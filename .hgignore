@@ -1,0 +1,8 @@
+syntax: glob
+
+*.swp
+*.pyc
+*.so
+doc/_build/*
+sgf/*
+
