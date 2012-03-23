@@ -12,7 +12,9 @@
 {% extends "basic/layout.html" %}
 
 {% block header %}
+    {%- if ugonet_online %}
     <link href='http://fonts.googleapis.com/css?family=Simonetta' rel='stylesheet' type='text/css'>
+    {%- endif %}
     <div class="header-wrapper">
       <div class="header">
         {%- if logo %}

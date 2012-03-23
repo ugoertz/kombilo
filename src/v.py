@@ -1962,7 +1962,7 @@ class Viewer:
 
         s = self.dataWindow.filelist.list.get(index)
         if self.options.confirmDelete.get() and s[0:2] == '* ':
-            if not askokcancel('Confirm deletion', 'There are unsaved changes. Delete?'):
+            if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'):
                 return
 
         del self.filelist[index]
@@ -2166,7 +2166,7 @@ class Viewer:
         for i in range(len(self.filelist)):
             s = self.dataWindow.filelist.list.get(i)
             if self.options.confirmDelete.get() and s[0:2] == '* ':
-                if not askokcancel('Confirm deletion', 'There are unsaved changes. Delete?'):
+                if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'):
                     return
                 else: break
 
@@ -2437,7 +2437,7 @@ class Viewer:
         self.filemenu.add_command(label='Open SGF', underline=0, command=self.openFile)
         self.filemenu.add_command(label='Save SGF', underline=0, command=self.saveSGFfile)
         self.filemenu.add_command(label='Save SGF as', underline=9, command=self.saveasSGFfile)
-        self.filemenu.add_command(label='Edit SGF source', command=self.exportSGF)
+        self.filemenu.add_command(label='Export SGF source', command=self.exportSGF)
 
 
         self.filemenu.add_separator()

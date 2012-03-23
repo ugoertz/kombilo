@@ -19,6 +19,7 @@ The following instructions cover the installation of Kombilo under Ubuntu
 Linux (current version, i.e. 11.10). If you use another flavor of Linux and
 are somewhat familiar with it, you will easily adapt them.
 
+.. _quick-start:
 
 Quick start: installation on a Ubuntu
 -------------------------------------
@@ -26,33 +27,39 @@ Quick start: installation on a Ubuntu
 With the following commands you can install Kombilo on a Ubuntu system.
 Lines starting with a ``#`` are comments - no need to type them. These
 instructions will create a subdirectory ``kombilo`` inside the current
-directory. See below for more details on the different steps::
-
-  # Install the packages that Kombilo depends on (and wget for the next step):
-  sudo apt-get install python-tk python-imaging python-imaging-tk python-pmw python-configobj wget
-  sudo apt-get install g++ python-dev libboost-filesystem-dev libboost-system-dev libsqlite3-dev
-
-  # download the Kombilo archive
-  wget
-
-  # unpack the archive
-  tar xfz XXX
-  cd XXX
-
-  # compile the C++ extension
-  python setup.py build_ext
-  cp libkombilo.py build/lib.linux-i686-2.7/_libkombilo.so ../kombilo/src/
-
-  # start the program
-  cd XXX
-  ./kombilo
-
+directory.
 
 There are three main steps to the installation: installing Python and the
 Python packages, downloading the Kombilo files and extracting them, and
-compiling the extension for the fast pattern search.  Finally (and
-optionally), you can "compile" the documentation so that you have it on
-your own computer and can access it offline.
+compiling the extension for the fast pattern search. See below for more
+details on the different steps.
+
+::
+
+  # Install the packages that Kombilo depends on (and wget for the next step):
+  sudo apt-get install python-tk python-imaging python-imaging-tk python-pmw
+  sudo apt-get install python-configobj wget g++  libsqlite3-dev
+  sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
+
+  # download the Kombilo archive
+  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.tar.gz
+
+  # unpack the archive
+  tar xfz kombilo-0.7.tar.gz kombilo
+
+  # compile the C++ extension
+  cd kombilo/lk
+  python setup.py build_ext
+  cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
+
+  # start the program
+  cd ../src/
+  ./kombilo.py
+
+
+Now continue with the :ref:`getting-started` section of the tutorial.
+After installing, you start the program by executing the ``kombilo.py``
+script in the ``kombilo/src`` directory.
 
 
 Basic dependencies
@@ -85,26 +92,22 @@ Downloading Kombilo
 tar.gz files
 ^^^^^^^^^^^^
 
-.tar.gz (containing kombilo, libkombilo, HTML & pdf docs, SWIG-generated
-files)
+Download the ``kombilo-0.7.tar.gz`` archive from the `Kombilo downloads
+<https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
 
-In the sequel, we assume that you have unpacked the Kombilo files in a
-directory ``~/go/kombilo``, and the libkombilo files in
-``~/go/libkombilo/``. If you choose different places, just adjust the names
-in the instructions below accordingly.
+Unpack the archive somewhere by ::
+
+  tar xfz kombilo-0.7.tar.gz kombilo
+
+This will extract all the files into the kombilo subdirectory.
+
 
 Mercurial repository
 ^^^^^^^^^^^^^^^^^^^^
 
-::
+You can also clone the Kombilo mercurial repository. See :ref:`development`
+below for some details.
 
-  sudo apt-get mercurial swig
-
-  hg clone
-
-  swig -c++ -python libkombilo.i 
-  python setup.py build_ext
-  cp libkombilo.py build/lib.linux-i686-2.7/_libkombilo.so ../kombilo/src/
 
 
 Libkombilo
@@ -125,13 +128,35 @@ Then, to compile the package, do the following::
   python setup.py build_ext
   cp build/lib.*/_libkombilo.so ~/go/kombilo/
 
-FIXME what about libkombilo.py?!; run SWIG if installed from repo
+
+.. _development:
+
+Development
+-----------
+
+If you want to work on Kombilo or Libkombilo yourself, you can clone the
+mercurial repository::
+
+  hg clone https://bitbucket.org/ugoertz/kombilo
+
+Make sure (before ...) that you have mercurial installed, and also install
+SWIG::
+
+  sudo apt-get mercurial swig
+
+Before you can compile the libkombilo extension, you need to run swig::
+
+  cd kombilo/lk
+  swig -c++ -python libkombilo.i 
+  python setup.py build_ext
+  cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
 
 
 Build the documentation
 -----------------------
 
-If you install Kombilo directly from its Mercurial repository, and want to
+If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
+step. If you installed directly from its Mercurial repository, and want to
 use the documentation offline (either directly or from the Kombilo Help
 menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
@@ -160,7 +185,7 @@ your computer).
 Libkombilo documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install *Doxygen* by ::
+Install `Doxygen <http://www.stack.nl/~dimitri/doxygen/>`_ by ::
 
   sudo apt-get install doxygen
 
@@ -170,17 +195,6 @@ and in the ``lk/doc/`` directory, run ::
 
 Besides a lot of warnings, this will generate HTML and LaTeX files of the
 documentation in ``lk/doc/build/``.
-
-
-Development
------------
-
-If you want to start working on libkombilo, 
-
-**hg** kombilo, libkombilo
-
-**SWIG**
-
 
 Setting up the SGF databases
 ----------------------------
@@ -201,19 +215,41 @@ database for pattern search. You can also select whether all games (or
 none) of the database should be considered as pro games, or whether this
 should be decided by the rank specified in the files.
 
-Finally, if you like, you can specifiy a folder where the Kombilo files
-should be stored. If you do not name a folder here, the files will be
-stored in the folder containing your SGF files.
+If you prefer, you can specifiy a folder where the Kombilo files should be
+stored. If you do not name a folder here, the files will be stored in the
+folder containing your SGF files.
+
+Finally, you can choose which algorithms you want to use with your
+databases. (You can also :ref:`disable the hashing algorithms
+<search-options>` for each pattern search, but you can only use then if you
+selected the corresponding option before processing the games.)
+
+The hashing algorithms speed up searches for full board and corner
+positions respectively, on the other hand the procesing takes slightly
+longer, more disk space is consumed, and Kombilo uses more memory when
+running.
+
+File sizes
+^^^^^^^^^^
+
+| **No Hashing**: roughly 170 MB for about 70,000 games (GoGoD winter 2011)
+| **Hashing for full board positions**: roughly 270 MB
+| **Hashing for full board and corner positions**: roughly 365 MB
 
 After adjusting the options, if necessary, select ``Add DB`` in order to
 add some SGF files.
 
-The optimal size (i.e. number of SGF files) of the databases
-depends mostly on the amount of memory in your computer. 
-I recommend a size of at least 2000 SGF files per 
-database; that should be fine on almost every system.
-If you have a lot of memory, you can experiment with larger databases to
-increase performance.
+The optimal size (i.e. number of SGF files) of the databases depends mostly
+on the amount of memory in your computer.  I recommend a size of at least
+1,000 - 2,000 SGF files per database; that should be fine on almost every
+system.  If you have a lot of memory, you can experiment with larger
+databases to increase performance. For databases with ten thousands of
+games, the "finalizing" will take quite some time (a few minutes for the
+70,000 GoGoD games on my laptop), so please be patient.
+
+Kombilo will create several database files: ``kombilo.db``, ``kombilo.da``,
+and if you use the hashing algorithms, also ``kombilo.db1`` and
+``kombilo.db2``.
 
 
 Toggle normal/disabled
@@ -246,6 +282,9 @@ If you made any changes to the SGF files in one of the database directories
 so that the pattern search really uses the information corresponding to the
 current version of the SGF files.
 
+Reprocessing deletes all the tags on your database, so export them before,
+and import them afterwards, if you want to keep them, see
+:ref:`import-export-tags`.
 
 Save messages
 -------------
@@ -264,24 +303,27 @@ With Ctrl-click and Shift-click you *can select several databases* in the
 list simultaneously. The "Toggle normal/disabled", "Remove" and "Reprocess"
 buttons will then apply to all the selected databases.
 
-
+Currently it is not possible to add single games to a database, or to
+delete single games.
 
 
 Searching
 =========
 
 There are two main ways to search in your database: by patterns occurring
-in the games (:ref:`Pattern search`), and by properties written out in the
+in the games (:ref:`pattern-search`), and by properties written out in the
 SGF file (such as the players, the result, the date, the event where the
-game was played etc.).  We call the latter type of search a :ref:`Game info
-search`.
+game was played etc.).  We call the latter type of search a
+:ref:`game-info-search`.
 
 Furthermore, you can search for tags - either games that were automatically
 tagged by Kombilo (e.g. handicap games), or for games that you tagged
-yourself - (:ref:`tag search`), and for the Dyer signature of a game
-(:ref:`Signature search`). This is typically used less often, but may be
+yourself - (:ref:`tag-search`), and for the Dyer signature of a game
+(:ref:`signature-search`). This is typically used less often, but may be
 useful to quickly find a game whose Kifu you have in printed form.
 
+
+.. _pattern-searcH:
 
 Pattern search
 --------------
@@ -291,6 +333,10 @@ white stones on the board, and select the size of the pattern (the
 "relevant region" for the search) by clicking with the right mouse button
 and dragging.
 
+.. index::
+  pair: Pattern search; Search options
+
+.. _search-options:
 
 Search options
 ^^^^^^^^^^^^^^
@@ -324,6 +370,10 @@ algorithms
   to choose them when creating the database from your SGF files.)
 
 
+.. index::
+  pair: Pattern search; Wildcards
+
+.. _wildcards:
 
 Wildcards
 ^^^^^^^^^
@@ -333,6 +383,9 @@ spot may either be empty, or contain a black stone, or contain a white
 stone. A black dot means that the spot may be empty or contain a black
 stone, and analogously for a white dot. You can go from empty to green,
 black, white, etc. by shift-clicking several times.
+
+.. index::
+  pair: Pattern search; Move sequence
 
 Move sequences
 ^^^^^^^^^^^^^^
@@ -362,6 +415,7 @@ Further notes
   continuations is not consistent between the different algorithms.
 
 
+.. _game-info-search:
 
 Game info search
 ----------------
@@ -410,6 +464,8 @@ SQL
     sgf (the full SFG source).
 
 
+.. _tag-search:
+
 Tag search
 ----------
 
@@ -429,6 +485,9 @@ these abbreviations, and combining them using the logical operators
 
 Just enter the search expression into the entry field below the tag list
 and press enter, or click the looking glass button right of this field.
+
+
+.. _signature-search:
 
 Signature search
 ----------------
@@ -465,15 +524,16 @@ You can print the signature of a game to the log tab by selecting it in the
 game list and pressing *s*.
 
 
+.. _export-search-results:
+
 Export search results
 ---------------------
 
 If you want to save some information on a pattern search, you
-can use the 'Export search results' function in the File menu.
-This will open a new window with a very simple text editor.
-It will contain the search pattern, the search pattern with
-the continuations, some statistical information on the search,
-and the number of hits in each database.
+can use the 'Export search results' function in the Database menu.  This
+will open a new window with a very simple text editor.  It will contain the
+search pattern, the search pattern with the continuations, some statistical
+information on the search, and the number of hits in each database.
 
 You can edit the information and in the end save the text to a 
 file. I would be interested in hearing your opinion if other
@@ -522,6 +582,15 @@ tenuki.
 
 Date profile
 ------------
+
+The bar diagram shows the distribution of games in the current list in
+comparison to all games in the database, by date. The height of the bars
+indicate the proportion of games in current list versus games in complete
+database. *The height of the bars does not contain absolute information*,
+i.e. even if there are only very few games in the current list, the highest
+bar will have full height. Absolute information is printed above the bars
+(number of games in current list in this time period/number of games in
+complete database in this time period).
 
 Computing the date profile is pretty slow (much slower than a pattern
 search), so you should keep this tab open only as long as you are really
@@ -593,6 +662,20 @@ all games where the large avalanche does not occur, by searching for ``not
 A`` - and again, this can be combined with searching for other tags.
 
 
+.. _import-export-tags:
+
+Importing/exporting tabs
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can export the tags in your current database, and import them later to
+a (different) database. (Use the corresponding menu items in the Database
+menu.) The games are identified by the Dyer signature and
+some additional hash code, so the imported tags will be set precisely on
+the games *with the same moves* as the games that carried the tags when
+exporting.
+
+Use this to transfer your tags when updating your database.
+
 
 GoTo field
 ----------
@@ -650,11 +733,10 @@ If you just can't find the next move, you can always use the
 'Next move' button above the board to move forward in the game.
 
 
-
 Export current position/SGF
 ---------------------------
 
-Similarly to the  :ref:`Export search results` function, you can "Export
+Similarly to the  :ref:`export-search-results` function, you can "Export
 current position" (in the database menu): this will open a text editor with
 the current position.  Again, you can choose "ASCII" or "Wiki" type. In
 addition, Kombilo can put the next moves (up to 9 moves) on the board,
@@ -676,14 +758,22 @@ With the **split collection** button (depicting scissors) right to the list
 of files, you can split one SGF file containing several games into a
 collection of files, one for each game.
 
-With *Copy current SGF files to folder* in the file menu you can copy the
-SGF files corresponding to the games currently in the game list to some
+With *Copy current SGF files to folder* in the Database menu you can copy
+the SGF files corresponding to the games currently in the game list to some
 folder (e.g. in order to use them with a different program).
 
 **@@monospace in SGF comments**. If you put the string ``@@monospace`` as
 the first line of a comment of an SGF node, Kombilo will display the
 comment in a fixed width font. This is useful whenever you want to output
 tabular data in a node (see the :py:mod:`sgftree` script).
+
+.. index::
+  single: Game info; edit
+
+In the **Game info** edit window, in the *Other SGF tags* entry field you
+must enter correct SGF code, i.e. special signs such as ``]`` and ``\``
+must be escaped by a preceding ``\``.
+
 
 
 Key bindings
@@ -717,7 +807,7 @@ Game list key bindings
 * ``Up``/``down``/``PgUp``/``PgDown``: move in game list
 * ``Home``/``End``: scroll to left/right
 * ``Return``: open selected game in viewer
-* ``Control-s``: print Dyer signature of selected game to log tab
+* ``Control-a``: print Dyer signature of selected game to log tab
 
 
 Configuring Kombilo
@@ -737,6 +827,10 @@ as the height of the entried in the left hand column by dragging the
 mouse pointer slowly over the region between the columns; it should change
 its look when you are over the sash.
 
+.. index::
+  pair: Options; Menu
+
+.. _options-menu:
 
 Options in the Options menu
 ---------------------------
@@ -763,6 +857,8 @@ who provideda a patch for this. (The SGF file is not changed.)
 
 **Show Coordinates**
 Show coordinates around the board.
+
+.. _option-discarding-changes:
 
 **Ask before discarding unsaved changes**
 If this option is enabled, Kombilo will ask for confirmation before
@@ -813,6 +909,8 @@ Changing either of these options will reset the game list.
 Advanced
 ^^^^^^^^
 
+.. _open-game-in-external-viewer:
+
 **Open game in external SGF viewer**
 By default, by double-clicking on a game in a game list, the game is opened
 in Kombilo's main window. (You can open the game in an external viewer, by
@@ -836,6 +934,8 @@ Under Windows, the file name is put in quotes. This is necessary if the
 path contains spaces. If you don't want the quotes (or want to set them
 yourself), you can use %F instead.
 
+.. index::
+  single: Options; kombilo.cfg
 
 The kombilo.cfg configuration file
 ----------------------------------
@@ -960,7 +1060,11 @@ know of.
 
 The references are stored in the file ``references`` in the ``data`` folder
 inside the main Kombilo directory. This is just a text file which you could
-edit yourself. The format should be self-explanatory.
+edit yourself. The format should be self-explanatory. You can also download
+the `current version
+<https://bitbucket.org/ugoertz/kombilo/raw/tip/src/data/references>`_ of
+this file from the Kombilo source code repository and save it as the
+``references`` file.
 
 If you want only references to sources which you own to be shown, you can
 define exclude or include rules in the file ``kombilo.cfg``.
@@ -970,35 +1074,38 @@ I think it would make sense to add references to other journals, like the
 American Go Journal, the British Go Journal, the Deutsche Go-Zeitung, 
 the Revue Francaise de Go, etc.
 
-Thanks are due to Uwe Richter for indexing 10 issues of Go World!
+.. index:: Command line arguments
 
+Command line arguments
+----------------------
+
+Kombilo.py
+^^^^^^^^^^
+
+You can give file names of SGF files as command line arguments, and Kombilo
+will open these files upon startup. The file names should be given with the
+complete path. If blanks occur in the path or in the file name, it has to
+be put inside quotation marks.
+
+v.py
+^^^^
+
+The ``v.py`` SGF viewer accepts one SGF file name as the first argument,
+and optionally a move number as the second argument. The file will be
+opened at the specified move number.
+
+.. _encodings:
 
 Encodings
 ---------
 
-Kombilo is aware of the character encoding of your SGF files. The default
-(and recommended) encoding is UTF8.
-
-- Adding files to your database: (see EditDB window)
-
-- Open/Save single SGF file (?)
+Kombilo can use SGF files with non-ASCII characters such as umlauts (äöü),
+accents (éèê), asian language characters, etc, **but currently it can only
+handle UTF-8-encoded files**. Of course, in addition the appropriate fonts
+to display these characters must be installed on your computer.
 
 
-Internals:
-
-* libkombilo is encoding-unaware
-* encoding "has to be done" at the node level, according to the SGF specs;
-  at least that seems to be the most suitable interpretation.
-* in the Kombilo databases, only UTF8 is used ?!?!?
-* upon processing files, an encoding must be chosen; kombiloNG.process
-  applies this encoding - when?
-
-NOTE: Strictly speaking, it might not be appropriate to treat an SGF as a
-text file and recode it entirely because of escape characters?!
-
-Game info edit window, Other SGF tags: user needs to escape special signs
-such as ]
-
+.. _requirements-on-SGF-files:
 
 Requirements on SGF files
 -------------------------
@@ -1052,4 +1159,22 @@ accept files with am email header and an SGF file after that. Be aware,
 though, that the header will be lost when you change the game info
 of that game: whenever Kombilo writes an SGF file, it will only write
 the game (resp. the game collection) itself.
+
+.. index::
+  Game records; Where to find
+
+.. _find-game-records:
+
+Where to find game records
+--------------------------
+
+Here are some sources of game records:
+
+* `GoGoD encyclopedia <http://www.gogod.co.uk/index.htm>`_ has more than
+  70,000 games.
+* `Go4go <http://www.go4go.net/v2/>`_ has more than 28,000 games.
+* `Games of strong players on KGS <http://www.u-go.net/gamerecords/>`_
+* `List of links to SGF collections on u-go.net <http://u-go.net/links/gamerecords/>`_
+* `List of links to SGF collections on Sensei's library
+  <http://senseis.xmp.net/?GoDatabases>`_
 

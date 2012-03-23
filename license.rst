@@ -80,14 +80,15 @@ Acknowledgments
 
 Over the years, many people directly or indirectly supported the development of
 Kombilo by offering code, general feedback, suggestions or bug reports, in
-particular: Arend Bayer, Sergey Datskovskiy, Fabrice de Volder, Jon Diamond,
-John Fairbairn, Patrice Fontaine, Christian Gawron, Sorin Gherman, Daniel
-Gilder, Steffen Glueckselig, Igor Goliney, Rene Grothmann, Alberto Hernando,
-Anders Kierulf, Tobias Klaus, Mace Lee, Marc A. Lehmann, Andre Prasetya,
-Alberto F. Rezza, Hendrik Reinke, Uwe Richter, Douglas Ridgway, Jan van Rongen,
-Bernhard Runge, Thomas Schmid, Thomas Schmid-Lindner, Bernd Schmidt, David
-Sigaty, Falko Spiller, Neil Stevens, Fred Strauss, Dan Stromberg, Jean-Pierre
-Vesinet, Christian Wenzel. 
+particular: Gilles Arcas, Daniel Balsom, Arend Bayer, Sergey Datskovskiy,
+Fabrice de Volder, Jon Diamond, John Fairbairn, Patrice Fontaine, Christian
+Gawron, Sorin Gherman, Daniel Gilder, Steffen Glueckselig, Igor Goliney,
+Rene Grothmann, Alberto Hernando, Anders Kierulf, Tobias Klaus, Mace Lee,
+Marc A. Lehmann, Andre Prasetya, Alberto F. Rezza, Hendrik Reinke, Uwe
+Richter, Douglas Ridgway, Jan van Rongen, Bernhard Runge, Thomas Schmid,
+Thomas Schmid-Lindner, Bernd Schmidt, David Sigaty, Falko Spiller, Neil
+Stevens, Fred Strauss, Dan Stromberg, Jean-Pierre Vesinet, Christian
+Wenzel. 
 
 
 

@@ -16,7 +16,8 @@ Then, a pattern search can be done in a few lines::
 
     # set up the KEngine, load the database files
     K = KEngine()
-    K.gamelist.DBlist.append({'sgfpath': '.', 'name':('.', 'kombilo1'), 'data': None, 'disabled': 0})
+    K.gamelist.DBlist.append({ 'sgfpath': '.', 'name':('.', 'kombilo1'), 
+                               'data': None, 'disabled': 0})
     K.loadDBs()
 
     # let us check whether this worked

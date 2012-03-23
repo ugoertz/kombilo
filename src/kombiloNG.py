@@ -106,34 +106,47 @@ class Pattern(lk.Pattern):
 
     To create a pattern, pass the following arguments to Pattern:
 
-    * p: The pattern as a string ("...XXO..X"). Blanks and line breaks will be
+    * p: The pattern as a string (``...XXO..X``). Blanks and line breaks will be
       ignored. Commas (to mark hoshis) will be replaces by periods.
-    * ptype (optional): one of
+    * ptype (optional): one of ::
   
-      CORNER_NW_PATTERN, CORNER_NE_PATTERN, CORNER_SW_PATTERN, CORNER_SE_PATTERN, (fixed in specified corner)
+        CORNER_NW_PATTERN, CORNER_NE_PATTERN, CORNER_SW_PATTERN, CORNER_SE_PATTERN
+        # fixed in specified corner
 
-      SIDE_N_PATTERN, SIDE_W_PATTERN, SIDE_E_PATTERN, SIDE_S_PATTERN, (slides along specified side)
+        SIDE_N_PATTERN, SIDE_W_PATTERN, SIDE_E_PATTERN, SIDE_S_PATTERN
+        # slides along specified side
 
-      CENTER_PATTERN, (movable in center)
+        CENTER_PATTERN
+        # movable in center
 
-      FULLBOARD_PATTERN.
+        FULLBOARD_PATTERN.
+    * sizeX, sizeY: the size (horizontal/vertical) of the pattern (not needed,
+      if ptype is ``FULLBOARD_PATTERN``).
     * anchors (optional): A tuple (right, left, top, bottom) which describe the
       rectangle containing all permissible positions for the top left corner of
       the pattern.
 
-    One of ptype and anchors must be present. If ptype is given, then anchors will be ignored.
+    One of ptype and anchors must be present. If ptype is given, then anchors
+    will be ignored.
 
-    * contlist (optional): A list of continuations, in 'SGF format', e.g.
-      ";B[qq];W[de];B[gf]",
+    * contlist (optional): A list of continuations, in *SGF format*, e.g.
+      ``;B[qq];W[de];B[gf]``,
     * topleft (optional): a pair of coordinates, specifying the top left corner
       of the pattern, needed for translating contlist into coordinates relative
       to the pattern
-    * contsinpattern (optional; used only if contlist is not given): 'X'
-      (black) or 'O' (white). If given, the labels 1, 2, 3, ... in the pattern
+    * contsinpattern (optional; used only if contlist is not given): ``X``
+      (black) or ``O`` (white). If given, the labels 1, 2, 3, ... in the pattern
       are extracted and handled as continuations, with 1 played by the
       specified color. 
     * contLabels (optional): A string of same size as p, with labels that
       should be used for labelling continuations.
+
+    .. warning:: Continuation and captures
+
+      With the :py:class:`Pattern` class it is not currently possible to deal
+      with captures made by one of the moves of the continuation list. While
+      the libkombilo library allows to do this, I have yet to think of a good
+      interface to access this functionality.
     '''
 
     def __init__(self, p, **kwargs):

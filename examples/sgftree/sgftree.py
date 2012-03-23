@@ -41,11 +41,13 @@ Mandatory options are ::
   initialposition # the initial position; see below for examples
   depth # the highest move number that is considered
   min_number_of_hits # variations with less hits are not considered
-  max_number_of_branches # if there are more continuations, only those with the most hits are considered
+  max_number_of_branches # if there are more continuations,
+                         # only those with the most hits are considered
 
 Further options::
 
-  gisearch # a query text for a game info search to be carried out before the pattern searches
+  gisearch # a query text for a game info search to be carried out
+           # before the pattern searches
   comment_head # text that should be prepended to every comment
 
 The default value for ``comment_head`` is ``@@monospace`` which causes Kombilo

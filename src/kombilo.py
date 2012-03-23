@@ -402,7 +402,7 @@ class GameListGUI(GameList, VScrolledList):
         VScrolledList.__init__(self, parent, 500, 0, self.get_data, get_data_ic=self.get_data_ic)
         self.listbox.config(width=52, height=6) 
         self.onSelectionChange = self.printGameInfo
-        for key, command in [ ('<Return>', self.handleDoubleClick), ('<s>', self.printSignature), ]:
+        for key, command in [ ('<Return>', self.handleDoubleClick), ('<Control-a>', self.printSignature), ]:
             self.listbox.bind(key, command)
         for key, command in [ ('<Button-1>', self.onSelectionChange), ('<Double-1>', self.handleDoubleClick), ('<Shift-1>', self.handleShiftClick), ('<Button-3>', self.rightMouseButton) ]:
             self.listbox.bind(key, command)
@@ -2054,7 +2054,7 @@ class App(v.Viewer, KEngine):
         for i in range(len(self.filelist)):
             s = self.dataWindow.filelist.list.get(i)
             if self.options.confirmDelete.get() and s[0:2] == '* ':
-                if not askokcancel('Confirm deletion', 'There are unsaved changes. Delete?'): return
+                if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'): return
                 else: break
         
         try:
