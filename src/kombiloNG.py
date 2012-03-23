@@ -412,12 +412,12 @@ class GameList(object):
         '''Return a property of the game at position ``index`` in the current
         list of games. Here ``prop`` should be one of the following constants:
 
-        * GL_FILENAME - the filename
-        * GL_PB - the black player
-        * GL_PW - the white player
-        * GL_RESULT - the result
-        * GL_SIGNATURE - the symmetrized Dyer signature
-        * GL_DATE - the date.
+        * ``GL_FILENAME`` - the filename
+        * ``GL_PB`` - the black player
+        * ``GL_PW`` - the white player
+        * ``GL_RESULT`` - the result
+        * ``GL_SIGNATURE`` - the symmetrized Dyer signature
+        * ``GL_DATE`` - the date.
         '''
         DBindex, game = self.getIndex(index)
         if DBindex == -1: return
@@ -841,10 +841,10 @@ class KEngine(object):
         '''
         Do a tag search on the current game list.
 
-        tag can be an expression like 'H and (X or not M)', where H, X, M are
+        tag can be an expression like ``H and (X or not M)``, where H, X, M are
         abbreviations for tags (i.e. keys in self.gamelist.customTags). In the
-        simplest example, tag == 'H', i.e. we just search for all games tagged
-        with 'H'.
+        simplest example, tag == ``H``, i.e. we just search for all games tagged
+        with ``H``.
         '''
 
         if not self.gamelist.noOfGames(): return

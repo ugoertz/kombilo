@@ -21,8 +21,8 @@ are somewhat familiar with it, you will easily adapt them.
 
 .. _quick-start:
 
-Quick start: installation on a Ubuntu
--------------------------------------
+Quick start: installation on a Ubuntu system
+--------------------------------------------
 
 With the following commands you can install Kombilo on a Ubuntu system.
 Lines starting with a ``#`` are comments - no need to type them. These
