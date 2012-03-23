@@ -5,4 +5,11 @@ syntax: glob
 *.so
 doc/_build/*
 sgf/*
+lk/build/*
+lk/doc/build/*
+lk/doc/libkombilo.tag
+lk/libkombilo.py
+lk/libkombilo_wrap.cxx
+src/kombilo.cfg
+src/libkombilo.py
 
