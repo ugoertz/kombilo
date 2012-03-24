@@ -54,9 +54,11 @@ Features
   using the underlying functionality of Kombilo within Python scripts, or
   as a C++ library.
 
-* Kombilo is free, and is open source - feel free to freely distribute it,
-  and feel free to clone or fork the project on BitBucket. I will be glad
-  to consider patches you send me for inclusion into the Kombilo code.
+* Kombilo is free, and is open source. Your :ref:`contributions
+  <contributing>` are welcome. Feel free to freely distribute it, and feel
+  free to clone or fork the `project on BitBucket
+  <https://bitbucket.org/ugoertz/kombilo/overview>`_. I will be glad to
+  consider patches you send me for inclusion into the Kombilo code.
 
 * Kombilo has been developed with tools that are available on all major
   operating systems (at least Linux, Windows, Mac OS X), *but the current

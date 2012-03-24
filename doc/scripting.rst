@@ -134,4 +134,6 @@ Libkombilo
 ==========
 
 To study the underlying C++ library in detail, look at the `Libkombilo
-documentation <http://dl.u-go.net/libkombilo/doc/>`_.
+documentation <http://dl.u-go.net/libkombilo/doc/>`_. A good starting point
+is the ``cpptest.cpp`` program in ``lk/examples``.
+

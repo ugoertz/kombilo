@@ -38,7 +38,7 @@ details on the different steps.
 
   # Install the packages that Kombilo depends on (and wget for the next step):
   sudo apt-get install python-tk python-imaging python-imaging-tk python-pmw
-  sudo apt-get install python-configobj wget g++  libsqlite3-dev
+  sudo apt-get install python-configobj g++  libsqlite3-dev
   sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
 
   # download the Kombilo archive
@@ -1030,6 +1030,78 @@ Miscellaneous
 
 The files containing the board image and the black and white stones are
 ``icons/board.jpg``, ``icons/black.gif`` and ``icons/white.gif``.
+
+
+.. index::
+  single: Contributing
+  single: Reporting bugs
+  single: Bug reports
+
+.. _contributing:
+
+Contributing
+============
+
+Kombilo intentionally is an open-source project. It has profited much from
+the contributions of its users in the past, and all your feedback and
+contributions are very much appreciated.
+
+Development is concentrated on the `Kombilo project page
+<https://www.bitbucket.org/ugoertz/kombilo/>`_ on `BitBucket
+<https://www.bitbucket.org>`_.
+
+
+Tell me how you like Kombilo
+----------------------------
+
+Any kind of feedback is appreciated. Tell me which parts of Kombilo you
+like, and which ones need improvement. Did you use the Kombilo engine in
+your own scripts? I would be glad to learn about your results.
+
+
+Ask questions, report bugs
+--------------------------
+
+If you have any problems, feel free to ask! Either by email at
+``ug@geometry.de``, or via the `issue tracker
+<https://bitbucket.org/ugoertz/kombilo/issues?status=new&status=open>`_.
+
+
+Ideas
+-----
+
+I have lots of ideas of new features I would like to implement, and I also
+would like to learn your ideas and priorities!
+
+
+Development
+-----------
+
+If you have time to delve into Kombilo development, check out the mercurial
+repository::
+
+  hg clone https://bitbucket.org/ugoertz/kombilo
+
+Feel free to fork the project and do send me pull requests for improvements
+or fixes you made.
+
+Documentation
+-------------
+
+I try to maintain a reasonably complete documentation, but there surely are
+gaps and probably some inaccuracies. Please notify me, if you think that
+something is not explained well.
+
+
+Windows/Mac OS X
+----------------
+
+I would love to add better support for Windows and/or Mac OS X users,
+however I do not have access to computers running either of these operating
+systems, right now. If you make progress on this, please tell me. I am also
+willing to discuss problems based on my experience with the previous
+Kombilo version for which I made a Windows installer.
+
 
 
 
