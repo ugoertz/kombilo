@@ -503,8 +503,8 @@ class GameList(object):
 
         self.gameIndex.sort()
         if sortReverse: self.gameIndex.reverse()
-        assert len(self.gameIndex) == sum([ db['data'].size() for db in self.DBlist if not db['disabled'] ])
-        assert len(self.gameIndex) == self.noOfGames()
+        # assert len(self.gameIndex) == sum([ db['data'].size() for db in self.DBlist if not db['disabled'] ])
+        # assert len(self.gameIndex) == self.noOfGames()
 
 
     def noOfGames(self):
@@ -1111,7 +1111,9 @@ class KEngine(object):
         filelist.sort()
 
         gls = lk.vectorGL()
-        for db in self.gamelist.DBlist: gls.push_back(db['data'])
+        for db in self.gamelist.DBlist:
+            if not db['disabled']: # for disabled db's, db['data'] is None
+                gls.push_back(db['data'])
 
         pop = lk.ProcessOptions()
         pop.rootNodeTags = 'PW,PB,RE,DT,EV'
@@ -1135,7 +1137,6 @@ class KEngine(object):
         # TODO boardsize
 
         gl.start_processing()
-        counter = 0
         for counter, filename in enumerate(filelist):
             if progBar and counter%100 == 0:
                 progBar.configure(value=counter*100.0/len(filelist))
