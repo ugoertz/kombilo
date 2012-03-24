@@ -1719,7 +1719,7 @@ class App(v.Viewer, KEngine):
     def addOneDB(self, arguments, dbpath, dummy):        # dummys needed for os.path.walk
         if KEngine.addOneDB(self, arguments, dbpath, dummy):
             index = arguments[-1] if not arguments[-1] is None else END
-            db = self.gamelist.DBlist[-1]
+            db = self.gamelist.DBlist[int(index) if index != END else -1]
             db_date = getDateOfFile(os.path.join(db['name'][0], db['name'][1]+'.da'))
             self.db_list.insert(index, dbpath + ' (%s, %d games)' % (db_date, db['data'].size()) )
             self.db_list.list.see(index)
@@ -1778,7 +1778,6 @@ class App(v.Viewer, KEngine):
 
             self.db_list.delete(index)
             self.callAddDB(dbpath, datap, index=i)
-            db = self.gamelist.DBlist[i]
             self.db_list.list.select_set(i)
         
         self.gamelist.reset()
@@ -1927,7 +1926,7 @@ class App(v.Viewer, KEngine):
             if db['disabled']:
                 self.db_list.insert(END, 'DISABLED - ' + db['sgfpath'] + ' (' + db_date  + ')' )
             else:
-                self.db_list.insert(END, db['sgfpath'] + ' (%s, %d games)' % (db_date, db['data'].size()) )
+                self.db_list.insert(END, db['sgfpath'] + ' (%s, %d games)' % (db_date, db['data'].size_all()) )
 
         for i, (text, command, ) in enumerate([('Add DB', self.addDB), ('Toggle normal/disabled', self.toggleDisabled),
                                                ('Remove DB', self.removeDB), ('Reprocess DB', self.reprocessDB)]):

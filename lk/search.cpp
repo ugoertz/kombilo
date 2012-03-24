@@ -33,7 +33,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
+#include <stdint.h>
+#include <inttypes.h>
 
 // FIXME check for security pbms (buffer overflow) in all places where a char[] of fixed length is used! (also in other files)
 
@@ -1031,6 +1032,10 @@ int GameList::size() {
   return currentList->size();
 }
 
+int GameList::size_all() {
+  return all->size();
+}
+
 string GameList::resultsStr(GameListEntry* gle) {
   string result;
   if (!gle->hits) return result;
@@ -1775,7 +1780,7 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
         // printf("commit\n");
         // add signature, fphash
         char sql1[150];
-        sprintf(sql1, "update GAMES set signature='%s', fphash='%ld' where id=%d;", sig, fphash, game_id);
+        sprintf(sql1, "update GAMES set signature='%s', fphash='%lld' where id=%d;", sig, (long long)fphash, game_id);
         // printf("sql1 %s\n", sql1);
         rc = sqlite3_exec(db, sql1, 0, 0, 0);
         if (rc != SQLITE_OK)  throw DBError();

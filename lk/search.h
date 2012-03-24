@@ -454,6 +454,7 @@ class GameList {
     void reset(); ///< Reset gane list so that all games in the database are in currentList.
     void resetFormat(std::string ORDERBY="", std::string FORMAT=""); ///< Change sort criterion and format string
     int size(); ///< Number of games in currentList
+    int size_all(); ///< Number of games in all
     std::string resultsStr(GameListEntry* gle);
 
     /// Retrieve information about games in currentList
