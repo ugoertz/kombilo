@@ -47,7 +47,7 @@ import libkombilo as lk
 from board import *
 from sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
-KOMBILO_VERSION = 0.7
+KOMBILO_VERSION = 0.8
 
 # ---------------------------------------------------------------------------------------
 
@@ -2175,6 +2175,7 @@ class Viewer:
                                                                             # e.g. references stuff
             c = ConfigObj(infile=configfile)
 
+            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
             c.filename = os.path.join(self.optionspath,'kombilo.cfg')
@@ -2673,7 +2674,7 @@ class Viewer:
         try:
             with open(os.path.join(self.basepath, configfilename)) as f:
                 self.config = ConfigObj(infile=f)
-                if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
+                if self.config['main']['version'].strip() in [ 'kombilo' + ver for ver in [ '0.7', '0.8' ] ]:
                     # otherwise this is an old .cfg file which should be ignored
                     
                     if 'configdir' in self.config['main']: # there is an individual cfg file for this user
