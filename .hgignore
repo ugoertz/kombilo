@@ -1,0 +1,17 @@
+syntax: glob
+
+*.swp
+*.pyc
+*.so
+doc/_build/*
+sgf/*
+lk/examples/*.o
+lk/examples/cpptest
+lk/build/*
+lk/doc/build/*
+lk/doc/libkombilo.tag
+lk/libkombilo.py
+lk/libkombilo_wrap.cxx
+src/kombilo.cfg
+src/libkombilo.py
+
