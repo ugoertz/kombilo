@@ -1,0 +1,279 @@
+/*
+ * agogo.css_t
+ * ~~~~~~~~~~~
+ *
+ * Sphinx stylesheet -- agogo theme.
+ *
+ * :copyright: Copyright 2007-2010 by the Sphinx team, see AUTHORS.
+ * :license: BSD, see LICENSE for details.
+ *
+ * modified by Ulrich Görtz for using the theme with the kombilo profiler,
+ * 2011
+ *
+ */
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  font-family: "Verdana", Arial, sans-serif;
+  line-height: 1.4em;
+  color: black;
+  background-color: #ffffff;
+  margin-top:100px;
+}
+
+
+/* Page layout */
+
+div.header, div.content, div.footer {
+  width: 70em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Default body styles */
+a {
+  color: #ce5c00;
+}
+
+div.bodywrapper a, div.footer a {
+  text-decoration: underline;
+}
+
+.clearer {
+  clear: both;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.line-block {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.line-block .line-block {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 1.5em;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: normal;
+  color: #3465a4;
+  margin-bottom: .8em;
+}
+
+h1 {
+  color: #204a87;
+}
+
+h2 {
+  padding-bottom: .5em;
+  border-bottom: 1px solid #3465a4;
+}
+
+a.headerlink {
+  visibility: hidden;
+  color: #dddddd;
+  padding-left: .3em;
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink,
+dt:hover > a.headerlink {
+  visibility: visible;
+}
+
+img {
+  border: 0;
+}
+
+div.admonition {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 2px 7px 1px 7px;
+  border-left: 0.2em solid black;
+}
+
+p.admonition-title {
+  margin: 0px 10px 5px 0px;
+  font-weight: bold;
+}
+
+dt:target, .highlighted {
+  background-color: #ffffff;
+}
+
+/* Header */
+
+div.header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+div.header h1 {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: normal;
+  font-size: 180%;
+  letter-spacing: .08em;
+}
+
+div.header h1 a {
+  color: white;
+}
+
+div.header div.rel {
+  margin-top: 1em;
+}
+
+div.header div.rel a {
+  color: #fcaf3e;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+p.logo {
+    float: right;
+}
+
+img.logo {
+    border: 0;
+}
+
+
+/* Content */
+div.content-wrapper {
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+div.document {
+  width: 50em;
+  float: left;
+}
+
+div.body {
+  padding-right: 2em;
+  text-align: justify;
+}
+
+div.document ul {
+  margin: 1.5em;
+  list-style-type: square;
+}
+
+div.document dd {
+  margin-left: 1.2em;
+  margin-top: .4em;
+  margin-bottom: 1em;
+}
+
+div.document .section {
+  margin-top: 1.7em;
+}
+div.document .section:first-child {
+  margin-top: 0px;
+}
+
+div.document div.highlight {
+  padding: 3px;
+  background-color: #ffffff;
+  border-top: 2px solid #dddddd;
+  border-bottom: 2px solid #dddddd;
+  margin-top: .8em;
+  margin-bottom: .8em;
+}
+
+div.document h2 {
+  margin-top: .7em;
+}
+
+div.document p {
+  margin-bottom: .5em;
+}
+
+div.document li.toctree-l1 {
+  margin-bottom: 1em;
+}
+
+div.document .descname {
+  font-weight: bold;
+}
+
+div.document .docutils.literal {
+  background-color: #ffffff;
+  padding: 1px;
+}
+
+div.document .docutils.xref.literal {
+  background-color: transparent;
+  padding: 0px;
+}
+
+div.document blockquote {
+  margin: 1em;
+}
+
+div.document ol {
+  margin: 1.5em;
+}
+
+
+
+/* Footer */
+
+div.footer-wrapper {
+  border-top: 4px solid #babdb6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  min-height: 80px;
+}
+
+div.footer, div.footer a {
+  color: #888a85;
+}
+
+div.footer .right {
+  text-align: right;
+}
+
+div.footer .left {
+  text-transform: uppercase;
+}
+
+
+/* -- viewcode extension ---------------------------------------------------- */
+
+.viewcode-link {
+    float: right;
+}
+
+.viewcode-back {
+    float: right;
+    font-family:: "Verdana", Arial, sans-serif;
+}
+
+div.viewcode-block:target {
+    margin: -1px -3px;
+    padding: 0 3px;
+    background-color: #ffffff;
+    border-top: 1px solid #ac9;
+    border-bottom: 1px solid #ac9;
+}
