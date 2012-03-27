@@ -41,7 +41,6 @@ from ScrolledText import ScrolledText
 import tkFileDialog
 from tkCommonDialog import Dialog
 from tkSimpleDialog import askstring
-from PIL import ImageTk, Image
 from tooltip.tooltip import ToolTip
 
 from kombiloNG import *
@@ -51,9 +50,6 @@ from Pmw import ScrolledFrame
 import Pmw
 
 from vsl.vl import VScrolledList
-
-# try: import Image
-# except: pass
 
 
 from board import *
@@ -87,8 +83,8 @@ class BoardWC(Board):
         describes the current board position. It can then be restored with restore."""
 
     
-    def __init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, onlyOneMouseButton = 0):
-        Board.__init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg)
+    def __init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, use_PIL=True, onlyOneMouseButton = 0):
+        Board.__init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, use_PIL)
 
         self.wildcards = {}
 
@@ -2883,14 +2879,14 @@ class App(v.Viewer, KEngine):
         self.inittags()
 
         # icons for the buttons
-        for button, filename in [ (self.showContButtonS, 'abc-u.png'), (self.backButtonS, 'edit-undo.png'), (self.resetButtonS, 'go-home.png'), (self.searchButtonS, 'system-search.png'),
-                                  (self.oneClickButtonS, 'mouse.png'), (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
-                                  (self.GIstart, 'system-search.png'), (self.GIclear, 'document-new.png'), (self.GI_bwd, 'go-previous.png'), (self.GI_fwd, 'go-next.png'),
-                                  (self.tagsearchButton, 'system-search.png'), (self.tagaddButton, 'add.png'), (self.tagdelButton, 'list-remove.png'), 
-                                  (self.tagallButton, 'edit-select-all.png'), (self.untagallButton, 'edit-clear.png'), (self.tagsetButton, 'bookmark-new.png'),
+        for button, filename in [ (self.showContButtonS, 'abc-u.gif'), (self.backButtonS, 'edit-undo.gif'), (self.resetButtonS, 'go-home.gif'), (self.searchButtonS, 'system-search.gif'),
+                                  (self.oneClickButtonS, 'mouse.gif'), (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
+                                  (self.GIstart, 'system-search.gif'), (self.GIclear, 'document-new.gif'), (self.GI_bwd, 'go-previous.gif'), (self.GI_fwd, 'go-next.gif'),
+                                  (self.tagsearchButton, 'system-search.gif'), (self.tagaddButton, 'add.gif'), (self.tagdelButton, 'list-remove.gif'), 
+                                  (self.tagallButton, 'edit-select-all.gif'), (self.untagallButton, 'edit-clear.gif'), (self.tagsetButton, 'bookmark-new.gif'),
                                 ]:
             try:
-                im = ImageTk.PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
+                im = PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
                 self.tkImages.append(im)
                 button.config(image=im)
             except:
@@ -2898,7 +2894,7 @@ class App(v.Viewer, KEngine):
 
         # load logo
         try:
-            self.logo = ImageTk.PhotoImage(file=os.path.join(self.basepath,'icons/logok.gif'))
+            self.logo = PhotoImage(file=os.path.join(self.basepath,'icons/logok.gif'))
         except TclError:
             self.logo = None
 

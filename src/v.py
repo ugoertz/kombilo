@@ -33,7 +33,6 @@ from ttk import *
 from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
-from PIL import ImageTk, Image
 from tooltip.tooltip import ToolTip
 import Pmw
 
@@ -496,9 +495,9 @@ class DataWindow:
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
-        for button, filename in [(self.filelistB1, 'document-new.png'), (self.filelistB2, 'document-open.png'), (self.filelistB3, 'user-trash.png'), (self.filelistB4, 'edit-cut.png')]:
+        for button, filename in [(self.filelistB1, 'document-new.gif'), (self.filelistB2, 'document-open.gif'), (self.filelistB3, 'user-trash.gif'), (self.filelistB4, 'edit-cut.gif')]:
             try:
-                im = ImageTk.PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
+                im = PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
                 button.config(image=im)
                 self.tkImages.append(im)
             except:
@@ -517,9 +516,9 @@ class DataWindow:
         self.gamelistB2 = Button(self.gamelistF, text = 'DEL', command = self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
-        for button, filename in [(self.gamelistB1, 'document-new.png'), (self.gamelistB2, 'user-trash.png')]:
+        for button, filename in [(self.gamelistB1, 'document-new.gif'), (self.gamelistB2, 'user-trash.gif')]:
             try:
-                im = ImageTk.PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
+                im = PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
                 button.config(image=im)
                 self.tkImages.append(im)
             except:
@@ -2199,6 +2198,7 @@ class Viewer:
         self.options.loadFromDisk(d)
 
 
+
     def helpDocumentation(self):
         path = os.path.abspath(os.path.join(self.basepath,'../doc/_build/html','index.html'))
         try:
@@ -2552,29 +2552,29 @@ class Viewer:
                                  (self.WBbutton, 'wb.gif', {}),
                                  (self.Bbutton, 'b.gif', {}),
                                  (self.Wbutton, 'w.gif', {}),
-                                 (self.prevButton, 'media-playback-back-K.png', {}),
-                                 (self.nextButton, 'media-playback-start-K.png', {}),
-                                 (self.prev10Button, 'media-seek-backward.png', {}),
-                                 (self.next10Button, 'media-seek-forward.png', {}),
-                                 (self.startButton, 'media-skip-backward.png', {}),
-                                 (self.endButton, 'media-skip-forward.png', {}),
-                                 (self.passButton, 'media-playback-pause-K.png', {}),
-                                 (self.gameinfoButton, 'edit-find.png' , {}),
+                                 (self.prevButton, 'media-playback-back-K.gif', {}),
+                                 (self.nextButton, 'media-playback-start-K.gif', {}),
+                                 (self.prev10Button, 'media-seek-backward.gif', {}),
+                                 (self.next10Button, 'media-seek-forward.gif', {}),
+                                 (self.startButton, 'media-skip-backward.gif', {}),
+                                 (self.endButton, 'media-skip-forward.gif', {}),
+                                 (self.passButton, 'media-playback-pause-K.gif', {}),
+                                 (self.gameinfoButton, 'edit-find.gif' , {}),
                                  (ca0, None, { 'padx': 10 }),
                                  (lab, None, {}),
-                                 (self.removeStoneButton, 'dialog-error.png', {}),
+                                 (self.removeStoneButton, 'dialog-error.gif', {}),
                                  (self.triangleButton, 'tr.gif', {}),
                                  (self.squareButton, 'sq.gif', {}),
-                                 (self.letterUButton, 'abc-u.png', {}),
-                                 (self.letterLButton, 'abc-l.png', {}),
-                                 (self.numberButton, '123.png', {}),
+                                 (self.letterUButton, 'abc-u.gif', {}),
+                                 (self.letterLButton, 'abc-l.gif', {}),
+                                 (self.numberButton, '123.gif', {}),
                                  (ca1, None, { 'padx': 10 }),
-                                 (self.delButton, 'process-stop.png', {}),
+                                 (self.delButton, 'process-stop.gif', {}),
                                  (ca2, None, { 'padx': 10 }),
-                                 (self.guessModeButton, 'stock_help.png', {}), ]):
+                                 (self.guessModeButton, 'stock_help.gif', {}), ]):
             try:
                 if filename:
-                    im = ImageTk.PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
+                    im = PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
                     button.config(image=im, width=buttonsize, height=buttonsize)
                     self.tkImages.append(im)
             except: pass
@@ -2720,17 +2720,29 @@ class Viewer:
         gifpath = os.path.join(SYSPATH,'icons')
 
         try:
-            self.boardImg = ImageTk.PhotoImage(file=os.path.join(gifpath, 'board.jpg'))
+            self.boardImg = PhotoImage(file=os.path.join(gifpath, 'board.gif'))
         except (TclError, IOError):
             self.boardImg = None
-        try:
-            self.blackStone = Image.open(os.path.join(gifpath, 'black.gif')).convert('RGBA')
-            self.whiteStone = Image.open(os.path.join(gifpath, 'white.gif')).convert('RGBA')
-        except (TclError, IOError, AttributeError):
-            self.blackStone = None
-            self.whiteStone = None
+
+
+        # use PIL?
+        if sys.platform.startswith('darwin'):
+            # on Macs, auto means False
+            self.use_PIL = True if self.options.use_PIL.get() == 1 else False
+        else:
+            self.use_PIL = True if (self.options.use_PIL.get() in [1, 'auto']) else False
+
+        self.blackStone = None
+        self.whiteStone = None
+        if self.use_PIL:
+            try:
+                from PIL import Image
+                self.blackStone = Image.open(os.path.join(gifpath, 'black.gif')).convert('RGBA')
+                self.whiteStone = Image.open(os.path.join(gifpath, 'white.gif')).convert('RGBA')
+            except (TclError, IOError, AttributeError, ImportError):
+                self.use_PIL = False
         
-        self.board = BoardClass(self.boardFrame, 19, (30,25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone)
+        self.board = BoardClass(self.boardFrame, 19, (30,25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone, self.use_PIL)
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
         
