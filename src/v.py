@@ -496,9 +496,9 @@ class DataWindow:
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
-        for button, filename in [(self.filelistB1, 'document-new.png'), (self.filelistB2, 'document-open.png'), (self.filelistB3, 'user-trash.png'), (self.filelistB4, 'edit-cut.png')]:
+        for button, filename in [(self.filelistB1, 'document-new.gif'), (self.filelistB2, 'document-open.gif'), (self.filelistB3, 'user-trash.gif'), (self.filelistB4, 'edit-cut.gif')]:
             try:
-                im = ImageTk.PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
+                im = PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
                 button.config(image=im)
                 self.tkImages.append(im)
             except:
@@ -517,9 +517,9 @@ class DataWindow:
         self.gamelistB2 = Button(self.gamelistF, text = 'DEL', command = self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
-        for button, filename in [(self.gamelistB1, 'document-new.png'), (self.gamelistB2, 'user-trash.png')]:
+        for button, filename in [(self.gamelistB1, 'document-new.gif'), (self.gamelistB2, 'user-trash.gif')]:
             try:
-                im = ImageTk.PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
+                im = PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
                 button.config(image=im)
                 self.tkImages.append(im)
             except:
@@ -2171,9 +2171,13 @@ class Viewer:
                 else: break
 
         try:
-            configfile = open(os.path.join(self.optionspath,'kombilo.cfg')) # read cfg file so that we keep everything there that's not explicitly addressed here
-                                                                            # e.g. references stuff
-            c = ConfigObj(infile=configfile)
+            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            c = ConfigObj(infile=defaultfile)
+            defaultfile.close()
+            if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
+                configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
+                c.merge(ConfigObj(infile=configfile))
+                configfile.close()
 
             c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath'] = self.sgfpath
@@ -2553,29 +2557,29 @@ class Viewer:
                                  (self.WBbutton, 'wb.gif', {}),
                                  (self.Bbutton, 'b.gif', {}),
                                  (self.Wbutton, 'w.gif', {}),
-                                 (self.prevButton, 'media-playback-back-K.png', {}),
-                                 (self.nextButton, 'media-playback-start-K.png', {}),
-                                 (self.prev10Button, 'media-seek-backward.png', {}),
-                                 (self.next10Button, 'media-seek-forward.png', {}),
-                                 (self.startButton, 'media-skip-backward.png', {}),
-                                 (self.endButton, 'media-skip-forward.png', {}),
-                                 (self.passButton, 'media-playback-pause-K.png', {}),
-                                 (self.gameinfoButton, 'edit-find.png' , {}),
+                                 (self.prevButton, 'media-playback-back-K.gif', {}),
+                                 (self.nextButton, 'media-playback-start-K.gif', {}),
+                                 (self.prev10Button, 'media-seek-backward.gif', {}),
+                                 (self.next10Button, 'media-seek-forward.gif', {}),
+                                 (self.startButton, 'media-skip-backward.gif', {}),
+                                 (self.endButton, 'media-skip-forward.gif', {}),
+                                 (self.passButton, 'media-playback-pause-K.gif', {}),
+                                 (self.gameinfoButton, 'edit-find.gif' , {}),
                                  (ca0, None, { 'padx': 10 }),
                                  (lab, None, {}),
-                                 (self.removeStoneButton, 'dialog-error.png', {}),
+                                 (self.removeStoneButton, 'dialog-error.gif', {}),
                                  (self.triangleButton, 'tr.gif', {}),
                                  (self.squareButton, 'sq.gif', {}),
-                                 (self.letterUButton, 'abc-u.png', {}),
-                                 (self.letterLButton, 'abc-l.png', {}),
-                                 (self.numberButton, '123.png', {}),
+                                 (self.letterUButton, 'abc-u.gif', {}),
+                                 (self.letterLButton, 'abc-l.gif', {}),
+                                 (self.numberButton, '123.gif', {}),
                                  (ca1, None, { 'padx': 10 }),
-                                 (self.delButton, 'process-stop.png', {}),
+                                 (self.delButton, 'process-stop.gif', {}),
                                  (ca2, None, { 'padx': 10 }),
-                                 (self.guessModeButton, 'stock_help.png', {}), ]):
+                                 (self.guessModeButton, 'stock_help.gif', {}), ]):
             try:
                 if filename:
-                    im = ImageTk.PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
+                    im = PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
                     button.config(image=im, width=buttonsize, height=buttonsize)
                     self.tkImages.append(im)
             except: pass
@@ -2672,24 +2676,27 @@ class Viewer:
         configfilename = 'kombilo.cfg' if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')) else 'default.cfg'
 
         try:
-            with open(os.path.join(self.basepath, configfilename)) as f:
+            with open(os.path.join(self.basepath, 'default.cfg')) as f:
                 self.config = ConfigObj(infile=f)
-                if self.config['main']['version'].strip() in [ 'kombilo' + ver for ver in [ '0.7', '0.8' ] ]:
-                    # otherwise this is an old .cfg file which should be ignored
-                    
-                    if 'configdir' in self.config['main']: # there is an individual cfg file for this user
-                        self.optionspath = os.path.join(self.config['main']['configdir'].replace('~', os.getenv('HOME')), '.kombilo')
-                        if not os.path.exists(self.optionspath):
-                            os.mkdir(self.optionspath)
-                        try:
-                            f1 = open(os.path.join(self.optionspath, 'kombilo.cfg'))
-                            ss = ConfigObj(infile=f1)
-                            f1.close()
-                            self.config.merge(ss)
-                        except IOError:
-                            pass
-                    if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
-                    self.loadOptions(self.config['options'])
+            if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')):
+                with open(os.path.join(self.basepath, 'kombilo.cfg')) as f:
+                    self.config.merge(ConfigObj(infile=f))
+            if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
+                # otherwise this is an old .cfg file which should be ignored
+                
+                if 'configdir' in self.config['main']: # there is an individual cfg file for this user
+                    self.optionspath = os.path.join(self.config['main']['configdir'].replace('~', os.getenv('HOME')), '.kombilo')
+                    if not os.path.exists(self.optionspath):
+                        os.mkdir(self.optionspath)
+                    try:
+                        f1 = open(os.path.join(self.optionspath, 'kombilo.cfg'))
+                        ss = ConfigObj(infile=f1)
+                        f1.close()
+                        self.config.merge(ss)
+                    except IOError:
+                        pass
+                if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
+                self.loadOptions(self.config['options'])
         except:
             showwarning('Error', 'Neither kombilo.cfg nor default.cfg were found.')
             sys.exit()
@@ -2721,17 +2728,29 @@ class Viewer:
         gifpath = os.path.join(SYSPATH,'icons')
 
         try:
-            self.boardImg = ImageTk.PhotoImage(file=os.path.join(gifpath, 'board.jpg'))
+            self.boardImg = PhotoImage(file=os.path.join(gifpath, 'board.jpg'))
         except (TclError, IOError):
             self.boardImg = None
-        try:
-            self.blackStone = Image.open(os.path.join(gifpath, 'black.gif')).convert('RGBA')
-            self.whiteStone = Image.open(os.path.join(gifpath, 'white.gif')).convert('RGBA')
-        except (TclError, IOError, AttributeError):
-            self.blackStone = None
-            self.whiteStone = None
+
+
+        # use PIL?
+        if sys.platform.startswith('darwin'):
+            # on Macs, auto means False
+            self.use_PIL = True if self.options.use_PIL.get() == 1 else False
+        else:
+            self.use_PIL = True if (self.options.use_PIL.get() in [1, 'auto']) else False
+
+        self.blackStone = None
+        self.whiteStone = None
+        if self.use_PIL:
+            try:
+                from PIL import Image
+                self.blackStone = Image.open(os.path.join(gifpath, 'black.gif')).convert('RGBA')
+                self.whiteStone = Image.open(os.path.join(gifpath, 'white.gif')).convert('RGBA')
+            except (TclError, IOError, AttributeError, ImportError):
+                self.use_PIL = False
         
-        self.board = BoardClass(self.boardFrame, 19, (30,25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone)
+        self.board = BoardClass(self.boardFrame, 19, (30,25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone, self.use_PIL)
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
         

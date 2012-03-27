@@ -41,7 +41,6 @@ from ScrolledText import ScrolledText
 import tkFileDialog
 from tkCommonDialog import Dialog
 from tkSimpleDialog import askstring
-from PIL import ImageTk, Image
 from tooltip.tooltip import ToolTip
 
 from kombiloNG import *
@@ -51,9 +50,6 @@ from Pmw import ScrolledFrame
 import Pmw
 
 from vsl.vl import VScrolledList
-
-# try: import Image
-# except: pass
 
 
 from board import *
@@ -87,8 +83,8 @@ class BoardWC(Board):
         describes the current board position. It can then be restored with restore."""
 
     
-    def __init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, onlyOneMouseButton = 0):
-        Board.__init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg)
+    def __init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, use_PIL=True, onlyOneMouseButton = 0):
+        Board.__init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, use_PIL)
 
         self.wildcards = {}
 
@@ -325,7 +321,7 @@ class ESR_TextEditor(v.TextEditor):
 
     def includeGameList(self):
         separator = ' %%%\n' if self.style=='wiki' else '\n' # wiki/plain style
-        self.text.insert(END, '\n\n!Game list\n\n' + separator.join(self.mster.gamelist.listbox.get(0, END)))
+        self.text.insert(END, '\n\n!Game list\n\n' + separator.join(self.mster.gamelist.get_all()))
         
 
 # -------------------------------------------------------------------------------------
@@ -414,8 +410,13 @@ class GameListGUI(GameList, VScrolledList):
     def get_data(self, i):
         return GameList.get_data(self, i, showTags = self.mster.options.showTags.get())
 
+    def get_all(self):
+        return [ GameList.get_data(self, i, showTags = self.mster.options.showTags.get()) for i in range(len(self.gameIndex)) ]
+
 
     def get_data_ic(self, i):
+        """Return taglook for specified line. (ic = itemconfig).
+        """
         try:
             db, game = self.getIndex(i)
             ID, pos = self.DBlist[db]['data'].currentList[game]
@@ -570,6 +571,7 @@ class GameListGUI(GameList, VScrolledList):
         index = self.get_index(int(self.listbox.curselection()[0]))
         self.addTag(SEEN_TAG, index)
         self.mster.openViewer(index)
+        self.mster.boardFrame.focus()
 
 
     def handleShiftClick(self, event):
@@ -2057,12 +2059,13 @@ class App(v.Viewer, KEngine):
                 else: break
         
         try:
+            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            c = ConfigObj(infile=defaultfile)
+            defaultfile.close()
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
                 configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
-            else:
-                configfile = open(os.path.join(self.optionspath,'default.cfg'))
-            c = ConfigObj(infile=configfile)
-            configfile.close()
+                c.merge(ConfigObj(infile=configfile))
+                configfile.close()
 
             c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath']  = self.sgfpath
@@ -2878,14 +2881,14 @@ class App(v.Viewer, KEngine):
         self.inittags()
 
         # icons for the buttons
-        for button, filename in [ (self.showContButtonS, 'abc-u.png'), (self.backButtonS, 'edit-undo.png'), (self.resetButtonS, 'go-home.png'), (self.searchButtonS, 'system-search.png'),
-                                  (self.oneClickButtonS, 'mouse.png'), (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
-                                  (self.GIstart, 'system-search.png'), (self.GIclear, 'document-new.png'), (self.GI_bwd, 'go-previous.png'), (self.GI_fwd, 'go-next.png'),
-                                  (self.tagsearchButton, 'system-search.png'), (self.tagaddButton, 'add.png'), (self.tagdelButton, 'list-remove.png'), 
-                                  (self.tagallButton, 'edit-select-all.png'), (self.untagallButton, 'edit-clear.png'), (self.tagsetButton, 'bookmark-new.png'),
+        for button, filename in [ (self.showContButtonS, 'abc-u.gif'), (self.backButtonS, 'edit-undo.gif'), (self.resetButtonS, 'go-home.gif'), (self.searchButtonS, 'system-search.gif'),
+                                  (self.oneClickButtonS, 'mouse.gif'), (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
+                                  (self.GIstart, 'system-search.gif'), (self.GIclear, 'document-new.gif'), (self.GI_bwd, 'go-previous.gif'), (self.GI_fwd, 'go-next.gif'),
+                                  (self.tagsearchButton, 'system-search.gif'), (self.tagaddButton, 'add.gif'), (self.tagdelButton, 'list-remove.gif'), 
+                                  (self.tagallButton, 'edit-select-all.gif'), (self.untagallButton, 'edit-clear.gif'), (self.tagsetButton, 'bookmark-new.gif'),
                                 ]:
             try:
-                im = ImageTk.PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
+                im = PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
                 self.tkImages.append(im)
                 button.config(image=im)
             except:
@@ -2893,7 +2896,7 @@ class App(v.Viewer, KEngine):
 
         # load logo
         try:
-            self.logo = ImageTk.PhotoImage(file=os.path.join(self.basepath,'icons/logok.gif'))
+            self.logo = PhotoImage(file=os.path.join(self.basepath,'icons/logok.gif'))
         except TclError:
             self.logo = None
 

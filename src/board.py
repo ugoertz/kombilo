@@ -33,7 +33,6 @@ import os
 import libkombilo as lk
 from abstractboard import abstractBoard
 
-from PIL import ImageTk, Image
 
 
 class Board(abstractBoard, Canvas):
@@ -61,7 +60,7 @@ class Board(abstractBoard, Canvas):
     """
 
     def __init__(self, master, boardsize = 19, canvasSize = (30,25), fuzzy=1, labelFontsize = None,
-                 focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None):
+                 focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True):
 
         self.focus = focus
         self.coordinates = 0
@@ -101,7 +100,7 @@ class Board(abstractBoard, Canvas):
         self.boundConf = self.bind("<Configure>", self.resize)
         self.resizable = 1
 
-        self.PILinstalled = 0
+        self.PILinstalled = use_PIL
 
         self.use3Dstones = IntVar()
         self.use3Dstones.set(1)
@@ -110,7 +109,6 @@ class Board(abstractBoard, Canvas):
         else:        self.img = None
 
         if blackImg and whiteImg:
-            self.PILinstalled = 1
             self.blackStone = blackImg
             self.whiteStone = whiteImg
 
@@ -169,6 +167,7 @@ class Board(abstractBoard, Canvas):
 
         if self.PILinstalled:
             try:
+                from PIL import ImageTk, Image
                 self.bStone = ImageTk.PhotoImage(self.blackStone.resize((c1+1,c1+1), Image.NEAREST))
                 self.wStone = ImageTk.PhotoImage(self.whiteStone.resize((c1+1,c1+1), Image.NEAREST))
             except:
