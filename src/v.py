@@ -2170,12 +2170,13 @@ class Viewer:
                 else: break
 
         try:
+            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            c = ConfigObj(infile=defaultfile)
+            defaultfile.close()
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
                 configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
-            else:
-                configfile = open(os.path.join(self.optionspath,'default.cfg'))
-            c = ConfigObj(infile=configfile)
-            configfile.close()
+                c.merge(ConfigObj(infile=configfile))
+                configfile.close()
 
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
