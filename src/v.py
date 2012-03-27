@@ -2170,9 +2170,12 @@ class Viewer:
                 else: break
 
         try:
-            configfile = open(os.path.join(self.optionspath,'kombilo.cfg')) # read cfg file so that we keep everything there that's not explicitly addressed here
-                                                                            # e.g. references stuff
+            if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
+                configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
+            else:
+                configfile = open(os.path.join(self.optionspath,'default.cfg'))
             c = ConfigObj(infile=configfile)
+            configfile.close()
 
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
@@ -2668,27 +2671,29 @@ class Viewer:
         self.basepath = sys.path[0] if not sys.path[0].endswith('library.zip') else os.path.split(sys.path[0])[0] # py2exe
         self.sgfpath = os.curdir
         self.optionspath = self.basepath 
-        configfilename = 'kombilo.cfg' if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')) else 'default.cfg'
 
         try:
-            with open(os.path.join(self.basepath, configfilename)) as f:
+            with open(os.path.join(self.basepath, 'default.cfg')) as f:
                 self.config = ConfigObj(infile=f)
-                if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
-                    # otherwise this is an old .cfg file which should be ignored
-                    
-                    if 'configdir' in self.config['main']: # there is an individual cfg file for this user
-                        self.optionspath = os.path.join(self.config['main']['configdir'].replace('~', os.getenv('HOME')), '.kombilo')
-                        if not os.path.exists(self.optionspath):
-                            os.mkdir(self.optionspath)
-                        try:
-                            f1 = open(os.path.join(self.optionspath, 'kombilo.cfg'))
-                            ss = ConfigObj(infile=f1)
-                            f1.close()
-                            self.config.merge(ss)
-                        except IOError:
-                            pass
-                    if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
-                    self.loadOptions(self.config['options'])
+            if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')):
+                with open(os.path.join(self.basepath, 'kombilo.cfg')) as f:
+                    self.config.merge(ConfigObj(infile=f))
+            if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
+                # otherwise this is an old .cfg file which should be ignored
+                
+                if 'configdir' in self.config['main']: # there is an individual cfg file for this user
+                    self.optionspath = os.path.join(self.config['main']['configdir'].replace('~', os.getenv('HOME')), '.kombilo')
+                    if not os.path.exists(self.optionspath):
+                        os.mkdir(self.optionspath)
+                    try:
+                        f1 = open(os.path.join(self.optionspath, 'kombilo.cfg'))
+                        ss = ConfigObj(infile=f1)
+                        f1.close()
+                        self.config.merge(ss)
+                    except IOError:
+                        pass
+                if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
+                self.loadOptions(self.config['options'])
         except:
             showwarning('Error', 'Neither kombilo.cfg nor default.cfg were found.')
             sys.exit()
