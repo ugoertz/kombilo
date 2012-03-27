@@ -24,13 +24,13 @@ def doc_as_pdf():
             local('cp sphinx.sty _build/latex/')
     with lcd('/home/ug/devel/k07-bb/doc/_build/latex/'):
         local('make all-pdf')
-        local('mv Kombilo.pdf kombilo-0.7.pdf')
+        local('mv Kombilo.pdf kombilo-0.7.1.pdf')
 
 
 def deploy_targz():
     with lcd('/home/ug/devel'):
         local('mkdir kombilo')
-        local('rm -f kombilo-0.7.tar.gz')
+        local('rm -f kombilo-0.7.1.tar.gz')
         local('hg clone k07-bb kombilo')
     with lcd('/home/ug/devel/kombilo/lk/doc'):
         local('doxygen')
@@ -51,7 +51,7 @@ def deploy_targz():
         local('rm -rf .hg')
         local('rm -f fabfile.py')
     with lcd('/home/ug/devel'):
-        local('tar cfz kombilo-0.7.tar.gz kombilo')
+        local('tar cfz kombilo-0.7.1.tar.gz kombilo')
         local('rm -rf kombilo')
 
 
