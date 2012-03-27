@@ -2067,6 +2067,7 @@ class App(v.Viewer, KEngine):
                 c.merge(ConfigObj(infile=configfile))
                 configfile.close()
 
+            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath']  = self.sgfpath
             c['main']['datapath'] = self.datapath
             self.saveOptions(c['options'])
