@@ -325,7 +325,7 @@ class ESR_TextEditor(v.TextEditor):
 
     def includeGameList(self):
         separator = ' %%%\n' if self.style=='wiki' else '\n' # wiki/plain style
-        self.text.insert(END, '\n\n!Game list\n\n' + separator.join(self.mster.gamelist.listbox.get(0, END)))
+        self.text.insert(END, '\n\n!Game list\n\n' + separator.join(self.mster.gamelist.get_all()))
         
 
 # -------------------------------------------------------------------------------------
@@ -414,8 +414,13 @@ class GameListGUI(GameList, VScrolledList):
     def get_data(self, i):
         return GameList.get_data(self, i, showTags = self.mster.options.showTags.get())
 
+    def get_all(self):
+        return [ GameList.get_data(self, i, showTags = self.mster.options.showTags.get()) for i in range(len(self.gameIndex)) ]
+
 
     def get_data_ic(self, i):
+        """Return taglook for specified line. (ic = itemconfig).
+        """
         try:
             db, game = self.getIndex(i)
             ID, pos = self.DBlist[db]['data'].currentList[game]
