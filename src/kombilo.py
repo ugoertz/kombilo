@@ -575,6 +575,7 @@ class GameListGUI(GameList, VScrolledList):
         index = self.get_index(int(self.listbox.curselection()[0]))
         self.addTag(SEEN_TAG, index)
         self.mster.openViewer(index)
+        self.mster.boardFrame.focus()
 
 
     def handleShiftClick(self, event):
