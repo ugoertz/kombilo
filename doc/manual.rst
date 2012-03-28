@@ -791,6 +791,10 @@ Global key bindings
 * ``Control-p`` start pattern search
 * ``Control-e`` print information about previous search pattern to log tab
 
+If the :ref:`search-history-as-tab <search-history-as-tab>` option is 1,
+then there is also
+
+* ``Control-h`` select search history tab
 
 Board key bindings
 ------------------
@@ -952,6 +956,27 @@ In addition to the options, you can also define how tagged games should be
 displayed (background/foreground color) in the game list, and which
 references to commentaries in the literature should be displayed in the
 game list.
+
+
+.. _search-history-as-tab:
+
+**search_history_as_tab** (new in 0.7.1)
+Set this to 1 in order to put the search history frame as a tab in the
+right hand column. If the option is 0, then the search history will be
+displayed as the bottom pane of the left hand column. The default
+for this option is 1.
+
+
+.. _use-pil:
+
+**use_PIL** (new in 0.7.1)
+Set this to 0 in order to disable the use of the Python Imaging Library
+(PIL). If 1, then PIL will be used. If ``use_PIL = auto``, then PIL will
+not be used on Mac OS, but will be used on other systems. This is the
+default setting, because PIL causes problems on Mac OS X. The only
+consequence is that without PIL, you will not get the "3D" stones, but just
+black/white circles as stones. (So if you prefer the flat stones, you could
+just set this option to 0.)
 
 
 **Uppercase labels**

@@ -2728,7 +2728,7 @@ class Viewer:
         gifpath = os.path.join(SYSPATH,'icons')
 
         try:
-            self.boardImg = PhotoImage(file=os.path.join(gifpath, 'board.jpg'))
+            self.boardImg = PhotoImage(file=os.path.join(gifpath, 'board.gif'))
         except (TclError, IOError):
             self.boardImg = None
 
