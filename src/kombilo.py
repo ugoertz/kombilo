@@ -328,43 +328,23 @@ class ESR_TextEditor(v.TextEditor):
 
 class DataWindow(v.DataWindow):
 
-    def __init__(self, master):
-
-        v.DataWindow.__init__(self, master)
-
-        self.prevSF = ScrolledFrame(self.prevSearchF, usehullsize=1, hull_width=300, hull_height=135, hscrollmode='static', vscrollmode='none', vertflex='elastic')
-        self.prevSF.pack(expand=YES, fill=X)
-
-
-        
-    def initPanes(self):
-        """ Create the panes in the data window. """
-
-        self.filelistF = Frame(self.win)
-        self.gamelistF = Frame(self.win)
-        self.gameinfoF = Frame(self.win)
-        self.gametreeF = Frame(self.win)
-        self.commentsF = Frame(self.win)
-        self.prevSearchF = Frame(self.win)
-        for fr in [ self.filelistF, self.gamelistF, self.gameinfoF, self.gametreeF, self.commentsF, self.prevSearchF ]:
-            self.win.add(fr)
-
-
     def get_geometry(self):
         self.win.update_idletasks()
-        l = [ str(self.win.sashpos(i)) for i in range(5) ]
+        try:
+            l = [ str(self.win.sashpos(i)) for i in range(5) ]
+        except: # allow for DataWindow column having only five panes, if prevSearches are a tab in right hand column
+            l = [ str(self.win.sashpos(i)) for i in range(4) ]
         return join(l, '|%')
 
 
     def set_geometry(self, s):
         l = split(s, '|%')
-        if len(l) != 5: return
-        for i in range(5):
-            self.win.sashpos(i, int(l[i]))
-            self.win.update_idletasks()
-
-
-
+        for i in [4, 3, 2, 1, 0]:
+            try:
+                self.win.sashpos(i, int(l[i]))
+                self.win.update_idletasks()
+            except: # allow win to have only 5 panes
+                pass
 
     def gamelistRelease(self, event):
         index1, index2 = v.DataWindow.gamelistRelease(self, event)
@@ -2689,6 +2669,21 @@ class App(v.Viewer, KEngine):
         self.gamelist = GameListGUI(self.listFrameS, self, noGamesLabel, winPercLabel, self.gameinfoS)
         self.gamelist.pack(expand=YES, fill=BOTH, side=TOP)
 
+        # search history
+
+        if self.options.search_history_as_tab.get():
+            self.prevSearchF = Frame(self.notebook)
+            self.notebook.insert(5, self.prevSearchF, text='History')
+            self.master.bind_all('<Control-h>', lambda e, self = self: self.notebook.select(self.dateProfileFS.winfo_pathname(self.prevSearchF.winfo_id()))) # select history tab
+        else:
+            self.prevSearchF = Frame(self.dataWindow.win)
+            self.dataWindow.win.add(self.prevSearchF)
+            self.dataWindow.set_geometry(self.options.dataWindowGeometryK.get())
+        self.prevSF = ScrolledFrame(self.prevSearchF, usehullsize=1, hull_width=300, hull_height=135, hscrollmode='static', vscrollmode='none', vertflex='elastic')
+        self.prevSF.pack(expand=YES, fill=X)
+        self.prevSearches = PrevSearchesStack(self.options.maxLengthSearchesStack, self.board.changed, self.prevSF, self)
+        self.board.callOnChange = self.prevSearches.select_clear
+
         self.initMenusK()
 
         # ------------ read the kombilo.cfg file (default databases etc.)
@@ -2914,8 +2909,6 @@ class App(v.Viewer, KEngine):
         self.parseReferencesFile(datafile = os.path.join(self.basepath, 'data', 'references'),
                                  options = self.config['references'] if 'references' in self.config else None)
         self.loadDBs(self.progBar, showwarning)
-        self.prevSearches = PrevSearchesStack(self.options.maxLengthSearchesStack, self.board.changed, self.dataWindow.prevSF, self)
-        self.board.callOnChange = self.prevSearches.select_clear
 
         self.logger.insert(END, 'Kombilo %s.\nReady ...\n' % KOMBILO_VERSION)
         self.progBar.stop()
