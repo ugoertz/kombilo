@@ -1734,6 +1734,15 @@ class App(v.Viewer, KEngine):
                                  
 
     def reprocessDB(self):
+        
+        # export all tags
+        from tempfile import NamedTemporaryFile
+        f = NamedTemporaryFile(delete=False)
+        tagfilename = f.name
+        f.close()
+        self.gamelist.exportTags(tagfilename,  [ int(x) for x in self.gamelist.customTags.keys() if not int(x) == lk.HANDI_TAG ])
+
+        # delete and add all selected databases
         for index in self.db_list.list.curselection():
             i = int(index)
         
@@ -1761,6 +1770,13 @@ class App(v.Viewer, KEngine):
             self.callAddDB(dbpath, datap, index=i)
             self.db_list.list.select_set(i)
         
+
+        # import previously saved tags
+        self.gamelist.importTags(tagfilename)
+        os.remove(tagfilename)
+        self.updatetaglist()
+
+        # cleaning up
         self.gamelist.reset()
         self.editDB_OK.config(state=NORMAL)
         self.saveProcMess.config(state=NORMAL)
