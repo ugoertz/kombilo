@@ -967,6 +967,18 @@ displayed as the bottom pane of the left hand column. The current default
 for this option is 0, in version 0.8 the default will become 1.
 
 
+.. _use-pil:
+
+**use_PIL** (new in 0.7.1)
+Set this to 0 in order to disable the use of the Python Imaging Library
+(PIL). If 1, then PIL will be used. If ``use_PIL = auto``, then PIL will
+not be used on Mac OS, but will be used on other systems. This is the
+default setting, because PIL causes problems on Mac OS X. The only
+consequence is that without PIL, you will not get the "3D" stones, but just
+black/white circles as stones. (So if you prefer the flat stones, you could
+just set this option to 0.)
+
+
 **Uppercase labels**
 If you want to use the 'Export search results' function to
 produce output for Sensei's Library, it is useful to use
