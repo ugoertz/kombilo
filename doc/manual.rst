@@ -282,9 +282,10 @@ If you made any changes to the SGF files in one of the database directories
 so that the pattern search really uses the information corresponding to the
 current version of the SGF files.
 
-Reprocessing deletes all the tags on your database, so export them before,
-and import them afterwards, if you want to keep them, see
-:ref:`import-export-tags`.
+Since version 0.7.1, reprocessing keeps all the tags on your database. This
+is usually the desired behavior. If you prefer to have all tags deleted,
+instead of reprocessing, remove the databases and then add them again.
+
 
 Save messages
 -------------
@@ -674,7 +675,9 @@ some additional hash code, so the imported tags will be set precisely on
 the games *with the same moves* as the games that carried the tags when
 exporting.
 
-Use this to transfer your tags when updating your database.
+In version 0.7, you can/should use this to transfer your tags when updating
+your database by reprocess. Since version 0.7.1, reprocess does this for
+you automatically.
 
 
 GoTo field
