@@ -1139,14 +1139,13 @@ class App(v.Viewer, KEngine):
             else:
                 sig += m.get()
  
-        self.logger.insert(END, sig+'\n') 
         if self.cursor:
             try: self.displayLabels(self.cursor.currentNode())
             except: pass
 
         self.signatureSearch(sig)
         self.progBar.stop()
-        self.logger.insert(END, '%1.1f seconds\n' % (time.time() - currentTime))
+        self.logger.insert(END, 'Signature search, %1.1f seconds, searching for\n%s\n' % (time.time() - currentTime, sig))
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
