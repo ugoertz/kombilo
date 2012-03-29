@@ -11,6 +11,10 @@ Kombilo is a go database program. Its main purpose is to search for games
 in which a given pattern or position occurs. You can also search for other
 criteria (like time period, players, events).
 
+The name 'Kombilo' is the Esperanto word for comb. It allows you to 'go
+through the game records with a fine-toothed comb'.  Pronunciation: 'i' as
+'ee' in see, and the stress is on the 'i'. 
+
 
 .. toctree::
    :maxdepth: 2
@@ -19,6 +23,7 @@ criteria (like time period, players, events).
    tutorial
    manual
    scripting
+   history
    license
 
 
