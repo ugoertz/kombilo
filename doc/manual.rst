@@ -229,6 +229,29 @@ positions respectively, on the other hand the procesing takes slightly
 longer, more disk space is consumed, and Kombilo uses more memory when
 running.
 
+
+.. index::
+  pair: Messages; Processing
+.. _processing-messages:
+
+Messages during processing
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the lower text area, Kombilo will output messages about the processed games.
+
+* **Duplicates**: Games which are duplicates to games already in the database
+  are named. Being a duplicate is tested with the method chosen in the options.
+  In every case, the Dyer signature (position of moves 20, 31, 40, 51, 60, 71)
+  is compared. With strict duplicate checking, in addition the final position is
+  compared.
+* **SGF Error**: If there was an SGF error, Kombilo issues a warning. It tries
+  to do its best to recover, and will insert as much of the game as it
+  understands into the database anyway.
+* **Unacceptable board size**: Currently, Kombilo processes only 19x19 games.
+* **not inserted**: For games which are not inserted into the database, this
+  message is appended to the error message. Otherwise, the game is inserted.
+
+
 File sizes
 ^^^^^^^^^^
 
