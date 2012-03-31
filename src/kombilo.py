@@ -1753,12 +1753,13 @@ class App(v.Viewer, KEngine):
         
             dbpath = self.gamelist.DBlist[i]['sgfpath']
             datap = self.gamelist.DBlist[i]['name']
+            del self.gamelist.DBlist[i]['data'] # make sure memory is freed and db connection closed
             del self.gamelist.DBlist[i]
 
             try:
                 os.remove(os.path.join(datap[0], datap[1]+'.db'))
                 os.remove(os.path.join(datap[0], datap[1]+'.da'))
-            except:
+            except ImportError:
                 showwarning('I/O Error', 'Could not delete the database files %s %s .' % datap)
             try: # these files will only be present if hashing algos were used, so do not issue a warning when they are not found
                 os.remove(os.path.join(datap[0], datap[1]+'.db1'))
@@ -2054,7 +2055,7 @@ class App(v.Viewer, KEngine):
                 else: break
         
         try:
-            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            defaultfile = open(os.path.join(self.basepath,'default.cfg'))
             c = ConfigObj(infile=defaultfile)
             defaultfile.close()
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
@@ -2701,7 +2702,7 @@ class App(v.Viewer, KEngine):
 
         self.initMenusK()
 
-        # ------------ read the kombilo.cfg file (default databases etc.)
+        # evaluate kombilo.cfg file (default databases etc.)
 
         self.datapath = self.config['main']['datapath'] if 'datapath' in self.config['main'] else self.basepath
 
@@ -2940,7 +2941,8 @@ if sys.path[0].endswith('library.zip'): SYSPATH = os.path.split(sys.path[0])[0]
 else: SYSPATH = sys.path[0]
 
 try:
-    root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
+    pass
+    # root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
 except TclError:
     showwarning('Error', 'Error reading kombilo.app')
     

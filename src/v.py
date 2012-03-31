@@ -2170,9 +2170,10 @@ class Viewer:
                 else: break
 
         try:
-            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            defaultfile = open(os.path.join(self.basepath,'default.cfg'))
             c = ConfigObj(infile=defaultfile)
             defaultfile.close()
+
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
                 configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
                 c.merge(ConfigObj(infile=configfile))
@@ -2671,14 +2672,29 @@ class Viewer:
         self.options = BunchTkVar()
         self.basepath = sys.path[0] if not sys.path[0].endswith('library.zip') else os.path.split(sys.path[0])[0] # py2exe
         self.sgfpath = os.curdir
-        self.optionspath = self.basepath 
+        self.optionspath = None
 
         try:
             with open(os.path.join(self.basepath, 'default.cfg')) as f:
                 self.config = ConfigObj(infile=f)
+
+            configfile = None
             if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')):
-                with open(os.path.join(self.basepath, 'kombilo.cfg')) as f:
+                # does kombilo.cfg exist in self.basepath?
+                # we do not expect this, because typically kombilo.cfg will be written to
+                # a .kombilo directory in the user's home directory
+                # (or, on Windows, to a kombilo directory below %APPDATA)
+                configfile = os.path.join(self.basepath, 'kombilo.cfg')
+            else:
+                if sys.platform.startswith('win'):
+                    configfile = os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.',''), 'kombilo.cfg')
+                else:
+                    configfile = os.path.expanduser('~/.kombilo/%s/kombilo.cfg' % ('%s' % KOMBILO_VERSION).replace('.',''))
+            if configfile and os.path.exists(configfile):
+                with open(configfile) as f:
+                    self.optionspath = os.path.dirname(configfile)
                     self.config.merge(ConfigObj(infile=f))
+
             if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
                 # otherwise this is an old .cfg file which should be ignored
                 
@@ -2695,10 +2711,23 @@ class Viewer:
                         pass
                 if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
                 self.loadOptions(self.config['options'])
-        except:
+        except ImportError:
             showwarning('Error', 'Neither kombilo.cfg nor default.cfg were found.')
             sys.exit()
-            return
+
+        if not self.optionspath:
+            # no kombilo.cfg found, so we will set self.optionspath now, to be used in quit method when we write kombilo.cfg
+            if sys.platform.startswith('win'):
+                self.optionspath = os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.',''))
+            else:
+                self.optionspath = os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.',''))
+            try:
+                os.makedirs(self.optionspath)
+            except:
+                if not os.path.exists(self.optionspath):
+                    showwarning('Error', 'Unable to create directory %s.' % self.optionspath)
+                    sys.exit()
+
         self.guessMode = IntVar()
 
         # The main window
