@@ -2935,15 +2935,16 @@ class App(v.Viewer, KEngine):
 
 root = Tk()
 root.withdraw()
-s = Style()
-s.theme_use('alt')
 
-if sys.path[0].endswith('library.zip'): SYSPATH = os.path.split(sys.path[0])[0]
-else: SYSPATH = sys.path[0]
+if sys.path[0].endswith('library.zip'):
+    # using an exe produced by py2exe?
+    SYSPATH = os.path.split(sys.path[0])[0]
+else:
+    SYSPATH = sys.path[0]
 
 try:
-    pass
-    # root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
+    if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
+        root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
 except TclError:
     showwarning('Error', 'Error reading kombilo.app')
     

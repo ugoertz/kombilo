@@ -2480,7 +2480,14 @@ class Viewer:
         self.optionsmenu.add_checkbutton(label='Show last move', underline=5, variable = self.options.showCurrMoveVar, command = self.showNextMove)
         self.optionsmenu.add_checkbutton(label='Show coordinates', variable = self.options.showCoordinates, command = self.toggleCoordinates)
         self.optionsmenu.add_checkbutton(label='Ask before discarding unsaved changes', variable = self.options.confirmDelete)
-                                         
+
+        theme_menu = Menu(self.optionsmenu)
+        for th in self.style.theme_names():
+            theme_menu.add_radiobutton(label=th, variable=self.options.theme, value=th, command=lambda: self.style.theme_use(self.options.theme.get()))
+
+        self.optionsmenu.add_cascade(label='Theme', underline=0, menu=theme_menu)
+
+
         # -------------- HELP -------------------
         self.helpmenu = Menu(menu, name='help')
         menu.add_cascade(label='Help', underline=0, menu=self.helpmenu)
@@ -2730,6 +2737,9 @@ class Viewer:
 
         self.guessMode = IntVar()
 
+        self.style = Style()
+        self.style.theme_use(self.options.theme.get())
+
         # The main window
 
         self.master = master
@@ -2825,7 +2835,8 @@ if __name__ == '__main__':
     else: SYSPATH = sys.path[0]
     
     try:
-        root.option_readfile(os.path.join(SYSPATH, 'v.app'))
+        if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
+            root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
     except TclError:
         showwarning('Error', 'Error reading v.app')
         
