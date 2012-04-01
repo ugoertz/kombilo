@@ -6,14 +6,14 @@ Kombilo manual
 Installation
 ============
 
-**A note for Windows/Mac OS X users:**
-At the moment, there is no installer for Windows or Mac OS X, nor can I
-give you detailed instructions. Your best bet is to try to "translate" the
-instructions for Linux systems to your system. If you succeed, please be so
-kind to write up what you did, so that I can improve the documentation
-accordingly.
 
--------------------------------
+.. index::
+  pair: Installation; Linux
+
+.. _Linux:
+
+Linux
+-----
 
 The following instructions cover the installation of Kombilo under Ubuntu
 Linux (current version, i.e. 11.10). If you use another flavor of Linux and
@@ -22,7 +22,7 @@ are somewhat familiar with it, you will easily adapt them.
 .. _quick-start:
 
 Quick start: installation on a Ubuntu system
---------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 With the following commands you can install Kombilo on a Ubuntu system.
 Lines starting with a ``#`` are comments - no need to type them. These
@@ -63,7 +63,7 @@ script in the ``kombilo/src`` directory.
 
 
 Basic dependencies
-------------------
+^^^^^^^^^^^^^^^^^^
 
 Unless you are a Python specialist, the easiest way to install the packages
 required for Kombilo is to install the following packages using the package
@@ -87,10 +87,10 @@ install using python setup.py install.
 
 
 Downloading Kombilo
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 tar.gz files
-^^^^^^^^^^^^
+............
 
 Download the ``kombilo-0.7.1.tar.gz`` archive from the `Kombilo downloads
 <https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
@@ -103,7 +103,7 @@ This will extract all the files into the kombilo subdirectory.
 
 
 Mercurial repository
-^^^^^^^^^^^^^^^^^^^^
+....................
 
 You can also clone the Kombilo mercurial repository. See :ref:`development`
 below for some details.
@@ -111,7 +111,7 @@ below for some details.
 
 
 Libkombilo
-----------
+^^^^^^^^^^
 
 To compile the extension for the pattern search, make sure that the
 following packages are installed::
@@ -132,7 +132,7 @@ Then, to compile the package, do the following::
 .. _development:
 
 Development
------------
+^^^^^^^^^^^
 
 If you want to work on Kombilo or Libkombilo yourself, you can clone the
 mercurial repository::
@@ -153,7 +153,7 @@ Before you can compile the libkombilo extension, you need to run swig::
 
 
 Build the documentation
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
 step. If you installed directly from its Mercurial repository, and want to
@@ -162,7 +162,7 @@ menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
 
 Kombilo documentation
-^^^^^^^^^^^^^^^^^^^^^
+.....................
 
 Install `Sphinx <http://sphinx.pocoo.org/>`_ either via ``pip install
 sphinx``, or globally by ::
@@ -183,7 +183,7 @@ your computer).
 
 
 Libkombilo documentation
-^^^^^^^^^^^^^^^^^^^^^^^^
+........................
 
 Install `Doxygen <http://www.stack.nl/~dimitri/doxygen/>`_ by ::
 
@@ -196,6 +196,54 @@ and in the ``lk/doc/`` directory, run ::
 Besides a lot of warnings, this will generate HTML and LaTeX files of the
 documentation in ``lk/doc/build/``.
 
+
+.. index::
+  pair: Installation; Windows
+
+Windows
+-------
+
+Installer
+^^^^^^^^^
+
+Installation from scratch
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. index::
+  pair: Installation; Mac OS X
+
+Mac OS X
+--------
+
+Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
+the :ref:`Linux` section apply to Mac OS X, as well. However, under some
+circumstances there appear to be some problems, depending on the versions of the
+packages that Kombilo depends on.  Simon Cozens reported that on a Mac (with Mac
+OS X 10.6) with `Homebrew <http://mxcl.github.com/homebrew/>`_ he could run
+Kombilo after ::
+
+  sudo easy_install configobj setuptools pyttk pip
+  brew install PIL boost
+  sudo pip install pil
+
+then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
+the libkombilo extension via ``python setup.py build_ext`` as described in the
+:ref:`Linux` section.
+
+On the other hand, sometimes the Python Imaging Library PIL seems to cause
+problems (installing it via Homebrew seems to be the best way). In fact, it is
+used only for the nicer stone pictures, so it is not too bad to not use it, and
+I made this the default for Macs. Change the :ref:`corresponding option
+<use-pil>` if you do want to use it. (Thanks to R. Berenguel for his help with
+figuring this out.)
+
+If you have Python 2.6, you need to install the ``pyttk`` package to run
+Kombilo. In Python 2.7, this package is already included in Python.
+`
+See also the :ref:`Only one mouse button <onlyonemousebutton>` option.
+
+
 Setting up the SGF databases
 ----------------------------
 
@@ -206,7 +254,7 @@ Select ``Edit DB list`` in the ``Database`` menu. A new window will open.
 .. image:: images/editdblist.jpg
 
 Add databases
--------------
+^^^^^^^^^^^^^
 
 In the lower section *Processing options* you can select which kind of
 files you want to add, whether to recursively add all subdirectories,
@@ -235,7 +283,7 @@ running.
 .. _processing-messages:
 
 Messages during processing
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+..........................
 
 In the lower text area, Kombilo will output messages about the processed games.
 
@@ -253,7 +301,7 @@ In the lower text area, Kombilo will output messages about the processed games.
 
 
 File sizes
-^^^^^^^^^^
+..........
 
 | **No Hashing**: roughly 170 MB for about 70,000 games (GoGoD winter 2011)
 | **Hashing for full board positions**: roughly 270 MB
@@ -276,7 +324,7 @@ and if you use the hashing algorithms, also ``kombilo.db1`` and
 
 
 Toggle normal/disabled
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 If you want to temporarily exclude a database from some searches, select it
 and use this button to set its status to 'disabled'.  It will then be
@@ -288,7 +336,7 @@ that database again without processing it again.
 
 
 Remove a database
------------------
+^^^^^^^^^^^^^^^^^
 
 If you want to remove a database from Kombilo's list completely, select it
 and press this button. The database files Kombilo has written will then be
@@ -298,7 +346,7 @@ later, it will have to be processed again.
 
 
 Reprocess a database
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 If you made any changes to the SGF files in one of the database directories
 (or added/deleted SGF files in there), you should reprocess the database,
@@ -311,7 +359,7 @@ instead of reprocessing, remove the databases and then add them again.
 
 
 Save messages
--------------
+^^^^^^^^^^^^^
 
 If there are errors in the SGF files, or if Kombilo finds duplicates, a
 message is issued. The 'save messages' button allows you to save these
@@ -321,7 +369,7 @@ the corresponding databases.)
 
 
 Further notes
--------------
+^^^^^^^^^^^^^
 
 With Ctrl-click and Shift-click you *can select several databases* in the
 list simultaneously. The "Toggle normal/disabled", "Remove" and "Reprocess"
@@ -1039,6 +1087,8 @@ letters are automatically understood by Sensei's Library.
 If you do not want to do that, and find that uppercase
 labels look better, you can use this option.
 
+
+.. _onlyonemousebutton:
 
 **Only one mouse button**
 Some Mac OS X users have a mouse with only one button. Using this option, 
