@@ -2205,7 +2205,8 @@ class Viewer:
 
 
     def helpDocumentation(self):
-        path = os.path.abspath(os.path.join(self.basepath,'../doc/_build/html','index.html'))
+        docpath = '../doc/_build/html' if not sys.path[0].endswith('library.zip') else 'doc/' # py2exe
+        path = os.path.abspath(os.path.join(self.basepath, docpath, 'index.html'))
         try:
             webbrowser.open('file:'+path, new=1)
         except:
