@@ -1157,24 +1157,29 @@ class KEngine(object):
                 pops |= lk.OMIT_DUPLICATES
             if strictDuplCheck: pops |= lk.CHECK_FOR_DUPLICATES_STRICT
 
-            if gl.process(sgf, path, fn, gls, '', pops):
-                pres = gl.process_results()
+            try:
+                if gl.process(sgf, path, fn, gls, '', pops):
+                    pres = gl.process_results()
+                    if messages:
+                        if pres & lk.IS_DUPLICATE:
+                            messages.insert('end', 'Duplicate ... %s\n' % filename)
+                            messages.update()
+                        if pres & lk.SGF_ERROR:
+                            messages.insert('end', 'SGF error, file %s, %d\n' % (filename, pres))
+                            messages.update()
+                        if pres & lk.UNACCEPTABLE_BOARDSIZE:
+                            messages.insert('end', 'Unacceptable board size error, file %s, %d\n' % (filename, pres))
+                            messages.update()
+                        if pres & lk.NOT_INSERTED_INTO_DB:
+                            messages.insert('end', 'not inserted\n')
+                            messages.update()
+                elif messages:
+                    messages.insert('end', 'SGF error, file %s, not inserted.\n' % filename)
+                    messages.update()
+            except:
                 if messages:
-                    if pres & lk.IS_DUPLICATE:
-                        messages.insert('end', 'Duplicate ... %s\n' % filename)
-                        messages.update()
-                    if pres & lk.SGF_ERROR:
-                        messages.insert('end', 'SGF error, file %s, %d\n' % (filename, pres))
-                        messages.update()
-                    if pres & lk.UNACCEPTABLE_BOARDSIZE:
-                        messages.insert('end', 'Unacceptable board size error, file %s, %d\n' % (filename, pres))
-                        messages.update()
-                    if pres & lk.NOT_INSERTED_INTO_DB:
-                        messages.insert('end', 'not inserted\n')
-                        messages.update()
-            elif messages:
-                messages.insert('end', 'SGF error, file %s' % filename)
-                messages.update()
+                    messages.insert('end', 'SGF error, file %s. Not inserted.\n' % filename)
+                    messages.update()
             
         messages.insert('end', 'Finalizing ... (this will take some time)\n')
         messages.update()
