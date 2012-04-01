@@ -1120,6 +1120,15 @@ The files containing the board image and the black and white stones are
 
 .. _contributing:
 
+
+Troubleshooting
+===============
+
+In case of errors, Kombilo writes some information to the file ``kombilo.err``
+which is in the same directory as your :ref:`kombilo.cfg <kombilocfg>` file.
+
+If you encounter problems, feel free to :ref:`contact me <report-bugs>`.
+
 Contributing
 ============
 
@@ -1139,6 +1148,7 @@ Any kind of feedback is appreciated. Tell me which parts of Kombilo you
 like, and which ones need improvement. Did you use the Kombilo engine in
 your own scripts? I would be glad to learn about your results.
 
+.. _report-bugs:
 
 Ask questions, report bugs
 --------------------------

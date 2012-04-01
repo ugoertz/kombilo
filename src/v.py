@@ -2735,6 +2735,9 @@ class Viewer:
                     showwarning('Error', 'Unable to create directory %s.' % self.optionspath)
                     sys.exit()
 
+        # use optionspath for logging errors
+        sys.stderr = open(os.path.join(self.optionspath, 'kombilo.err'), 'a')
+
         self.guessMode = IntVar()
 
         self.style = Style()
