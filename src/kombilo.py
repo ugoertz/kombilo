@@ -1754,12 +1754,13 @@ class App(v.Viewer, KEngine):
             dbpath = self.gamelist.DBlist[i]['sgfpath']
             datap = self.gamelist.DBlist[i]['name']
             del self.gamelist.DBlist[i]['data'] # make sure memory is freed and db connection closed
+                                                # (otherwise, on Windows, we might not be able to delete the db file)
             del self.gamelist.DBlist[i]
 
             try:
                 os.remove(os.path.join(datap[0], datap[1]+'.db'))
                 os.remove(os.path.join(datap[0], datap[1]+'.da'))
-            except ImportError:
+            except:
                 showwarning('I/O Error', 'Could not delete the database files %s %s .' % datap)
             try: # these files will only be present if hashing algos were used, so do not issue a warning when they are not found
                 os.remove(os.path.join(datap[0], datap[1]+'.db1'))
