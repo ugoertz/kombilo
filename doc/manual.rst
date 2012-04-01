@@ -844,9 +844,9 @@ Configuring Kombilo
 ===================
 
 The most common options can be changed in the *Options* menu. Furthermore,
-you can configure Kombilo by editing the file ``kombilo.cfg`` (when Kombilo
-is not running). Finally, the appearance can be modified by changing the
-file ``kombilo.app`` accordingly.
+you can configure Kombilo by :ref:`editing the file kombilo.cfg
+<kombilocfg>` (when Kombilo is not running). Finally, the appearance can be
+modified by creating/changing the file ``kombilo.app`` accordingly.
 
 Window layout
 -------------
@@ -914,6 +914,15 @@ the continuations (e.g. place a black resp.  white stone on the upper left
 resp. upper right hoshi, do a whole board search without 'fixed color', and
 look at the continuations).
 
+.. _themes:
+
+Themes
+^^^^^^
+
+Kombilo offers you to change its look according to one of a number of themes.
+Which themes are available depends on your operating system. Just try them out.
+The effects will be visible immediately.
+
 The 'Game list' submenu
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -966,14 +975,31 @@ yourself), you can use %F instead.
 
 .. index::
   single: Options; kombilo.cfg
+.. _kombilocfg:
 
 The kombilo.cfg configuration file
 ----------------------------------
 
 All configurable options can be changed by editing the file ``kombilo.cfg``
 in the kombilo folder. This file is created when Kombilo is started for the
-first time. Alternatively, you can just copy the file ``default.cfg`` to
-``kombilo.cfg``.
+first time.
+
+.. note:: Location of the ``kombilo.cfg`` file
+
+  Depending on your platform, the kombilo.cfg file will be stored in the
+  following place:
+
+  *Linux/Mac OS*: ``~/.kombilo/07/``, where ``~`` is your home directory; on
+  Linux, this is typically ``/home/yourusername/``.
+
+  *Windows*: In the folder ``kombilo\07\`` inside the *APPDATA* folder;
+  typically *APPDATA* is something like
+  ``\Users\yourusername\AppData\Roaming\``.
+
+  If you want to use several instances of the same Kombilo version at the same
+  time, you can also place the kombilo.cfg file inside the main Kombilo
+  directory. If there is a kombilo.cfg present there, it will be preferred. Note
+  that in this case you need write permissions for this folder.
 
 Lines starting with a ``#`` are comments. Most options are explained by
 comments in this file.
@@ -1053,14 +1079,11 @@ kombilo.app
 
 You can change some 'global properties' like background color, type
 and size of the font used in the game list and in the text windows
-etc. by editing the file 'kombilo.app' in the main Kombilo
+etc. by creating a file 'kombilo.app' in the main Kombilo
 directory. This is a plain text file; if you change it, please
 make sure to save the new version as plain text (ASCII), too.
-The format of the file should be pretty obvious. Before you
-change it, make a backup which you can restore in case Kombilo
-won't start with the changed version.
 
-The individual entries should be self-explanatory. The default values are::
+Here is an example which shows the format of the file::
 
   *font:                  Helvetica 10
   *background:            grey88
@@ -1074,6 +1097,13 @@ The individual entries should be self-explanatory. The default values are::
   *Entry.background:      white
   *Canvas.background:     grey88
   *Label.background:      grey88
+
+.. note::
+
+  **Changed in version 0.7.1:** Before Version 0.7.1, the kombilo.app file was
+  present by default. Before you create it, check whether you can obtain a look
+  which is to your taste by :ref:`choosing a *theme* <themes>` in the options
+  menu.
 
 
 Miscellaneous
