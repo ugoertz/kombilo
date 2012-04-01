@@ -1,3 +1,5 @@
+import os.path
+import urllib2
 from fabric.api import run, cd, local, lcd, prefix, env
 
 def deploy_doc():
@@ -53,6 +55,73 @@ def deploy_targz():
     with lcd('/home/ug/devel'):
         local('tar cfz kombilo-0.7.1.tar.gz kombilo')
         local('rm -rf kombilo')
+
+
+
+
+def win_libkombilo():
+    # copy boost
+    if not os.path.exists(r'c:\Users\ug\kombilo\lk\boost'):
+        local(r'xcopy /i /s c:\Users\ug\kombilo-util\boost_1_49_0\boost c:\Users\ug\kombilo\lk\boost ')
+
+
+    with lcd(r'c:\Users\ug\kombilo\lk'):
+        # clean up
+        if os.path.exists('build'):
+            local('rd /q /s build')
+
+        # SWIG
+        local(r'"c:\Program Files\swigwin-2.0.4\swig" -c++ -python libkombilo.i')
+
+        # build extension
+        local('python setup.py build_ext')
+
+        # copy
+        local(r'copy /y libkombilo.py ..\src\ ')
+        local(r'copy /y build\lib.win32-2.7\_libkombilo.pyd ..\src\ ')
+
+
+def win_py2exe():
+    # copy stuff for py2exe
+    # to create the Pmw.py file use http://pmw.cvs.sourceforge.net/viewvc/pmw/Pmw/Pmw_0_0_0/bin/bundlepmw.py?revision=1.3&view=markup
+    for f in ['sqlite3.dll', 'Pmw.py', 'PmwBlt.py', 'PmwColor.py' ]:
+        local('copy /y c:\\Users\\ug\\kombilo-util\\%s \\Users\\ug\\kombilo\\src\\ ' % f)
+
+    # do py2exe
+    with lcd(r'c:\Users\ug\kombilo\src'):
+        # clean up
+        if os.path.exists('dist'): local('rd /q /s dist')
+        local('python setup.py py2exe')
+
+def win_innosetup():
+    # copy stuff for innosetup
+    # vcredist_x86.exe: http://www.microsoft.com/download/en/confirmation.aspx?id=5582
+    for f in ['vcredist_x86.exe']:
+        local('copy /y c:\\Users\\ug\\kombilo-util\\%s \\Users\\ug\\kombilo\\src\\dist\\ ' % f)
+
+    for f in ['kombilo.ico' ]:
+        local('copy /y c:\\Users\\ug\\kombilo\\%s \\Users\\ug\\kombilo\\src\\dist\\ ' % f)
+
+    # build docs
+    with lcd(r'c:\Users\ug\kombilo\doc'):
+       local('sphinx-build -b html . _build\html')
+
+    # add source archive
+    with lcd(r'c:\Users\ug\kombilo\src\dist'):
+        u = urllib2.urlopen('https://bitbucket.org/ugoertz/kombilo/get/v0.7.zip')
+        with open('kombilo-source.zip', 'wb') as f:
+            f.write(u.read())
+
+    # innosetup
+    with lcd(r'c:\Users\ug\kombilo'):
+        local(r'"c:\Program Files\Inno Setup 5\ISCC" kombilo.iss')
+
+
+def deploy_win():
+    win_libkombilo()
+    win_py2exe()
+    win_innosetup()
+
 
 
     

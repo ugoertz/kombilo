@@ -5,7 +5,6 @@ import py2exe
 
 doclist = ['doc/'+os.path.split(f)[1] for f in glob.glob('./doc/*')]
 giflist = ['icons/'+os.path.split(f)[1] for f in glob.glob('./icons/*')]
-srclist = ['kombilo.py', 'v.py', 'board.py', 'libkombilo.py', ]
 
 # includefiles = [ 'default.cfg', 'data/references' ] + giflist
 
@@ -20,11 +19,10 @@ setup(
 		# 'build_exe': { 'include_files': includefiles,
 	# 	                   'includes': [ 're' ], }
                   },
-        data_files=[('.', ['kombilo.app', 'default.cfg', '../kombilo.ico', ]),
+        data_files=[('.', ['default.cfg', ]),
                     ('doc', doclist),
                     ('icons', giflist),
-                    ('src', srclist),
-		    ('data', ['data/references'] ),
+                    ('data', ['data/references'] ),
 		    ]
 	)
 
