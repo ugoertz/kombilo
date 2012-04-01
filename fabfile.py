@@ -104,13 +104,12 @@ def win_innosetup():
 
     # build docs
     with lcd(r'c:\Users\ug\kombilo\doc'):
-       local('sphinx-build -b html . _build\html')
+       local('sphinx-build -b html . ..\src\dist\doc')
 
     # add source archive
-    with lcd(r'c:\Users\ug\kombilo\src\dist'):
-        u = urllib2.urlopen('https://bitbucket.org/ugoertz/kombilo/get/v0.7.zip')
-        with open('kombilo-source.zip', 'wb') as f:
-            f.write(u.read())
+    u = urllib2.urlopen('https://bitbucket.org/ugoertz/kombilo/get/v0.7.zip')
+    with open('c:\Users\ug\kombilo\src\dist\kombilo-source.zip', 'wb') as f:
+        f.write(u.read())
 
     # innosetup
     with lcd(r'c:\Users\ug\kombilo'):
