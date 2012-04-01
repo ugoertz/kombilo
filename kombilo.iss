@@ -11,7 +11,7 @@ UninstallDisplayIcon={app}\MyProg.exe
 Compression=bzip
 SourceDir=c:\Users\ug\kombilo\src\dist\
 OutputDir=c:\Users\ug\kombilo\installer\
-OutputBaseFilename=kombilo07
+OutputBaseFilename=kombilo071
 MinVersion=4,4
 AllowNoIcons=yes
 
