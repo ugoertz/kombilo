@@ -2711,7 +2711,7 @@ class Viewer:
                         pass
                 if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
                 self.loadOptions(self.config['options'])
-        except ImportError:
+        except:
             showwarning('Error', 'Neither kombilo.cfg nor default.cfg were found.')
             sys.exit()
 
