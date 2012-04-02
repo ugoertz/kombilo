@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # File: kombilo.py
 
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ##   Kombilo is a go database program.
 
@@ -2095,7 +2095,7 @@ class App(v.Viewer, KEngine):
 
         t = []
         
-        t.append('Kombilo %s - written by Ulrich Goertz (u@g0ertz.de)\n\n' % KOMBILO_VERSION)
+        t.append('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)\n\n' % KOMBILO_VERSION)
         t.append('Kombilo is a go database program.\n')
         t.append('You can find more information on Kombilo and the newest ')
         t.append('version at http://www.u-go.net/kombilo/\n\n')
@@ -2134,7 +2134,7 @@ class App(v.Viewer, KEngine):
             t = file.read()
             file.close()
         except:
-            t = 'Kombilo was written by Ulrich Goertz (u@g0ertz.de).\n' 
+            t = 'Kombilo was written by Ulrich Goertz (ug@geometry.de).\n' 
             t = t + 'It is open source software, published under the MIT License.'
             t = t + 'See the documentation for more information. ' 
             t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'
