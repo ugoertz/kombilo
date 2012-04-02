@@ -2,6 +2,7 @@
 Kombilo manual
 ==============
 
+.. _install:
 
 Installation
 ============
@@ -10,7 +11,7 @@ Installation
 .. index::
   pair: Installation; Linux
 
-.. _Linux:
+.. _install-linux:
 
 Linux
 -----
@@ -199,12 +200,54 @@ documentation in ``lk/doc/build/``.
 
 .. index::
   pair: Installation; Windows
+.. _install-windows:
 
 Windows
 -------
 
 Installer
 ^^^^^^^^^
+
+The installer installs the Kombilo package together with all libraries etc.
+which it depends on. Using it should allow you to ignore the whole Installation
+section of this documentation.
+
+If you would like to know the details, here is some further information:
+
+Basically, the installer extracts an archive which contains the Python
+interpreter, further packages that Kombilo depends on, and the Kombilo files
+themselves to your hard disk. In this way, for one thing you do not have to
+install all these packages yourself, and furthermore Kombilo will not interfere
+with different versions of these packages that you might have in use.
+
+**Main kombilo directory:** The Kombilo files all go into the installation
+directory that you can specify during installation; typically ``c:\Program
+Files\kombilo07`` or something similar
+
+**Source code:** The Kombilo source code is included as a zip archive in the
+main Kombilo directory.
+
+**Microsoft DLLs:** Python, and hence the Kombilo installer, relies on a couple
+of DLLs (shared libraries) that are part of Microsoft's Visual C++ compiler
+package. The installer includes a self-extracting archive which may be freely
+distributed; if you do not yet have them, the DLLs will be installed on your
+system, in an appropriate folder.
+
+**Configuration/log files:** The individual configuration file ``kombilo.cfg``,
+and (if necessary) the error log file ``kombilo.err`` will be written to
+a directory inside the *APPDATA* directory (something like
+``c:\Users\yourusername\AppData\Roaming\kombilo\07\``).
+
+**Uninstall:** The installer creates an *uninstall* menu entry in the Kombilo
+menu inside your start menu (unless you disable the start menu entry
+altogether). The uninstaller will remove all files that Kombilo created inside
+the main kombilo directory, as well as the start menu entry and possibly the
+desktop icon. It cannot (and should not) remove the DLLs. Neither will it remove
+the configuration files (see above). This allows you to uninstall kombilo,
+install a new version, and continue to use your old configuration. Instead of
+using the menu entry, you can also directly invoke the exe file (its file name
+starts with ``unins``) directly.
+
 
 Installation from scratch
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -228,7 +271,7 @@ around this is to remove the ``-mno-cygwin`` from lines 322, 323, 324, 325 and
 
 Install `sqlite3 <http://www.sqlite.org/>`_ (and `create a libsqlite3.a file
 <http://stackoverflow.com/a/1862394>`_ for MinGW) and the `Boost
-library<http://www.boost.org/>`_ (only the header files are needed for
+library <http://www.boost.org/>`_ (only the header files are needed for
 libkombilo; there is no need to compile the boost library).
 
 After that, you should be able to run ``python setup.py build_ext`` in the
@@ -246,12 +289,13 @@ Kombilo directory.
 
 .. index::
   pair: Installation; Mac OS X
+.. _install-macosx:
 
 Mac OS X
 --------
 
 Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
-the :ref:`Linux` section apply to Mac OS X, as well. However, under some
+the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
 circumstances there appear to be some problems, depending on the versions of the
 packages that Kombilo depends on.  Simon Cozens reported that on a Mac (with Mac
 OS X 10.6) with `Homebrew <http://mxcl.github.com/homebrew/>`_ he could run
@@ -263,7 +307,7 @@ Kombilo after ::
 
 then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
 the libkombilo extension via ``python setup.py build_ext`` as described in the
-:ref:`Linux` section.
+:ref:`install-linux` section.
 
 On the other hand, sometimes the Python Imaging Library PIL seems to cause
 problems (installing it via Homebrew seems to be the best way). In fact, it is
