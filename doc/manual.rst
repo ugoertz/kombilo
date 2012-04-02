@@ -2,18 +2,19 @@
 Kombilo manual
 ==============
 
+.. _install:
 
 Installation
 ============
 
-**A note for Windows/Mac OS X users:**
-At the moment, there is no installer for Windows or Mac OS X, nor can I
-give you detailed instructions. Your best bet is to try to "translate" the
-instructions for Linux systems to your system. If you succeed, please be so
-kind to write up what you did, so that I can improve the documentation
-accordingly.
 
--------------------------------
+.. index::
+  pair: Installation; Linux
+
+.. _install-linux:
+
+Linux
+-----
 
 The following instructions cover the installation of Kombilo under Ubuntu
 Linux (current version, i.e. 11.10). If you use another flavor of Linux and
@@ -22,7 +23,7 @@ are somewhat familiar with it, you will easily adapt them.
 .. _quick-start:
 
 Quick start: installation on a Ubuntu system
---------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 With the following commands you can install Kombilo on a Ubuntu system.
 Lines starting with a ``#`` are comments - no need to type them. These
@@ -63,7 +64,7 @@ script in the ``kombilo/src`` directory.
 
 
 Basic dependencies
-------------------
+^^^^^^^^^^^^^^^^^^
 
 Unless you are a Python specialist, the easiest way to install the packages
 required for Kombilo is to install the following packages using the package
@@ -87,10 +88,10 @@ install using python setup.py install.
 
 
 Downloading Kombilo
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 tar.gz files
-^^^^^^^^^^^^
+............
 
 Download the ``kombilo-0.8.tar.gz`` archive from the `Kombilo downloads
 <https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
@@ -103,7 +104,7 @@ This will extract all the files into the kombilo subdirectory.
 
 
 Mercurial repository
-^^^^^^^^^^^^^^^^^^^^
+....................
 
 You can also clone the Kombilo mercurial repository. See :ref:`development`
 below for some details.
@@ -111,7 +112,7 @@ below for some details.
 
 
 Libkombilo
-----------
+^^^^^^^^^^
 
 To compile the extension for the pattern search, make sure that the
 following packages are installed::
@@ -132,7 +133,7 @@ Then, to compile the package, do the following::
 .. _development:
 
 Development
------------
+^^^^^^^^^^^
 
 If you want to work on Kombilo or Libkombilo yourself, you can clone the
 mercurial repository::
@@ -153,7 +154,7 @@ Before you can compile the libkombilo extension, you need to run swig::
 
 
 Build the documentation
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
 step. If you installed directly from its Mercurial repository, and want to
@@ -162,7 +163,7 @@ menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
 
 Kombilo documentation
-^^^^^^^^^^^^^^^^^^^^^
+.....................
 
 Install `Sphinx <http://sphinx.pocoo.org/>`_ either via ``pip install
 sphinx``, or globally by ::
@@ -183,7 +184,7 @@ your computer).
 
 
 Libkombilo documentation
-^^^^^^^^^^^^^^^^^^^^^^^^
+........................
 
 Install `Doxygen <http://www.stack.nl/~dimitri/doxygen/>`_ by ::
 
@@ -196,6 +197,131 @@ and in the ``lk/doc/`` directory, run ::
 Besides a lot of warnings, this will generate HTML and LaTeX files of the
 documentation in ``lk/doc/build/``.
 
+
+.. index::
+  pair: Installation; Windows
+.. _install-windows:
+
+Windows
+-------
+
+Installer
+^^^^^^^^^
+
+The installer installs the Kombilo package together with all libraries etc.
+which it depends on. Using it should allow you to ignore the whole Installation
+section of this documentation.
+
+If you would like to know the details, here is some further information:
+
+Basically, the installer extracts an archive which contains the Python
+interpreter, further packages that Kombilo depends on, and the Kombilo files
+themselves to your hard disk. In this way, for one thing you do not have to
+install all these packages yourself, and furthermore Kombilo will not interfere
+with different versions of these packages that you might have in use.
+
+**Main kombilo directory:** The Kombilo files all go into the installation
+directory that you can specify during installation; typically ``c:\Program
+Files\kombilo07`` or something similar
+
+**Source code:** The Kombilo source code is included as a zip archive in the
+main Kombilo directory.
+
+**Microsoft DLLs:** Python, and hence the Kombilo installer, relies on a couple
+of DLLs (shared libraries) that are part of Microsoft's Visual C++ compiler
+package. The installer includes a self-extracting archive which may be freely
+distributed; if you do not yet have them, the DLLs will be installed on your
+system, in an appropriate folder.
+
+**Configuration/log files:** The individual configuration file ``kombilo.cfg``,
+and (if necessary) the error log file ``kombilo.err`` will be written to
+a directory inside the *APPDATA* directory (something like
+``c:\Users\yourusername\AppData\Roaming\kombilo\07\``).
+
+**Uninstall:** The installer creates an *uninstall* menu entry in the Kombilo
+menu inside your start menu (unless you disable the start menu entry
+altogether). The uninstaller will remove all files that Kombilo created inside
+the main kombilo directory, as well as the start menu entry and possibly the
+desktop icon. It cannot (and should not) remove the DLLs. Neither will it remove
+the configuration files (see above). This allows you to uninstall kombilo,
+install a new version, and continue to use your old configuration. Instead of
+using the menu entry, you can also directly invoke the exe file (its file name
+starts with ``unins``) directly.
+
+
+Installation from scratch
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to build Kombilo from source yourself, here are some notes. The
+*libkombilo* extension has to be compiled with a C++ compiler. You could
+(probably, and probably easier) use Microsoft Visual C++, but I used the open
+source `MinGW <http://www.mingw.org/>`_ compiler.  To use MinGW, some
+preparations have to be made:
+
+In ``\Python27\Lib\distutils\``, create a file ``distutils.cfg`` with the
+following content::
+
+  [build]
+  compiler = mingw32
+
+Furthermore, there is a problem with the Python distutils core: it passes the
+``-mno-cygwin`` option to MinGW, but this option is not recognized. One way
+around this is to remove the ``-mno-cygwin`` from lines 322, 323, 324, 325 and
+326 of ``\Python27\Lib\distutils\cygwinccompiler``.
+
+Install `sqlite3 <http://www.sqlite.org/>`_ (and `create a libsqlite3.a file
+<http://stackoverflow.com/a/1862394>`_ for MinGW) and the `Boost
+library <http://www.boost.org/>`_ (only the header files are needed for
+libkombilo; there is no need to compile the boost library).
+
+After that, you should be able to run ``python setup.py build_ext`` in the
+``lk`` subdirectory inside your Kombilo directory.
+
+After installing Python and the packages (configobj, PIL, Pmw) that Kombilo
+depends on, you should now be able to run ``python kombilo.py``.
+
+To create a stand-alone exe file, you can use `py2exe
+<http://www.py2exe.org/>`_. To distribute the whole thing as
+a one-file-installer, I use `InnoSetup <http://www.jrsoftware.org/isinfo.php>`_.
+See also the ``deploy_win`` method in the fabric file ``fabfile.py`` in the main
+Kombilo directory.
+
+
+.. index::
+  pair: Installation; Mac OS X
+.. _install-macosx:
+
+Mac OS X
+--------
+
+Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
+the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
+circumstances there appear to be some problems, depending on the versions of the
+packages that Kombilo depends on.  Simon Cozens reported that on a Mac (with Mac
+OS X 10.6) with `Homebrew <http://mxcl.github.com/homebrew/>`_ he could run
+Kombilo after ::
+
+  sudo easy_install configobj setuptools pyttk pip
+  brew install PIL boost
+  sudo pip install pil
+
+then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
+the libkombilo extension via ``python setup.py build_ext`` as described in the
+:ref:`install-linux` section.
+
+On the other hand, sometimes the Python Imaging Library PIL seems to cause
+problems (installing it via Homebrew seems to be the best way). In fact, it is
+used only for the nicer stone pictures, so it is not too bad to not use it, and
+I made this the default for Macs. Change the :ref:`corresponding option
+<use-pil>` if you do want to use it. (Thanks to R. Berenguel for his help with
+figuring this out.)
+
+If you have Python 2.6, you need to install the ``pyttk`` package to run
+Kombilo. In Python 2.7, this package is already included in Python.
+`
+See also the :ref:`Only one mouse button <onlyonemousebutton>` option.
+
+
 Setting up the SGF databases
 ----------------------------
 
@@ -206,7 +332,7 @@ Select ``Edit DB list`` in the ``Database`` menu. A new window will open.
 .. image:: images/editdblist.jpg
 
 Add databases
--------------
+^^^^^^^^^^^^^
 
 In the lower section *Processing options* you can select which kind of
 files you want to add, whether to recursively add all subdirectories,
@@ -229,8 +355,31 @@ positions respectively, on the other hand the procesing takes slightly
 longer, more disk space is consumed, and Kombilo uses more memory when
 running.
 
+
+.. index::
+  pair: Messages; Processing
+.. _processing-messages:
+
+Messages during processing
+..........................
+
+In the lower text area, Kombilo will output messages about the processed games.
+
+* **Duplicates**: Games which are duplicates to games already in the database
+  are named. Being a duplicate is tested with the method chosen in the options.
+  In every case, the Dyer signature (position of moves 20, 31, 40, 51, 60, 71)
+  is compared. With strict duplicate checking, in addition the final position is
+  compared.
+* **SGF Error**: If there was an SGF error, Kombilo issues a warning. It tries
+  to do its best to recover, and will insert as much of the game as it
+  understands into the database anyway.
+* **Unacceptable board size**: Currently, Kombilo processes only 19x19 games.
+* **not inserted**: For games which are not inserted into the database, this
+  message is appended to the error message. Otherwise, the game is inserted.
+
+
 File sizes
-^^^^^^^^^^
+..........
 
 | **No Hashing**: roughly 170 MB for about 70,000 games (GoGoD winter 2011)
 | **Hashing for full board positions**: roughly 270 MB
@@ -253,7 +402,7 @@ and if you use the hashing algorithms, also ``kombilo.db1`` and
 
 
 Toggle normal/disabled
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 If you want to temporarily exclude a database from some searches, select it
 and use this button to set its status to 'disabled'.  It will then be
@@ -265,7 +414,7 @@ that database again without processing it again.
 
 
 Remove a database
------------------
+^^^^^^^^^^^^^^^^^
 
 If you want to remove a database from Kombilo's list completely, select it
 and press this button. The database files Kombilo has written will then be
@@ -275,7 +424,7 @@ later, it will have to be processed again.
 
 
 Reprocess a database
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 If you made any changes to the SGF files in one of the database directories
 (or added/deleted SGF files in there), you should reprocess the database,
@@ -288,7 +437,7 @@ instead of reprocessing, remove the databases and then add them again.
 
 
 Save messages
--------------
+^^^^^^^^^^^^^
 
 If there are errors in the SGF files, or if Kombilo finds duplicates, a
 message is issued. The 'save messages' button allows you to save these
@@ -298,7 +447,7 @@ the corresponding databases.)
 
 
 Further notes
--------------
+^^^^^^^^^^^^^
 
 With Ctrl-click and Shift-click you *can select several databases* in the
 list simultaneously. The "Toggle normal/disabled", "Remove" and "Reprocess"
@@ -821,9 +970,9 @@ Configuring Kombilo
 ===================
 
 The most common options can be changed in the *Options* menu. Furthermore,
-you can configure Kombilo by editing the file ``kombilo.cfg`` (when Kombilo
-is not running). Finally, the appearance can be modified by changing the
-file ``kombilo.app`` accordingly.
+you can configure Kombilo by :ref:`editing the file kombilo.cfg
+<kombilocfg>` (when Kombilo is not running). Finally, the appearance can be
+modified by creating/changing the file ``kombilo.app`` accordingly.
 
 Window layout
 -------------
@@ -891,6 +1040,15 @@ the continuations (e.g. place a black resp.  white stone on the upper left
 resp. upper right hoshi, do a whole board search without 'fixed color', and
 look at the continuations).
 
+.. _themes:
+
+Themes
+^^^^^^
+
+Kombilo offers you to change its look according to one of a number of themes.
+Which themes are available depends on your operating system. Just try them out.
+The effects will be visible immediately.
+
 The 'Game list' submenu
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -943,14 +1101,31 @@ yourself), you can use %F instead.
 
 .. index::
   single: Options; kombilo.cfg
+.. _kombilocfg:
 
 The kombilo.cfg configuration file
 ----------------------------------
 
 All configurable options can be changed by editing the file ``kombilo.cfg``
 in the kombilo folder. This file is created when Kombilo is started for the
-first time. Alternatively, you can just copy the file ``default.cfg`` to
-``kombilo.cfg``.
+first time.
+
+.. note:: Location of the ``kombilo.cfg`` file
+
+  Depending on your platform, the kombilo.cfg file will be stored in the
+  following place:
+
+  *Linux/Mac OS*: ``~/.kombilo/07/``, where ``~`` is your home directory; on
+  Linux, this is typically ``/home/yourusername/``.
+
+  *Windows*: In the folder ``kombilo\07\`` inside the *APPDATA* folder;
+  typically *APPDATA* is something like
+  ``\Users\yourusername\AppData\Roaming\``.
+
+  If you want to use several instances of the same Kombilo version at the same
+  time, you can also place the kombilo.cfg file inside the main Kombilo
+  directory. If there is a kombilo.cfg present there, it will be preferred. Note
+  that in this case you need write permissions for this folder.
 
 Lines starting with a ``#`` are comments. Most options are explained by
 comments in this file.
@@ -991,6 +1166,8 @@ If you do not want to do that, and find that uppercase
 labels look better, you can use this option.
 
 
+.. _onlyonemousebutton:
+
 **Only one mouse button**
 Some Mac OS X users have a mouse with only one button. Using this option, 
 they can mark the search-relevant region with Alt + (left) mouse button
@@ -1030,14 +1207,11 @@ kombilo.app
 
 You can change some 'global properties' like background color, type
 and size of the font used in the game list and in the text windows
-etc. by editing the file 'kombilo.app' in the main Kombilo
+etc. by creating a file 'kombilo.app' in the main Kombilo
 directory. This is a plain text file; if you change it, please
 make sure to save the new version as plain text (ASCII), too.
-The format of the file should be pretty obvious. Before you
-change it, make a backup which you can restore in case Kombilo
-won't start with the changed version.
 
-The individual entries should be self-explanatory. The default values are::
+Here is an example which shows the format of the file::
 
   *font:                  Helvetica 10
   *background:            grey88
@@ -1051,6 +1225,13 @@ The individual entries should be self-explanatory. The default values are::
   *Entry.background:      white
   *Canvas.background:     grey88
   *Label.background:      grey88
+
+.. note::
+
+  **Changed in version 0.7.1:** Before Version 0.7.1, the kombilo.app file was
+  present by default. Before you create it, check whether you can obtain a look
+  which is to your taste by :ref:`choosing a *theme* <themes>` in the options
+  menu.
 
 
 Miscellaneous
@@ -1066,6 +1247,15 @@ The files containing the board image and the black and white stones are
   single: Bug reports
 
 .. _contributing:
+
+
+Troubleshooting
+===============
+
+In case of errors, Kombilo writes some information to the file ``kombilo.err``
+which is in the same directory as your :ref:`kombilo.cfg <kombilocfg>` file.
+
+If you encounter problems, feel free to :ref:`contact me <report-bugs>`.
 
 Contributing
 ============
@@ -1086,6 +1276,7 @@ Any kind of feedback is appreciated. Tell me which parts of Kombilo you
 like, and which ones need improvement. Did you use the Kombilo engine in
 your own scripts? I would be glad to learn about your results.
 
+.. _report-bugs:
 
 Ask questions, report bugs
 --------------------------

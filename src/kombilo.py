@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # File: kombilo.py
 
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ##   Kombilo is a go database program.
 
@@ -58,6 +58,8 @@ import v
 import libkombilo as lk
 from sgf import Node, Cursor
 
+
+KOMBILO_RELEASE = '0.8'
 
 # --------- GUI TOOLS -------------------------------------------------------------------
 
@@ -1753,6 +1755,8 @@ class App(v.Viewer, KEngine):
         
             dbpath = self.gamelist.DBlist[i]['sgfpath']
             datap = self.gamelist.DBlist[i]['name']
+            del self.gamelist.DBlist[i]['data'] # make sure memory is freed and db connection closed
+                                                # (otherwise, on Windows, we might not be able to delete the db file)
             del self.gamelist.DBlist[i]
 
             try:
@@ -2054,7 +2058,7 @@ class App(v.Viewer, KEngine):
                 else: break
         
         try:
-            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            defaultfile = open(os.path.join(self.basepath,'default.cfg'))
             c = ConfigObj(infile=defaultfile)
             defaultfile.close()
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
@@ -2094,7 +2098,7 @@ class App(v.Viewer, KEngine):
 
         t = []
         
-        t.append('Kombilo %s - written by Ulrich Goertz (u@g0ertz.de)\n\n' % KOMBILO_VERSION)
+        t.append('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)\n\n' % KOMBILO_RELEASE)
         t.append('Kombilo is a go database program.\n')
         t.append('You can find more information on Kombilo and the newest ')
         t.append('version at http://www.u-go.net/kombilo/\n\n')
@@ -2133,7 +2137,7 @@ class App(v.Viewer, KEngine):
             t = file.read()
             file.close()
         except:
-            t = 'Kombilo was written by Ulrich Goertz (u@g0ertz.de).\n' 
+            t = 'Kombilo was written by Ulrich Goertz (ug@geometry.de).\n' 
             t = t + 'It is open source software, published under the MIT License.'
             t = t + 'See the documentation for more information. ' 
             t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'
@@ -2582,6 +2586,9 @@ class App(v.Viewer, KEngine):
 
     def evalOptions(self):
         self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(), self.options.commentfontStyle.get()))
+        if self.options.showCoordinates.get():
+            self.board.coordinates = 1
+            self.board.resize()
         if self.options.windowGeomK.get():
             self.master.geometry(self.options.windowGeomK.get())
         if self.options.dataWindowGeometryK.get():
@@ -2702,7 +2709,7 @@ class App(v.Viewer, KEngine):
 
         self.initMenusK()
 
-        # ------------ read the kombilo.cfg file (default databases etc.)
+        # evaluate kombilo.cfg file (default databases etc.)
 
         self.datapath = self.config['main']['datapath'] if 'datapath' in self.config['main'] else self.basepath
 
@@ -2926,7 +2933,7 @@ class App(v.Viewer, KEngine):
                                  options = self.config['references'] if 'references' in self.config else None)
         self.loadDBs(self.progBar, showwarning)
 
-        self.logger.insert(END, 'Kombilo %s.\nReady ...\n' % KOMBILO_VERSION)
+        self.logger.insert(END, 'Kombilo %s.\nReady ...\n' % KOMBILO_RELEASE)
         self.progBar.stop()
 
 
@@ -2934,14 +2941,16 @@ class App(v.Viewer, KEngine):
 
 root = Tk()
 root.withdraw()
-s = Style()
-s.theme_use('alt')
 
-if sys.path[0].endswith('library.zip'): SYSPATH = os.path.split(sys.path[0])[0]
-else: SYSPATH = sys.path[0]
+if sys.path[0].endswith('library.zip'):
+    # using an exe produced by py2exe?
+    SYSPATH = os.path.split(sys.path[0])[0]
+else:
+    SYSPATH = sys.path[0]
 
 try:
-    root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
+    if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
+        root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
 except TclError:
     showwarning('Error', 'Error reading kombilo.app')
     

@@ -1,8 +1,10 @@
 syntax: glob
 
+*~
 *.swp
 *.pyc
 *.so
+installer
 doc/_build/*
 sgf/*
 lk/examples/*.o
@@ -12,6 +14,8 @@ lk/doc/build/*
 lk/doc/libkombilo.tag
 lk/libkombilo.py
 lk/libkombilo_wrap.cxx
+lk/boost
 src/kombilo.cfg
 src/libkombilo.py
-
+src/dist
+src/build

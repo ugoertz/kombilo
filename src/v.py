@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # File: v.py
 
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy of 
 ## this software and associated documentation files (the "Software"), to deal in 
@@ -33,7 +33,7 @@ from ttk import *
 from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
-from PIL import ImageTk, Image
+
 from tooltip.tooltip import ToolTip
 import Pmw
 
@@ -2171,9 +2171,10 @@ class Viewer:
                 else: break
 
         try:
-            defaultfile = open(os.path.join(self.optionspath,'default.cfg'))
+            defaultfile = open(os.path.join(self.basepath,'default.cfg'))
             c = ConfigObj(infile=defaultfile)
             defaultfile.close()
+
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
                 configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
                 c.merge(ConfigObj(infile=configfile))
@@ -2204,8 +2205,10 @@ class Viewer:
         self.options.loadFromDisk(d)
 
 
+
     def helpDocumentation(self):
-        path = os.path.abspath(os.path.join(self.basepath,'../doc/_build/html','index.html'))
+        docpath = '../doc/_build/html' if not sys.path[0].endswith('library.zip') else 'doc/' # py2exe
+        path = os.path.abspath(os.path.join(self.basepath, docpath, 'index.html'))
         try:
             webbrowser.open('file:'+path, new=1)
         except:
@@ -2216,7 +2219,7 @@ class Viewer:
     def helpAbout(self):
         """ Display the 'About ...' window with some basic information. """
         
-        t = 'v.py - written by Ulrich Goertz (u@g0ertz.de)\n\n'
+        t = 'v.py - written by Ulrich Goertz (ug@geometry.de)\n\n'
         t = t + 'v.py is a program to display go game records in SGF format.\n'
         t = t + 'It comes together with the go database program Kombilo.\n'
         
@@ -2245,13 +2248,13 @@ class Viewer:
     def helpLicense(self):
         """ Display the GNU General Public License. """
         try:
-            t = 'v.py\n (C) Ulrich Goertz (u@g0ertz.de), 2001-2011.\n' 
+            t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2011.\n' 
             t = t + '------------------------------------------------------------------------\n\n'
             file = open(os.path.join(self.basepath,'license.rst'))
             t = t + file.read()
             file.close()
         except IOError:
-            t = 'v.py was written by Ulrich Goertz (u@g0ertz.de).\n' 
+            t = 'v.py was written by Ulrich Goertz (ug@geometry.de).\n' 
             t = t + 'It is open source software, published under the MIT License.'
             t = t + 'See the documentation for more information. ' 
             t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'
@@ -2480,7 +2483,14 @@ class Viewer:
         self.optionsmenu.add_checkbutton(label='Show last move', underline=5, variable = self.options.showCurrMoveVar, command = self.showNextMove)
         self.optionsmenu.add_checkbutton(label='Show coordinates', variable = self.options.showCoordinates, command = self.toggleCoordinates)
         self.optionsmenu.add_checkbutton(label='Ask before discarding unsaved changes', variable = self.options.confirmDelete)
-                                         
+
+        theme_menu = Menu(self.optionsmenu)
+        for th in self.style.theme_names():
+            theme_menu.add_radiobutton(label=th, variable=self.options.theme, value=th, command=lambda: self.style.theme_use(self.options.theme.get()))
+
+        self.optionsmenu.add_cascade(label='Theme', underline=0, menu=theme_menu)
+
+
         # -------------- HELP -------------------
         self.helpmenu = Menu(menu, name='help')
         menu.add_cascade(label='Help', underline=0, menu=self.helpmenu)
@@ -2672,15 +2682,29 @@ class Viewer:
         self.options = BunchTkVar()
         self.basepath = sys.path[0] if not sys.path[0].endswith('library.zip') else os.path.split(sys.path[0])[0] # py2exe
         self.sgfpath = os.curdir
-        self.optionspath = self.basepath 
-        configfilename = 'kombilo.cfg' if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')) else 'default.cfg'
+        self.optionspath = None
 
         try:
             with open(os.path.join(self.basepath, 'default.cfg')) as f:
                 self.config = ConfigObj(infile=f)
+
+            configfile = None
             if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')):
-                with open(os.path.join(self.basepath, 'kombilo.cfg')) as f:
+                # does kombilo.cfg exist in self.basepath?
+                # we do not expect this, because typically kombilo.cfg will be written to
+                # a .kombilo directory in the user's home directory
+                # (or, on Windows, to a kombilo directory below %APPDATA)
+                configfile = os.path.join(self.basepath, 'kombilo.cfg')
+            else:
+                if sys.platform.startswith('win'):
+                    configfile = os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.',''), 'kombilo.cfg')
+                else:
+                    configfile = os.path.expanduser('~/.kombilo/%s/kombilo.cfg' % ('%s' % KOMBILO_VERSION).replace('.',''))
+            if configfile and os.path.exists(configfile):
+                with open(configfile) as f:
+                    self.optionspath = os.path.dirname(configfile)
                     self.config.merge(ConfigObj(infile=f))
+
             if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
                 # otherwise this is an old .cfg file which should be ignored
                 
@@ -2700,8 +2724,27 @@ class Viewer:
         except:
             showwarning('Error', 'Neither kombilo.cfg nor default.cfg were found.')
             sys.exit()
-            return
+
+        if not self.optionspath:
+            # no kombilo.cfg found, so we will set self.optionspath now, to be used in quit method when we write kombilo.cfg
+            if sys.platform.startswith('win'):
+                self.optionspath = os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.',''))
+            else:
+                self.optionspath = os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.',''))
+            try:
+                os.makedirs(self.optionspath)
+            except:
+                if not os.path.exists(self.optionspath):
+                    showwarning('Error', 'Unable to create directory %s.' % self.optionspath)
+                    sys.exit()
+
+        # use optionspath for logging errors
+        sys.stderr = open(os.path.join(self.optionspath, 'kombilo.err'), 'a')
+
         self.guessMode = IntVar()
+
+        self.style = Style()
+        self.style.theme_use(self.options.theme.get())
 
         # The main window
 
@@ -2798,7 +2841,8 @@ if __name__ == '__main__':
     else: SYSPATH = sys.path[0]
     
     try:
-        root.option_readfile(os.path.join(SYSPATH, 'v.app'))
+        if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
+            root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
     except TclError:
         showwarning('Error', 'Error reading v.app')
         

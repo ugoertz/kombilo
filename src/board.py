@@ -4,7 +4,7 @@
 ##   It contains classes implementing an abstract go board and a go
 ##   board displayed on the screen.
 
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy of 
 ## this software and associated documentation files (the "Software"), to deal in 
@@ -528,6 +528,10 @@ class Board(abstractBoard, Canvas):
                                     m[34], m[35],
                                     fill=self.currentColor, stipple='gray50',
                                     outline='', tags=('shaded','non-bg') )
+            elif sys.platform.startswith('darwin'):
+                x1, x2, y1, y2 = self.getPixelCoord((x,y), 1)
+                pcoord = x1+2, x2+2, y1-2, y2-2
+                self.create_oval(pcoord, fill=self.currentColor, outline='', tags=('shaded','non-bg')) 
             else:
                 self.create_oval(self.getPixelCoord((x,y), 1), fill=self.currentColor, stipple='gray50',
                                  outline='', tags=('shaded','non-bg')) 
