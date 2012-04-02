@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # File: v.py
 
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy of 
 ## this software and associated documentation files (the "Software"), to deal in 
@@ -2217,7 +2217,7 @@ class Viewer:
     def helpAbout(self):
         """ Display the 'About ...' window with some basic information. """
         
-        t = 'v.py - written by Ulrich Goertz (u@g0ertz.de)\n\n'
+        t = 'v.py - written by Ulrich Goertz (ug@geometry.de)\n\n'
         t = t + 'v.py is a program to display go game records in SGF format.\n'
         t = t + 'It comes together with the go database program Kombilo.\n'
         
@@ -2246,13 +2246,13 @@ class Viewer:
     def helpLicense(self):
         """ Display the GNU General Public License. """
         try:
-            t = 'v.py\n (C) Ulrich Goertz (u@g0ertz.de), 2001-2011.\n' 
+            t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2011.\n' 
             t = t + '------------------------------------------------------------------------\n\n'
             file = open(os.path.join(self.basepath,'license.rst'))
             t = t + file.read()
             file.close()
         except IOError:
-            t = 'v.py was written by Ulrich Goertz (u@g0ertz.de).\n' 
+            t = 'v.py was written by Ulrich Goertz (ug@geometry.de).\n' 
             t = t + 'It is open source software, published under the MIT License.'
             t = t + 'See the documentation for more information. ' 
             t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'

@@ -4,7 +4,7 @@
 ##   It contains classes implementing an abstract go board and a go
 ##   board displayed on the screen.
 
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy of 
 ## this software and associated documentation files (the "Software"), to deal in 

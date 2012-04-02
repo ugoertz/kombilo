@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # File: kombilo.py
         
-##   Copyright (C) 2001-12 Ulrich Goertz (u@g0ertz.de)
+##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
 ##   Kombilo is a go database program. 
 

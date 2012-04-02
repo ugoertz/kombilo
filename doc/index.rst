@@ -15,6 +15,10 @@ The name 'Kombilo' is the Esperanto word for comb. It allows you to 'go
 through the game records with a fine-toothed comb'.  Pronunciation: 'i' as
 'ee' in see, and the stress is on the 'i'. 
 
+Kombilo was written by Ulrich Goertz, ug@geometry.de.
+
+Web site: `u-go.net/kombilo/ <http://u-go.net/kombilo/>`_
+
 
 .. toctree::
    :maxdepth: 2
