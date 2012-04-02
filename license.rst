@@ -9,23 +9,25 @@ License
 License for the Kombilo source code
 -----------------------------------
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of 
-this software and associated documentation files (the "Software"), to deal in 
-the Software without restriction, including without limitation the rights to 
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do 
-so, subject to the following conditions:
+.. code-block:: none
 
-The above copyright notice and this permission notice shall be included in all 
-copies or substantial portions of the Software.
+  Permission is hereby granted, free of charge, to any person obtaining a copy of 
+  this software and associated documentation files (the "Software"), to deal in 
+  the Software without restriction, including without limitation the rights to 
+  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+  of the Software, and to permit persons to whom the Software is furnished to do 
+  so, subject to the following conditions:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
-SOFTWARE.
+  The above copyright notice and this permission notice shall be included in all 
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+  SOFTWARE.
 
 
 (This is the so-called MIT License (or X11 License), see
@@ -83,7 +85,7 @@ Kombilo itself:
 Python
 ^^^^^^
 
-::
+.. code-block:: none
 
     PSF LICENSE AGREEMENT FOR PYTHON 2.7.2
 
@@ -135,7 +137,7 @@ Link: `Python License <http://docs.python.org/license.html>`_.
 Python Imaging Library PIL
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     The Python Imaging Library (PIL) is
 
@@ -168,7 +170,7 @@ Link: `PIL license <http://www.pythonware.com/products/pil/license.htm>`_.
 Python MegaWidgets
 ^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     Copyright 1997-1999 Telstra Corporation Limited, Australia Copyright 2000-2002
     Really Good Software Pty Ltd, Australia
@@ -197,7 +199,7 @@ Link: `Python MegaWidgets license <http://pmw.sourceforge.net/doc/copyright.html
 ConfigObj
 ^^^^^^^^^
 
-::
+.. code-block:: none
 
     Copyright (c) 2004 - 2010, Michael Foord & Nicola Larosa
 
@@ -235,7 +237,7 @@ Link: `ConfigObj license <http://www.voidspace.org.uk/python/configobj.html#lice
 SQLite
 ^^^^^^
 
-::
+.. code-block:: none
 
   All of the deliverable code in SQLite has been dedicated to the public domain
   by the authors. All code authors, and representatives of the companies they
@@ -259,7 +261,7 @@ licenses might apply, they are also freely distributable (and, since the Boost
 source code is not included in the Kombilo installer, it is not even required
 that the license be stated here). For details, see the link below.
 
-::
+.. code-block:: none
 
   Boost Software License - Version 1.0 - August 17th, 2003
 
