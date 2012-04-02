@@ -2583,6 +2583,9 @@ class App(v.Viewer, KEngine):
 
     def evalOptions(self):
         self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(), self.options.commentfontStyle.get()))
+        if self.options.showCoordinates.get():
+            self.board.coordinates = 1
+            self.board.resize()
         if self.options.windowGeomK.get():
             self.master.geometry(self.options.windowGeomK.get())
         if self.options.dataWindowGeometryK.get():
