@@ -4,13 +4,13 @@ from fabric.api import run, cd, local, lcd, prefix, env
 
 def deploy_doc():
     with cd('/home/ug/www.u-go.net/k07-bb'):
-        run('hg pull -u')
+        run('hg pull -u') # note: as a prerequisite, the repository must be in the right branch!
     with cd('/home/ug/www.u-go.net/k07-bb/lk'):
-        run('rm -rf ../../dl/kombilo/doc')
         run('swig -c++ -python libkombilo.i')
         run('python setup.py build_ext')
         run('cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/')
     with cd('/home/ug/www.u-go.net/k07-bb/doc'):
+        run('rm -rf ../../dl/kombilo/doc')
         run('sphinx-build -A ugonet_online=1 -b html . ../../dl/kombilo/doc')
     with cd('/home/ug/www.u-go.net/k07-bb/lk/doc'):
         run('doxygen')

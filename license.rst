@@ -293,13 +293,13 @@ Link: `Boost library license <http://www.boost.org/users/license.html>`_.
 Further acknowledgments
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-
 The libkombilo library is compiled using the `MinGW <http://www.mingw.org/>`_
 compiler, an exe file is produced using `py2exe <http://www.py2exe.org/>`_, the
 installer is made with `InnoSetup <http://www.jrsoftware.org/isinfo.php>`_, and
 the documentation is compiled by the `Sphinx <http://sphinx.pocoo.org/>`_
 package. `Fabric <http://docs.fabfile.org/en/1.4.0/>`_ eases the deployment
-process.
+process. `VirtualBox <https://www.virtualbox.org/>`_ turned out to be
+magnificent for simultaneously developing on Linux and Windows.
 
 
 Acknowledgments
