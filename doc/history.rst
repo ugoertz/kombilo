@@ -26,10 +26,14 @@ History/Change log
 0.7
 ---
 
-0.7.1 (March 2012)
+0.7.1 (April 2012)
 ^^^^^^^^^^^^^^^^^^
 
-Minor fixes to version 0.7, including
+Major changes:
+
+* provide a Windows installer.
+
+Selected minor fixes:
 
 * Make reprocess export/import tags automatically.
 * Optionally put search history as a tab in notebook in right column.
@@ -37,10 +41,10 @@ Minor fixes to version 0.7, including
 * Pass focus to boardFrame upon double click in game list. Thanks to
   crux@lifein19x19 for the suggestion.
 * Update references to commentaries.
-
-Furthermore, optionally Kombilo avoids the use of Python Imaging Library
-(PIL). With this option, Kombilo can be made to work on Mac OS X. Thanks to
-RBerenguel@lifein19x19 for testing things on Mac OS.
+* optionally Kombilo avoids the use of Python Imaging Library (PIL). With this
+  option, Kombilo can be made to work on Mac OS X. Thanks to
+  RBerenguel@lifein19x19 for testing things on Mac OS.
+* Fixed some issues regarding the handling of bad SGF files.
 
 
 0.7 (March 2012)
