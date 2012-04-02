@@ -1,7 +1,7 @@
 // File: pattern.cpp
 // part of libkombilo, http://www.u-go.net/kombilo/
 
-// Copyright (c) 2006-12 Ulrich Goertz <u@g0ertz.de>
+// Copyright (c) 2006-12 Ulrich Goertz <ug@geometry.de>
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of 
 // this software and associated documentation files (the "Software"), to deal in 

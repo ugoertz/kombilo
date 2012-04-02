@@ -1,7 +1,7 @@
 // File: search.cpp
 // part of libkombilo, http://www.u-go.net/kombilo/
 
-// Copyright (c) 2006-12 Ulrich Goertz <u@g0ertz.de>
+// Copyright (c) 2006-12 Ulrich Goertz <ug@geometry.de>
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of 
 // this software and associated documentation files (the "Software"), to deal in 
@@ -1779,7 +1779,11 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
         // printf("commit\n");
         // add signature, fphash
         char sql1[150];
+#if defined(_WIN32)
+        sprintf(sql1, "update GAMES set signature='%s', fphash='%I64d' where id=%d;", sig, (long long)fphash, game_id);
+#else
         sprintf(sql1, "update GAMES set signature='%s', fphash='%lld' where id=%d;", sig, (long long)fphash, game_id);
+#endif
         // printf("sql1 %s\n", sql1);
         rc = sqlite3_exec(db, sql1, 0, 0, 0);
         if (rc != SQLITE_OK)  throw DBError();

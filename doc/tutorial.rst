@@ -10,8 +10,10 @@ getting started with the program.
 Getting started
 ===============
 
-The :ref:`quick-start` section explains how to install Kombilo and how to
-start the program.
+First you need to :ref:`install <install>` the program. For Windows, there is an
+installer which will set up everything for you. For other operating systems, or
+if there are problems, look at the pertaining instructions:
+:ref:`install-linux`, :ref:`install-windows`, :ref:`install-macosx`.
 
 When you start Kombilo, the **main window** will open, with a go board in
 the middle, some widgets which belong to the SGF editor on the left, and
