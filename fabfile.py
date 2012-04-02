@@ -34,6 +34,8 @@ def deploy_targz():
         local('mkdir kombilo')
         local('rm -f kombilo-0.7.1.tar.gz')
         local('hg clone k07-bb kombilo')
+    with lcd('/home/ug/devel/kombilo/'):
+        local('hg update v0.7')
     with lcd('/home/ug/devel/kombilo/lk/doc'):
         local('doxygen')
 
