@@ -59,6 +59,8 @@ import libkombilo as lk
 from sgf import Node, Cursor
 
 
+KOMBILO_RELEASE = '0.7.1'
+
 # --------- GUI TOOLS -------------------------------------------------------------------
 
 class chooseDirectory(Dialog):
@@ -2095,7 +2097,7 @@ class App(v.Viewer, KEngine):
 
         t = []
         
-        t.append('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)\n\n' % KOMBILO_VERSION)
+        t.append('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)\n\n' % KOMBILO_RELEASE)
         t.append('Kombilo is a go database program.\n')
         t.append('You can find more information on Kombilo and the newest ')
         t.append('version at http://www.u-go.net/kombilo/\n\n')
@@ -2930,7 +2932,7 @@ class App(v.Viewer, KEngine):
                                  options = self.config['references'] if 'references' in self.config else None)
         self.loadDBs(self.progBar, showwarning)
 
-        self.logger.insert(END, 'Kombilo %s.\nReady ...\n' % KOMBILO_VERSION)
+        self.logger.insert(END, 'Kombilo %s.\nReady ...\n' % KOMBILO_RELEASE)
         self.progBar.stop()
 
 
