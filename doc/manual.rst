@@ -43,10 +43,10 @@ details on the different steps.
   sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
 
   # download the Kombilo archive
-  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.1.tar.gz
+  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.2.tar.gz
 
   # unpack the archive
-  tar xfz kombilo-0.7.1.tar.gz kombilo
+  tar xfz kombilo-0.7.2.tar.gz kombilo
 
   # compile the C++ extension
   cd kombilo/lk
@@ -93,12 +93,12 @@ Downloading Kombilo
 tar.gz files
 ............
 
-Download the ``kombilo-0.7.1.tar.gz`` archive from the `Kombilo downloads
+Download the ``kombilo-0.7.2.tar.gz`` archive from the `Kombilo downloads
 <https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
 
 Unpack the archive somewhere by ::
 
-  tar xfz kombilo-0.7.1.tar.gz kombilo
+  tar xfz kombilo-0.7.2.tar.gz kombilo
 
 This will extract all the files into the kombilo subdirectory.
 
