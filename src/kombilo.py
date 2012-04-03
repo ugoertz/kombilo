@@ -59,7 +59,7 @@ import libkombilo as lk
 from sgf import Node, Cursor
 
 
-KOMBILO_RELEASE = '0.7.1'
+KOMBILO_RELEASE = '0.7.2'
 
 # --------- GUI TOOLS -------------------------------------------------------------------
 
