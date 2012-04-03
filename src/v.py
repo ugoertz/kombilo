@@ -1069,6 +1069,14 @@ class Viewer:
         self.cursor.seeCurrent()
 
 
+    def update_window_title(self):
+        if not self.options.doNotChangeWindowTitle.get():
+            pw = self.cursor.transcode('PW').replace('\r','').replace('\n','')
+            pb = self.cursor.transcode('PB').replace('\r','').replace('\n','')
+            res = self.cursor.transcode('RE').replace('\r','').replace('\n','') or '?'
+            self.master.title('%s - %s (%s)' % (pw, pb, res[0], ))
+
+
     def setup(self, gameNo = 0, update = 1):
         """ Set up initial position (clear board, put handi stones etc.). """
 
@@ -1108,12 +1116,7 @@ class Viewer:
 
         try:
 
-            if not self.options.doNotChangeWindowTitle.get():
-                pw = self.cursor.transcode('PW').replace('\r','').replace('\n','')
-                pb = self.cursor.transcode('PB').replace('\r','').replace('\n','')
-                res = self.cursor.transcode('RE').replace('\r','').replace('\n','') or '?'
-                self.master.title('%s - %s (%s)' % (pw, pb, res[0], ))
-
+            self.update_window_title()
             if self.cursor.currentNode().has_key('AB'):
                 for x in self.cursor.currentNode()['AB']:
                     self.board.play(self.convCoord(x), 'black')
@@ -2323,6 +2326,7 @@ class Viewer:
         else:
             if not self.returnChanges: self.currentFileChanged()            
             self.gameinfoWindow.destroy()
+        self.update_window_title()
 
         
     def gameinfoCancel(self):
@@ -2671,7 +2675,7 @@ class Viewer:
         except: pass
 
     def init_key_bindings(self):
-        self.master.bind_all('<Control-q>', lambda e, self = self: self.quit())
+        self.master.bind('<Control-q>', lambda e, self = self: self.quit())
 
 
 
@@ -2757,7 +2761,7 @@ class Viewer:
         self.frame = Frame(self.mainframe)
         self.mainframe.add(self.frame)
 
-        self.boardFrame = Frame(self.frame)
+        self.boardFrame = Frame(self.frame, takefocus=1)
         labelFrame = Frame(self.frame)
         
         self.boardFrame.pack(side=TOP, expand=YES, fill=BOTH, padx=5)
