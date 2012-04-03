@@ -1575,6 +1575,10 @@ class App(v.Viewer, KEngine):
 
             if self.options.jumpToMatchVar.get():
                 viewer.jumpToNode(moveno)
+                
+            viewer.frame.update_idletasks()
+            viewer.boardFrame.update_idletasks()
+            viewer.boardFrame.focus()
 
 
     def openViewer_internal(self, filename, gameNumber, moveno):
