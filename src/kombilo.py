@@ -1716,6 +1716,8 @@ class App(v.Viewer, KEngine):
             i = int(index)
             datap = self.gamelist.DBlist[i]['name']
             dbpath = self.gamelist.DBlist[i]['sgfpath']
+            del self.gamelist.DBlist[i]['data'] # make sure memory is freed and db connection closed
+                                                # (otherwise, on Windows, we might not be able to delete the db file)
             del self.gamelist.DBlist[i]
 
             try:
