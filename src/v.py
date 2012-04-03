@@ -2669,7 +2669,7 @@ class Viewer:
         except: pass
 
     def init_key_bindings(self):
-        self.master.bind_all('<Control-q>', lambda e, self = self: self.quit())
+        self.master.bind('<Control-q>', lambda e, self = self: self.quit())
 
 
 
