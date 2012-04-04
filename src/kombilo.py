@@ -553,7 +553,6 @@ class GameListGUI(GameList, VScrolledList):
         index = self.get_index(int(self.listbox.curselection()[0]))
         self.addTag(SEEN_TAG, index)
         self.mster.openViewer(index)
-        self.mster.boardFrame.focus()
 
 
     def handleShiftClick(self, event):
@@ -1525,21 +1524,21 @@ class App(v.Viewer, KEngine):
             # an external viewer can (probably) not understand this
             if len(moveno) != 1: moveno = 0
             else: moveno = moveno[0]
-                
+
             if sys.platform[:3] == 'win': filenameQU = '"' + filename + '"'
             else: filenameQU = filename
-            
+
             s1 = self.options.altViewerVar1.get()
             if os.name == 'posix':
                 s1 = s1.replace('~', os.getenv('HOME'))
-                    
+
             s2 = replace(self.options.altViewerVar2.get(), '%f', filenameQU)
             s2 = replace(s2, '%F', filename)
             s2 = replace(s2, '%n', str(moveno))
             s2 = replace(s2, '%g', str(gameNumber))
 
             try:
-                    
+
                 if sys.platform[:3] == 'win':
                     os.spawnv(os.P_DETACH, s1, ('"'+s1+'"',)+tuple(split(s2)))
                         # it is necessary to quote the
@@ -1553,11 +1552,11 @@ class App(v.Viewer, KEngine):
                 else: showwarning('Error', s1 + ' not found.')
             except OSError:
                 showwarning('Error', 'Error starting SGF viewer')
-                
+
         else:
             window = Toplevel()
             window.withdraw()
-            
+
             viewer = v.Viewer(window)
             viewer.frame.focus_force()
 
@@ -1575,11 +1574,11 @@ class App(v.Viewer, KEngine):
 
             if self.options.jumpToMatchVar.get():
                 viewer.jumpToNode(moveno)
-                
+
             viewer.frame.update_idletasks()
             viewer.boardFrame.update_idletasks()
             viewer.boardFrame.focus()
-
+        self.mster.gamelist.listbox.focus()
 
     def openViewer_internal(self, filename, gameNumber, moveno):
 
@@ -1593,8 +1592,9 @@ class App(v.Viewer, KEngine):
 
         if self.options.jumpToMatchVar.get():
             self.jumpToNode(moveno)
+        self.boardFrame.focus()
 
-            
+
     def altOpenViewer(self, no):
         """ Open game from game list in SGF viewer - "alternative mode", i.e. if the default is to
         open an external viewer, this method will load the game into the internal list, and vice versa."""
