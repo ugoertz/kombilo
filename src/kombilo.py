@@ -1578,7 +1578,7 @@ class App(v.Viewer, KEngine):
             viewer.frame.update_idletasks()
             viewer.boardFrame.update_idletasks()
             viewer.boardFrame.focus()
-        self.mster.gamelist.listbox.focus()
+        self.gamelist.listbox.focus()
 
     def openViewer_internal(self, filename, gameNumber, moveno):
 
