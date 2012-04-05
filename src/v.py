@@ -1664,7 +1664,7 @@ class Viewer:
         
     def labelClick(self, event):
         x, y = self.board.getBoardCoord((event.x, event.y), 1)
-        if not x*y: return
+        if x==-1 or y==-1: return
         pos = chr(x+ord('a')) + chr(y+ord('a'))
 
         t = self.options.labelType.get()
