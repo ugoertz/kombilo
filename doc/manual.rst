@@ -840,6 +840,8 @@ white player, entering ``Cho`` will bring you to the games with white
 player Cho.
 
 
+.. _search-history:
+
 Search history
 --------------
 
