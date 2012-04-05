@@ -59,7 +59,7 @@ import libkombilo as lk
 from sgf import Node, Cursor
 
 
-KOMBILO_RELEASE = '0.7.2'
+KOMBILO_RELEASE = '0.8'
 
 # --------- GUI TOOLS -------------------------------------------------------------------
 
@@ -2072,6 +2072,7 @@ class App(v.Viewer, KEngine):
                 c.merge(ConfigObj(infile=configfile))
                 configfile.close()
 
+            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath']  = self.sgfpath
             c['main']['datapath'] = self.datapath
             self.saveOptions(c['options'])

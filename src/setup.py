@@ -10,12 +10,12 @@ giflist = ['icons/'+os.path.split(f)[1] for f in glob.glob('./icons/*')]
 
 setup(
         name = "kombilo",
-        version = "0.7.2",
+        version = "0.8",
         description = "Kombilo - a go database program",
         # executables = [ target ],
         windows=['kombilo.py'],
-        py_modules=['board', 'v'],
-        options = { 'py2exe': { 'dll_excludes':  [ 'MSVCP90.dll', 'MSVCR90.dll' ], }
+    py_modules=['board', 'v'],
+    options = { 'py2exe': { 'dll_excludes':  [ 'MSVCP90.dll', 'MSVCR90.dll' ], }
                 # 'build_exe': { 'include_files': includefiles,
                 #                'includes': [ 're' ], }
                   },

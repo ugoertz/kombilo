@@ -43,10 +43,10 @@ details on the different steps.
   sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
 
   # download the Kombilo archive
-  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.2.tar.gz
+  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.8.tar.gz
 
   # unpack the archive
-  tar xfz kombilo-0.7.2.tar.gz kombilo
+  tar xfz kombilo-0.8.tar.gz kombilo
 
   # compile the C++ extension
   cd kombilo/lk
@@ -93,12 +93,12 @@ Downloading Kombilo
 tar.gz files
 ............
 
-Download the ``kombilo-0.7.2.tar.gz`` archive from the `Kombilo downloads
+Download the ``kombilo-0.8.tar.gz`` archive from the `Kombilo downloads
 <https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
 
 Unpack the archive somewhere by ::
 
-  tar xfz kombilo-0.7.2.tar.gz kombilo
+  tar xfz kombilo-0.8.tar.gz kombilo
 
 This will extract all the files into the kombilo subdirectory.
 
@@ -1141,8 +1141,8 @@ game list.
 **search_history_as_tab** (new in 0.7.1)
 Set this to 1 in order to put the search history frame as a tab in the
 right hand column. If the option is 0, then the search history will be
-displayed as the bottom pane of the left hand column. The current default
-for this option is 0, in version 0.8 the default will become 1.
+displayed as the bottom pane of the left hand column. The default
+for this option is 1.
 
 
 .. _use-pil:
