@@ -44,7 +44,7 @@ from tkSimpleDialog import askstring
 from tooltip.tooltip import ToolTip
 
 from kombiloNG import *
-
+from custommenus import CustomMenus
 
 from Pmw import ScrolledFrame
 import Pmw
@@ -2243,6 +2243,12 @@ class App(v.Viewer, KEngine):
         advOptMenu.add_checkbutton(label='Open games in external viewer', variable = self.options.externalViewer)
         advOptMenu.add_command(label='Alternative SGF viewer', underline=0, command=self.altViewer)
 
+        self.custom_menus = CustomMenus(self)
+        self.optionsmenu.insert_command(1, label='Custom Menus', command=self.custom_menus.change)
+
+
+
+
 
     def balloonHelpK(self):
 
@@ -2916,6 +2922,9 @@ class App(v.Viewer, KEngine):
                 button.config(image=im)
             except:
                 pass
+
+        self.custom_menus.path = self.optionspath
+        self.custom_menus.buildMenus(1, self.basepath)                     
 
         # load logo
         try:
