@@ -840,6 +840,28 @@ white player, entering ``Cho`` will bring you to the games with white
 player Cho.
 
 
+Search history
+--------------
+
+A right-click on one of the board brings up a small menu, which lets you
+delete that entry, put the entry on hold resp. release it. In the options you
+can configure the maximum number of search patterns which should be remembered.
+If this number is reached, the oldest patterns are deleted, unless they are on
+hold.
+
+You can also use the back button in the toolbar in the right hand column to
+return to the previous search pattern. The patterns are organized in a tree;
+this makes the back button work in the most sensible way. Depending on the depth
+inside this search history tree, the small boards are placed with a vertical
+offset. (This offset is assigned when the small board is created and not changed
+afterwards; if patterns in the tree are deleted, the depth of other patterns
+changes, but their vertical offset will not reflect this.)
+
+:ref:`Optionally <search-history-as-tab>`, you can have the search history as
+the bottom pane of the left hand column.
+
+
+
 Log
 ---
 

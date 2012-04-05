@@ -446,7 +446,7 @@ class Board(abstractBoard, Canvas):
         self.onChange()
         p = self.getPixelCoord(pos)
         if not self.use3Dstones.get() or not self.PILinstalled or self.canvasSize[1] <= 7:
-            self.stones[pos] = self.create_oval(p, fill=color, tags='non-bg')
+            self.stones[pos] = self.create_oval(*p, fill=color, tags='non-bg')
         else:
             if color=='black': self.stones[pos] = self.create_image(((p[0]+p[2])/2, (p[1]+p[3])/2), image=self.bStone, tags='non-bg')
             elif color=='white': self.stones[pos] = self.create_image(((p[0]+p[2])/2, (p[1]+p[3])/2), image=self.wStone, tags='non-bg')
