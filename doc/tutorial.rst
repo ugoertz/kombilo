@@ -342,21 +342,6 @@ Comments
 In this window the comments which the SGF file contains for the current node are
 displayed.
 
-Kombilo: Search history
-^^^^^^^^^^^^^^^^^^^^^^^
-
-This frame contains a list of previous search patterns. 
-Click on one of the small boards to go back to the corresponding pattern
-search (i.e. the pattern and the game list are restored to what they have
-been right after the search).
-
-.. image:: images/searchhistory.jpg
-
-A right-click on one of the board brings up a small menu, which lets you
-delete that entry, put the entry on hold resp. release it.
-
-
-
 
 The game list column
 ====================
@@ -525,6 +510,18 @@ resulting game list with the tag ``A``. The you can easily search for all
 these games, also in combination with other tags, and you can search for
 all games where the large avalanche does not occur, by searching for ``not
 A`` - and again, this can be combined with searching for other tags.
+
+Search history
+--------------
+
+This tab contains a list of previous search patterns. 
+Click on one of the small boards to go back to the corresponding pattern
+search (i.e. the pattern and the game list are restored to what they have
+been right after the search).
+
+.. image:: images/searchhistory.jpg
+
+See also the :ref:`corresponding section <search-history>` in the manual.
 
 
 
