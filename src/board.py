@@ -125,8 +125,9 @@ class Board(abstractBoard, Canvas):
         self.delete('non-bg')     # delete everything except for background image
         c0, c1 = self.canvasSize
         size = 2*c0 + (self.boardsize-1)*c1
-        # self.config(height=size, width=size) # FIXME this is not so beautiful, but must be careful with infinite loop via resize.
-        
+        self.config(height=size, width=size)
+        self.update_idletasks()
+
         if self.img:
             self.delete('board')
             for i in range(size/200 + 2):
