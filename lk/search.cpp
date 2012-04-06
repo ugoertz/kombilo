@@ -313,11 +313,10 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
   // check whether this is a kombilo db file
   rc = sqlite3_exec(db, "select * from db_info where rowid = 1;", dbinfo_callback, &dbinfo, 0);
   if (rc != SQLITE_OK) throw DBError();
-  if (dbinfo && strcmp(dbinfo, "kombilo 0.7")) {
+  if (dbinfo) {
+    if (strcmp(dbinfo, "kombilo 0.7") && strcmp(dbinfo, "kombilo 0.8")) throw DBError();
     delete [] dbinfo;
-    throw DBError();
   }
-  delete [] dbinfo;
 
   rc = sqlite3_exec(db, "select * from db_info where rowid = 2;", dbinfo_callback, &dbinfo, 0);
   if (rc != SQLITE_OK) throw DBError();
@@ -338,7 +337,7 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
     // printf("retrieving dbinfo failed\n");
 
     // write version information to db_info
-    rc = sqlite3_exec(db, "insert into db_info (rowid,info) values (1,'kombilo 0.7')", 0, 0, 0);
+    rc = sqlite3_exec(db, "insert into db_info (rowid,info) values (1,'kombilo 0.8')", 0, 0, 0);
 
     if (p_options == 0) p_op = new ProcessOptions(); // use default values
     else {
