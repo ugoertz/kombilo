@@ -1907,16 +1907,14 @@ class App(v.Viewer, KEngine):
         f2.grid(row=1, sticky=NSEW)
         for i in range(4): f2.columnconfigure(i, weight=1)
 
-        f2a = Frame(window)
-        f2a.grid(row=2, sticky=NSEW)
         f3 = Frame(window)
         f3.grid(row=3, sticky=NSEW)
         f3.columnconfigure(0, weight=1)
         f4 = Frame(window)
         f4.grid(row=4, sticky=NSEW)
+        f5 = Frame(window)
+        f5.grid(row=5, sticky=NSEW)
 
-        window.rowconfigure(0, weight=1)
-        window.rowconfigure(4, weight=2)
         window.columnconfigure(0, weight=1)
                 
         self.db_list = v.ScrolledList(f1)
@@ -1938,16 +1936,20 @@ class App(v.Viewer, KEngine):
         for i, (text, command, ) in enumerate([('Add DB', self.addDB), ('Toggle normal/disabled', self.toggleDisabled),
                                                ('Remove DB', self.removeDB), ('Reprocess DB', self.reprocessDB)]):
             Button(f2, text=text, command=command).grid(row=0, column=i, sticky=NSEW)
+        self.editDB_OK = Button(f2, text='OK', command = self.finalizeEditDB)
+        self.editDB_OK.grid(row=0, column=4, sticky=NSEW)
             
         Label(f3, text='Processing options', justify=LEFT, font=('Helvetica', 10, 'bold')).grid(row=0, column=0, sticky=W)
 
+        recursionButton = Checkbutton(f3, text = "Recursively add subdirectories", highlightthickness=0, variable = self.options.recProcess, pady=5)
+        recursionButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
         self.filenamesVar = StringVar()
         filenamesLabel = Label(f3, anchor='w', text='Files:', pady=10)
-        filenamesLabel.grid(row=1, column=0, sticky=E)
+        filenamesLabel.grid(row=1, column=2, sticky=E)
         filenamesMenu = Combobox(f3, textvariable = self.filenamesVar, values = ['*.sgf', '*.sgf, *.mgt', 'All files'], state='readonly')
         filenamesMenu.set('*.sgf')
-        filenamesMenu.grid(row=1, column=1, sticky=W)
+        filenamesMenu.grid(row=1, column=3, sticky=W)
 
         # self.encodingVar = StringVar()
         # 
@@ -1966,8 +1968,6 @@ class App(v.Viewer, KEngine):
         # encoding1Menu.set('Add CA tag')
         # encoding1Menu.grid(row=1, column=5, sticky=W)
 
-        recursionButton = Checkbutton(f3, text = "Recursively add subdirectories", highlightthickness=0, variable = self.options.recProcess, pady=5)
-        recursionButton.grid(row=2, column=0, columnspan=2, sticky=W)
 
         duplButton = Checkbutton(f3, text="Accept duplicates", highlightthickness=0, variable = self.options.acceptDupl, pady=5)
         duplButton.grid(row=3, column=0, sticky=W, columnspan=2)
@@ -1991,7 +1991,7 @@ class App(v.Viewer, KEngine):
         whereDatabasesButton.grid(row=8, column=0, columnspan=3, sticky=W)
 
         self.whereDatabasesEntry = Entry(f3, textvariable = self.options.whereToStoreDatabases, )
-        self.whereDatabasesEntry.grid(row=8, column=2, columnspan=3, sticky=NSEW)
+        self.whereDatabasesEntry.grid(row=8, column=3, columnspan=3, sticky=NSEW)
         if not self.options.storeDatabasesSeparately.get(): self.whereDatabasesEntry.config(state=DISABLED)
 
         browseButton = Button(f3, text='Browse', command = self.browseDatabases)
@@ -2010,14 +2010,10 @@ class App(v.Viewer, KEngine):
         self.algo_hash_corner = Checkbutton(f3, text = 'Use hashing for corner positions', highlightthickness = 0, variable = self.options.algo_hash_corner, pady=5)
         self.algo_hash_corner.grid(row=10, column = 3, columnspan=2)
 
-        self.processMessages = Message(f4)
-        self.processMessages.pack(side=TOP, expand=YES, fill=BOTH)
-
-        self.editDB_OK = Button(f2a, text='OK', command = self.finalizeEditDB)
-        self.editDB_OK.pack(side=RIGHT)
-
         self.saveProcMess = Button(f4, text='Save messages', command = self.saveMessagesEditDBlist)
         self.saveProcMess.pack(side=RIGHT)
+        self.processMessages = Message(f5)
+        self.processMessages.pack(side=TOP, expand=YES, fill=BOTH)
 
         window.update_idletasks()
         window.focus()
