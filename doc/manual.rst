@@ -1007,6 +1007,37 @@ as the height of the entried in the left hand column by dragging the
 mouse pointer slowly over the region between the columns; it should change
 its look when you are over the sash.
 
+
+.. index:: Custom Menus
+.. _custom-menus:
+
+Custom menus
+------------
+
+The custom menus can be used to add your own menu entries. Upon selecting a menu
+entry, Kombilo can do a pattern search for some pre-defined pattern and/or
+a game info search and/or open a html file in your web browser. For example, you
+could create entries for fuseki or joseki patterns, for players, or for titles. 
+
+To edit the custom menus, select the corresponding entry in the Options menu.
+You see a list of the currently existing menus, submenus and entries. The first
+line with a ``*`` represents the Kombilo main menu. You can add submenus or entries
+to the menus, or delete them.
+
+When an entry is selected, you can
+
+* Add pattern information by pressing the corresponding button. The pattern (and
+  search-relevant region, and the search options) will then be associated with
+  this menu entry). 
+
+* Add game info information by clicking the corresponding button. The current
+  entries in the game info search window will then be associated with the
+  current menu entry. 
+
+* Add a HTML file by entering the file name in the corresponding field, or by
+  browsing for a file. 
+
+
 .. index::
   pair: Options; Menu
 
