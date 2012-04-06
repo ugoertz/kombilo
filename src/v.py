@@ -2765,7 +2765,7 @@ class Viewer:
         self.mainframe = PanedWindow(self.master, sashrelief=SUNKEN, sashwidth=2, sashpad=2, orient='horizontal') # note that PanedWindow is Tkinter, not ttk
         self.mainframe.pack(expand=YES, fill=BOTH)
         dw_frame = Frame(self.mainframe)
-        self.mainframe.add(dw_frame, )
+        self.mainframe.add(dw_frame, minsize=1, )
         self.frame = Frame(self.mainframe)
         self.mainframe.add(self.frame, minsize=250)
 
