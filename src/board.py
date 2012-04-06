@@ -126,13 +126,18 @@ class Board(abstractBoard, Canvas):
         c0, c1 = self.canvasSize
         size = 2*c0 + (self.boardsize-1)*c1
         self.config(height=size, width=size)
-        self.update_idletasks()
 
         if self.img:
             self.delete('board')
             for i in range(size/200 + 2):
                 for j in range(size/200 + 2):
                     self.create_image(200*i,200*j,image=self.img, tags='board')
+
+        # place a gray rectangle over the board background picture
+        # in order to make the board quadratic
+        self.create_rectangle(size+1, 0, size+1000, size+1000, fill ='grey88', outline='', tags='non-bg')
+        self.create_rectangle(0, size+1, size+1000, size+1000, fill='grey88', outline='', tags='non-bg')
+
 
         color = 'black'
 
@@ -164,7 +169,6 @@ class Board(abstractBoard, Canvas):
                 self.create_text(c0 + c1*i, c0/4+1, text=a, font = ('Helvetica', 5+c1/7, ''))
                 self.create_text(c0/4+1, c0+c1*i, text=`self.boardsize-i`,font = ('Helvetica', 5+c1/7, ''))
                 self.create_text(c1*self.boardsize+3*c0/4+4, c0 + c1*i, text=`self.boardsize-i`, font = ('Helvetica', 5+c1/7, ''))
-                
 
         if self.PILinstalled:
             try:
@@ -173,6 +177,8 @@ class Board(abstractBoard, Canvas):
                 self.wStone = ImageTk.PhotoImage(self.whiteStone.resize((c1+1,c1+1), Image.NEAREST))
             except:
                 self.PILinstalled = 0
+
+        self.update_idletasks()
         self.resizable = sres
 
 
@@ -199,12 +205,6 @@ class Board(abstractBoard, Canvas):
         self.canvasSize = (m/20 + 4, (m - 2*(m/20+4))/(self.boardsize-1))
 
         self.drawBoard()
-
-        # place a gray rectangle over the board background picture
-        # in order to make the board quadratic
-
-        self.create_rectangle(h+1, 0, h+1000, w+1000, fill ='grey88', outline='', tags='non-bg')     
-        self.create_rectangle(0, w+1, h+1000, w+1000, fill='grey88', outline='', tags='non-bg')
 
         for x in self.status_keys(): self.placeStone(x, self.getStatus(*x))
         for x in self.marks: self.placeMark(x, self.marks[x])

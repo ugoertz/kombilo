@@ -333,9 +333,9 @@ class DataWindow(v.DataWindow):
     def get_geometry(self):
         self.win.update_idletasks()
         try:
-            l = [ str(self.win.sashpos(i)) for i in range(5) ]
+            l = [ str(self.win.sash_coord(i)[1]) for i in range(5) ]
         except: # allow for DataWindow column having only five panes, if prevSearches are a tab in right hand column
-            l = [ str(self.win.sashpos(i)) for i in range(4) ]
+            l = [ str(self.win.sash_coord(i)[1]) for i in range(4) ]
         return join(l, '|%')
 
 
@@ -343,7 +343,7 @@ class DataWindow(v.DataWindow):
         l = split(s, '|%')
         for i in [4, 3, 2, 1, 0]:
             try:
-                self.win.sashpos(i, int(l[i]))
+                self.win.sash_place(i, 1, int(l[i]))
                 self.win.update_idletasks()
             except: # allow win to have only 5 panes
                 pass
@@ -2577,7 +2577,7 @@ class App(v.Viewer, KEngine):
         self.options.windowGeomK.set(self.master.geometry())
         self.options.dataWindowGeometryK.set(self.dataWindow.get_geometry())
         self.mainframe.update_idletasks()
-        l = [ str(self.mainframe.sashpos(i)) for i in range(2) ]
+        l = [ str(self.mainframe.sash_coord(i)[0]) for i in range(2) ]
         self.options.sashPosK.set(join(l, '|%'))
         self.options.saveToDisk(d)
 
@@ -2605,7 +2605,7 @@ class App(v.Viewer, KEngine):
             self.mainframe.update_idletasks()
             l = self.options.sashPosK.get().split('|%')
             for i in [1,0]:
-                self.mainframe.sashpos(i, int(l[i]))
+                self.mainframe.sash_place(i, int(l[i]), 1)
                 self.mainframe.update_idletasks()
         except: pass
 
