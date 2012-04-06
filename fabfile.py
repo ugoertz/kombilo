@@ -1,51 +1,51 @@
-import os.path
-import urllib2
 from fabric.api import run, cd, local, lcd, prefix, env
 
+# FIXME directories below depend on version!
+
 def deploy_doc():
-    with cd('/home/ug/www.u-go.net/k07-bb'):
+    with cd('/home/ug/www.u-go.net/k08-bb'):
         run('hg pull -u') # note: as a prerequisite, the repository must be in the right branch!
-    with cd('/home/ug/www.u-go.net/k07-bb/lk'):
+    with cd('/home/ug/www.u-go.net/k08-bb/lk'):
         run('swig -c++ -python libkombilo.i')
         run('python setup.py build_ext')
         run('cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/')
-    with cd('/home/ug/www.u-go.net/k07-bb/doc'):
+    with cd('/home/ug/www.u-go.net/k08-bb/doc'):
         run('rm -rf ../../dl/kombilo/doc')
         run('sphinx-build -A ugonet_online=1 -b html . ../../dl/kombilo/doc')
-    with cd('/home/ug/www.u-go.net/k07-bb/lk/doc'):
+    with cd('/home/ug/www.u-go.net/k08-bb/lk/doc'):
         run('doxygen')
         run('rm -rf ../../../dl/libkombilo/doc')
         run('cp -a build/html ../../../dl/libkombilo/doc')
 
 
 def doc_as_pdf():
-    with prefix('source /home/ug/.virtualenvs/k07-bb/bin/activate'):
-        with lcd('/home/ug/devel/k07-bb/doc'):
+    with prefix('source /home/ug/.virtualenvs/k08-bb/bin/activate'):
+        with lcd('/home/ug/devel/k08-bb/doc'):
             local('make clean')
             local('make latex')
             local('cp sphinx.sty _build/latex/')
-    with lcd('/home/ug/devel/k07-bb/doc/_build/latex/'):
+    with lcd('/home/ug/devel/k08-bb/doc/_build/latex/'):
         local('make all-pdf')
-        local('mv Kombilo.pdf kombilo-0.7.2.pdf')
+        local('mv Kombilo.pdf kombilo-0.8.pdf')
 
 
 def deploy_targz():
     with lcd('/home/ug/devel'):
         local('mkdir kombilo')
-        local('rm -f kombilo-0.7.2.tar.gz')
-        local('hg clone k07-bb kombilo')
+        local('rm -f kombilo-0.8.tar.gz')
+        local('hg clone k08-bb kombilo')
     with lcd('/home/ug/devel/kombilo/'):
-        local('hg update v0.7')
+        local('hg update default')
     with lcd('/home/ug/devel/kombilo/lk/doc'):
         local('doxygen')
 
     with lcd('/home/ug/devel/kombilo/lk'):
         local('swig -c++ -python libkombilo.i')
-        with prefix('source /home/ug/.virtualenvs/k07-bb/bin/activate'):
+        with prefix('source /home/ug/.virtualenvs/k08-bb/bin/activate'):
             local('python setup.py build_ext')
         local('cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/')
         local('rm -rf build')
-    with prefix('source /home/ug/.virtualenvs/k07-bb/bin/activate'):
+    with prefix('source /home/ug/.virtualenvs/k08-bb/bin/activate'):
         with lcd('/home/ug/devel/kombilo/doc'):
             local('make html')
     with lcd('/home/ug/devel/kombilo'):
@@ -55,7 +55,7 @@ def deploy_targz():
         local('rm -rf .hg')
         local('rm -f fabfile.py')
     with lcd('/home/ug/devel'):
-        local('tar cfz kombilo-0.7.2.tar.gz kombilo')
+        local('tar cfz kombilo-0.8.tar.gz kombilo')
         local('rm -rf kombilo')
 
 
@@ -109,7 +109,7 @@ def win_innosetup():
        local('sphinx-build -b html . ..\src\dist\doc')
 
     # add source archive
-    u = urllib2.urlopen('https://bitbucket.org/ugoertz/kombilo/get/v0.7.zip')
+    u = urllib2.urlopen('https://bitbucket.org/ugoertz/kombilo/get/default.zip') # FIXME
     with open('c:\Users\ug\kombilo\src\dist\kombilo-source.zip', 'wb') as f:
         f.write(u.read())
 

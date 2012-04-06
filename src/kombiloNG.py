@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# File: kombilo.py
+# File: kombiloNG.py
         
 ##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
@@ -47,7 +47,7 @@ import libkombilo as lk
 from abstractboard import abstractBoard
 import sgf
 
-KOMBILO_VERSION = '0.7'
+KOMBILO_VERSION = '0.8'
 
 REFERENCED_TAG = 3
 SEEN_TAG = 4

@@ -33,6 +33,7 @@ from ttk import *
 from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
+
 from tooltip.tooltip import ToolTip
 import Pmw
 
@@ -46,7 +47,7 @@ import libkombilo as lk
 from board import *
 from sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
-KOMBILO_VERSION = 0.7
+KOMBILO_VERSION = 0.8
 
 # ---------------------------------------------------------------------------------------
 
@@ -2190,6 +2191,7 @@ class Viewer:
                 c.merge(ConfigObj(infile=configfile))
                 configfile.close()
 
+            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
             c.filename = os.path.join(self.optionspath,'kombilo.cfg')

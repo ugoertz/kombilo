@@ -44,7 +44,7 @@ from tkSimpleDialog import askstring
 from tooltip.tooltip import ToolTip
 
 from kombiloNG import *
-
+from custommenus import CustomMenus
 
 from Pmw import ScrolledFrame
 import Pmw
@@ -59,7 +59,7 @@ import libkombilo as lk
 from sgf import Node, Cursor
 
 
-KOMBILO_RELEASE = '0.7.2'
+KOMBILO_RELEASE = '0.8'
 
 # --------- GUI TOOLS -------------------------------------------------------------------
 
@@ -96,22 +96,25 @@ class BoardWC(Board):
         self.smartFixedColor = IntVar()
 
         self.onlyOneMouseButton = 'init'
-        self.rebindMouseButtons(onlyOneMouseButton)
+        self.rebind_mouse_buttons(onlyOneMouseButton)
 
         self.bounds1 = self.bind('<Shift-1>', self.wildcard)
 
         self.invertSelection = IntVar()
 
+    def unbind_third_mouse_button(self):
+        """Unbinds the 'third' mouse button events (click, motion)."""
+        if self.onlyOneMouseButton:
+            click, motion = self.onlyOneMouseButton.split(';')
+            self.unbind(click, self.bound3m)
+            self.unbind(motion, self.bound3)
+        else:
+            self.unbind('<B3-Motion>', self.bound3m)
+            self.unbind('<3>', self.bound3)
 
-    def rebindMouseButtons(self, onlyOneMouseButton):
+    def rebind_mouse_buttons(self, onlyOneMouseButton):
         if self.onlyOneMouseButton != 'init': # do not do this during the first run (since self.bound3m, self.bound3 do not exist yet)
-            if self.onlyOneMouseButton:
-                click, motion = self.onlyOneMouseButton.split(';')
-                self.unbind(click, self.bound3m)
-                self.unbind(motion, self.bound3)
-            else:
-                self.unbind('<B3-Motion>', self.bound3m)
-                self.unbind('<3>', self.bound3)
+            self.unbind_third_mouse_button()
         self.onlyOneMouseButton = onlyOneMouseButton
         if onlyOneMouseButton:
             click, motion = onlyOneMouseButton.split(';')
@@ -294,16 +297,36 @@ class BoardWC(Board):
             self.setSelection(d['selection'][0], d['selection'][1])
 
 
-class BoardWCNoLabels(BoardWC):
+
+
+
+class SearchHistoryBoard(BoardWC):
     '''Used for the small boards in the list of previous searches. Does not display text labels.'''
 
     def __init__(self, *args, **kwargs):
+        if 'offset' in kwargs:
+            self.offset = kwargs['offset']
+            del kwargs['offset']
+        else:
+            self.offset = 0
+        for f in [ 'create_polygon', 'create_rectangle', 'create_line', 'create_image', 'create_oval', 'create_text' ]:
+            setattr(self, f, self.add_offset(getattr(self, f)))
         BoardWC.__init__(self, *args, **kwargs)
+
+
+    def add_offset(self, f):
+        offset = self.offset
+        def new_f(self, *args, **kwargs):
+            new_args = [ (x if i%2 else x+offset) for i, x in enumerate(args) ]
+            f(self, *new_args, **kwargs)
+        return new_f
+
 
     def placeLabel(self, pos, typ, text=None, color=None):
         """Labels are ignored. """
-        
+
         return
+
 
 # ---------------------------------------------------------------------------------------
 
@@ -573,37 +596,73 @@ class GameListGUI(GameList, VScrolledList):
 
 # ---------------------------------------------------------------------------------------
 
+
+class TreeNode(list):
+    """Node of a tree. self viewed as a list is the list of children. self.d is the data stored in the node."""
+
+    def __init__(self, parent=None, data=None):
+        self.parent = parent
+        self.d = data if data else {}
+
+    def add_child(self, data):
+        list.append(self, TreeNode(parent=self, data=data))
+        return self[-1]
+
+    def level(self):
+        return self.parent.level()+1 if self.parent else 0
+
+    def size(self):
+        """Return number of elements in the tree with root *self*."""
+        return 1 + sum([ x.size() for x in self])
+
+    def foreach(self, f, *args):
+        """Apply f to each element in the tree."""
+        f(self, *args)
+        for x in self: x.foreach(f, *args)
+
+    def traverse(self):
+        yield self
+        for child in self:
+            for node in child.traverse():
+                yield node
+
+    def delete(self):
+        for child in self: child.parent = self.parent
+        self.parent.extend(self) # the children of node become children of its parent
+        self.parent.remove(self)
+
+
 class PrevSearchesStack:
 
-    """ This class provides a stack which contains the data of the previous searches,
+    """ This class provides a tree which contains the data of the previous searches,
     s.t. one can return to the previous search with the back button.
-    
-    self.data is a list of lists [copy(kwargs), b, onHold], where
-    * kwargs is the keyword dictionary passed to append(), the keywords being boardData, snapshot_ids, modeVar, cursorSn (see def append())
-    * b is the copy of the board at this point
-    * the third argument determines whether this item is protected agains deletion (0=no, 1=yes)
-    
-    
+
+    self.data is a tree of dicts with the following keys:
+    * kw is the keyword dictionary passed to append(), the keywords being boardData, snapshot_ids, modeVar, cursorSn (see def append())
+    * board is the copy of the board at this point
+    * on_hold determines whether this item is protected agains deletion (0=no, 1=yes)
+
+    *self.active* is a Boolean which states whether the current node is active
+    (board has the red frame; position agrees with position on the large board)
+    *self.current* is the node to which the back button will jump back
     """
 
 
     def __init__(self, maxLength, boardChanged, prevSF, master):
-        self.data = []
+        self.data = TreeNode()
+        self.current = self.data
+        self.active = False
         self.mster = master
-        
+
         self.maxLength = maxLength
         self.boardChanged = boardChanged
 
         self.prevSF = prevSF
         self.labelSize = IntVar()
         self.labelSize.set(4)
-
-        self.selected = -1
-        self.prev_select = -1
-
         self.popupMenu = None
 
-        
+
     def append(self, **kwargs):
         ''' keywords are
         boardData = self.board.snapshot()
@@ -611,46 +670,46 @@ class PrevSearchesStack:
         modeVar=self.modeVar.get()
         cursorSn = [self.cursor, self.cursor.currentGame, v.pathToNode(self.cursor.currentN)]
         '''
-        
-        if self.mster.options.maxLengthSearchesStack.get() and len(self.data) >= self.mster.options.maxLengthSearchesStack.get():
-            for i, d in enumerate(self.data):
-                if not d[2]:
-                    self.delete(i)
+
+
+        if self.mster.options.maxLengthSearchesStack.get() and self.data.size() >= self.mster.options.maxLengthSearchesStack.get():
+            for node in self.data.traverse():
+                if 'on_hold' in node.d and not node.d['on_hold']:
+                    self.delete(node)
                     break
-            
-        b = BoardWCNoLabels(self.prevSF.interior(), self.mster.board.boardsize, (9,5), 0, self.labelSize, 1, None, self.mster.boardImg, None, None) # small board
+
+        b = SearchHistoryBoard(self.prevSF.interior(), self.mster.board.boardsize, (9,5), 0, self.labelSize, 1, None, self.mster.boardImg, None, None,
+                               offset=min(10*self.current.level(), 100)) # small board
         b.resizable = 0
         b.pack(side=LEFT, expand=YES, fill=Y)
         b.update_idletasks()
-        b.bound1 = b.bind('<1>', lambda event, self=self, l=len(self.data): self.click(l))
-        if b.onlyOneMouseButton:
-            b.unbind('<M2-B1-Motion>', b.bound3m)
-            b.unbind('<M2-Button-1>', b.bound3)
-        else:
-            b.unbind('<B3-Motion>', b.bound3m)
-            b.unbind('<3>', b.bound3)
+        b.unbind_third_mouse_button()
         b.unbind('<Configure>', b.boundConf)
-        b.bound3 = b.bind('<3>', lambda event, self=self, l = len(self.data): self.postMenu(event, l))
         b.unbind('<Shift-1>', b.bounds1)
         b.restore(kwargs['boardData'])
         b.tkraise('non-bg')
         b.resizable = 0
 
         self.prevSF.reposition()
-        self.data.append([copy(kwargs), b, 0])
-        self.select(len(self.data)-1)
+        node = self.current.add_child({ 'kw': copy(kwargs), 'board': b, 'on_hold': False, })
+        b.bound1 = b.bind('<1>', lambda event, self=self, l = node: self.click(l))
+        b.bound3 = b.bind('<3>', lambda event, self=self, l = node: self.postMenu(event, l))
+        self.select(node)
+        self.prevSF.xview('moveto', 1.0)
 
-        
-    def postMenu(self, event, boardid):
+        self.redraw()
+
+
+    def postMenu(self, event, node):
         self.popupMenu = Menu(self.mster.dataWindow.window)
         self.popupMenu.config(tearoff=0)
-        self.popupMenu.add_command(label = 'Delete', command = lambda self=self, boardid=boardid: self.unpostAndDelete(boardid))
+        self.popupMenu.add_command(label = 'Delete', command = lambda self=self, node=node: self.unpost_and_delete(node))
 
-        if self.data[boardid][2]:
-            self.popupMenu.add_command(label = 'Release', command = lambda self=self, boardid=boardid: self.unpostAndRelease(boardid))
+        if node.d['on_hold']:
+            self.popupMenu.add_command(label = 'Release', command = lambda self=self, node=node: self.unpost_and_release(node))
         else:
-            self.popupMenu.add_command(label = 'Hold', command = lambda self=self, boardid=boardid: self.unpostAndHold(boardid))
-            
+            self.popupMenu.add_command(label = 'Hold', command = lambda self=self, node=node: self.unpost_and_hold(node))
+
         self.popupMenu.tk_popup(event.x_root, event.y_root)
 
 
@@ -658,174 +717,159 @@ class PrevSearchesStack:
         if self.popupMenu:
             self.popupMenu.unpost()
             self.popupMenu = None
-        
-        
-    def unpostAndDelete(self, boardid):
+
+
+    def unpost_and_delete(self, node):
         self.unpost()
-        self.delete(boardid)
+        self.delete(node)
 
 
-    def unpostAndHold(self, boardid):
+    def unpost_and_hold(self, node):
         self.unpost()
-        self.data[boardid][2] = 1
-        c = self.data[boardid][1].getPixelCoord((21,21), 1)[0]
-        self.data[boardid][1].create_rectangle(6,6,c-4,c-4, fill='', outline='blue', width=2, tags='hold')
-        
+        node.d['on_hold'] = True
+        c = node.d['board'].getPixelCoord((21,21), 1)[0]
+        node.d['board'].create_rectangle(6,6,c-4,c-4, fill='', outline='blue', width=2, tags='hold')
 
-    def unpostAndRelease(self, boardid):
+
+    def unpost_and_release(self, node):
         self.unpost()
-        self.data[boardid][2] = 0
-        self.data[boardid][1].delete('hold')
+        node.d['on_hold'] = False
+        node.d['board'].delete('hold')
 
 
-    def delete(self, boardid):
-        s, b, dummy = self.data[boardid]
-        del self.data[boardid]
+    def delete(self, node, reposition = True):
+        node.delete()
 
+        b = node.d['board']
         if not b: return
         b.delete(ALL)
         b.unbind('<1>', b.bound1)
         b.unbind('<3>', b.bound3)
         b.pack_forget()
         b.destroy()
-        
-        if boardid == self.selected: self.selected = -1
-        if boardid == self.prev_select: self.prev_select = -1
-        if boardid < self.selected: self.selected -= 1
-        if boardid < self.prev_select: self.prev_select -= 1
-        
-        for i, d in enumerate(self.data):
-            s, b, dummy = d
-            if b:
-                b.bound1 = b.bind('<1>', lambda event, self=self, l=i: self.click(l))
-                b.bound3 = b.bind('<3>', lambda event, self=self, l=i: self.postMenu(event, l))
 
-        self.prevSF.reposition()
+        if node == self.current:
+            self.current = node.parent
+            if self.active: self.active = False
+
+        def rebind(n):
+            if 'board' in n.d:
+                b = n.d['board']
+                b.bound1 = b.bind('<1>', lambda event, self=self, l=n: self.click(l))
+                b.bound3 = b.bind('<3>', lambda event, self=self, l=n: self.postMenu(event, l))
+        self.data.foreach(rebind)
+
+        if reposition: self.prevSF.reposition()
 
 
     def deleteFile(self, cursor):
-        d = []
-        for i, da in enumerate(self.data):
-            if da[0]['cursorSn'][0] == cursor:
-                d.append(i)
-        d.reverse()
-        for i in d:
-            self.delete(i)
+        def f(node, del_fct):
+            if node.d['kw']['cursorSn'][0] == cursor: del_fct(node, False)
+        self.data.foreach(f, self.delete)
+        self.prevSF.reposition()
 
 
     def deleteGame(self, cursor, game):
-        d = []
-        for i, da in enumerate(self.data):
-            if da[0]['cursorSn'][0] == cursor:
-                if da[0]['cursorSn'][1] == game :
-                    d.append(i)
+        def f(node, del_fct):
+            if node.d['kw']['cursorSn'][0] == cursor:
+                if node.d['kw']['cursorSn'][1] == game :
+                    del_fct(node, False)
                 elif da[0]['cursorSn'][1] > game:
                     da[0]['cursorSn'][1] -= 1
-        d.reverse()
-        for i in d:
-            self.delete(i)
+        self.data.foreach(f, self.delete)
+        self.prevSF.reposition()
 
 
     def exchangeGames(self, cursor, index1, index2):
         if index1 < index2:
-            for da in self.data:
-                if da[0]['cursorSn'][0] == cursor:
-                    if da[0]['cursorSn'][1] == index1:
-                        da[0]['cursorSn'][1] = index2
+            def f(node):
+                if node.d['kw']['cursorSn'][0] == cursor:
+                    if node.d['kw']['cursorSn'][1] == index1:
+                        node.d['kw']['cursorSn'][1] = index2
                     elif index1 < da[0]['cursorSn'][1] <= index2:
-                        da[0]['cursorSn'][1] -= 1
+                        node.d['kw']['cursorSn'][1] -= 1
         elif index1 > index2:
-            for da in self.data:
-                if da[0]['cursorSn'][0] == cursor:
-                    if da[0]['cursorSn'][1] == index1:
-                        da[0]['cursorSn'][1] = index2
-                    elif index2 <= da[0]['cursorSn'][1] < index1:
-                        da[0]['cursorSn'][1] += 1
+            def f(node):
+                if node.d['kw']['cursorSn'][0] == cursor:
+                    if node.d['kw']['cursorSn'][1] == index1:
+                        node.d['kw']['cursorSn'][1] = index2
+                    elif index2 <= node.d['kw']['cursorSn'][1] < index1:
+                        node.d['kw']['cursorSn'][1] += 1
+        self.data.foreach(f)
 
 
     def deleteNode(self, cursor, game, pathToNode):
-        d = []
-        for i, da in enumerate(self.data):
-            if da[0]['cursorSn'][0] == cursor and da[0]['cursorSn'][1] == game:
+        def f(node, del_fct):
+            if node.d['kw']['cursorSn'][0] == cursor and node.d['kw']['cursorSn'][1] == game:
                 j = 0
-                p = da[0]['cursorSn'][2]
-                
-                while j < len(p) and j < len(pathToNode) and p[j] == pathToNode[j]:
-                    j += 1
+                p = node.d['kw']['cursorSn'][2]
+
+                while j < len(p) and j < len(pathToNode) and p[j] == pathToNode[j]: j += 1
 
                 if j == len(pathToNode):
-                    d.append(i)
-
-                if j < len(pathToNode) and j < len(p) and p[j] > pathToNode[j]:
-                    da[0]['cursorSn'][2][j] -= 1
-        d.reverse()
-        for i in d:
-            self.delete(i)
-        
-        
-    def see(self, board):
-        if board == END: self.prevSF.xview('moveto', 1.0)
-        else:
-            self.prevSF.xview('moveto', 1.0 / (len(self.data)+1) * board)
+                    del_fct(node, False)
+                elif j < len(pathToNode) and j < len(p) and p[j] > pathToNode[j]:
+                    node.d['kw']['cursorSn'][2][j] -= 1
+        self.data.foreach(f, self.delete)
+        self.prevSF.reposition()
 
 
-    def select(self, board):
-        
-        if board == -1 or board >= len(self.data): return
 
-        if not self.data[board][1]: return
-        else: b = self.data[board][1]
-            
+    def select(self, node):
+
+        if node is None or node == self.data: return
+        b = node.d['board']
         self.select_clear()
-        
+
         c = b.getPixelCoord((21,21), 1)[0]
         b.create_rectangle(2,2, c-2,c-2, width=3, outline = 'red', tags = 'sel')
-        
-        self.selected = board
-        self.see(board)
+
+        self.active = True
+        self.current = node
 
 
-    def click(self, board):
-        self.select(board)
-        self.mster.back(self.data[self.selected][0], self.selected)
+    def click(self, node):
+        self.select(node)
+        self.mster.back(self.current)
 
-        
+
     def select_clear(self):
-        if 0 <= self.selected < len(self.data):
-            self.data[self.selected][1].delete('sel')
-            self.prev_select = self.selected 
-            self.selected = -1
+        if self.active:
+            self.current.d['board'].delete('sel')
+            self.active = False
 
 
     def pop(self):
+        self.select_clear()
+        if not self.data or self.current == self.data or self.current.parent == self.data:
+            return
 
-        if not self.data or self.selected == 0:
-            self.select_clear()
-            return None, None
+        self.current = self.current.parent
+        return self.current
 
-        if self.selected == -1:
-            if self.prev_select == -1: return None, None
-            else: self.selected = self.prev_select + 1
-        else:
-            se = self.selected
-            self.select_clear()
-            self.selected = se
-            
-        self.selected -= 1
 
-        if self.data[self.selected][1]:
-            return (self.data[self.selected][0], self.selected)
-        else:
-            return (self.data[self.selected][0], -1)
+    def redraw(self):
+        def unpack(node):
+            if 'board' in node.d:
+                node.d['board'].pack_forget()
+        self.data.foreach(unpack)
+
+        def pack(node):
+            if 'board' in node.d:
+                node.d['board'].pack(side=LEFT, expand=YES, fill=Y)
+        self.data.foreach(pack)
 
 
     def clear(self):
         for db in self.mster.gamelist.DBlist:
             if db['disabled']: continue
             db['data'].delete_all_snapshots()
-        while self.data: self.delete(0)
-        self.selected = -1
-        self.prev_select = -1
+        def f(node, del_fct):
+            del_fct(node.d['pos'], False)
+        self.data.foreach(f, self.delete)
+        self.reposition()
+        self.active = False
+        self.current = None
 
 # ---------------------------------------------------------------------------------------
 
@@ -1152,25 +1196,32 @@ class App(v.Viewer, KEngine):
 
 
 
-    def back(self, prev=None, selected=None):
-        """ Go back to previous search (restore board, game list etc.)
+    def back(self, target=None):
+        """ Go back to target_valuesious search (restore board, game list etc.)
         If an SGF file is currently loaded (and was loaded at the time of
-        the previous search too), the position of its cursor is
-        restored too."""
+        the target_valuesious search too), the position of its cursor is
+        restored too.
+
+        target: a node entry in the search history tree; the board etc. will be restored to the information in here
+
+        If this is called without arguments, then target_values and selected are
+        retrieved from prevSearches.pop.
+        """
 
         self.leaveNode()
 
-        if not prev:
-            prev, selected = self.prevSearches.pop()
-            if prev is None:
+        if target is None:
+            target = self.prevSearches.pop()
+            if target is None:
                 self.reset()
                 return
+        target_values = target.d['kw']
 
         self.comments.delete('1.0', END)
         self.gamelist.clearGameInfo()
         self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
 
-        cu = prev['cursorSn']
+        cu = target_values['cursorSn']
         if cu:
             found = 0
             for i, fi in enumerate(self.filelist):
@@ -1193,26 +1244,26 @@ class App(v.Viewer, KEngine):
                 for i in cu[2]:
                     self.next(i,0)
                 self.cursor.seeCurrent()
-                
-                self.board.restore(prev['boardData'], fromSGF=True)
-                self.sel = self.board.selection      # used in self.showCont()                    
+
+                self.board.restore(target_values['boardData'], fromSGF=True)
+                self.sel = self.board.selection      # used in self.showCont()
                 self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
             else:
                 showwarning('Error', 'SGF File not found')
 
         # restore variables
-        mv, fc, fa, ml, nextM = prev['variables']
+        mv, fc, fa, ml, nextM = target_values['variables']
         self.modeVar.set(mv)
         self.fixedColorVar.set(fc)
         self.fixedAnchorVar.set(fa)
         self.moveLimit.set(ml)
         self.nextMoveVar.set(nextM)
 
-        for i, sid in prev['snapshot_ids']:
+        for i, sid in target_values['snapshot_ids']:
             self.gamelist.DBlist[i]['data'].restore(sid)
 
         # restore currentSearchPattern
-        i, sid = prev['snapshot_ids'][0]
+        i, sid = target_values['snapshot_ids'][0]
         self.currentSearchPattern = self.gamelist.DBlist[i]['data'].mrs_pattern
 
         self.continuations = []
@@ -1227,8 +1278,8 @@ class App(v.Viewer, KEngine):
         if self.showContinuation.get(): self.showCont()
         self.board.changed.set(0)
         self.displayStatistics()
-        self.gamelist.update()        
-        self.prevSearches.select(selected)
+        self.gamelist.update()
+        self.prevSearches.select(target)
         self.notebookTabChanged()
 
 
@@ -2068,6 +2119,7 @@ class App(v.Viewer, KEngine):
                 c.merge(ConfigObj(infile=configfile))
                 configfile.close()
 
+            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath']  = self.sgfpath
             c['main']['datapath'] = self.datapath
             self.saveOptions(c['options'])
@@ -2185,11 +2237,6 @@ class App(v.Viewer, KEngine):
         self.gamelist.printGameInfo(None, start)
 
 
-    def rebindMouseButtons(self):
-        self.board.rebindMouseButtons(self.options.onlyOneMouseButton.get())
-
-
-
     def initMenusK(self):
         """ Initialize the menus, and a few options variables. """
 
@@ -2237,6 +2284,12 @@ class App(v.Viewer, KEngine):
         self.optionsmenu.add_cascade(label='Advanced', underline=0, menu=advOptMenu)
         advOptMenu.add_checkbutton(label='Open games in external viewer', variable = self.options.externalViewer)
         advOptMenu.add_command(label='Alternative SGF viewer', underline=0, command=self.altViewer)
+
+        self.custom_menus = CustomMenus(self)
+        self.optionsmenu.insert_command(1, label='Custom Menus', command=self.custom_menus.change)
+
+
+
 
 
     def balloonHelpK(self):
@@ -2703,7 +2756,7 @@ class App(v.Viewer, KEngine):
             self.prevSearchF = Frame(self.dataWindow.win)
             self.dataWindow.win.add(self.prevSearchF)
             self.dataWindow.set_geometry(self.options.dataWindowGeometryK.get())
-        self.prevSF = ScrolledFrame(self.prevSearchF, usehullsize=1, hull_width=300, hull_height=135, hscrollmode='static', vscrollmode='none', vertflex='elastic')
+        self.prevSF = ScrolledFrame(self.prevSearchF, usehullsize=1, hull_width=300, hull_height=235, hscrollmode='static', vscrollmode='none', vertflex='elastic')
         self.prevSF.pack(expand=YES, fill=X)
         self.prevSearches = PrevSearchesStack(self.options.maxLengthSearchesStack, self.board.changed, self.prevSF, self)
         self.board.callOnChange = self.prevSearches.select_clear
@@ -2911,6 +2964,9 @@ class App(v.Viewer, KEngine):
                 button.config(image=im)
             except:
                 pass
+
+        self.custom_menus.path = self.optionspath
+        self.custom_menus.buildMenus(1, self.basepath)                     
 
         # load logo
         try:
