@@ -1,0 +1,488 @@
+# Compiled by Ulrich Goertz (ug@geometry.de)
+# (with the help of U. Richter)
+#
+# This file belongs to the Kombilo package.
+
+# References to game commentaries in the English go literature
+# For an explanation of the format of this file, see the Kombilo
+# documentation.
+
+
+boardsize = 19
+
+# Go World --- {{{
+[GW 1]
+title = Go World 1
+data = bchdgscdlqem, cerqolgcqmoj, chqcdpkqmedq, dhchedehhlgr, diknqnbkfklp, ficebifpcijc, fidehdgkndpo, ddffercfgqne 
+[GW 10]
+title = Go World 10
+data = cdebempcehkk, cinelhpbeghi, cforomdrrhjh, ceolmbnhlffd, dgdigrieehlp, dhnkpbrrodrh, dicmqqeienpd, djgcolqcrpoi, dfmdmgknkgqh, efflpfhceimh, eikiqpfjgklf 
+[GW 11]
+title = Go World 11
+data = bcigmegeqamd, bghqbrckpfif, cdbepmendlpn, cdpnqnjcqnfo, cfknnfplimcr, chhijkffjfoi, choblcjeobpi, dfkfcngadrel, fgdrjcejnprp, fghhkpifgpll, fhkfkeifdghi, fjmcdgbnbidb 
+[GW 12]
+title = Go World 12
+data = adjokknomnbn, bdoircqeleco, cempqedlinmh, ceocmcadqhna, cfqjnoploodl, cgfdhnfilp??, cgiddbpolblh, defhplqrnocq, denfrmebqqmh, dhidqedepdld, egkdjpocrqfr, ehkgogcgpgpo, fgomkrphdogo, fhiebofdfmhb 
+[GW 13]
+title = Go World 13
+data = bfjfiikgqghc, cccnfpgbdqkr, cekeoqbendob, cfjcdijhgocg, cifmoqgbingn, dhcobekcmfol, eifbkgdjgoen, ejhdnndiopdf, efdnjehfgkfd, fghinrmbmpqi, fibfleejjhpj, dgeicjgoqkcg, ccdldhfngmih 
+[GW 14]
+title = Go World 14
+data = bccmijdhabbi, bcfqjnfmkplq, ccfhhrfghjqc, cflbochfbeck, dekgqnjpcrjf, dgrplnnplqqk, dhpiqkhdolmp, eedgbfgddjcp, efiefqkplfnf, egenfngcgmhk, gijnocqmqccj, chfqppdmlqis 
+[GW 15]
+title = Go World 15
+data = becqigdjfhlq, beohokojrkol, bgkejjgdjfib, dgihikejdqaf, dhocqqchobjm, eggjpgeifqkf, egpcfdjeldek, fgcjdlqqcipi, fghfodepebje, fibdenhdfjeq, eidpdriedmhd 
+[GW 16]
+title = Go World 16
+data = ccbccqcibgbp, ccfikifhqfbs, cenenadenbmh, chfprpffndrn, cjchlejomqqe, dfbblcbhocng, dhldrphpnrfl, eigqcgikdnqg, einggnrcnoir, fgpbkicmpilg, efheblldaegh, efghfecbhdjh, ghliqjpgrqph, dgqmodhenloe, bcoroichhkog 
+[GW 17]
+title = Go World 17
+data = cedgjodlpjij, chpemioikfle, chppdmhpqmen, cgmgicjilclo, dhepiihhfmjk, dipbmnjqpklf, efgkhgclpipb, cgpnmdcdrchq, cepgojpopcrk, bceacqgecjoc 
+[GW 18]
+title = Go World 18
+data = bdpmmrrgqnob, bfdbqlndrcfn, cdhikhkehhbj, dejobdrqfqqb, dgidkihbmekl, dgkdlinqhjga, eiofmnhqlkoj, ghklqgjlooni 
+[GW 19]
+title = Go World 19
+data = bcifenmcgpcm, ceidhckgkblj, cfdhhkibhhip, chgcginpcmlc, chqbsfkepgjo, decmhoecmbeg, dedendelgomf, dedimphcfpjq, dejcqibgghel, delbnkngrjro, dfjckgrqqbnc, dgjqqjcdqeif, dhhidikdjbmf, egqprmdqrpqi, einqgnlqiker, gglqmfdcmjbn, cgledjgbehfi, ehdrkmgpioij, dinnkbqlmlno 
+[GW 2]
+title = Go World 2
+data = cfmofbpnormg, dgejhodcgmip, dgpifmonenam, dipojronbfgf, ejodogqdnjjm, egdrndbfkphh 
+[GW 20]
+title = Go World 20
+data = cckrpggkhnog, cdgpkkqoikpc, ccdliocqjqoq, dfdpqlcnimrk, dficrgiprknr, dhbcerhrimmo, ejoelhefkcjh, hhfnihcciebi, djgddfnfifbf, dgqpijcijcig, bcffjcecrcjf 
+[GW 21]
+title = Go World 21
+data = cdbclmjpimlr, cerbboqbfpiq, cgfnjmbngmeg, cgidjoedkpcn, cjgcjqpfpjjn, dfdlemcbeohj, dhrcgoqrfpqm, ejbfiefgbeek, cerrjmqkiqdh, dhepercjcmfn, hjcdhlefpbda, djpdodileeqg, bebodkqoeljf, cccslecmhfjl 
+[GW 22]
+title = Go World 22
+data = cdjoemffbhjl, cggkijfmfnrq, cikgpoocdnco, ddceqpeedgqn, dfqdkkpjpnjq, ehmhmqndpooo, fgepsdejqpgh, ghegqeeknqqj, hikjebikanrd 
+[GW 23]
+title = Go World 23
+data = bekmidqncppo, cdojoqqolkio, cfkfgcibeerl, cfqmgebjdepi, cidgibnkemjc, ciepnchbibpm, dfipoboqdron, djjeqjqdjfql, cdcfiodhcqqp 
+[GW 24]
+title = Go World 24
+data = bcgidgefealq, bdqrqpbrfqog, bencmclcqeki, cdnccpokrdro, cfjcbkeqgmmq, cfnfrkbdokni, cgqddebgomfq, chnerpoggbjh, deqnerqdoofl, dfcfjefqlceg, dfgpbbqkjkme, dgfjbnhehdld, egcefmcgglnd, ehmbrdncpecq, ehoqplrfjook, hjkdhedosfhi 
+[GW 26]
+title = Go World 26
+data = adobqhiqhqqe, beehnqqrjdoi, cejfrcciclpp, cfgedogcopnm, cghedlegkddp, cjjdheodkfmh, dfedrbgfobhc, dihljqhhdkkg, djjejfgebjoe, eecmombdmbmq, efbgekifkilm, efelhmfohohe, egmqeobfgqdi, ejlegbiglcmh 
+[GW 27]
+title = Go World 27
+data = bhrcoeocqogk, chhdjgghmfri, chnoglckioho, cjdboheqmhmj, ddenpndklpdm, dejbglbgcijp, djrgrcqepbcp, djrimoqclenl, egqrfmoifpio, iifqgpndrocm, cepqbjfpnqdn 
+[GW 28]
+title = Go World 28
+data = bcdddieelcik, bgornlqppimi, bieqhrgkjode, cgfpimdqdilq, cidgbecjgfqh, cidkhsceerpk, dddnoidkkogl, deobcolcqmfo, dephlqqdiemn, dfdghbocncld, dfjpbghdjqrn, dhgfcfhccqqh, cdjgiggdiidn, deicihgchfnc, ffbkhkeibfeq, fijcjlcfoikk, eiooehfdglfi, cfjqpsbqoqpm, cfjeoipmncgf, ffnobpkchlbj, befdhciijfhe 
+[GW 29]
+title = Go World 29
+data = bddbfqdrgocb, bddogreikqak, bejbleebgicj, cfdgidneglim, cffrchepnpos, chfkedckbfhd, cjbbhjihgbhf, dfdnedjeffij, dibljfikdbkd, diqhrkcmibqo, efgdiegbabhm, ejfgjhblfigm, ejijggbomlpm, fgqolciprnfb, ggbglencpjgn, ggdpnmcmqpog 
+[GW 3]
+title = Go World 3
+data = cdekffhihdmn, cdifnegdmbog, cdmqhehqffrk, cfeqqjrgcqpl, djqdqemdpkpi, fhkmcloggcmf, ijjcrcdjhmfk 
+[GW 30]
+title = Go World 30
+data = bcpkljkdmgjp, cchpmqejarhj, cdafgidcjelh, ceemhpaecjbc, cfkmljqqpijm, cfnkmconloph, cgoqqjcpqigm, chmegknmoceh, dehckimbjhih, dfqqboghinjd, dgggimjgqggn, difpjmfgilhl, ggellpeignrf, ghjokrdmnpgq 
+[GW 31]
+title = Go World 31
+data = beepjepemceo, bgjeojhepggi, ceepqmpnhnng, ceokmjidihrk, cffhphdgrmeq, cfobcoopfbdj, chefedpggefh, childnobhqen, deeekqicmkom, deqcmbncjclq, dfmeqhdhkeck, dghgfkgcjjgb, djbhpnmcpqqr, efjdngqkkekg, eihdiapgifkh, gicckpdcgkkr, dgifnhgrmopl 
+[GW 32]
+title = Go World 32
+data = afdkfgpcpfqq, bgpijkmcolie, cgneloiejojd, chddkfonocef, chfbfibfhcib, cdrqefgqlobj, dgjiqhdjkfig, dikqkmicpmmp, fgccqlhfmpmc, egkfdlcifooq, cfmqbkqqhpdl, cfhnkdeeodgr, bdmpbmdolrgq 
+[GW 4]
+title = Go World 4
+data = ceoeighdgcjr, chegemceprlo, dfqcomkbopjh, dgjnodqolimd, efhcmoehkioh, ehhellobrngp 
+[GW 42]
+title = Go World 42
+data = bcrdmfdnlcki, cdiqqqcplnjo, dedjkldcliql, deosloqqnoel, dgcopgbgjplb, dgfikjpqdmgg, dhlflhjdllon, effdeidpbhlc, ejkdloheqjio, ejqhlbpcjbhf, bgnncknofkin, bioqokehmpil 
+[GW 43]
+title = Go World 43
+data = cdnfbjidphpo, cecbbhcchfre, cfdierfghpkc, cfndiiebdkpm, cihejbcroroc, cdfjdicgpdli, ddopinfnjljk, dflilqecohin, efnqpfghgcon, efqomrnqpjie, ceqlbfinhepd 
+[GW 44]
+title = Go World 44
+data = bbdkhgaefikg, bcepqgcmcnpj, beejqidgcoek, cckocbnqjgml, cdfpenbqclgk, cdlchbgeiikj, cdqejgnqeejf, cejfohffofbc, cfclgiqqdbgd, cfkepericemn, cfobjpncgfpn, cjjijdfikijo, dfmojerqpifg, digdobdfoejb, eecjpmqmjmpq, eindmgbdqdni 
+[GW 45]
+title = Go World 45
+data = cdqdfjndbono, cfmeopcrqirh, cghgpqigjdim, chhmplenbnpo, ehpfpahkqpmi, fhicpiocpfoq 
+[GW 46]
+title = Go World 46
+data = bepnhqlnimdq, cfgcnckipfqc, charrllqogmq, deibiigdbepg, ejeindffgdga, fhqblhpcndrl, gidqdkimfnqc, diefhecoplmp 
+[GW 47]
+title = Go World 47
+data = bbfgpkhcoqrg, ccbrmieopkmk, cddmjdeprcpk, cdkgonodolbn, cdkofpabhokl, cfidnngeijob, chdqdgcbdimd, dfmgjekfhc??, dgggoijcqnic, dhphdojdpmip, egqfhhhkhjmi 
+[GW 48]
+title = Go World 48
+data = cddnicclqjhj, cigpkqcfkrmr, dfeibmehdrcn, dffqgpqpimob, dfgdhkdmiomn, didqlmqoardh, dimonmqrpioq, eicifqbbbpjn, eioqebghhqpf, fgqgfhkdeohi, chdhadhjcdio 
+[GW 49]
+title = Go World 49
+data = cdnqpfefqcrj, cgoqijekpnli, chrrqldrjodo, cjebiidjcpkq, denomhiddkgb, eedgfmfociaj, cgggrkacpdnh 
+[GW 5]
+title = Go World 5
+data = bccqhdggkcqi, bdcklreonnmm, ccooeoppqcbr, cgpmekpdjqdl, dhgbedgqbepp, djfhochjcmbn, fjigbkopgkok 
+[GW 50]
+title = Go World 50
+data = bbeqjpndnoll, bcqmelggeppd, begeckfbeiqd, bepnkdpqhphe, bfgpllfkigof, bficsoqklekm, bhihocifnebn, bjqdmgldmjrm, cegciphcfoph, cfcqrrelqhfb, cffrlpdbipgl, cjdboheqmhmj, dgipbpgplpqn 
+[GW 51]
+title = Go World 51
+data = bcbpqpfigrqh, ccdijfobjbkh, cdcgadfgfkkd, cdmfbqpdhqlq, cfbhgjdbhidj, cgcphqoniolg, cgpojqbppbij, dednmcegbqfl, didnerprelmn, eeimddjqqjbm, efckjqbehokm, efofqgneqpll, benprjpkqfpg 
+[GW 52]
+title = Go World 52
+data = bcbphkgpobhj, bddjnneeiclk, beimdrgmicgn, bepbbhfblgic, beqiqoqdjeji, cceqghgcemip, ccgokldqfnsr, cekfjbfhieql, cgjqnqelpqik, chbqldcdbkec, ciqqlbccfpbe, dfelrnfppoln, dfmqrsggkrri, dghppqbpneqs, djlepboonkil, fgkfmfedpkik, fhblebdiigib, ghpmgcelqqff, cdcmfdcqckel 
+[GW 53]
+title = Go World 53
+data = bgnkrdnjocoe, cfkcnhbbhbqk, dddjprhqphnn, deqlrpdibnie, dhqqilbehdob, djbfnnggobnj, djifkipbnikm, eefmqmcmqlsr, fhephnjghpik, fikqboqjmcnj, gifigmegekrh, bcidgfneqghe 
+[GW 54]
+title = Go World 54
+data = cdlclmelhdil, cfhqeidpenkp, cfifobbdmcqb, cjcdabcpnejk, dfpmlkhqmmii, dgclphclrjpo, dgqdompjlmen, dhbhjnqchoqm, egpcijnhdqdl, fgkicqjjpecd 
+[GW 55]
+title = Go World 55
+data = beldpghclhmq, benddmnpkhqi, beorhdebrooa, bfdnphplqfrk, celemcrimhrc, cjqbfknlcokn, dfnlrqdrporo, cgbpmhcjpgqg, cicbjindnfmn, eediqecgabfq, derdlefenpmg, defqpqdkdmom 
+[GW 56]
+title = Go World 56
+data = bfehgqjdfeke, ceokcmmedkmj, cjqhjfebkcio, dedoclcmgcnd, dfgomqirfape, dfqokcqnmfhg, dghfclelkcnp, dgmifniehfkp, effhqjdjjcmc, ejkgiqbgbcof, finpdnhpfpkc 
+[GW 57]
+title = Go World 57
+data = behmaplcgqij, ccopriqifrdi, cgdcffbbqfac, dfkqoeqpmemi, dgnnlqciifmo, dhfkonjcdqln, fhjdfmdplhmo 
+[GW 58]
+title = Go World 58
+data = ceieclbhprmr, cfegmcejpolb, cgqnlmopoksj, depoeqagbcpf, djmccghhhekq, eiagekdbbaji, eigehjedfbhf 
+[GW 59]
+title = Go World 59
+data = bbcnecgdhbbq, bfolrnkdqmrf, cijgeiafjhfm, dfdqrqegbppe, dfpmkckqimmf, dhieolclohmn, djcdcmircojk, eecigfdgmink, eigglcbmdfmb 
+[GW 6]
+title = Go World 6
+data = becqrcehjrpg, bedrcdjccoro, beomnjbkrrkf, ccqqgrpnnmlc, cffpclfqfnqq, cineknnplrfr, deegjbqrdcle, dfredhjqeddj, dhglclhjfgpq 
+[GW 60]
+title = Go World 60
+data = bceleijldkkr, bdmfqfbnhkqi, bgmqcjcbikhm, ccehdefcafdf, ccgpdlqjjole, cdmohmoofmgf, cjfiomibdnpl, cjjhlebdecjb, demehggjoeic, dfcjemfqeoal, ggfjglncghhh 
+[GW 61]
+title = Go World 61
+data = befgfqbgdjkr, cfgjlcbhckqj, cghcpgidogdr, deqqcqmcpoej, dergidpfqbpn, dfgggkegenij, dhmcqobgjcom, dirgdlqgejmn, ehdiepcmbkon, ggcorfqjfcil, ghqgnhpkofeq 
+[GW 62]
+title = Go World 62
+data = bcqqdqdioqbo, bdhhkghcrmkm, bebgpgffkecn, bfhdbkickcgh, ccinjfpllnjg, ccopcmmopffi, cddldnpqipco, cffgfioejhdk, cfqoqkkopmsq, cjgeiqrdbkep, dfjgfqbeqcgh, dfqhjkdkiqjh, dimqnckelqlk 
+[GW 63]
+title = Go World 63
+data = bdchmobcfnrr, beafqebdcnpi, bfpemhicroqh, cfmebjpcbijn, cgiqndehmqeq, cgqogpffhpbj, deeidgoqcefo, dhbnqmckjjdm, fgghkqkegpqc 
+[GW 64]
+title = Go World 64
+data = bcefhjegbdnp, bfmqorfmqcol, bfqomigikoio, bgobdpgpqkic, ccbqmednehgi, cfhrgnfmjmoj, cglgijhpnggc, chrpfpdbcqbo, cigdnrcpnjrr, cjcblnrmjohr, dipihhfbkjrf, djcdhhbgdaap, eenoinqlohoq, egoificdmfbp, fgkpolgckmnd 
+[GW 65]
+title = Go World 65
+data = bcdnhpcoflme, bcjfrqjcinpl, bcpimloimkrn, cdpgglpcmjnn, cecrlrldmcel, ceerojhlpnbk, cejdibpfbqlc, cfhojljpcqnl, cgqmcffpfbge, cikdhqpfidfh, efphkogppkng, egjcqcqomfnj 
+[GW 66]
+title = Go World 66
+data = bdlcneckqdor, bgjrplkqpije, cejfpeephcod, cffldngjkikc, cfiqllgnflmj, cgeeicegjerh, cgggrnfecmic, ciqddbeghkbb, denpqjrompcm, dfdjqpdoopmh, diiojgipidoq, ffnpjnjdpilk, fggiflfhlgmg 
+[GW 67]
+title = Go World 67
+data = bcfgepiffpej, bfqocpqqorqf, cegebhpddedm, chockcephcnf, ddcnhfpgejfp, dehpkkgefrcl, dfjeelqpghhm, dgfeekkdebmb, dinqgjclbmho, djpinnadllje, fjjcmnbqkqol 
+[GW 68]
+title = Go World 68
+data = bcibhgbgifkq, cgbqpidbqfro, cggcblddbpfr, chbjpgierdrg, dfdklqgggifp, dgdchogkqbjo, dhmbqqcnldjj, dhnclobgqcjm, diqnndhcokqh, egrhjeocnemd, fhjmkpgmlkhd 
+[GW 69]
+title = Go World 69
+data = bekgenmrrbmi, bhqbjmlqpfgr, cdfjmobpopge, cfiipcnghfhn, chjdkonceoki, cijdfcorcoef, dehgepegpbkn, difejgmigbck, dhffoqeljfol, bdboheolfmed 
+[GW 7]
+title = Go World 7
+data = bfnqfkqldghg, cfemjmephpaq, cgjcpnfcjdop, cigimqbmfgio, difmnbdnnnkg, efeqmneegpmq, efqhplcercpm, ehfarohekigj, ffeikghfenfp, higkkecnjerd, ijpingkgqqmp, dhihgdbfcqbk 
+[GW 70]
+title = Go World 70
+data = bdfdqjjqdirm, bdofdglbdjhg, bhkelidlklim, cekhpolgimlo, dfgmfkcnghaf, dfopjdbbhdpi, dhfnoienblol, efpjniogonlm 
+[GW 71]
+title = Go World 71
+data = bckiclggdmmf, ccfopbhdeoeb, cdnprfprmfmd, cendpjnclero, cfbmjbcgbbmc, cfehgmeddkdn, cfpqkjreqlmh, cjegqnbfroqj, defepibcojml, dfdqkqlegnqk, dgefcqdkblcn, difrgdorfobm, efdlnpqperib, ghggkpjpgolr, giphrehckgrc 
+[GW 72]
+title = Go World 72
+data = cddpecgchhkh, cdhgrcbdpkrp, cgbslpfpfrnp, cgqlhcbnkege, dhklpfkpgnqb, efqpnoqgcnql, ffhkqndabonp 
+[GW 73]
+title = Go World 73
+data = bcghnbfgedrc, bdieegfenmkq, bhiplicbkgoj, cedhljgekiom, cfnjfnkqicei, defnrdbqehqj, deqcefkcobcg, dgohrmicordq, efkhodmghfol, ehicbehccd??, ggmqjiddonlg 
+[GW 74]
+title = Go World 74
+data = cjdhjdcehfkf, dfmdnqrcreil, efdeqgfbdqrp, ehoocpjedimp, fgfhofdfjfjo, gikjqpgndijp, dgpefqdflcdo, ijbdpmnorlnl, cgoeeblqclgc 
+[GW 75]
+title = Go World 75
+data = bdgibpcjfohb, ccepekobqbjk, cfpkkbicnlgb, cjffbjolhfrf, dggoqcimepph, dgnrpcmpmdek, dgpkmldqsjlm, dibmmqclemqb 
+[GW 76]
+title = Go World 76
+data = bfepgpqjdmhn, bgmbhqmddqmr, cfkpnnnqjojd, cgqkknjdqhmf, dgfgbbgdfbsd, dicekiclgdkl, effmflcqnqir, efhercjcqdpl, egchmgggpcne, ehcnepgpglfn, bdidhklbfpjn 
+[GW 77]
+title = Go World 77
+data = bgmphjopcmln, cdqsimqofpdb, cehqknrmpklc, cfrjrpdglmel, dffbpmrbfqiq, dgprqknhnrlh, dimmrpgepmpj 
+[GW 78]
+title = Go World 78
+data = bdjdlljmmfhf, cdeqhqcqiqlr, cdoijefgfhlf, cekrrdfoplhe, cffdbkpcbgdk, cfhcbkecfffs, cfhckpnhebmq, cfifkfnhqmml, cfnbjfnhrfif, cfojipikcrgq, cgfhfjbjej??, dhihnjifjigr, diechrcihqpe, efeglmqinrqh, efofkepblfjj, ehckgkjdigjj 
+[GW 79]
+title = Go World 79
+data = bcjfpchdpine, bdqdfchjrche, ccdepmpfkmpc, cdinfmefikho, cdqljrnqpfnn, cfdqfjjbrikm, cgkpolqenblm, cgpqmmkpprhl, chdhpggncckm, cijpmqfkeqjj, cinfqnobkfcn, ddciomcleljk, dfjdjflegfhi, dhijlpdqhkqe, fggpmpqqmshb, ghodljmoojeq, higpqmfrbqhj 
+[GW 8]
+title = Go World 8
+data = bcmhnrfodgfr, bdhekhffhfmh, cceihkefgmjr, cdekkifgkmhm, cebfieefekjc, ceclmnqilljk, dgmcgfnrjcgk, diigbhgiegee, cfblfqbeelpq, cdnrknmdnlqn 
+[GW 80]
+title = Go World 80
+data = bcoejiqirhql, bfpcmpqnoeed, cfecjmlcdmmq, cfjehjqfhbhi, dfmclhgbleop, dfmdrlcdoqko, dgihimhigbbi, ehjdgffdmblc, ejghjqfgmgqf, fjodqcdeplhc 
+[GW 81]
+title = Go World 81
+data = bbjlqpojeihl, bcegifbhhffe, bdcsjdboembh, bfiegppchgbr, bghejnpenrlm, cfkdcljccnjn, chefcckccdqf, cicjasfcdrgj, denrncqiiojp, deqbnebeinop, dfnbngcfmbqi, dgbidmebfimq, dhpikqnbqdqp, djqgiecondhd, efjicijhgedh, ejbfmkcborrh 
+[GW 82]
+title = Go World 82
+data = bcqplodnpnrp, bdomglqqelho, beqckebhsbje, ccgjphfmpkne, cgnocogecelo, dffhcadgfghb, dficiqdgfoqp, dgcorjdqiqkr, dgkdndciqfkf, dgkffqldhhip, diigjqdbglqp, efpnmenpnnhe 
+[GW 83]
+title = Go World 83
+data = bdlcmmqcqjmn, bforfmnqdlih, bidqckcjfjbm, ccempjedbjkc, ceihkgdhgfnd, cemqnrbognlb, cggfqfjdpnno, cgnsnhfrogei, cgrjidoqohif, dgpcoqcckdkh, dhkegdgcichi, dincjigdmdgm, efooqcpngonb, hibqilgoggcj 
+[GW 84]
+title = Go World 84
+data = ccekocihfprn, cepmqoqkepnp, cfhdojmckhkf, cflmogicoqcl, cghnmcfkpogh, dggmklbehpgp, djmdohhcpeoa, eepqqcnoqioj, egplpiqmleei, hhpqppbqgpil 
+[GW 85]
+title = Go World 85
+data = bffdhrfjdjro, bgboqeqnjlbm, bhjkqhomqgii, bibehnegkkkm, cceeipaprekk, cdfdibcqfgqn, cdhrjrkoqcmo, cfgnbkgjgmcd, cgrepjnongih, chpofefjmpoi, cjedjoemefor, dfbpgpcnqofh, efbbrdcemgsn, egcojdemhnbe, egmhhrfejopq, fgfkrhdoqdol 
+[GW 86]
+title = Go World 86
+data = bfdhrfqpqdog, bgocnqbendpb, bgofjkqgmlmq, bjegkqamfolk, ccdehicihbgl, ccgkqnceefpr, cgdijbdqfiod, ciqgqimqqhon, cjdfcdbpigqg, dhbjpadgldpo, dhoqqmdrrnbm, dhpnibcohhbm, hiqcomidprcp 
+[GW 87]
+title = Go World 87
+data = bdfnrphqonfr, bfqdqlfqgnnk, cdebjeecldhh, cefhpnhkfmeg, cfddaicqffqf, cgbjefcoebqh, chohrpfcqnio, ciqbqlocldoe, cjhdqcdigjhp, dgreiehgqghe, djncnnccpfoi, effoiofnrpgi, eihcilaejfgq, ffeihbjdqdnq 
+[GW 88]
+title = Go World 88
+data = abndlibqefmg, bdldriernbnm, cecqjnecfnho, cfgcndbeqnmi, chqiljocpjjj, djdckgfckfbh, efbfonqqbogr 
+[GW 89]
+title = Go World 89
+data = bdcqhkdmgrhn, ccelqbdngoeg, ccopolnqkpnn, cdffqkfpodlm, cfgfqfdancrg, cggk??fljh??, eifcprnemnkb 
+[GW 9]
+title = Go World 9
+data = bcpmegkoncle, berqkcgldegk, bfqelmrefmnl, bgcnnpbocfcr, chplifehigrh, chqckrmqgomp, ciqdplfqncoe, deqejofhfjgc, efpfpkiddkgn, efqsjqorgjoi, bferfqmdonlp 
+[GW 90]
+title = Go World 90
+data = bcrddhqnbmgf, behdeldhihqc, cdibeichelbi, cfcfiodghood, cirnirphdpbq, chfqcjdnlpnq, dfpqehcrmokf, egffrndjelpr, ehffpehgljpr 
+[GW 91]
+title = Go World 91
+data = bbmokoqqhokm, ccmpgodgonhn, cgorjelfmcdg, chqqmnbdblrj, dgobhdbhoekg, ehjfimhbgrrp, ehromlonmikn, fgjhqhnkoirc, fhdckhhblelh, fjegrqecenle 
+[GW 92]
+title = Go World 92
+data = cdqgsekfnajg, cebdqbbcabro, cepnpqcfqqlr, dicnndgceqrn, egigndlhnfjl, eipljnorqjeo 
+[GW 93]
+title = Go World 93
+data = bdhjgqdbcpkh, beoboqrjnpjq, cdmqdrmpdild, cediokgdheck, cichdrcaemie, cjdiahrrblef, ddeqrjcaiofi, dgdlhodjbonh, dhdeifeckcqf, eefplmbniopk 
+[GW 94]
+title = Go World 94
+data = bdcmqhgcgioj, bepgoneenhrp, bfimicbkbcih, ccnpjkmfolpr, ceffghicggen, cfjbonbgcqqi, cjfhefghbjjd, dhqqpicoqlrc, diccrpmjkodh, chgfagggjfhp 
+[GW 95]
+title = Go World 95
+data = bdqdgmgpflio, bercbqpmeodi, bfbpkdjoqceg, cclnefekllib, dhjcqcfkfdpe, efohkdndrggi 
+[GW 25]
+title = Go World 25
+data = dhfdfhcokfhi, fhhefcbdible, dfcieqnnncho, bfagbadcioen, dhrrgelepmhn, bflggmogqiol, dijnlchqhhpj, cfmcdcoddhbb, ciificghkboi, dfmeohmcidjl, cfiqcjrhroeb, biocngfeobri, dgngdfidnfmo, deokqemqlomd, cerknbjqqklq, bfhdkgmqhjpc, bdfifogfflai 
+[GW 33]
+title = Go World 33
+data = beqperibbqie, cilgrqnbiiec, cehmehhigjji, fhdjlnehpnok, egopnhcmqmjc, cciqkrcbjqmp, cfijmgnojhjd, fhpinkcckqpc, dffgffdrlcro, bdgeclfliceg, efhqgncbcqqm, gidhpkbnkerk, eijbpohendnq, cfecoakpnebi, bhkqceqlfiqr 
+[GW 34]
+title = Go World 34
+data = chgepfckkdng, cdfoohqijnjj, bdrpkhekjjrd, bcdejiqpjdkl, dejcdrfqqcpn, eiqglcghjbfl, cdjihqcbcojn, cefohkideqpl, eggoncgpdkob, ccfiqjgqlmce 
+[GW 35]
+title = Go World 35
+data = bdqohpdmphcn, dedbripqhqkb, efocgapkhbrk, chnjonpjqlnm, dfqfhldhopdq, hipgfqmddocj, cgprkoiqspjq, dfdjqmabflog, beqlcrfhgior, ffai??ei????, eebehkidobpi, cflbmrbhondn, egelfhdjimcf, bbbkafggeleo, dgobrheenfkb, degfcpndcicl 
+[GW 36]
+title = Go World 36
+data = efhdcllqelfr, efbrfoehgmed, cdldjfpeihgh, ddbigjfpmqcm, cgqmfjbppnin, dhqpocjppqcd, debophcofgqr, cccifbmdlcqo, bdpljphqdnoc, djhcnkghkhol, fgbeiccijeqf, fjigqmldqqnm, cdlgmqjhbadq, bcojcqcopncr, cgkfoqbkoopp, dgbebbdajbej, denecpncqdbi, bbdkfqfgodej, cccqqfbfihqg, djgikkejollp, cgnejqppgqnn 
+[GW 37]
+title = Go World 37
+data = ffknfjdlikck, cgojjpgmmobr, cfdchhebdgbp, deqcqjmeoehh, deofboqdkheg, cdcopjgbhodc, bejlmkfoqfhf, cccgkfgghgnd, cdbrbecmdmnd, cfcjjmhprlii, ccjqcrkgjpgs, bbdiqmddqior 
+[GW 38]
+title = Go World 38
+data = delcbqmcpfab, belfqidimpmd, fgdphlgqfldh, chfqinqqqljd, diffibkcgebp, cheecngmgbgp, cgiderbdimal, effgncdghdhp, fgpnfmedqrgp, cihdogjclgld, bhhhcrhcqgen, cgcnqngcolrp, cdmbppndpmoi, dfhdkdbeekjm 
+[GW 39]
+title = Go World 39
+data = dichigbnfqkl, bejplcokpjkm, dfpjcinkdmij, ccdrnfhqmrrm, cgjgnllfqjol, ddeihenqjemc, bcbpcokekpbq, dfdbfncdeoip, ceheomjikiln, cglgeggfdihl, cegqqmpjqoro, gjbbbkdpekkd, dgoomqfrpesp 
+[GW 40]
+title = Go World 40
+data = egiqdfcndiie, cdmgopmikpkd, difiplckkcrl, bfpgeprirohg, cferkhqqkdle, cfibnoegebdl, egqqlefcmdnh, dgnrifciicmb, chmdqligqoll, fiqjhelbcnon, cddgcigehnjk, cipbocejqipi, dfnqicpplkde, efqcpfcjpigp, chqdbhcjmedc 
+[GW 41]
+title = Go World 41
+data = bcdoihgiinqm, fghbnhiepenc, ejrjpirqrohm, bdlfffpglgdh, dhimphfppjjq, hiqnnkqqqhpc, cglnjodoehkq, degbafebcbbc, djbbqkhdhipm, bbffckgchppf, dfmgkmihjbeg 
+[GW 96]
+title = Go World 96
+data = cfdjqfbpbkrk, dilecjigeigm, bcfkrfohhqqr, efoepqbofbnh, cilqgppmmnen, dijdmbdnrfpq, ccejopciqhoj, fhfoqgejjqcr, deqinopiroib, egpqcqdkoiak, fgcijghdicnd, bddrlloopoer, chcqliepgjod 
+[GW 97]
+title = Go World 97
+data = ddeohcdnpqjl, ehdrjjfjejir, eeerhmhdhqeg, bgprjdeqpjlh, chqnodogjcbo, chckhnrqjplp, cdihnjjgqjhl, dinqplqhphfp 
+[GW 98]
+title = Go World 98
+data = ccbdmbeblphp, dggeldpgicid, cfnebprhcpej, dhapaidpffie, ejecorbjqlnp, bchgecejihkc, cenoqmaelkmi, bepggokoplmc 
+[GW 99]
+title = Go World 99
+data = cfplpqqmqqle, cfclqlhcoelk, dhdqljdnoqmd, cefskkdrfkgg, cdegnpmffebq, cceihpjpfgqp, cegcdoneefeq, egjpmqkiqheb, cgjfjneciikl, ceikcjbofnbf, eiepnqiebgoj, beipbflpilgo, diiqhaqnbnje, cgjdhkjhngqo, dicbhmcfekhl, cjbegrdnhcmc 
+[GW 100]
+title = Go World 100
+data = djedembekeqd, ffekhkegigbg, cefdlcdehdbh, ceolrjnnimhe, hhgihochijlk, einbmeqbrdic, efqekgbeigdn, beplhppkrnjp, cdnjhmbilikq, bcenkblqneqb, chnskmpqnskj 
+[GW 101]
+title = Go World 101
+data = cihldpejiodo, dfebicfejrjb, ddfqimjcebmq, bcjcrdodqioh, cgjhpjbgpnqn, dfclfeebdnqi, cccoqsdlpqji, cfpohlclgmkn, ejcedcqqbeki, chjefgfempli 
+[GW 102]
+title = Go World 102
+data = djnenigfqbci, deqnkpocqpgo, djbfbmdbfpbo, beboidcqifhf, bfnqmnieqofo, cibfecjeefii, begekmdbqfbj, bdkcocngpilf, dieqpcnqqfoj, ehqqdngceqpb, dijghenpkgik, dhdrffimiifh 
+[GW 103]
+title = Go World 103
+data = gjedjnobfhee, efggafdhijjd, bdhniqfngrbk, cfmrclmdjnej, cfcoicbqfegh, cgnpcmqdpfog, cepnmbdrfhgp, cgidqfeemlpi, fgqrrjifpnpl, efcqkifpqqnc, cfdckheigfiq 
+[GW 104]
+title = Go World 104
+data = fgbfonccqooj, deeadqfdheco, cgqrmnqqipqg, bdqckgohpkkh, cgckqggfdgli, cedjnegefjph, dfdcplblrgqk, eeipnfmfordn, ceifdmlcdhoe 
+[GW 105]
+title = Go World 105
+data = dfkdmgqlkajf, egmdqgjcrjob, cdqgocobborm, decnhdprdoie, bhmodhoolphf, cgohoqoergbq, djfjqcgfqgom, dghinokhqpon, cfcpelfppjam, bfqmqolddqfl, dgfgngbfpchi 
+[GW 106]
+title = Go World 106
+data = dfehifgebjcn, bdclnceeheng, cgkoljoornng, cfreofgbrbmf, bdkhnpndhqkp, fhpihjihmccl, dglhocoqqmle, eeefrpdlqnmq, fghqhgndfjio, ehfqedddfjfo, bcjchjmcmdnc, hjqdnhghpgpk, chdhbqffhmjm 
+[GW 107]
+title = Go World 107
+data = dicpnhfkkcpk, bhcdgddfkiip, bdqgpkebjqij, ccciblbdmqph, gihlbjcjemcr, cdpipnhqqmqe, bjpbqiicolbr, egrbgeqdicjp, cgrfkmfqpllr, cegfqbdjbbhp, dgehodcienkq, cecjojfpqgml 
+[GW 108]
+title = Go World 108
+data = debidkbhbofg, cghgpieckeqa, cghhhfeqfijd, egiflocjeohc, djreferqmqhi, deofqncqgjri, ciedfjqpfhbg, ciimkiikfqoh, cflijoojrhsq, becancdjhqrg, dihcprikmcsb 
+[GW 109]
+title = Go World 109
+data = ddproiqoollg, eedmnhidhhmc, dihjhobliqeo, ghniiljiqdkr, cfaqohcpnehc, dddnerchjpln, eiqqhjnqgfad, cecjdrdjcpbo, bcfhfjcjnqpr 
+[GW 110]
+title = Go World 110
+data = eejpboaejndn, chqbnifdlpoo, decfcjkcaeag, bbemdrdphodn, ccepbpgcbqgn, chbfbhredlod, bfjcqngcjdrc, cekclhqgkdpn, degbdlfggmgp, ccgmggdkehhb, dfqopiceqqog 
+[GW 111]
+title = Go World 111
+data = ceogqehrkfbd, dgdjpnfbpoph, deibegbbckgj, ccdjgcfqikpq, bdlqeherjoif, cghgbnbefkkc, mphppgjmline, deiddqmcpbip, fgdrijdohkpn 
+[GW 112]
+title = Go World 112
+data = djedboflgdif, cjijlifijhcc, dfpgmiocigre, ddckkolqdmgn, cfnqopbimqgc, deofrnkdrepl, efeiickcifgl, dfrerbldrhkc, cjejigfcpfqf 
+[GW 113]
+title = Go World 113
+data = bdapqpdlkqrs, dfgnmcepglhk, ccehiqieihql, dhcppcoqerob, ehocdohqfljg, djjfbbidhbph, bdfjbjbphjle, gjeffobjdndd, efhchlbcqben, cefhhedieeqm 
+[GW 114]
+title = Go World 114
+data = cirobknpirng, ehodrqfmpoom, dgorplmbgdoh, beojqhmdicih, dhnbpkomrjmi, beoneqnkeehr, cepkpghonggj 
+[GW 115]
+title = Go World 115
+data = cfcoircjjqql, diocchcqifmb, dfhgmbjfgcpb, ejncokiqblko, bebghnhfjggq, fglbndggmepb, cihjkkbghedp, deffohjfilkg, eharlpfqmpio, eediepjbcqcj, cgdkbodhgjfn 
+[GW 116]
+title = Go World 116
+data = ddfkgnbpdges, bhfoikincjif, beinfngkjoho, eebfkeckkfjb, eioogngkgprq, celinjpepgkd, dfjemebgjcdr 
+[GW 117]
+title = Go World 117
+data = cgdrlddnpckk, bdpkjhhpojpb, cghlckiqblmm, cfmqkbqnmdbq, bcjojkejdmpc, efpqqlqqrerl, chfegincgghi, bfqnigadkdgd, becancdjhqrg, fgaeigceehbk 
+[GW 118]
+title = Go World 118
+data = djodmpkcerfk, bfofloqlpqcq, ccnqrbclpcnb, bhghfpndobjl, cfndklqolljq, ffckjncpfkqq, ehmpiegpqobo, bfhrklhpihkn, cghhhfeqfijd 
+[GW 119]
+title = Go World 119
+data = bgonbopqikal, cdhdkbfgofik, ceccbgfflceg, djrcdcrpkdha, bepbhjncdbpf, deplmnqerrql, bhekgefpfjhd, fgfqnnlbgrml, cdqakdmflfnk, bhqjpkokrfkb, cgjfpifgkifq, dfmpohidlkrc 
+[GW 120]
+title = Go World 120
+data = cepfnkmfmjmp, adhdmcdjkeee, efqcgddhdrkb, bcdjhipmehfm, fgdiqccenebk, dddrobefgqqf, ejdeffleggsj, cjgikceheolg, debejbjgbdnd 
+[GW 121]
+title = Go World 121
+data = dfgffpfeepgk, cekqldlqpsqd, dfhhlgicrikf, bfkcifpecebb, chdmmqephpqo 
+[GW 122]
+title = Go World 122
+data = chqfkdcjqcqq, ceekpnjcggbq, dijdgiglnoco, cdndepcfngom, diecrpeqqdgd, dhqkkepinclp, egfeclrcciai, mqflfijnglph 
+[GW 123]
+title = Go World 123
+data = deciffeqdloi, fidkfqdmboqc, cjhhigjegamc, dfnpbnfepigr, dgolqmlnqosq, efpmqrfqmplj, cgegeodfihlc, belhliekepgl, eheqgdroofhl, dfjdafbdcgcm, dhlqnkbogjeo
+[GW 124]
+title = Go World 124
+data = cejpcnncinqj, dfhcllqiomcl, ccenrnjnajgp, defhnodhnpbo, frrpqqkoqpon, dieglqbcprnc, ddnnehnpnmhc, cgkqffjqgbgh, cfnbgonfoejn
+[GW 125]
+title = Go World 125
+data = cddnembcphhn, ffafeobabjhr, egdgjdhgodfb, efonjmoqillk, cikgfoekflkh, ehmbnhleifmd, dhebdlgcnhdo, bedfqcjcmcii, dendhgepiemp
+[GW 126]
+title = Go World 126
+data = djqfncdoqejd, ceippcgcclhl, cdkehicglbme, cecjojdgeljf, cfonkcledffb, cdoqrnbfnbid, gibfenjecqph
+[GW 127]
+title = Go World 127
+data = cekepfeilhho, cdhgqjbgfjeb, dfdcdidmchjn, cgejfmdgidjj, eedhkfefjfkl, egcqiqgedrgn, defrchdpbmge, cibcimhednmr, bicldnpcmcnl
+# }}}
+# Go Review --- {{{
+[GR Spring 1977]
+title = Go Review Spring 1977
+data = begbqphdrgho, cdjchbqeiffc, cfplkhqpdjik, dgqfbiconobo, efelkihigkjf
+[GR Winter 1977]
+title = Go Review Winter 1977
+data = chijiildhken, ccdfpgdlpkhf, fffjqbedpmsb, dggesbdpmdmh, bdnhfjqnhcfk
+[GR Autumn 1976]
+title = Go Review Autumn 1976
+data = eiehkkejcdho, bdgorggpfrpq, cgqdnbdqqmjl, bdrqlcrckqfo, dggesbdpmdmh, dgcdipdcorjr, efehhfdkmdoc, fgieafpmjeqe
+[GR Summer 1976]
+title = Go Review Summer 1976
+data = cgbognelbjpc, fgdnporoqiol, eeoqrkenqqkd, cghdjmjjnidp, dgpfrhegqari, cdhfmbbamgcm, dggesbdpmdmh 
+[GR Spring 1976]
+title = Go Review Spring 1976
+data = bdledrdefojq, deefgpifbedl, egpcniebqhqr, bfjccglgdmil, dggesbdpmdmh
+[GR Winter 1976]
+title = Go Review Winter 1976
+data = chpeqkpnockb, cfbjildifrec, dfclqlqkqchd, dfogefockefh, dimngmqgjlml, ciccromcgigf, depnbneefbdl, eeipdjooiohg
+[GR Autumn 1975]
+title = Go Review Autumn 1975
+data = ciccromcgigf, cjqdmidccfoq, ccfjqnelbsfn, cgcclgcjhbhg, cfobnepjpkff, efggjebqehhl, efggjebqehhl, eidqnhgcjrok
+[GR Summer 1975]
+title = Go Review Summer 1975
+data = cepasdpficki, cdhjkldloqin, dfbclqbdndjg, djkblkmerfgl, cgqbfbkdprcf, diqdcqflfngr, cdljmbgikeed
+[GR Spring 1975]
+title = Go Review Spring 1975
+data = djkblkmerfgl, dficdlfbhfjp, bfcmfhdqggfo, bbelgfeijkbo, depkcqlqonfq, cdncppqhifrn, cfqcieqilhch, cgbcnijfmhpd, eghpibipjlne
+# }}}
+# Invincible --- {{{
+[INV]
+title = Invincible - the games of Shusaku (ed. John Power)
+data = bbdngfnbgjdf, bcjonfbqikpb, bcrdeqqlnokf, bdbehoqdpmor, bdhfhpcgqmof, bdoqofmppppd, bgfnlnfigoij, bggipeificmf, bgpmloqoiomn, bhphmnodrlon, bifdbdciecha, bjdejmfklqjn, ccbiqkbhgiom, ccbpmkdhhojg, cceglqgdohjs, ccfmeojpepke, cchjdmeeenep, cchlkdfpgjog, cdckpgiojior, cdledhmbdqjr, cdncppqhifrn, cdocmfgjicgn, cdpkrhdhllbe, cdqakpodqnrp, cdqhdpqcpleg, cdqndnoohpbm, cebdhfedchjh, cebrbofjkogk, cefaiefgdlfn, cefoejcnfmar, cefpikejkgnj, cegcldeihgkd, cejhqhqklhhp, cemelpsgpnlj, cfdoqcbbgkpb, cffqhlbcdphd, cfgcdrpdcqnm, cfjgfijbghqh, cfmfheibejqm, cfmpngdnjpjc, cfnbohqcoijg, cfocdigggemf, cfoprkebomco, cfppofbjpinn, cgenjmgfpkmk, cgloghedipqq, cglpfcmorobj, cgqfdmncomge, cgroqhcedicf, cimdqkmolnpm, cinfmopfoodn, cioqmilehmme, cjbiigdehfhj, cjchqnrhljrr, ddopmmbcorhp, debsokeodnjq, deeghpcllcop, deegkqdbidpm, defojllcmnpc, defshbgqkdkj, delhjkdlldhn, deokhonmllkc, deopnobaknli, deqjiiphkdhj, dfcbdmnojpkh, dfjfpdmgrfqk, dfjpobehfgnl, dfkbfjigmddk, dfpjlgjeogpg, dfrlmfppodqn, dgdmpqfffile, dgmcjgqerinh, dgodgefdpnrh, dgqdlknfkhcj, dhchedehhlgr, dhjhgegnrdlf, dhkrjrbnjoin, dibekeeckdfq, dikcgombrfhf, diplnjprmqni, eeemmoffplro, efbejqghqnml, efcabchdebio, efhpeoimbqlr, efkqpeidkdhp, egogclnqdndp, egpqickbhhji, ehglkdbpgdbo, ehkogedmeong, eieogdckijhd, eiihjpcfoqgr, eijgjicblepk, fgjcfdqeqqhh, fhocmocdqpip, fiemgjgqdoio, ghphkiqcpglc
+# }}}
+# Appreciating famous games --- {{{
+[AFG]
+title = Appreciating Famous Games (Ohira Shuzo)
+data = bhmcfhnpemgk, bjmcckghhkhp, ccckjfdidagq, cemirnpgnpbf, cfdinpfgmqqo, cfkeqbbjqcqg, cjchgjhcfglc, dgdmpqfffile, dgldndgegdgh, fghgncejcejp
+# }}}
+# 1971 Honinbo --- {{{
+[H71]
+title = The 1971 Honinbo Tournament (Iwamoto)
+data = bdggdlkckebk, bdgmffclkieh, bedjjmlcgjpm, cdeeonhcpini, chfgenheidmn, cicjjoghcknf, dgohifroojbp, dgorippqrkko, dfhhbhffgkhi, cgcjggeblcgn, fiadqlcqiqql, chehhmqmiflh, gghjqeclmiof, bbdkeikobkjd
+# }}}
+# Tournament go 1992 (ed. John Power) --- {{{
+[TG92]
+title = Tournament Go 1992 (ed. John Power)
+data = bcioqeerhkqq, bcqnpfbmmcol, bdcihfphqoqb, bddqfhjqffke, bdgjdnfffkbo, bdqihmkehpfj, bedgqpfdqcmd, bfdlgfhehcpq, bjlfbfmeofpi, ccdokpbannne, ccffcilddclh, ccophdmoqflf, cdqpqffeocni, cefdpgfiqjjb, cefprndgoqdk, cenmcmlldhfm, cfcemmfggjlq, cfgcbfkmgpqf, cfkcrqqelqkr, cflenidiqkqc, cfnpjbghrqdm, cfnqeoldilhp, cgfkqlcofbkq, cggnflcoiekm, cgnpcnopqgkb, chicmncgqgld, chjhifghhdcp, ddcookeiejjn, deeihdcjflem, dfcpoljgqhfq, dfggfkkcqlip, dfmndjndifqe, dfpeejreohdm, dgeqnpprdlqg, dhmdofpfrdli, dicihnchdobl, dimocokccdek, djbdhkirgmqd, djkcjqcnjhmo, efaffibdpdoc, efeepokgqnml, efhcgkgbgihj, efmpslhgpkcq, egehimlelhfp, ehejkpbfqpnn, eibapmkqqjhm, eigmbqfocgkc, fignkdghrnje, gjpcpbhfmchc, iicphjqqfikh
+# }}}
+# Le go cosmique --- {{{
+[LGC]
+title = Le Go Cosmique (Takemiya Masaki)
+data = bceleijldkkr, bdmfqfbnhkqi, bjlfbfmeofpi, cckqdmnpdidh, cdbclmjpimlr, cdmgopmikpkd, ceqgjmlpenjb, ddhiqpnbjcej, dfplipclgmej, dighebfegdcm, egqqlefcmdnh, ehpfpahkqpmi, eihhhccqjhgp, fiecqgmpjnno
+# }}}
+# Life and master games --- {{{
+[LMG]
+title = Life & master games (Cho Hun-hyeon)
+data = afdfcjeicmil, bdnfnlndrgrn, beohnkpclglk, cfddfcdqlghi, cfnqqgcoojjn, cfpklbjpodli, cjphqrkhppng, ddblpdekcneh, dfompenorcqq, dfpmlkhqmmii, dgpqnfpjrpcp, dhbqnpfggmmo, dhfnoienblol, dhieolclohmn, efhcjhdiepoe, efjinkfplkom, egpnenndrmir, ehkfhpfggeer, fgjcfkhhjbcm, ggbgcogkblki
+# }}}
+# John Fairbairn --- {{{
+[9DS]
+title = 9-dan Showdown (J. Fairbairn)
+data = bcapnldpojre, efkeebhenddi, deegcjfcdhdq, cgleoockmpqq, bjgcdgdqbcpi, cieicknpicph, eeengndohrqj, dfgkdqdihkdm, cjkccmkeieem, cfeherdhjppc, bdqrpqnopjnj, efhdcllqelfr, bfhfjalbgdkq, deoqnohbbomd, cjfjqbenqepp, cdcqhbcjqjqi, dfchhfbbbngo, dgkdnhomjkbq, cfjqlcqjqlpc, ciimifoihkql, ccbmldeogdhh, bdqcrncjqbpn, dflqiobdlccl, begpbnipdsdk, ccejgmkqhqmp, cgqbhqpcfibj, benpneocdmpq, bckfkojciggi, cirpkdnopjem, cijdhocejggi
+[KAM]
+title = Kamakura (J. Fairbairn)
+data = ciieeiomlqcg, fghgohcgqgnh, dhemabfocqgl, bfnkidojlhhi, fhqmofegpqoi, ciqnqfcejepn, dhqqfgepkdga, depeqppckppp, bdpnqlhdrpjk, bfnemiqdleni
+[FS]
+title = Final Summit (J. Fairbairn)
+data = cfjpmprpckql, dicdfgedqqjl, dfomqbcnohmq, cfqcnqjqlhpm, cehnelephjmo, cfkodkirklql, dfnfliqcpooj, eefgqgppgipb, efdmoddnpnlf, fgbkjjfefkgm
+# }}}
+# Best of 2009 --- {{{
+[BGR09]
+title = The Best Game Records of 2009
+data = cdhdkbfgofik, cfpcebjglcfo, dhkeokdemeph, chbqkqckbmgd, cefhfjeechbm, bdqqlrqompco, bdqlpshcpqlk, bdkeokrqifbc, ehqmklfolqro, dglcmjnhgcjc, bepbhjncdbpf, cfgodomkfldp, bfiqqdfieopf, chnnqicponog, dgmdhdlijfib, bdgclriqdqmc, bdlehidjidmd, cfkgmfpejqcg, debejbjgbdnd, bbjnkfqflgig, eqfkhpfcjblb, deplmnqerrql, deghmrhgfbjq, bckpoqfplrql, cjgikceheolg, ejdeffleggsj, dgobnnqprkbc, cfonpibciden, bdplprnqgdnm, ccgoqpepjlqm, ccjoqnkpfoqi, gjfhngempbfj, behohkhmdmpg, cfmqmmdlqnln, chpbligeorlj, cenliiemiqkk, dhqlgkpkekgj, efdofkdherdk, cecfqhdnqfoi, cdjchhdgdafq, cicpioeppboq, bcqqiqhbdngp, efeimeafdnii, ddbndleleqin, dfgjmiplnkni, ccbgoejqornc, bdoenepchfph, eghrggbrmbda, cdiilrffqdki, bgpciidkqbic, dhrgpprfscbi, dfhlcrfjdoko, dgorcnciqflk, ffdnjdfgjfph
+# }}}
+# Yuan Zhou --- {{{
+[MPTAK]
+title = Master Play. The style of Takemiya (Yuan Zhou)
+data = dgqdompjlmen, cdbclmjpimlr
+# }}}
+# Masterpieces of Handicap Go --- {{{
+[MH1]
+title = Masterpieces of Handicap Go 1
+data = abdgikeodjoo, bdhjidjimcle, bhihocifnebn, bhjfopednmnf, ccehklcggkgj, cebiiefhjclf, cedqdoidemdb, cekopmgmkpbn, cjjhqmdfnlqo, defrgbdfeeko, dfmdffchdeoq, dgprpenqpjcp, dhccrihepgef, egbqhldmelfl, eghisefcqdjd, ffjoikhpnjmm, fhckojgcbrro, fhenhheremlc, fhifqgbdlbrb, ghogkcmfpjld
+[MH2]
+title = Masterpieces of Handicap Go 2
+data = bgcgbdgjijek, bhqrimbpjorh, cgiqcqficlhh, cihbfigeeicf, ciqqmdcroomg, delhjkdlldhn, dfedcfhdgglg, dfnlhmhqrpij, dggpnrennqrp, dgqikcgbmmob, djkcninckfeh, eeehqjeneikq, efeijhfdkdnk, efhqgncbcqqm, ejkcemfpfhod, fgpcnbbqaorf, ghhpalglchcr, gibiqmglnmpo
+# }}}
+# GoGoD --- {{{
+[CBASE]
+title = GoGoD CD (CBase)
+data = dgpeseqfnooh, efhcifeqlfdf, chlcleobjfni, efmqqjbppnkg, bdpoklinjlnj, bhmcfhnpemgk, cjcgonqlelee, cgnederbddmm, bednipacqnkl, depjndqdodjh, dgqqrodrkoli, fgfpjnprdggf, cefrqqeqejnb, bepcdqacnrlg, ccelkocfjkoo, dggeldpgicid, cggndnfpjpbn, cfnebprhcpej, dhlollqrorjk, cfqrbrqfjpee, cfqgpqcjqkbk, djedhmgigdjm, cgjfjneciikl, ceikcjbofnbf, bechgjcafhij, fgdidqcecgds, bdlicrpieljm, cfdmdqbefogp, cebglpcncmqk, dfdmbpfabngr, cioijjqdjkdh, bcdnpmdqgqpf, dgqqjnjbfocb, efifihhhikld, bgioimbrqlkm, bchgecejihkc, dggfkqccfnlr, cfqkdcgnqodq, cdnjhmbilikq, bdrpknqcpkbo, cgbaqqbceiok, cedkefccahgq, celmmmohiphl, dhdqljdnoqmd, cfplpqqmqqle, eibmmkciokmf, ejrbrlgdqnoj, dgksiekpoeqf, cipoicrpaprb, bflfmogcpokm, dicjkcmqnfol, efbfogdeoqph, djedembekeqd, ddjnqleqpjlc, dhioqdmqloma, djeikjdhnbpl, dhiobmgqqrcc, dfnqbpjfrpoj, ehnjcecmogii, dgferdjeiidi, cdkmkhjqhjgq, cengojkckifh, dhfhnfhgpcpi, dgidmqdhornr, dibqdqkrqfgh, efibmqqgqkoo, cjkhlkrnsipj, fhgcqohkihkm, dffqklqdipne, cfedphmccjmg, bcjcobbcjfcp, bdbqgmdldnob, dhlonqkeprrp, dfrfekcrdkhd, fgebadfigiho, ccbmegffehgk, dfegbchddebd, bejpnfacrbgk, cghnbjdqgkir, bcbnmgeclene, eicmhcnfrobd, cenmkoigngml, bdcehnclrmjr, dgldggpgnddb, cfdjqqiikicj, beenildmjeir, beipbflpilgo, cdfpmfjqokkm, dgghpdbdinkc, cgiprqcpirql, bcdlfnejfhfr, cgecplbhldok, cdlgihqdjgen, ddhpnmjpmror, dedrgrdnfojo, cemchpopijmq, djehpqhcqlmn, cfkrnbgorqpg, cjpdiejdfbol, bckeeiggjgdh, dfegoqdhnopk, benrqeaccnnj, dfphobbipqic, cgleieoglgfd, fgfi??hdkj??, cekpegrheikm, efqmrgppqiqc, fgiefljbdlbo, eeficqbhoccr, eehifnfgcogn, chahhdcgqhlq, cceohifeekbp, chfmjmbhincc, dfmilkfdrgom, egflepiejkdh, cgjqfcofenkd, egpjlqqhrmjb, cfohgdrfnnkd, cgbklpeqjqhp, cgfkheeihfqj, egknjkeknfrh, ehomepjbfpjj, ccdqdijqeggl, cdqmpcdjrdlh, bcipkcnqrlme, cihkhofdloor, ddcifhnrbjdf, bcabikhbgjho, cgjhpjbgpnqn, bdqohpdgphcn, dfklnfqoqjre, dghgjifhabbo, djkcninckfeh, dfhbqhbekgnc, fibcpeffeflc, bfnkidojlhhi, cgqmfjbppnin, bfnemiqdleni, cdolnpdcbqpd, ceefghidhebq, cibkkqdibder, cigqpdblhphl, cjkcpfbgpdrj, bcoljmacqnnp, cephlnnmrrql, bcpkrflcqghk, eghblbchbehh, dgeilfkdgdob, abghjmdpgndi, bcherpgeplkq, dfjqimenkqfp, dfokbrpkdqpm, cfidchdfqbgf, cccgciffhken, dipnpednlcpc, bdnebofhmqkn, cipoipmdgoco, dhmdqkcqrdki, beqppenpqsnb, dgomliobnnqr, cgofcppnorng, biegbkgfglhe, dghaflccdbhf, dfnopplepkfk, derqiqmornln, djhfikecjhme, cekqhhdjbhfq, bgknoqgneiqr, deppgomdiolj, ccdngjgbgnji, agipbpqngmep, cdjdsnbfqqno, dejffmbdqjhh, dhjfgeqnkdhh, cfgfgrcmpmnd, ejfeoffgqlqe, chceefnbmpbd, cecgfkbcemim, dfqomjlbpjsi, cjbfiejrkdjj, diljqmpjhidj, diqfqniqedql, ceoloqmfoekh, delccoicidaq, cgdlipdrhlfk, efnqeledhqip, ghcbpbebclil, chlnioqkkphn, efbjjnfhjmil, ccprlgnkrklh, ceifqijcpcqk, bfhcfkchjfke, dhfjcbgeckib, bcrrejnqqmko, ciidfkdoqfdr, beebeobbkchl, difbpfldkeom, cihenmmfqlko, bebkklbddnid, cerdiqjcqmlr, dfchhccnefok, cekbplcfremh, djjcfcdojimi, ehplllqkkpke, dhhbqldgqhqb, dfjedjegnbkf, cgdknqfcgdkg, dfpldrpgodbf, cchogfqnpkhf, cfncjneemafq, dfmdpqccodcj, belmlniokcdk, bcqcmkeioicq, cfpfqoqejpon, chgrgjkofmgp, egfkbieifhcr, cgommgpdmlop, dhpnomrllmfk, derelhebifii, ejeifmcigqjp, ehgpecfqjoge, difihfclgoie, eihhkhiehfef, dfrcijbidlbo, bdhekrcfffim, egdjqcpojcpk, bgijdpgffcbq, cijoidbclqeb, dfkdrcccjern, bepimrplhrhj, bcrocrnocogm, cdnrmjbhqeie, cijqqsmolrpj, deoofidbnngp, cecfehicdekh, ffqrnqnddobo, efpbmgkbnlpg, egjdqfjepgqk, dgffblbdfgem, cgehlbbfibom, cfpmjlqkjpjk, cejelggfkffg, ffcgidjgmflb, fgohfchdkfkh, bgjohrcjmrpq, deprhjcdflhr, ffdjrncnrpjq, cgfmgedhfplc, diidbkggdmjf, checnbbhjegm, cjpdjdnqnpcc, benerfmdkcpg, dhcgeiglhlgg, bedofriobqeb, fhljfbngickl, difrenpmcklc, egclifhhlddr, efhqamcdelfe, fgbiaojgands, eicgcbhblbhd, bdnomlrprkqg
+# }}}
