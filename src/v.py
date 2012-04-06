@@ -464,13 +464,12 @@ SGFtreeCanvas.UNIT = 32
 
 class DataWindow:
 
-    def __init__(self, master):
+    def __init__(self, master, window):
         self.mster = master
         
-        window = Frame(master.mainframe)
-        master.mainframe.insert(0, window)
+        window = window
 
-        win = Panedwindow(window, orient='vertical')
+        win = PanedWindow(window, orient='vertical', )
         self.win = win
         win.pack(expand=YES, fill=BOTH)
         
@@ -556,7 +555,11 @@ class DataWindow:
 
     def toggleGuessMode(self):
         if self.mster.guessMode.get():
-            # TODO .. could check sashpos and change it, if necessary
+            if self.mster.mainframe.sash_coord(0)[0] < 300:
+                self.remember_sash = self.mster.mainframe.sash_coord(0)[0]
+                self.mster.mainframe.sash_place(0, 300, 1)
+            else:
+                self.remember_sash = None
 
             self.guessRightWrong = [0,0]
             self.guessModeCanvas.pack(side=RIGHT, expand=NO, fill=BOTH)
@@ -580,6 +583,11 @@ class DataWindow:
             self.guessModeCanvas.pack_forget()
             if self.SNM: self.mster.options.showNextMoveVar.set(1)
             self.mster.showNextMove()
+            try:
+                if not self.remember_sash is None:
+                    self.mster.mainframe.sash_place(0, self.remember_sash, 1)
+            except:
+                pass
 
     def gamelistClick(self, event):
         self.gamelist.clickedLast = self.gamelist.list.nearest(event.y)
@@ -685,32 +693,31 @@ class DataWindow:
 
             except lk.SGFError: showwarning('Error', 'SGF error in gamelistRelease.')
             except: showwarning('Error', 'An error occured, please send a bug report.')
-            
+
         return None, None
 
     def get_geometry(self):
         self.win.update_idletasks()
-        l = [ str(self.win.sashpos(i)) for i in range(4) ]
+        l = [ str(self.win.sash_coord(i)[1]) for i in range(4) ]
         return join(l, '|%')
-        
+
     def set_geometry(self, s):
         l = split(s, '|%')
         if len(l) != 4: return
         self.win.update_idletasks()
-        for i in range(4):
-            self.win.sashpos(i, int(l[i]))
+        for i in [3,2,1,0]:
+            self.win.sash_place(i, 1, int(l[i]))
             self.win.update_idletasks()
-
 
 
     def updateGameInfo(self, cursor):
 
         currentGame = cursor.currentGame
-        
+
         try:
             node = cursor.getRootNode(currentGame)
         except: return
-        
+
         t = []
 
         s1 = cursor.transcode('PW',node)
@@ -1961,8 +1968,9 @@ class Viewer:
             return
 
         index = int(self.dataWindow.filelist.list.curselection()[0])
-
+        
         s = self.dataWindow.filelist.list.get(index)
+
         if self.options.confirmDelete.get() and s[0:2] == '* ':
             if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'):
                 return
@@ -2196,7 +2204,7 @@ class Viewer:
         """ Save options to the dictionary d. """
         self.options.windowGeom.set(self.master.geometry())
         self.options.dataWindowGeometry.set(self.dataWindow.get_geometry())
-        self.options.sashPos.set(self.mainframe.sashpos(0))
+        self.options.sashPos.set(self.mainframe.sash_coord(0)[0])
 
         self.options.saveToDisk(d)
 
@@ -2668,7 +2676,7 @@ class Viewer:
             self.dataWindow.set_geometry(self.options.dataWindowGeometry.get())
         self.mainframe.update_idletasks()
         try:
-            self.mainframe.sashpos(0, self.options.sashPos.get())
+            self.mainframe.sash_place(0, int(self.options.sashPos.get()), 1)
             self.mainframe.update_idletasks()
         except: pass
 
@@ -2754,14 +2762,16 @@ class Viewer:
 
         navFrame = Frame(self.master)
         navFrame.pack(side=TOP, pady=3)
-        self.mainframe = Panedwindow(self.master, orient='horizontal')
+        self.mainframe = PanedWindow(self.master, sashrelief=SUNKEN, sashwidth=2, sashpad=2, orient='horizontal') # note that PanedWindow is Tkinter, not ttk
         self.mainframe.pack(expand=YES, fill=BOTH)
+        dw_frame = Frame(self.mainframe)
+        self.mainframe.add(dw_frame, )
         self.frame = Frame(self.mainframe)
-        self.mainframe.add(self.frame)
+        self.mainframe.add(self.frame, minsize=250)
 
         self.boardFrame = Frame(self.frame, takefocus=1)
         labelFrame = Frame(self.frame)
-        
+
         self.boardFrame.pack(side=TOP, expand=YES, fill=BOTH, padx=5)
         labelFrame.pack(side=TOP)
 
@@ -2805,7 +2815,7 @@ class Viewer:
 
         # the data window
 
-        self.dataWindow = DataWindowClass(self)
+        self.dataWindow = DataWindowClass(self, dw_frame)
 
         self.comments = self.dataWindow.comments
         self.cursor = EnhancedCursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])', self.comments, self.dataWindow.SGFtreeC, self)
