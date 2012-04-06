@@ -1236,7 +1236,7 @@ class App(v.Viewer, KEngine):
         self.reset()
         self.board.newPosition()
         self.changeCurrentFile(None, 0)
-        for fi in self.filelist:
+        for i in range(len(self.filelist)):
             self.delFile()
         
         self.gotoVar.set('')
