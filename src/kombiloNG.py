@@ -877,13 +877,13 @@ class KEngine(object):
             p = self.currentSearchPattern
             plist = p.getInitialPosAsList(boundary=True, hoshi = True)
             
-            l1 = [ ''.join(x).strip() for x in plist ]
+            l1 = [ ' '.join(x).strip() for x in plist ]
 
             N = 400 if showAllCont else 10
             for cont in self.continuations[:N]:
                 x, y = cont[1]+1, cont[2]+1
                 if plist[y][x] in ['.', ',']: plist[y][x] = cont[11] # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
-            l2 = [ ''.join(x).strip() for x in plist ]
+            l2 = [ ' '.join(x).strip() for x in plist ]
         
             s1 = '$$B Search Pattern\n$$' + join(l1, '\n$$') + '\n' if exportMode=='wiki' else join(l1, '\n') 
             s2 = '$$B Continuations\n$$' + join(l2, '\n$$') + '\n' if exportMode=='wiki' else join(l2, '\n')
@@ -905,6 +905,11 @@ class KEngine(object):
                 else: t.append('\n')
 
                 t.append('Statistics:\n')
+
+                Bperc = self.Bwins * 100.0 / self.noMatches
+                Wperc = self.Wwins * 100.0 / self.noMatches
+
+                t.append('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%' % (self.noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
 
                 if exportMode=='wiki': t.append(' %%%\n')
                 t.append('\n')
