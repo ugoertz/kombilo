@@ -1250,7 +1250,7 @@ class App(v.Viewer, KEngine):
         self.fixedAnchorVar.set(0)
         self.nextMoveVar.set(0)
         
-        self.showContinuation.set(0)
+        self.showContinuation.set(1)
         self.oneClick.set(0)
         self.notebookTabChanged()
         
@@ -2237,6 +2237,7 @@ class App(v.Viewer, KEngine):
         self.optionsmenu.add_cascade(label='Advanced', underline=0, menu=advOptMenu)
         advOptMenu.add_checkbutton(label='Open games in external viewer', variable = self.options.externalViewer)
         advOptMenu.add_command(label='Alternative SGF viewer', underline=0, command=self.altViewer)
+        advOptMenu.add_checkbutton(label='Use upper case labels', variable = self.options.uppercaseLabels)
 
 
     def balloonHelpK(self):
