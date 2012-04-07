@@ -450,7 +450,7 @@ class GameList(object):
         '''
 
         db, game = self.getIndex(i)
-        if db == -1: return '~'
+        if db == -1: return
         ID, pos = self.DBlist[db]['data'].currentList[game]
         d = self.DBlist[db]['data'][pos]
         # print ID, pos, d
