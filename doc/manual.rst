@@ -66,6 +66,10 @@ script in the ``kombilo/src`` directory.
 Basic dependencies
 ^^^^^^^^^^^^^^^^^^
 
+The best Python version to run Kombilo on is **Python 2.7**. You might be able
+to get it to work with 2.6, but this will need some more work (at least you need
+to install pyttk separately). It is currently not compatible with Python 3.
+
 Unless you are a Python specialist, the easiest way to install the packages
 required for Kombilo is to install the following packages using the package
 manager of your choice (``synaptic``, ``aptitude``, ``apt-get`` etc.)::
@@ -317,8 +321,9 @@ I made this the default for Macs. Change the :ref:`corresponding option
 figuring this out.)
 
 If you have Python 2.6, you need to install the ``pyttk`` package to run
-Kombilo. In Python 2.7, this package is already included in Python.
-`
+Kombilo. In Python 2.7, which is the preferred Python version for Kombilo, this
+package is already included in Python.
+
 See also the :ref:`Only one mouse button <onlyonemousebutton>` option.
 
 
