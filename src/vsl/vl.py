@@ -72,12 +72,16 @@ class VirtualListbox(Listbox):
 
     def insert_interval(self, interval=None):
         interval = interval or self.current
-        for i in xrange(*interval): self.insert(END, self.get_data(i))
-        if self.get_data_ic:
-            for i in xrange(*interval):
+        for i in xrange(*interval):
+            d = self.get_data(i)
+            self.insert(END, self.get_data(i))
+            if d and self.get_data_ic:
                 ic = self.get_data_ic(i)
                 if ic:
-                    self.itemconfig(i-interval[0], **ic)
+                    try:
+                        self.itemconfig(i-interval[0], **ic)
+                    except TclError:
+                        pass
 
 
 

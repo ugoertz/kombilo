@@ -38,10 +38,11 @@ Major changes:
 ---
 
 
-0.7.2
-^^^^^
+0.7.2 (April 2012)
+^^^^^^^^^^^^^^^^^^
 
-Bug fixes.
+Bug fixes. Added mouse wheel support, and - on Linux - support for back/next
+mouse buttons.
 
 
 0.7.1 (April 2012)

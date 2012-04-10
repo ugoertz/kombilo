@@ -957,8 +957,8 @@ must be escaped by a preceding ``\``.
 
 
 
-Key bindings
-============
+Key and mouse bindings
+======================
 
 Global key bindings
 -------------------
@@ -970,6 +970,7 @@ Global key bindings
 * ``Control-d`` select date profile tab
 * ``Control-t`` select tags tab
 * ``Control-p`` start pattern search
+* ``Control-b`` go back to previous search
 * ``Control-e`` print information about previous search pattern to log tab
 
 If the :ref:`search-history-as-tab <search-history-as-tab>` option is 1,
@@ -993,6 +994,15 @@ Game list key bindings
 * ``Home``/``End``: scroll to left/right
 * ``Return``: open selected game in viewer
 * ``Control-a``: print Dyer signature of selected game to log tab
+
+Mouse bindings
+--------------
+
+* The mouse wheel lets you scroll the game list, or scroll through the current
+  game, depending on where the mouse pointer is located.
+* The next button triggers a pattern search, the back button goes back to the
+  previous search. (This does not work on Windows.)
+
 
 
 Configuring Kombilo
