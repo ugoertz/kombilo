@@ -23,6 +23,17 @@ databases, including all tags.
 History/Change log
 ==================
 
+
+0.8
+---
+
+Major changes:
+
+* Organize pattern search history as a tree.
+* Reintroduce :ref:`custom-menus` as in Kombilo 0.5.
+
+
+
 0.7
 ---
 
