@@ -1203,6 +1203,7 @@ class App(v.Viewer, KEngine):
         # restore variables
         mv, fc, fa, ml, nextM = prev['variables']
         self.modeVar.set(mv)
+        self.board.currentColor = mv[:5]
         self.fixedColorVar.set(fc)
         self.fixedAnchorVar.set(fa)
         self.moveLimit.set(ml)
