@@ -1305,6 +1305,10 @@ void GameList::createGamesDB() throw(DBError) {
   int rc = sqlite3_exec(db, sql1.c_str(), 0, 0, 0);
   if(rc != SQLITE_OK) throw DBError();
 
+  sql1 = "create index if not exists dateindex on GAMES (date);";
+  rc = sqlite3_exec(db, sql1.c_str(), 0, 0, 0);
+  if (rc != SQLITE_OK) throw DBError();
+
   sql1 = "create table if not exists GAME_TAGS ( id integer primary key, game_id integer, tag_id integer, unique(game_id, tag_id) );";
   rc = sqlite3_exec(db, sql1.c_str(), 0, 0, 0);
   if (rc != SQLITE_OK) throw DBError();
