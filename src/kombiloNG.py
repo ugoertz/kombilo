@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# File: kombilo.py
+# File: kombiloNG.py
         
 ##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
@@ -47,10 +47,23 @@ import libkombilo as lk
 from abstractboard import abstractBoard
 import sgf
 
-KOMBILO_VERSION = '0.7'
+KOMBILO_VERSION = '0.8'
 
 REFERENCED_TAG = 3
 SEEN_TAG = 4
+
+
+
+if 'gettext' in sys.modules:
+    # is kombiloNG imported by a module which already imported gettext?
+
+    import gettext
+    t = gettext.translation('kombilo', '../lang')
+    _ = t.ugettext
+else:
+    # otherwise, ignore requests for translations
+    def _(s): return s
+
 
 # -------------- TOOLS --------------------------------------------------
 
@@ -330,7 +343,7 @@ class GameList(object):
         self.gameIndex = []
         self.showFilename = 1
         self.showDate = 0
-        self.customTags = { '1': ('H', 'Handicap game', ), '2': ('P', 'Professional game', ), str(REFERENCED_TAG): ('C', 'Reference to commentary available', ), str(SEEN_TAG): ('S', 'Seen', ),  }
+        self.customTags = { '1': ('H', _('Handicap game'), ), '2': ('P', _('Professional game'), ), str(REFERENCED_TAG): ('C', _('Reference to commentary available'), ), str(SEEN_TAG): ('S', _('Seen'), ),  }
 
     def populateDBlist(self, d):
         '''Add the databases specified in the dictionary ``d`` to this
@@ -575,8 +588,8 @@ class GameList(object):
         t += (' ' + node['BR'][0]) if node.has_key('BR') else ''
 
         if node.has_key('RE'): t = t + ', ' + node['RE'][0]
-        if node.has_key('KM'): t = t + ' (Komi ' + node['KM'][0] + ')'
-        if node.has_key('HA'): t = t + ' (Hcp ' + node['HA'][0] + ')'
+        if node.has_key('KM'): t = t + ' (' + _('Komi') + ' ' + node['KM'][0] + ')'
+        if node.has_key('HA'): t = t + ' (' + _('Hcp') + ' ' + node['HA'][0] + ')'
 
         t = t + '\n'
 
@@ -594,7 +607,7 @@ class GameList(object):
             t = t + gc
 
         signature = self.DBlist[DBindex]['data'].getSignature(index)
-        t2 = ('Commentary in ' + ', '.join(self.references[signature])) if signature in self.references else ''
+        t2 = (_('Commentary in ') + ', '.join(self.references[signature])) if signature in self.references else ''
 
         return t, t2
         
@@ -885,16 +898,16 @@ class KEngine(object):
                 if plist[y][x] in ['.', ',']: plist[y][x] = cont[11] # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
             l2 = [ ' '.join(x).strip() for x in plist ]
         
-            s1 = '$$B Search Pattern\n$$' + join(l1, '\n$$') + '\n' if exportMode=='wiki' else join(l1, '\n') 
-            s2 = '$$B Continuations\n$$' + join(l2, '\n$$') + '\n' if exportMode=='wiki' else join(l2, '\n')
+            s1 = '$$B ' + _('Search Pattern') + '\n$$' + join(l1, '\n$$') + '\n' if exportMode=='wiki' else join(l1, '\n') 
+            s2 = '$$B ' + _('Continuations') + '\n$$' + join(l2, '\n$$') + '\n' if exportMode=='wiki' else join(l2, '\n')
 
             if exportMode=='wiki': t.append('!')
-            t.append('Search results\n\n')
-            if not exportMode=='wiki': t.append('Pattern:\n')
+            t.append(_('Search results') + '\n\n')
+            if not exportMode=='wiki': t.append(_('Pattern:') + '\n')
 
             t.append(s1)
 
-            if not exportMode=='wiki': t.append('\n\nContinuations:\n')
+            if not exportMode=='wiki': t.append('\n\n' + _('Continuations') + ':\n')
             else: t.append('\n\n')
         
             t.append(s2)
@@ -904,32 +917,32 @@ class KEngine(object):
                 if exportMode=='wiki': t.append('%%%%\n!')
                 else: t.append('\n')
 
-                t.append('Statistics:\n')
+                t.append(_('Statistics') + ':\n')
 
                 Bperc = self.Bwins * 100.0 / self.noMatches
                 Wperc = self.Wwins * 100.0 / self.noMatches
 
-                t.append('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%' % (self.noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
+                t.append(_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (self.noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
 
                 if exportMode=='wiki': t.append(' %%%\n')
                 t.append('\n')
 
                 for cont in self.continuations[:N]:
                     if cont[3]: # black continuations
-                        t.append('B%s:    %d (%d), ' % (cont[11], cont[3], cont[3]-cont[6]))
-                        t.append('B %1.1f%% - W %1.1f%%' % (cont[4]*100.0/cont[3], cont[5]*100.0/cont[3]))
+                        t.append(_('B%s:    %d (%d), ') % (cont[11], cont[3], cont[3]-cont[6]))
+                        t.append(_('B %1.1f%% - W %1.1f%%') % (cont[4]*100.0/cont[3], cont[5]*100.0/cont[3]))
                         if exportMode=='wiki': t.append(' %%%')
                         t.append('\n')
                     if cont[7]: # white continuations
-                        t.append('W%s:    %d (%d), ' % (cont[11], cont[7], cont[7]-cont[10]))
-                        t.append('B %1.1f%% - W %1.1f%%' % (cont[8]*100.0/cont[7], cont[9]*100.0/cont[7]))
+                        t.append(_('W%s:    %d (%d), ') % (cont[11], cont[7], cont[7]-cont[10]))
+                        t.append(_('B %1.1f%% - W %1.1f%%') % (cont[8]*100.0/cont[7], cont[9]*100.0/cont[7]))
                         if exportMode=='wiki': t.append(' %%%')
                         t.append('\n')
 
                 t.append('\n')
                 if exportMode=='wiki': t.append('!')
 
-                t.append('Hits per database\n')
+                t.append(_('Hits per database\n'))
                 for db in self.gamelist.DBlist:
                     if db['disabled']: continue
                     t.append(db['sgfpath'] + ': ' + `db['data'].size()` + ' games (of ' + `db['data'].all.size()` + ')')
@@ -1019,7 +1032,7 @@ class KEngine(object):
                 try:
                     db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1]+'.db'))
                 except: 
-                    if showwarning: showwarning('IOError', 'Could not open database %s/%s.' % db['name'])
+                    if showwarning: showwarning(_('IOError'), _('Could not open database %s/%s.') % db['name'])
                     del self.gamelist.DBlist[DBlistIndex]
                     continue
             DBlistIndex += 1  # May differ from loop counter if databases which cannot be opened are omitted.
@@ -1075,17 +1088,17 @@ class KEngine(object):
             datapath = datap
 
         if os.path.isfile(os.path.join(datapath[0], datapath[1]+'.db')):
-            if showwarning: showwarning('Error', 'A kombilo database already exists at %s. Please remove it first, or reprocess that database.' % os.path.join(datapath[0], datapath[1]))
+            if showwarning: showwarning(_('Error'), _('A kombilo database already exists at %s. Please remove it first, or reprocess that database.') % os.path.join(datapath[0], datapath[1]))
             return
 
         try:
             gl = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar)
         except:
-            if showwarning: showwarning('Error', 'A fatal error occured when processing ' + dbpath + '. Are the directories for the database files writable?')
+            if showwarning: showwarning(_('Error'), _('A fatal error occured when processing %s. Are the directories for the database files writable?') % dbpath)
             return
 
         if gl == None:
-            if messages: messages.insert('end', 'Directory %s contains no sgf files.\n' % dbpath)
+            if messages: messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
             return
         # open the lkGameList:
         if index is None:
@@ -1094,7 +1107,7 @@ class KEngine(object):
             self.gamelist.DBlist[index:index] = [{'name':datapath, 'sgfpath':dbpath, 'data': gl, 'disabled': 0}]
         self.currentSearchPattern = None
         self.gamelist.update()
-        if messages: messages.insert('end', 'Added ' + dbpath + '.\n')
+        if messages: messages.insert('end', _('Added %s.') % dbpath + '\n')
         return gl != None
 
 
@@ -1104,7 +1117,7 @@ class KEngine(object):
             progBar.configure(value=0)
             progBar.update()
         if messages:
-            messages.insert('end', 'Processing ' + dbpath + '.\n')
+            messages.insert('end', _('Processing %s.') % dbpath + '\n')
             messages.update()
         if filenames == '*.sgf':
             filelist = glob.glob(os.path.join(dbpath,'*.sgf'))
@@ -1129,13 +1142,13 @@ class KEngine(object):
         if algos: pop.algos |= algos
         if deleteDBfiles and os.path.exists(os.path.join(datap[0], datap[1]+'.db')):
             if messages:
-                messages.insert('end', 'Delete old database files.')
+                messages.insert('end', _('Delete old database files.'))
                 messages.update()
             try:
                 for ext in [ 'db', 'dd', 'da' ]: os.remove(os.path.join(datap[0], datap[1]+'.%s' % ext))
             except:
                 if messages:
-                    messages.insert('end', 'Unable to delete database files.')
+                    messages.insert('end', _('Unable to delete database files.'))
                     messages.update()
 
         gl = lkGameList(os.path.join(datap[0], datap[1]+'.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
@@ -1152,7 +1165,7 @@ class KEngine(object):
                 file.close()
             except:
                 if messages:
-                    messages.insert('end', 'Unable to read file %s' % filename)
+                    messages.insert('end', _('Unable to read file %s') % filename)
                     messages.update()
                 continue
 
@@ -1167,26 +1180,26 @@ class KEngine(object):
                     pres = gl.process_results()
                     if messages:
                         if pres & lk.IS_DUPLICATE:
-                            messages.insert('end', 'Duplicate ... %s\n' % filename)
+                            messages.insert('end', _('Duplicate ... %s\n') % filename)
                             messages.update()
                         if pres & lk.SGF_ERROR:
-                            messages.insert('end', 'SGF error, file %s, %d\n' % (filename, pres))
+                            messages.insert('end', _('SGF error, file %s, %d\n') % (filename, pres))
                             messages.update()
                         if pres & lk.UNACCEPTABLE_BOARDSIZE:
-                            messages.insert('end', 'Unacceptable board size error, file %s, %d\n' % (filename, pres))
+                            messages.insert('end', _('Unacceptable board size error, file %s, %d\n') % (filename, pres))
                             messages.update()
                         if pres & lk.NOT_INSERTED_INTO_DB:
-                            messages.insert('end', 'not inserted\n')
+                            messages.insert('end', _('not inserted\n'))
                             messages.update()
                 elif messages:
-                    messages.insert('end', 'SGF error, file %s, not inserted.\n' % filename)
+                    messages.insert('end', _('SGF error, file %s, not inserted.\n') % filename)
                     messages.update()
             except:
                 if messages:
-                    messages.insert('end', 'SGF error, file %s. Not inserted.\n' % filename)
+                    messages.insert('end', _('SGF error, file %s. Not inserted.\n') % filename)
                     messages.update()
             
-        messages.insert('end', 'Finalizing ... (this will take some time)\n')
+        messages.insert('end', _('Finalizing ... (this will take some time)\n'))
         messages.update()
         gl.finalize_processing()
 

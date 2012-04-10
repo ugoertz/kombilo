@@ -43,10 +43,10 @@ details on the different steps.
   sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
 
   # download the Kombilo archive
-  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.2.tar.gz
+  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.8.tar.gz
 
   # unpack the archive
-  tar xfz kombilo-0.7.2.tar.gz kombilo
+  tar xfz kombilo-0.8.tar.gz kombilo
 
   # compile the C++ extension
   cd kombilo/lk
@@ -97,12 +97,12 @@ Downloading Kombilo
 tar.gz files
 ............
 
-Download the ``kombilo-0.7.2.tar.gz`` archive from the `Kombilo downloads
+Download the ``kombilo-0.8.tar.gz`` archive from the `Kombilo downloads
 <https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
 
 Unpack the archive somewhere by ::
 
-  tar xfz kombilo-0.7.2.tar.gz kombilo
+  tar xfz kombilo-0.8.tar.gz kombilo
 
 This will extract all the files into the kombilo subdirectory.
 
@@ -845,6 +845,30 @@ white player, entering ``Cho`` will bring you to the games with white
 player Cho.
 
 
+.. _search-history:
+
+Search history
+--------------
+
+A right-click on one of the board brings up a small menu, which lets you
+delete that entry, put the entry on hold resp. release it. In the options you
+can configure the maximum number of search patterns which should be remembered.
+If this number is reached, the oldest patterns are deleted, unless they are on
+hold.
+
+You can also use the back button in the toolbar in the right hand column to
+return to the previous search pattern. The patterns are organized in a tree;
+this makes the back button work in the most sensible way. Depending on the depth
+inside this search history tree, the small boards are placed with a vertical
+offset. (This offset is assigned when the small board is created and not changed
+afterwards; if patterns in the tree are deleted, the depth of other patterns
+changes, but their vertical offset will not reflect this.)
+
+:ref:`Optionally <search-history-as-tab>`, you can have the search history as
+the bottom pane of the left hand column.
+
+
+
 Log
 ---
 
@@ -987,6 +1011,37 @@ as the height of the entried in the left hand column by dragging the
 "sashed" between them to the left/right (or up/down, resp.). Move your
 mouse pointer slowly over the region between the columns; it should change
 its look when you are over the sash.
+
+
+.. index:: Custom Menus
+.. _custom-menus:
+
+Custom menus
+------------
+
+The custom menus can be used to add your own menu entries. Upon selecting a menu
+entry, Kombilo can do a pattern search for some pre-defined pattern and/or
+a game info search and/or open a html file in your web browser. For example, you
+could create entries for fuseki or joseki patterns, for players, or for titles. 
+
+To edit the custom menus, select the corresponding entry in the Options menu.
+You see a list of the currently existing menus, submenus and entries. The first
+line with a ``*`` represents the Kombilo main menu. You can add submenus or entries
+to the menus, or delete them.
+
+When an entry is selected, you can
+
+* Add pattern information by pressing the corresponding button. The pattern (and
+  search-relevant region, and the search options) will then be associated with
+  this menu entry). 
+
+* Add game info information by clicking the corresponding button. The current
+  entries in the game info search window will then be associated with the
+  current menu entry. 
+
+* Add a HTML file by entering the file name in the corresponding field, or by
+  browsing for a file. 
+
 
 .. index::
   pair: Options; Menu
@@ -1146,8 +1201,8 @@ game list.
 **search_history_as_tab** (new in 0.7.1)
 Set this to 1 in order to put the search history frame as a tab in the
 right hand column. If the option is 0, then the search history will be
-displayed as the bottom pane of the left hand column. The current default
-for this option is 0, in version 0.8 the default will become 1.
+displayed as the bottom pane of the left hand column. The default
+for this option is 1.
 
 
 .. _use-pil:
