@@ -28,6 +28,10 @@ import sys
 import webbrowser
 from configobj import ConfigObj
 
+import gettext
+t = gettext.translation('kombilo', '../lang')
+_ = t.ugettext
+
 from Tkinter import *
 from ttk import *
 from tkMessageBox import *
@@ -94,8 +98,8 @@ class TextEditor:
         self.buttonFrame = Frame(self.window)
         self.buttonFrame.pack(side=TOP, expand=NO, fill=X)
 
-        Button(self.buttonFrame, text='Quit', command=self.quit).pack(side=RIGHT)
-        Button(self.buttonFrame, text='Save as', command=self.saveas).pack(side=RIGHT)
+        Button(self.buttonFrame, text=_('Quit'), command=self.quit).pack(side=RIGHT)
+        Button(self.buttonFrame, text=_('Save as'), command=self.saveas).pack(side=RIGHT)
 
         # self.window.lift()
         self.window.focus()
@@ -114,7 +118,7 @@ class TextEditor:
             file.write(self.text.get('1.0', END).encode('utf-8', 'ignore'))
             file.close()
         except IOError:
-            showwarning('IO Error', 'Cannot write to ' + f)
+            showwarning(_('IO Error'), _('Cannot write to ') + f)
 
     def quit(self):
 
@@ -485,13 +489,13 @@ class DataWindow:
         self.filelistF.rowconfigure(2,weight=1)
         self.filelistF.columnconfigure(0,weight=1)
 
-        self.filelistB1 = Button(self.filelistF, text = 'NEW', command = self.mster.newFile)
+        self.filelistB1 = Button(self.filelistF, text = _('NEW'), command = self.mster.newFile)
         self.filelistB1.grid(row=0, column=1, sticky=S)
-        self.filelistB2 = Button(self.filelistF, text= 'OPEN', command = self.mster.openFile)
+        self.filelistB2 = Button(self.filelistF, text= _('OPEN'), command = self.mster.openFile)
         self.filelistB2.grid(row=1, column=1, sticky=S)
-        self.filelistB3 = Button(self.filelistF, text = 'DEL', command = self.mster.delFile)
+        self.filelistB3 = Button(self.filelistF, text = _('DEL'), command = self.mster.delFile)
         self.filelistB3.grid(row=0, column=2, sticky=S)
-        self.filelistB4 = Button(self.filelistF, text = 'split', command=self.mster.splitCollection)
+        self.filelistB4 = Button(self.filelistF, text = _('split'), command=self.mster.splitCollection)
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
@@ -511,9 +515,9 @@ class DataWindow:
         self.gamelistF.rowconfigure(2,weight=1)
         self.gamelistF.columnconfigure(0,weight=1)
 
-        self.gamelistB1 = Button(self.gamelistF, text = 'NEW', command = self.mster.newGame)
+        self.gamelistB1 = Button(self.gamelistF, text = _('NEW'), command = self.mster.newGame)
         self.gamelistB1.grid(row=0, column=1, sticky=S)
-        self.gamelistB2 = Button(self.gamelistF, text = 'DEL', command = self.mster.delGame)
+        self.gamelistB2 = Button(self.gamelistF, text = _('DEL'), command = self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
         for button, filename in [(self.gamelistB1, 'document-new.gif'), (self.gamelistB2, 'user-trash.gif')]:
@@ -692,8 +696,8 @@ class DataWindow:
 
                 return self.gamelist.clickedLast, i
 
-            except lk.SGFError: showwarning('Error', 'SGF error in gamelistRelease.')
-            except: showwarning('Error', 'An error occured, please send a bug report.')
+            except lk.SGFError: showwarning(_('Error'), _('SGF error in gamelistRelease.'))
+            except: showwarning(_('Error'), _('An error occured, please send a bug report.'))
 
         return None, None
 
@@ -746,7 +750,7 @@ class DataWindow:
         s1 = cursor.transcode('KM',node)
         if s1: t.append(' (Komi ' + s1 + ')')
         s1 = cursor.transcode('HA',node)
-        if s1: t.append(' (Hcp ' + s1 + ')')
+        if s1: t.append(' (' + _('Hcp') + ' ' + s1 + ')')
 
         t.append('\n')
 
@@ -906,7 +910,7 @@ class EnhancedCursor(Cursor):
 
             self.seeCurrent()
 
-        except: showwarning('Error', 'SGF error in onButton1')
+        except: showwarning(_('Error'), _('SGF error in onButton1'))
 
 
     def next(self, n=0, markCurrent=True):
@@ -964,7 +968,7 @@ class EnhancedCursor(Cursor):
                         if d.has_key(prop):
                             d[prop] = [ flip(split(x, ':')[0]) + ':' + flip(split(x, ':')[1]) for x in d[prop]]
                 except:
-                    showwarning('Error', 'SGF error in def symmetry(self, flip).')
+                    showwarning(_('Error'), _('SGF error in def symmetry(self, flip).'))
 
                 try:
                     if node.down: nodelist.append(node.down)
@@ -1038,7 +1042,7 @@ class Viewer:
 
         if self.cursor.root.numChildren <= 1: return
 
-        filename = tkFileDialog.asksaveasfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')],
+        filename = tkFileDialog.asksaveasfilename(filetypes=[(_('SGF files'), '*.sgf'), (_('All files'), '*')],
                                                   initialdir = self.sgfpath)
         if not filename: return
         self.sgfpath = os.path.split(filename)[0]
@@ -1055,10 +1059,10 @@ class Viewer:
                 try:
                     f.write('(' + self.cursor.outputVar(n) + ')')
                 except lk.SGFError:
-                    showwarning('Error', 'SGF error in game ' + `i`)
+                    showwarning(_('Error'), _('SGF error in game %d') % i)
                 f.close()
             except IOError:
-                showwarning('Error', 'I/O Error when writing ' + filename + `i` + '.sgf')
+                showwarning(_('Error'), _('I/O Error when writing %s%d.sgf') % (filename, i))
                 break
             n = n.down
             i += 1
@@ -1098,13 +1102,13 @@ class Viewer:
         try:
             self.cursor.game(gameNo, update)
         except lk.SGFError:
-            showwarning('Error', 'SGF Error in game ' + `gameNo` + ' in current file.')
+            showwarning(_('Error'), _('SGF Error in game %d in current file.') % gameNo)
             return
 
         try:
             si = self.cursor.getRootNode(gameNo)['SZ'][0]
             if strip(si) != '19':
-                showwarning('Error', 'The board size of this game is not 19x19.')
+                showwarning(_('Error'), _('The board size of this game is not 19x19.'))
                 return
         except:
             pass
@@ -1119,7 +1123,7 @@ class Viewer:
         self.moveno.set('0')
         self.capW = 0
         self.capB = 0
-        self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
+        self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
 
         try:
 
@@ -1137,7 +1141,7 @@ class Viewer:
                 self.board.play(self.convCoord(self.cursor.currentNode()['B'][0]), 'white')
 
         except lk.SGFError:
-            showwarning('SGF Error', 'SGF Error in def setup().')
+            showwarning(_('SGF Error'), _('SGF Error in def setup().'))
             self.gameName.set('')
             self.currentFile = ''
             self.cursor = None
@@ -1189,7 +1193,7 @@ class Viewer:
                 self.cursor.previous(0)
 
         except lk.SGFError:
-            showwarning('SGF Error', 'SGF Error in def markAll()')
+            showwarning(_('SGF Error'), _('SGF Error in def markAll()'))
             self.board.delMarks()
 
         if self.board.currentColor == 'black':
@@ -1232,7 +1236,7 @@ class Viewer:
             else:
                 try: self.cursor.previous()
                 except lk.SGFError:
-                    showwarning('Error', 'Error in SGF file')
+                    showwarning(_('Error'), _('Error in SGF file'))
                     break
                 
         # not found
@@ -1255,7 +1259,7 @@ class Viewer:
             self.board.delLabels()
             self.moveno.set(str(int(self.moveno.get())+1))
             self.displayNode(c)
-            self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
+            self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
             self.currentFileChanged()
             self.board.currentColor = self.modeVar.get()[:5]
         except lk.SGFError:
@@ -1275,7 +1279,7 @@ class Viewer:
         try:
             c = self.cursor.currentNode()
         except lk.SGFError:
-            showwarning('Error', 'SGF Error in gotoMove().')
+            showwarning(_('Error'), _('SGF Error in gotoMove().'))
             return
         
         if (c.has_key('B') and c['B'][0] == pos) or (c.has_key('W') and c['W'][0] == pos):
@@ -1406,7 +1410,7 @@ class Viewer:
                     self.board.currentColor = self.modeVar.get()
 
             except lk.SGFError:
-                showwarning('Error', 'SGF Error in nextMove()')
+                showwarning(_('Error'), _('SGF Error in nextMove()'))
 
             self.currentFileChanged()
                     
@@ -1450,7 +1454,7 @@ class Viewer:
                     try:
                         self.cursor.previous(0)
                     except lk.SGFError:
-                        showwarning('Error', 'Error in SGF file')
+                        showwarning(_('Error'), _('Error in SGF file'))
                         break
 
         
@@ -1481,9 +1485,9 @@ class Viewer:
                 
                 if nM == 'B': self.capB = self.capB + len(self.board.undostack_top_captures())
                 if nM == 'W': self.capW = self.capW + len(self.board.undostack_top_captures())
-                self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
+                self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
             except lk.SGFError:
-                showwarning('Error', 'SGF error in nextMove, 2.')
+                showwarning(_('Error'), _('SGF error in nextMove, 2.'))
 
             self.currentFileChanged()
 
@@ -1507,7 +1511,7 @@ class Viewer:
                     if c.has_key('W'):
                         self.capW -= len(self.board.undostack_top_captures())
                         # print self.capB, self.capW, len(self.board.undostack_top_captures())
-                    self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
+                    self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
 
                     self.board.undo()
 
@@ -1517,7 +1521,7 @@ class Viewer:
                 c = self.cursor.previous(markCurrent)
                 self.moveno.set(str(int(self.moveno.get())-1))
 
-                self.board.delLabels()    
+                self.board.delLabels()
                 self.board.delMarks()
             
                 self.markAll()
@@ -1666,7 +1670,7 @@ class Viewer:
                         self.next(markCurrent=False)
                         break
                 else: break
-        except: showwarning('Error', 'SGF error')
+        except: showwarning(_('Error'), _('SGF error'))
         self.cursor.seeCurrent()
 
         
@@ -1781,7 +1785,7 @@ class Viewer:
                 self.board.placeLabel((x,y), t, text)
 
         except lk.SGFError:
-            showwarning('Error', 'SGF Error in def labelClick().')
+            showwarning(_('Error'), _('SGF Error in def labelClick().'))
 
         self.currentFileChanged()
 
@@ -1797,7 +1801,7 @@ class Viewer:
             self.markAll()
 
             self.cursor.updateTree()
-        except lk.SGFError: showwarning('Error', 'SGF error in delVar.')
+        except lk.SGFError: showwarning(_('Error'), _('SGF error in delVar.'))
         self.currentFileChanged()
         
         
@@ -1915,9 +1919,9 @@ class Viewer:
             index = int(self.dataWindow.filelist.list.curselection()[0])
             self.dataWindow.filelist.list.select_clear(index)
 
-        self.filelist.insert(0, ['New', '', (), c, {}])
+        self.filelist.insert(0, [_('New'), '', (), c, {}])
         self.currentFileNum += 1
-        self.dataWindow.filelist.insert(0, 'New')
+        self.dataWindow.filelist.insert(0, _('New'))
         self.changeCurrentFile(None, 0)
 
 
@@ -1937,14 +1941,14 @@ class Viewer:
             path = '.'
 
         if not filename:
-            path, filename = os.path.split(tkFileDialog.askopenfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')], initialdir=self.sgfpath))
+            path, filename = os.path.split(tkFileDialog.askopenfilename(filetypes=[(_('SGF files'), '*.sgf'), (_('All files'), '*')], initialdir=self.sgfpath))
         if filename:
             try:
                 f = open(os.path.join(path,filename))
                 s = f.read()
                 f.close()
             except IOError:
-                showwarning('Open file', 'Cannot open this file\n')
+                showwarning(_('Open file'), _('Cannot open this file\n'))
                 return 0
             else:
                 if not s: return 0
@@ -1954,7 +1958,7 @@ class Viewer:
                     c = EnhancedCursor(s, self.comments, self.dataWindow.SGFtreeC, self)
 
                 except lk.SGFError:
-                    showwarning('Parsing Error', 'Error in SGF file!')
+                    showwarning(_('Parsing Error'), _('Error in SGF file!'))
                     return 0
 
                 self.dataWindow.filelist.insert(0, filename)
@@ -1973,7 +1977,7 @@ class Viewer:
         s = self.dataWindow.filelist.list.get(index)
 
         if self.options.confirmDelete.get() and s[0:2] == '* ':
-            if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'):
+            if not askokcancel(_('Confirm deletion'), _('There are unsaved changes. Discard them?')):
                 return
 
         del self.filelist[index]
@@ -2011,7 +2015,7 @@ class Viewer:
         try:
             d = self.cursor.currentNode()
         except lk.SGFError:
-            showwarning('Error', 'SGF Error in leaveNode()')
+            showwarning(_('Error'), _('SGF Error in leaveNode()'))
             return
         
         if 'C' in d:
@@ -2118,8 +2122,8 @@ class Viewer:
             file = open(filename, 'w')
             file.write(sgf_out)
             file.close()
-        except IOError: showwarning('Error', 'I/O Error')
-        except lk.SGFError: showwarning('Error', 'SGF error in saveSGFfile')
+        except IOError: showwarning(_('Error'), _('I/O Error'))
+        except lk.SGFError: showwarning(_('Error'), _('SGF error in saveSGFfile'))
 
         else:
             self.currentFileChanged(1)
@@ -2131,7 +2135,7 @@ class Viewer:
 
         self.leaveNode()
 
-        f = tkFileDialog.asksaveasfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')],
+        f = tkFileDialog.asksaveasfilename(filetypes=[(_('SGF files'), '*.sgf'), (_('All files'), '*')],
                                            initialdir = self.sgfpath)
 
         if not f: return
@@ -2141,9 +2145,9 @@ class Viewer:
             file.write(sgf_out)
             file.close()
         except IOError:
-            showwarning('I/O Error', 'Could not write to file ' + f)
+            showwarning(_('I/O Error'), _('Could not write to file ') + f)
         except lk.SGFError:
-            showwarning('Error', 'SGF error in saveasSGFfile')
+            showwarning(_('Error'), _('SGF error in saveasSGFfile'))
 
         else:
             self.sgfpath, self.currentFile = os.path.split(f)
@@ -2167,7 +2171,7 @@ class Viewer:
                 TextEditor(t, self.sgfpath, (self.options.exportFont0, self.options.exportFont1, self.options.exportFont2))
             except:
                 TextEditor(t, self.sgfpath, )
-        except lk.SGFError: showwarning('Error', 'SGF error')
+        except lk.SGFError: showwarning(_('Error'), _('SGF error'))
 
 
        
@@ -2177,7 +2181,7 @@ class Viewer:
         for i in range(len(self.filelist)):
             s = self.dataWindow.filelist.list.get(i)
             if self.options.confirmDelete.get() and s[0:2] == '* ':
-                if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'):
+                if not askokcancel(_('Confirm deletion'), _('There are unsaved changes. Discard them?')):
                     return
                 else: break
 
@@ -2197,7 +2201,7 @@ class Viewer:
             c.filename = os.path.join(self.optionspath,'kombilo.cfg')
             c.write()
         except IOError:
-            showwarning('IOError', 'Could not write kombilo.cfg.')
+            showwarning(_('I/O Error'), _('Could not write kombilo.cfg.'))
 
         self.master.destroy()
 
@@ -2223,22 +2227,21 @@ class Viewer:
         try:
             webbrowser.open('file:'+path, new=1)
         except:
-            showwarning('Error', 'Failed to open the web browser.\nYou can find the tutorial as \na file at: '+ path)
+            showwarning(_('Error'), _('Failed to open the web browser.\nYou can find the tutorial as \na file at: %s') % path)
         
 
 
     def helpAbout(self):
         """ Display the 'About ...' window with some basic information. """
         
-        t = 'v.py - written by Ulrich Goertz (ug@geometry.de)\n\n'
-        t = t + 'v.py is a program to display go game records in SGF format.\n'
-        t = t + 'It comes together with the go database program Kombilo.\n'
+        t = _('v.py - written by Ulrich Goertz (ug@geometry.de)') + '\n\n'
+        t = t + _('v.py is a program to display go game records in SGF format.') + '\n'
+        t = t + _('It comes together with the go database program Kombilo.') + '\n'
         
-        t = t + 'v.py is free software; for more information '
-        t = t + 'see the documentation.\n\n'
+        t = t + _('v.py is free software; for more information see the documentation.') + '\n\n'
 
         window = Toplevel()
-        window.title('About v.py ...')
+        window.title(_('About v.py ...'))
 
         text = Text(window, height=15, width=60, relief=FLAT, wrap=WORD)
         text.insert(1.0, t)
@@ -2246,7 +2249,7 @@ class Viewer:
         text.config(state=DISABLED)
         text.pack()
 
-        b = Button(window, text="OK", command = window.destroy)
+        b = Button(window, text=_("OK"), command = window.destroy)
         b.pack(side=RIGHT)
         
         window.update_idletasks()
@@ -2259,16 +2262,16 @@ class Viewer:
     def helpLicense(self):
         """ Display the GNU General Public License. """
         try:
-            t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2011.\n' 
+            t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2012.\n' 
             t = t + '------------------------------------------------------------------------\n\n'
             file = open(os.path.join(self.basepath,'license.rst'))
             t = t + file.read()
             file.close()
         except IOError:
-            t = 'v.py was written by Ulrich Goertz (ug@geometry.de).\n' 
-            t = t + 'It is open source software, published under the MIT License.'
-            t = t + 'See the documentation for more information. ' 
-            t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'
+            t = _('v.py was written by Ulrich Goertz (ug@geometry.de).') + '\n' 
+            t = t + _('It is open source software, published under the MIT License.')
+            t = t + _('See the documentation for more information. ') 
+            t = t + _('This program is distributed WITHOUT ANY WARRANTY!') + '\n\n'
         self.textWindow(t,'v.py license')
 
     def textWindow(self, t, title='', grab=1):
@@ -2283,7 +2286,7 @@ class Viewer:
         text.config(state=DISABLED)
         text.pack()
 
-        b = Button(window, text="OK", command = window.destroy)
+        b = Button(window, text=_("OK"), command = window.destroy)
         b.pack(side=RIGHT)
         
         window.update_idletasks()
@@ -2330,7 +2333,7 @@ class Viewer:
                     del self.gameinfoDict[k]
 
         except:
-            showwarning('SGF Error', "Parse error in 'Other SGF tags'")
+            showwarning(_('SGF Error'), _("Parse error in 'Other SGF tags'"))
         else:
             if not self.returnChanges: self.currentFileChanged()            
             self.gameinfoWindow.destroy()
@@ -2354,7 +2357,7 @@ class Viewer:
         if not data:
             try: self.gameinfoDict = self.cursor.getRootNode(self.cursor.currentGame)
             except:
-                showwarning('Error', 'SGF Error in gameinfo')
+                showwarning(_('Error'), _('SGF Error in gameinfo'))
                 return
             self.returnChanges = 0
         else:
@@ -2365,7 +2368,7 @@ class Viewer:
         window.transient(self.master)
         window.protocol('WM_DELETE_WINDOW', self.gameinfoCancel)
         self.gameinfoWindow = window
-        window.title('Game Info')
+        window.title(_('Game Info'))
 
         keylist = ['GC', 'PB', 'BR', 'PW', 'WR', 'EV', 'RE', 'DT', 'KM']
 
@@ -2403,18 +2406,18 @@ class Viewer:
             Entry(f, width = 35, textvariable=self.gameinfoVars[key]).grid(row=i, column=1, columnspan=2, sticky=W+E)
             i += 1
             
-        Label(window, text='Game Comment: ').pack(anchor=W)
+        Label(window, text=_('Game Comment: ')).pack(anchor=W)
         self.gameinfoGCText = ScrolledText(window, height=5, width=40, relief=SUNKEN, wrap=WORD)
         self.gameinfoGCText.pack(expand=YES, fill=BOTH)
         self.gameinfoGCText.insert(END, self.gameinfoVars['GC'].get())
         
-        Label(window, text='Other SGF tags: ').pack(anchor=W)
+        Label(window, text=_('Other SGF tags: ')).pack(anchor=W)
         self.gameinfoOthersText = ScrolledText(window, height=5, width=40, relief=FLAT, wrap=WORD)
         self.gameinfoOthersText.pack(expand=YES, fill=BOTH)
         self.gameinfoOthersText.insert(END, self.gameinfoVars['others'].get())
         
-        Button(window, text='Cancel', command = self.gameinfoCancel).pack(side=RIGHT)
-        Button(window, text="OK", command = self.gameinfoOK).pack(side=RIGHT)
+        Button(window, text=_('Cancel'), command = self.gameinfoCancel).pack(side=RIGHT)
+        Button(window, text=_("OK"), command = self.gameinfoOK).pack(side=RIGHT)
         
         window.update_idletasks()
         window.focus()
@@ -2452,65 +2455,65 @@ class Viewer:
 
         # -------------- FILE -------------------
         self.filemenu = Menu(menu)
-        menu.add_cascade(label='File', underline=0, menu=self.filemenu)
-        self.filemenu.add_command(label='New SGF', underline=0, command=self.newFile)
-        self.filemenu.add_command(label='Open SGF', underline=0, command=self.openFile)
-        self.filemenu.add_command(label='Save SGF', underline=0, command=self.saveSGFfile)
-        self.filemenu.add_command(label='Save SGF as', underline=9, command=self.saveasSGFfile)
-        self.filemenu.add_command(label='Export SGF source', command=self.exportSGF)
+        menu.add_cascade(label=_('File'), underline=0, menu=self.filemenu)
+        self.filemenu.add_command(label=_('New SGF'), underline=0, command=self.newFile)
+        self.filemenu.add_command(label=_('Open SGF'), underline=0, command=self.openFile)
+        self.filemenu.add_command(label=_('Save SGF'), underline=0, command=self.saveSGFfile)
+        self.filemenu.add_command(label=_('Save SGF as'), underline=9, command=self.saveasSGFfile)
+        self.filemenu.add_command(label=_('Export SGF source'), command=self.exportSGF)
 
 
         self.filemenu.add_separator()
-        self.filemenu.add_command(label='Exit', underline =1, command=self.quit)
+        self.filemenu.add_command(label=_('Exit'), underline =1, command=self.quit)
 
 
         # --------------- EDIT ------------------
         self.editmenu = Menu(menu)
-        menu.add_cascade(label='Edit', underline=0, menu=self.editmenu)
-        self.editmenu.add_command(label='Mirror vertically', underline=9, command=lambda self=self, flip=flip_mirror1: self.mirrorSGF(flip))
-        self.editmenu.add_command(label='Mirror diagonally', underline=9, command=lambda self=self, flip=flip_mirror2: self.mirrorSGF(flip))
-        self.editmenu.add_command(label='Rotate', underline=9, command=lambda self=self, flip=flip_rotate: self.mirrorSGF(flip))
+        menu.add_cascade(label=_('Edit'), underline=0, menu=self.editmenu)
+        self.editmenu.add_command(label=_('Mirror vertically'), underline=9, command=lambda self=self, flip=flip_mirror1: self.mirrorSGF(flip))
+        self.editmenu.add_command(label=_('Mirror diagonally'), underline=9, command=lambda self=self, flip=flip_mirror2: self.mirrorSGF(flip))
+        self.editmenu.add_command(label=_('Rotate'), underline=9, command=lambda self=self, flip=flip_rotate: self.mirrorSGF(flip))
 
         ctrlclickmenu = Menu(self.editmenu)
-        self.editmenu.add_cascade(label='Ctrl-Click behavior', menu=ctrlclickmenu)
-        for text, value in [ ('Delete stone', 'DEL ST', ), ('Triangle label', 'TR', ), ('Square label', 'SQ', ), ('Upper case letter', 'ABC', ),
-                             ('Lower case letter', 'abc', ), ('Number label', '12n' ,), ]:
+        self.editmenu.add_cascade(label=_('Ctrl-Click behavior'), menu=ctrlclickmenu)
+        for text, value in [ (_('Delete stone'), 'DEL ST', ), (_('Triangle label'), 'TR', ), (_('Square label'), 'SQ', ), (_('Upper case letter'), 'ABC', ),
+                             (_('Lower case letter'), 'abc', ), (_('Number label'), '12n' ,), ]:
             ctrlclickmenu.add_radiobutton(label=text, variable = self.options.labelType, value = value)
 
 
         # -------------- PRACTICE ------------------
 
         self.practicemenu = Menu(menu)
-        menu.add_cascade(label='Practice', underline=0, menu=self.practicemenu)
-        self.practicemenu.add_checkbutton(label='Guess mode', underline=0, variable=self.guessMode, command=self.dataWindow.toggleGuessMode)
+        menu.add_cascade(label=_('Practice'), underline=0, menu=self.practicemenu)
+        self.practicemenu.add_checkbutton(label=_('Guess mode'), underline=0, variable=self.guessMode, command=self.dataWindow.toggleGuessMode)
 
 
         # -------------- OPTIONS -------------------
         self.optionsmenu = Menu(menu)
-        menu.add_cascade(label='Options', underline=0, menu=self.optionsmenu)
+        menu.add_cascade(label=_('Options'), underline=0, menu=self.optionsmenu)
 
-        self.optionsmenu.add_checkbutton(label='Fuzzy stone placement', underline = 0, variable=self.options.fuzzy, command=self.board.fuzzyStones)
-        self.optionsmenu.add_checkbutton(label='Shaded stone mouse pointer', variable=self.options.shadedStoneVar)
-        self.optionsmenu.add_checkbutton(label='Show next move', underline=5, variable = self.options.showNextMoveVar, command = self.showNextMove)
-        self.optionsmenu.add_checkbutton(label='Show last move', underline=5, variable = self.options.showCurrMoveVar, command = self.showNextMove)
-        self.optionsmenu.add_checkbutton(label='Show coordinates', variable = self.options.showCoordinates, command = self.toggleCoordinates)
-        self.optionsmenu.add_checkbutton(label='Ask before discarding unsaved changes', variable = self.options.confirmDelete)
+        self.optionsmenu.add_checkbutton(label=_('Fuzzy stone placement'), underline = 0, variable=self.options.fuzzy, command=self.board.fuzzyStones)
+        self.optionsmenu.add_checkbutton(label=_('Shaded stone mouse pointer'), variable=self.options.shadedStoneVar)
+        self.optionsmenu.add_checkbutton(label=_('Show next move'), underline=5, variable = self.options.showNextMoveVar, command = self.showNextMove)
+        self.optionsmenu.add_checkbutton(label=_('Show last move'), underline=5, variable = self.options.showCurrMoveVar, command = self.showNextMove)
+        self.optionsmenu.add_checkbutton(label=_('Show coordinates'), variable = self.options.showCoordinates, command = self.toggleCoordinates)
+        self.optionsmenu.add_checkbutton(label=_('Ask before discarding unsaved changes'), variable = self.options.confirmDelete)
 
         theme_menu = Menu(self.optionsmenu)
         for th in self.style.theme_names():
             theme_menu.add_radiobutton(label=th, variable=self.options.theme, value=th, command=lambda: self.style.theme_use(self.options.theme.get()))
 
-        self.optionsmenu.add_cascade(label='Theme', underline=0, menu=theme_menu)
+        self.optionsmenu.add_cascade(label=_('Theme'), underline=0, menu=theme_menu)
 
 
         # -------------- HELP -------------------
-        self.helpmenu = Menu(menu, name='help')
-        menu.add_cascade(label='Help', underline=0, menu=self.helpmenu)
+        self.helpmenu = Menu(menu, name=_('help'))
+        menu.add_cascade(label=_('Help'), underline=0, menu=self.helpmenu)
 
-        self.helpmenu.add_command(label='About ...', underline=0, command=self.helpAbout)
+        self.helpmenu.add_command(label=_('About ...'), underline=0, command=self.helpAbout)
         
-        self.helpmenu.add_command(label='License', underline=0, command=self.helpLicense)
-        self.helpmenu.add_command(label='Documentation', underline=0, command=self.helpDocumentation)
+        self.helpmenu.add_command(label=_('License'), underline=0, command=self.helpLicense)
+        self.helpmenu.add_command(label=_('Documentation'), underline=0, command=self.helpDocumentation)
 
         self.mainMenu = menu
 
@@ -2548,12 +2551,12 @@ class Viewer:
         self.boardFrame.bind('<Prior>', self.upVariation)
         self.boardFrame.bind('<Next>', self.downVariation)
         
-        self.passButton = Button(navFrame, text='Pass', command = self.passFct)
+        self.passButton = Button(navFrame, text=_('Pass'), command = self.passFct)
         
-        self.gameinfoButton = Button(navFrame, text = 'Info', command = self.gameinfo, underline = 0)
+        self.gameinfoButton = Button(navFrame, text = _('Info'), command = self.gameinfo, underline = 0)
         self.boardFrame.bind('<Control-i>', lambda e, s = self.gameinfoButton: s.invoke())
 
-        lab = Label(navFrame, text='Ctrl-Click:')
+        lab = Label(navFrame, text=_('Ctrl-Click:'))
         
         self.removeStoneButton = Radiobutton(navFrame, text='DEL ST', indicatoron=0, variable=self.options.labelType, value='DEL ST')
         self.triangleButton = Radiobutton(navFrame, text='TR', indicatoron=0, variable=self.options.labelType, value='TR')
@@ -2562,7 +2565,7 @@ class Viewer:
         self.letterLButton = Radiobutton(navFrame, text='abc', indicatoron=0, variable=self.options.labelType, value='abc')
         self.numberButton = Radiobutton(navFrame, text='123', indicatoron=0, variable=self.options.labelType, value='12n')
         self.delButton = Button(navFrame, text='DEL', command = lambda self=self: self.delVar())
-        self.guessModeButton = Checkbutton(navFrame, text='Guess mode', indicatoron=0,
+        self.guessModeButton = Checkbutton(navFrame, text=_('Guess mode'), indicatoron=0,
                                            variable=self.guessMode, command=self.dataWindow.toggleGuessMode)
 
         ca0 = Separator(navFrame, orient='vertical')
@@ -2627,39 +2630,39 @@ class Viewer:
 
 
     def balloonHelp(self):
-        ToolTip(self.prevButton, 'Back one move')
-        ToolTip(self.nextButton, 'Forward one move')
-        ToolTip(self.prev10Button, 'Back 10 moves')
-        ToolTip(self.next10Button, 'Forward 10 moves')
-        ToolTip(self.startButton, 'Start of game/Clear board')
-        ToolTip(self.endButton, 'End of game')
-        ToolTip(self.passButton, 'Pass')
-        ToolTip(self.gameinfoButton, 'Edit game info')
+        ToolTip(self.prevButton, _('Back one move'))
+        ToolTip(self.nextButton, _('Forward one move'))
+        ToolTip(self.prev10Button, _('Back 10 moves'))
+        ToolTip(self.next10Button, _('Forward 10 moves'))
+        ToolTip(self.startButton, _('Start of game/Clear board'))
+        ToolTip(self.endButton, _('End of game'))
+        ToolTip(self.passButton, _('Pass'))
+        ToolTip(self.gameinfoButton, _('Edit game info'))
 
-        ToolTip(self.BWbutton, 'Play black/white stones')
-        ToolTip(self.WBbutton, 'Play white/black stones')
-        ToolTip(self.Bbutton, 'Place black stones')
-        ToolTip(self.Wbutton, 'Place white stones')
+        ToolTip(self.BWbutton, _('Play black/white stones'))
+        ToolTip(self.WBbutton, _('Play white/black stones'))
+        ToolTip(self.Bbutton, _('Place black stones'))
+        ToolTip(self.Wbutton, _('Place white stones'))
 
-        ToolTip(self.capLabel, 'Number of captured stones')
-        ToolTip(self.movenoLabel, 'Number of current move')
-        ToolTip(self.gameNameLabel, 'Current SGF file')
+        ToolTip(self.capLabel, _('Number of captured stones'))
+        ToolTip(self.movenoLabel, _('Number of current move'))
+        ToolTip(self.gameNameLabel, _('Current SGF file'))
 
-        ToolTip(self.dataWindow.filelistB1, 'Create new SGF file')
-        ToolTip(self.dataWindow.filelistB2, 'Open SGF file')
-        ToolTip(self.dataWindow.filelistB3, 'Delete SGF file from list')
-        ToolTip(self.dataWindow.filelistB4, 'Split collection into single files')
-        ToolTip(self.dataWindow.gamelistB1, 'Create new game')
-        ToolTip(self.dataWindow.gamelistB2, 'Delete game')
+        ToolTip(self.dataWindow.filelistB1, _('Create new SGF file'))
+        ToolTip(self.dataWindow.filelistB2, _('Open SGF file'))
+        ToolTip(self.dataWindow.filelistB3, _('Delete SGF file from list'))
+        ToolTip(self.dataWindow.filelistB4, _('Split collection into single files'))
+        ToolTip(self.dataWindow.gamelistB1, _('Create new game'))
+        ToolTip(self.dataWindow.gamelistB2, _('Delete game'))
 
-        ToolTip(self.removeStoneButton, 'Ctrl-click deletes stone')
-        ToolTip(self.triangleButton, 'Ctrl-click places/deletes triangle label')
-        ToolTip(self.squareButton, 'Ctrl-click places/deletes square label')
-        ToolTip(self.letterUButton, 'Ctrl-click places/deletes uppercase label')
-        ToolTip(self.letterLButton, 'Ctrl-click places/deletes lowercase label')
-        ToolTip(self.numberButton, 'Ctrl-click places/deletes number label')
-        ToolTip(self.delButton, 'Delete this and all following nodes')
-        ToolTip(self.guessModeButton, 'Enter/leave guess mode')
+        ToolTip(self.removeStoneButton, _('Ctrl-click deletes stone'))
+        ToolTip(self.triangleButton, _('Ctrl-click places/deletes triangle label'))
+        ToolTip(self.squareButton, _('Ctrl-click places/deletes square label'))
+        ToolTip(self.letterUButton, _('Ctrl-click places/deletes uppercase label'))
+        ToolTip(self.letterLButton, _('Ctrl-click places/deletes lowercase label'))
+        ToolTip(self.numberButton, _('Ctrl-click places/deletes number label'))
+        ToolTip(self.delButton, _('Delete this and all following nodes'))
+        ToolTip(self.guessModeButton, _('Enter/leave guess mode'))
         
 
     def evalOptions(self):
@@ -2734,7 +2737,7 @@ class Viewer:
                 if 'sgfpath' in self.config['main']: self.sgfpath = self.config['main']['sgfpath']
                 self.loadOptions(self.config['options'])
         except:
-            showwarning('Error', 'Neither kombilo.cfg nor default.cfg were found.')
+            showwarning(_('Error'), _('Neither kombilo.cfg nor default.cfg were found.'))
             sys.exit()
 
         if not self.optionspath:
@@ -2747,7 +2750,7 @@ class Viewer:
                 os.makedirs(self.optionspath)
             except:
                 if not os.path.exists(self.optionspath):
-                    showwarning('Error', 'Unable to create directory %s.' % self.optionspath)
+                    showwarning(_('Error'), _('Unable to create directory %s.') % self.optionspath)
                     sys.exit()
 
         # use optionspath for logging errors
@@ -2858,7 +2861,7 @@ if __name__ == '__main__':
         if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
             root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
     except TclError:
-        showwarning('Error', 'Error reading v.app')
+        showwarning(_('Error'), _('Error reading v.app'))
         
     app = Viewer(root)
 

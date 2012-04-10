@@ -34,6 +34,10 @@ import re
 from array import *
 from configobj import ConfigObj
 
+import gettext
+t = gettext.translation('kombilo', '../lang')
+_ = t.ugettext
+
 from Tkinter import *
 from ttk import *
 from tkMessageBox import *
@@ -341,12 +345,12 @@ class ESR_TextEditor(v.TextEditor):
         self.mster = master
         self.style = style
         
-        Button(self.buttonFrame, text='Include game list', command=self.includeGameList).pack(side=LEFT)
+        Button(self.buttonFrame, text=_('Include game list'), command=self.includeGameList).pack(side=LEFT)
 
 
     def includeGameList(self):
         separator = ' %%%\n' if self.style=='wiki' else '\n' # wiki/plain style
-        self.text.insert(END, '\n\n!Game list\n\n' + separator.join(self.mster.gamelist.get_all()))
+        self.text.insert(END, '\n\n!' + _('Game list') + '\n\n' + separator.join(self.mster.gamelist.get_all()))
         
 
 # -------------------------------------------------------------------------------------
@@ -490,9 +494,9 @@ class GameListGUI(GameList, VScrolledList):
             Bperc = self.Bwins * 100.0 / noOfG
             Wperc = self.Wwins * 100.0 / noOfG
         self.total_in_list = noOfG
-        self.noGamesLabel.config(text = `noOfG` + ' games')
+        self.noGamesLabel.config(text = _('%d games') % noOfG)
         if noOfG:
-            self.winPercLabel.config(text='B: %1.1f%%, W: %1.1f%%' % (Bperc, Wperc))
+            self.winPercLabel.config(text=_('B: %1.1f%%, W: %1.1f%%') % (Bperc, Wperc))
         else: self.winPercLabel.config(text='')
         VScrolledList.reset(self)
 
@@ -550,10 +554,10 @@ class GameListGUI(GameList, VScrolledList):
             c = Cursor(sgf, 1)
             rootNode = c.getRootNode(gameNumber)
         except IOError:
-            showwarning('Error', 'I/O Error')
+            showwarning(_('Error'), _('I/O Error'))
             return
         except lk.SGFError:
-            showwarning('Error', 'SGF error')
+            showwarning(_('Error'), _('SGF error'))
             return
         
         # backup = copy(rootNode.data)
@@ -567,7 +571,7 @@ class GameListGUI(GameList, VScrolledList):
                 file.write(s)
                 file.close()
             except IOError:
-                showwarning('I/O Error', 'Could not write to file ' + filename)
+                showwarning(_('I/O Error'), _('Could not write to file ') + filename)
 
 
     def handleDoubleClick(self, event):
@@ -703,12 +707,12 @@ class PrevSearchesStack:
     def postMenu(self, event, node):
         self.popupMenu = Menu(self.mster.dataWindow.window)
         self.popupMenu.config(tearoff=0)
-        self.popupMenu.add_command(label = 'Delete', command = lambda self=self, node=node: self.unpost_and_delete(node))
+        self.popupMenu.add_command(label = _('Delete'), command = lambda self=self, node=node: self.unpost_and_delete(node))
 
         if node.d['on_hold']:
-            self.popupMenu.add_command(label = 'Release', command = lambda self=self, node=node: self.unpost_and_release(node))
+            self.popupMenu.add_command(label = _('Release'), command = lambda self=self, node=node: self.unpost_and_release(node))
         else:
-            self.popupMenu.add_command(label = 'Hold', command = lambda self=self, node=node: self.unpost_and_hold(node))
+            self.popupMenu.add_command(label = _('Hold'), command = lambda self=self, node=node: self.unpost_and_hold(node))
 
         self.popupMenu.tk_popup(event.x_root, event.y_root)
 
@@ -916,7 +920,7 @@ class App(v.Viewer, KEngine):
             return
 
         data = [ { 'black': y*1.0/(z*m) if z else 0, 'label': [ '%d' % x[0], '-', '%d' % (x[1]-1,) ], 'label_top': [ '%d/' % y, '%d' % z ] } for x, y, z in d ]
-        self.displayBarChart(self.dateProfileCanv, 'stat', data=data, colors = ['black'], title='Date profile, %d games' % self.gamelist.noOfGames())
+        self.displayBarChart(self.dateProfileCanv, 'stat', data=data, colors = ['black'], title=_('Date profile, %d games') % self.gamelist.noOfGames())
 
 
     def displayStatistics(self):
@@ -931,7 +935,7 @@ class App(v.Viewer, KEngine):
         Wperc = self.Wwins * 100.0 / noMatches
            
         if not self.continuations:
-            self.displayBarChart(self.statisticsCanv, 'stat', title = '%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%' % (noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
+            self.displayBarChart(self.statisticsCanv, 'stat', title = _('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
             return
 
         maxHeight = self.continuations[0][0]
@@ -944,7 +948,7 @@ class App(v.Viewer, KEngine):
 
         self.displayBarChart(self.statisticsCanv, 'stat',
                              data=data, colors= [ self.options.Btenuki.get(), 'black', 'white', self.options.Wtenuki.get() ],
-                             title = '%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%' % (noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
+                             title = _('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches-self.noSwitched, self.noSwitched, Bperc, Wperc))
 
 
     def displayBarChart(self, canvas, tag, colors=[], data=[], title=''):
@@ -1083,11 +1087,11 @@ class App(v.Viewer, KEngine):
                 self.leaveNode()
                 self.displayLabels(self.cursor.currentNode())
             except:
-                showwarning('Error', 'SGF Error')
+                showwarning(_('Error'), _('SGF Error'))
                 
         self.gameinfoSearch(query)
         self.progBar.stop()
-        self.logger.insert(END, 'Game info search, query "%s", %1.1f seconds\n' % (query, time.time() - currentTime))
+        self.logger.insert(END, _('Game info search, query "%s", %1.1f seconds\n') % (query, time.time() - currentTime))
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -1099,7 +1103,7 @@ class App(v.Viewer, KEngine):
         if not self.gamelist.noOfGames(): self.reset()
 
         window = Toplevel(takefocus=0)
-        window.title('Signature Search')
+        window.title(_('Signature Search'))
 
         m20 = StringVar()
         m40 = StringVar()
@@ -1108,17 +1112,17 @@ class App(v.Viewer, KEngine):
         m51 = StringVar()
         m71 = StringVar()
         
-        l1 = Label(window, text='Move 20')
+        l1 = Label(window, text=_('Move 20'))
         e1 = Entry(window, width=4, textvariable=m20)
-        l2 = Label(window, text='Move 40')
+        l2 = Label(window, text=_('Move 40'))
         e2 = Entry(window, width=4, textvariable=m40)
-        l3 = Label(window, text='Move 60')
+        l3 = Label(window, text=_('Move 60'))
         e3 = Entry(window, width=4, textvariable=m60)
-        l4 = Label(window, text='Move 31')
+        l4 = Label(window, text=_('Move 31'))
         e4 = Entry(window, width=4, textvariable=m31)
-        l5 = Label(window, text='Move 51')
+        l5 = Label(window, text=_('Move 51'))
         e5 = Entry(window, width=4, textvariable=m51)
-        l6 = Label(window, text='Move 71')
+        l6 = Label(window, text=_('Move 71'))
         e6 = Entry(window, width=4, textvariable=m71)
 
         for i, (label, entry ) in enumerate([ (l1, e1), (l2, e2), (l3, e3) ]):
@@ -1131,8 +1135,8 @@ class App(v.Viewer, KEngine):
 
         e1.focus()
         
-        bs = Button(window, text='Search', command = lambda self=self, window=window, m20=m20, m40=m40, m60=m60, m31=m31, m51=m51, m71=m71: self.doSigSearch(window, m20, m40, m60, m31, m51, m71))
-        bq = Button(window, text='Cancel', command = window.destroy)
+        bs = Button(window, text=_('Search'), command = lambda self=self, window=window, m20=m20, m40=m40, m60=m60, m31=m31, m51=m51, m71=m71: self.doSigSearch(window, m20, m40, m60, m31, m51, m71))
+        bq = Button(window, text=_('Cancel'), command = window.destroy)
 
         window.protocol('WM_DELETE_WINDOW', window.destroy)
 
@@ -1190,7 +1194,7 @@ class App(v.Viewer, KEngine):
 
         self.signatureSearch(sig)
         self.progBar.stop()
-        self.logger.insert(END, 'Signature search, %1.1f seconds, searching for\n%s\n' % (time.time() - currentTime, sig))
+        self.logger.insert(END, (_('Signature search, %1.1f seconds, searching for') % (time.time() - currentTime)) + '\n%s\n' %  sig)
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -1235,7 +1239,7 @@ class App(v.Viewer, KEngine):
                 else:
                     try: self.cursor.game(self.cursor.currentGame)
                     except:
-                        showwarning('Error', 'SGF Error')
+                        showwarning(_('Error'), _('SGF Error'))
                         return
                 self.board.newPosition()
                 self.moveno.set('0')
@@ -1247,9 +1251,9 @@ class App(v.Viewer, KEngine):
 
                 self.board.restore(target_values['boardData'], fromSGF=True)
                 self.sel = self.board.selection      # used in self.showCont()
-                self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
+                self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
             else:
-                showwarning('Error', 'SGF File not found')
+                showwarning(_('Error'), _('SGF File not found'))
 
         # restore variables
         mv, fc, fa, ml, nextM = target_values['variables']
@@ -1429,7 +1433,7 @@ class App(v.Viewer, KEngine):
         exportMode = StringVar()
 
         dialog = Toplevel()
-        dialog.title('Export position')
+        dialog.title(_('Export position'))
         dialog.protocol('WM_DELETE_WINDOW', lambda: None)
 
         f1 = Frame(dialog)
@@ -1438,14 +1442,14 @@ class App(v.Viewer, KEngine):
 
         for f in [f1, f2, f3]: f.pack(side=TOP, fill=BOTH, expand=YES, pady=5)
         
-        Label(f1, text='Number of moves to be shown (0-9):').pack(side=TOP)
+        Label(f1, text=_('Number of moves to be shown (0-9):')).pack(side=TOP)
         Entry(f1, textvariable=numberOfMoves).pack(side=TOP)
 
-        Label(f2, text='Export mode:').pack(side=LEFT)
-        Radiobutton(f2, text='ASCII', variable=exportMode, value='ascii', highlightthickness=0).pack(side=LEFT)
-        Radiobutton(f2, text='Wiki', variable=exportMode, value='wiki', highlightthickness=0).pack(side=LEFT)
+        Label(f2, text=_('Export mode:')).pack(side=LEFT)
+        Radiobutton(f2, text=_('ASCII'), variable=exportMode, value='ascii', highlightthickness=0).pack(side=LEFT)
+        Radiobutton(f2, text=_('Wiki'), variable=exportMode, value='wiki', highlightthickness=0).pack(side=LEFT)
 
-        Button(f3, text='OK', command=dialog.destroy).pack(anchor=E)
+        Button(f3, text=_('OK'), command=dialog.destroy).pack(anchor=E)
 
         dialog.update_idletasks()  
         dialog.focus()
@@ -1504,7 +1508,7 @@ class App(v.Viewer, KEngine):
                 l[i].insert(0, '%2d  ' % (19-i))
 
             l.insert(0, '')
-            l.insert(0, '    A B C D E F G H J K L M N O P Q R S T')
+            l.insert(0, _('    A B C D E F G H J K L M N O P Q R S T'))
 
             if n:
                 if nextMove == 'B': remarks.append('Black = 1\n')
@@ -1535,7 +1539,7 @@ class App(v.Viewer, KEngine):
         exportMode = StringVar()
 
         dialog = Toplevel()
-        dialog.title('Export position')
+        dialog.title(_('Export position'))
         dialog.protocol('WM_DELETE_WINDOW', lambda: None)
 
         f1 = Frame(dialog)
@@ -1544,14 +1548,14 @@ class App(v.Viewer, KEngine):
 
         for f in [f1, f2, f3]: f.pack(side=TOP, fill=BOTH, expand=YES, pady=5)
         
-        Label(f1, text='Export mode:').pack(side=LEFT)
-        Radiobutton(f1, text='ASCII', variable=exportMode, value='ascii', highlightthickness=0).pack(side=LEFT)
-        Radiobutton(f1, text='Wiki', variable=exportMode, value='wiki', highlightthickness=0).pack(side=LEFT)
+        Label(f1, text=_('Export mode:')).pack(side=LEFT)
+        Radiobutton(f1, text=_('ASCII'), variable=exportMode, value='ascii', highlightthickness=0).pack(side=LEFT)
+        Radiobutton(f1, text=_('Wiki'), variable=exportMode, value='wiki', highlightthickness=0).pack(side=LEFT)
 
         showAllCont = IntVar()
-        Checkbutton(f2, text='Show all continuations', variable=showAllCont, highlightthickness=0).pack(side=LEFT)
+        Checkbutton(f2, text=_('Show all continuations'), variable=showAllCont, highlightthickness=0).pack(side=LEFT)
 
-        Button(f3, text='OK', command=dialog.destroy).pack(anchor=E)
+        Button(f3, text=_('OK'), command=dialog.destroy).pack(anchor=E)
 
         dialog.update_idletasks()  
         dialog.focus()
@@ -1599,10 +1603,10 @@ class App(v.Viewer, KEngine):
                     pid = os.fork()
                     if pid == 0:
                         os.execv(s1, (s1,)+tuple(split(s2)))
-                        showwarning('Error', 'Error starting SGF viewer')
-                else: showwarning('Error', s1 + ' not found.')
+                        showwarning(_('Error'), _('Error starting SGF viewer'))
+                else: showwarning(_('Error'), _('%s not found.') % s1)
             except OSError:
-                showwarning('Error', 'Error starting SGF viewer')
+                showwarning(_('Error'), _('Error starting SGF viewer'))
 
         else:
             window = Toplevel()
@@ -1671,17 +1675,17 @@ class App(v.Viewer, KEngine):
         """ Ask for alternative SGF viewer. """
         
         window = Toplevel()
-        window.title('Alternative SGF viewer')
+        window.title(_('Alternative SGF viewer'))
 
         f = Frame(window)
         f.pack()
         
-        l1 = Label(f, text='Enter the command to launch the SGF viewer')
+        l1 = Label(f, text=_('Enter the command to launch the SGF viewer'))
         e1 = Entry(f, width=40, textvariable=self.options.altViewerVar1)
-        l2 = Label(f, text='Enter the command line options, with %f for the filename')
+        l2 = Label(f, text=_('Enter the command line options, with %f for the filename'))
         e2 = Entry(f, width=40, textvariable=self.options.altViewerVar2)
 
-        b = Button(f, text='OK', command = window.destroy) 
+        b = Button(f, text=_('OK'), command = window.destroy) 
 
         window.protocol('WM_DELETE_WINDOW', lambda: None)
         
@@ -1717,16 +1721,16 @@ class App(v.Viewer, KEngine):
         if self.options.storeDatabasesSeparately.get() and self.options.whereToStoreDatabases.get():
             datap = (self.options.whereToStoreDatabases.get(), '')
             if os.path.exists(datap[0]) and not os.path.isdir(datap[0]):
-                showwarning('Error', datap[0] + ' is not a directory.')
+                showwarning(_('Error'), _('%s is not a directory.') % datap[0])
                 self.editDB_OK.config(state=NORMAL)
                 self.saveProcMess.config(state=NORMAL)
                 return
             elif not os.path.exists(datap[0]):
-                if askokcancel('Error', 'Directory ' + datap[0] + ' does not exist. Create it?'):
+                if askokcancel(_('Error'), _('Directory %s does not exist. Create it?') % datap[0]):
                     try:
                         os.makedirs(datap[0])
                     except:
-                        showwarning('Error', datap[0] + ' could not be created.')
+                        showwarning(_('Error'), _('%s could not be created.') % datap[0])
                         self.editDB_OK.config(state=NORMAL)
                         self.saveProcMess.config(state=NORMAL)
                         return
@@ -1743,7 +1747,7 @@ class App(v.Viewer, KEngine):
 
 
     def callAddDB(self, dbp, datap, index=None):
-        tagAsPro = { 'Never': 0, 'All games' : 1, 'All games with p-rank players' : 2, }[self.options.tagAsPro.get()]
+        tagAsPro = { _('Never'): 0, _('All games') : 1, _('All games with p-rank players') : 2, }[self.options.tagAsPro.get()]
         algos = 0
         if self.options.algo_hash_full.get(): algos |= lk.ALGO_HASH_FULL
         if self.options.algo_hash_corner.get(): algos |= lk.ALGO_HASH_CORNER
@@ -1779,13 +1783,13 @@ class App(v.Viewer, KEngine):
                 os.remove(os.path.join(datap[0], datap[1]+'.db'))
                 os.remove(os.path.join(datap[0], datap[1]+'.da'))
             except:
-                showwarning('I/O Error', 'Could not delete the database files.')
+                showwarning(_('I/O Error'), _('Could not delete the database files.'))
             try: # these files will only be present if hashing algos were used, so do not issue a warning when they are not found
                 os.remove(os.path.join(datap[0], datap[1]+'.db1'))
                 os.remove(os.path.join(datap[0], datap[1]+'.db2'))
             except:
                 pass
-            self.processMessages.insert(END, 'Removed ' + dbpath + '.\n')
+            self.processMessages.insert(END, _('Removed %s.') % dbpath + '\n')
             
         self.gamelist.reset()
         self.prevSearches.clear()
@@ -1820,7 +1824,7 @@ class App(v.Viewer, KEngine):
                 os.remove(os.path.join(datap[0], datap[1]+'.db'))
                 os.remove(os.path.join(datap[0], datap[1]+'.da'))
             except:
-                showwarning('I/O Error', 'Could not delete the database files %s %s .' % datap)
+                showwarning(_('I/O Error'), _('Could not delete the database files %s %s .') % datap)
             try: # these files will only be present if hashing algos were used, so do not issue a warning when they are not found
                 os.remove(os.path.join(datap[0], datap[1]+'.db1'))
                 os.remove(os.path.join(datap[0], datap[1]+'.db2'))
@@ -1878,7 +1882,7 @@ class App(v.Viewer, KEngine):
             file.write(self.processMessages.get('1.0', END))
             file.close()
         except IOError:
-            showwarning('Error', 'Could not write to ' + filename)
+            showwarning(_('Error'), _('Could not write to ') + filename)
 
 
     def DBlistClick(self, event):
@@ -1950,7 +1954,7 @@ class App(v.Viewer, KEngine):
         self.editDB_window = window
         window.transient(self.master)
 
-        window.title('Edit database list')
+        window.title(_('Edit database list'))
 
         f1 = Frame(window)
         f1.grid(row=0, sticky=NSEW)
@@ -1980,25 +1984,25 @@ class App(v.Viewer, KEngine):
             db_date = getDateOfFile(os.path.join(db['name'][0], db['name'][1]+'.da'))
 
             if db['disabled']:
-                self.db_list.insert(END, 'DISABLED - ' + db['sgfpath'] + ' (' + db_date  + ')' )
+                self.db_list.insert(END, _('DISABLED') + ' - ' + db['sgfpath'] + ' (' + db_date  + ')' )
             else:
                 self.db_list.insert(END, db['sgfpath'] + ' (%s, %d games)' % (db_date, db['data'].size_all()) )
 
-        for i, (text, command, ) in enumerate([('Add DB', self.addDB), ('Toggle normal/disabled', self.toggleDisabled),
-                                               ('Remove DB', self.removeDB), ('Reprocess DB', self.reprocessDB)]):
+        for i, (text, command, ) in enumerate([(_('Add DB'), self.addDB), (_('Toggle normal/disabled'), self.toggleDisabled),
+                                               (_('Remove DB'), self.removeDB), (_('Reprocess DB'), self.reprocessDB)]):
             Button(f2, text=text, command=command).grid(row=0, column=i, sticky=NSEW)
-        self.editDB_OK = Button(f2, text='OK', command = self.finalizeEditDB)
+        self.editDB_OK = Button(f2, text=_('OK'), command = self.finalizeEditDB)
         self.editDB_OK.grid(row=0, column=4, sticky=NSEW)
             
-        Label(f3, text='Processing options', justify=LEFT, font=('Helvetica', 10, 'bold')).grid(row=0, column=0, sticky=W)
+        Label(f3, text=_('Processing options'), justify=LEFT, font=('Helvetica', 10, 'bold')).grid(row=0, column=0, sticky=W)
 
-        recursionButton = Checkbutton(f3, text = "Recursively add subdirectories", highlightthickness=0, variable = self.options.recProcess, pady=5)
+        recursionButton = Checkbutton(f3, text = _('Recursively add subdirectories'), highlightthickness=0, variable = self.options.recProcess, pady=5)
         recursionButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
         self.filenamesVar = StringVar()
-        filenamesLabel = Label(f3, anchor='w', text='Files:', pady=10)
+        filenamesLabel = Label(f3, anchor='w', text=_('Files:'), pady=10)
         filenamesLabel.grid(row=1, column=2, sticky=E)
-        filenamesMenu = Combobox(f3, textvariable = self.filenamesVar, values = ['*.sgf', '*.sgf, *.mgt', 'All files'], state='readonly')
+        filenamesMenu = Combobox(f3, textvariable = self.filenamesVar, values = ['*.sgf', '*.sgf, *.mgt', _('All files')], state='readonly')
         filenamesMenu.set('*.sgf')
         filenamesMenu.grid(row=1, column=3, sticky=W)
 
@@ -2008,36 +2012,36 @@ class App(v.Viewer, KEngine):
         #            'shift-jis', 'shift-jisx0213', 'euc-jp', 'euc-jisx0213', 'iso-2022-jp', 'iso-2022-jp-1',
         #            'iso-2022-jp-2', 'iso-2022-jp-3', 'iso-2022-jp-ext', 'cp949', 'euc-kr', 'johab', 'iso-2022-kr',
         #           ]
-        # encLabel = Label(f3, anchor='w', text='Encoding:', pady=10)
+        # encLabel = Label(f3, anchor='w', text=_('Encoding:'), pady=10)
         # encLabel.grid(row=1, column=3, sticky=E)
         # encodingMenu = Combobox(f3, textvariable = self.encodingVar, values = enclist, state='readonly')
         # encodingMenu.set('utf-8')
         # encodingMenu.grid(row=1, column=4, sticky=W)
         # 
         # self.encoding1Var = StringVar()
-        # encoding1Menu = Combobox(f3, textvariable = self.encoding1Var, values = ['Do not change SGF', 'Add CA tag', 'Transcode SGF to utf-8'], state='readonly')
-        # encoding1Menu.set('Add CA tag')
+        # encoding1Menu = Combobox(f3, textvariable = self.encoding1Var, values = [_('Do not change SGF'), _('Add CA tag'), _('Transcode SGF to utf-8')], state='readonly')
+        # encoding1Menu.set(_('Add CA tag'))
         # encoding1Menu.grid(row=1, column=5, sticky=W)
 
 
-        duplButton = Checkbutton(f3, text="Accept duplicates", highlightthickness=0, variable = self.options.acceptDupl, pady=5)
+        duplButton = Checkbutton(f3, text=_('Accept duplicates'), highlightthickness=0, variable = self.options.acceptDupl, pady=5)
         duplButton.grid(row=3, column=0, sticky=W, columnspan=2)
 
-        strictDuplCheckButton = Checkbutton(f3, text="Strict duplicate check", highlightthickness=0, variable = self.options.strictDuplCheck, pady=5)
+        strictDuplCheckButton = Checkbutton(f3, text=_('Strict duplicate check'), highlightthickness=0, variable = self.options.strictDuplCheck, pady=5)
         strictDuplCheckButton.grid(row=3, column=2, sticky=W, columnspan=2)
 
-        processVariations = Checkbutton(f3, text="Process variations", highlightthickness=0, variable = self.options.processVariations, pady=5)
+        processVariations = Checkbutton(f3, text=_('Process variations'), highlightthickness=0, variable = self.options.processVariations, pady=5)
         processVariations.grid(row=5, column=0, sticky=W, columnspan=2)
        
-        profTagLabel = Label(f3, anchor='e', text='Tag as professional:', font=('Helvetica', 10), pady=8)
+        profTagLabel = Label(f3, anchor='e', text=_('Tag as professional:'), font=('Helvetica', 10), pady=8)
         profTagLabel.grid(row=6, column=0, sticky=W, )
         profTag = Combobox(f3, justify='left', textvariable = self.options.tagAsPro,
-                               values = ['Never', 'All games', 'All games with p-rank players',  ], state='readonly')
+                               values = [_('Never'), _('All games'), _('All games with p-rank players'),  ], state='readonly')
         profTag.grid(row=6, column=1, columnspan=2, sticky=W)
 
         sep = Separator(f3, orient='horizontal')
         sep.grid(row=7, column=0, columnspan=7, sticky=NSEW)
-        whereDatabasesButton = Checkbutton(f3, text = 'Store databases separately from SGF files', highlightthickness=0,
+        whereDatabasesButton = Checkbutton(f3, text = _('Store databases separately from SGF files'), highlightthickness=0,
                                            command = self.toggleWhereDatabases, variable = self.options.storeDatabasesSeparately, padx=8)
         whereDatabasesButton.grid(row=8, column=0, columnspan=3, sticky=W)
 
@@ -2045,7 +2049,7 @@ class App(v.Viewer, KEngine):
         self.whereDatabasesEntry.grid(row=8, column=3, columnspan=3, sticky=NSEW)
         if not self.options.storeDatabasesSeparately.get(): self.whereDatabasesEntry.config(state=DISABLED)
 
-        browseButton = Button(f3, text='Browse', command = self.browseDatabases)
+        browseButton = Button(f3, text=_('Browse'), command = self.browseDatabases)
         browseButton.grid(row=8, column=5)
         f3.grid_columnconfigure(0, weight=1)
         f3.grid_columnconfigure(1, weight=2)
@@ -2055,13 +2059,13 @@ class App(v.Viewer, KEngine):
         sep1 = Separator(f3, orient='horizontal')
         sep1.grid(row=9, column=0, columnspan=7, sticky=NSEW)
 
-        self.algo_hash_full = Checkbutton(f3, text = 'Use hashing for full board positions', highlightthickness = 0, variable = self.options.algo_hash_full, pady=5)
+        self.algo_hash_full = Checkbutton(f3, text = _('Use hashing for full board positions'), highlightthickness = 0, variable = self.options.algo_hash_full, pady=5)
         self.algo_hash_full.grid(row=10, column = 0, columnspan=2)
 
-        self.algo_hash_corner = Checkbutton(f3, text = 'Use hashing for corner positions', highlightthickness = 0, variable = self.options.algo_hash_corner, pady=5)
+        self.algo_hash_corner = Checkbutton(f3, text = _('Use hashing for corner positions'), highlightthickness = 0, variable = self.options.algo_hash_corner, pady=5)
         self.algo_hash_corner.grid(row=10, column = 3, columnspan=2)
 
-        self.saveProcMess = Button(f4, text='Save messages', command = self.saveMessagesEditDBlist)
+        self.saveProcMess = Button(f4, text=_('Save messages'), command = self.saveMessagesEditDBlist)
         self.saveProcMess.pack(side=RIGHT)
         self.processMessages = Message(f5)
         self.processMessages.pack(side=TOP, expand=YES, fill=BOTH)
@@ -2086,7 +2090,7 @@ class App(v.Viewer, KEngine):
             if not dir: return
             dir = str(dir)
 
-        if not os.path.exists(dir) and askokcancel('Error', 'Directory ' + dir + ' does not exist. Create it?'):
+        if not os.path.exists(dir) and askokcancel(_('Error'), _('Directory %s does not exist. Create it?') % dir):
             try:
                 os.makedirs(dir)
             except:
@@ -2107,7 +2111,7 @@ class App(v.Viewer, KEngine):
         for i in range(len(self.filelist)):
             s = self.dataWindow.filelist.list.get(i)
             if self.options.confirmDelete.get() and s[0:2] == '* ':
-                if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'): return
+                if not askokcancel(_('Confirm deletion'), _('There are unsaved changes. Discard them?')): return
                 else: break
         
         try:
@@ -2131,7 +2135,7 @@ class App(v.Viewer, KEngine):
             c.filename = os.path.join(self.optionspath,'kombilo.cfg')
             c.write()
         except:
-            showwarning('IOError', 'Could not write kombilo.cfg')
+            showwarning(_('IOError'), _('Could not write kombilo.cfg'))
 
         self.master.quit()
         
@@ -2151,16 +2155,14 @@ class App(v.Viewer, KEngine):
 
         t = []
         
-        t.append('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)\n\n' % KOMBILO_RELEASE)
-        t.append('Kombilo is a go database program.\n')
-        t.append('You can find more information on Kombilo and the newest ')
-        t.append('version at http://www.u-go.net/kombilo/\n\n')
+        t.append(_('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)') % KOMBILO_RELEASE + '\n\n')
+        t.append(_('Kombilo is a go database program.') + '\n')
+        t.append(_('You can find more information on Kombilo and the newest version at http://www.u-go.net/kombilo/') + '\n\n')
         
-        t.append('Kombilo is free software; for more information ')
-        t.append('see the documentation.\n\n')
+        t.append(_('Kombilo is free software; for more information see the documentation.') + '\n\n')
         
         window = Toplevel()
-        window.title('About Kombilo ...')
+        window.title(_('About Kombilo ...'))
 
         if self.logo:
             canv = Canvas(window, width=75,height=23)
@@ -2173,7 +2175,7 @@ class App(v.Viewer, KEngine):
         text.config(state=DISABLED)
         text.pack()
 
-        b = Button(window, text="OK", command = window.destroy)
+        b = Button(window, text=_('OK'), command = window.destroy)
         b.pack(side=RIGHT)
         
         window.update_idletasks()
@@ -2184,17 +2186,17 @@ class App(v.Viewer, KEngine):
 
 
     def helpLicense(self):
-        """ Display the GNU General Public License. """
+        """ Display the Kombilo license. """
         try:
             file = open(os.path.join(self.basepath, 'license.rst'))
             t = file.read()
             file.close()
         except:
-            t = 'Kombilo was written by Ulrich Goertz (ug@geometry.de).\n' 
-            t = t + 'It is open source software, published under the MIT License.'
-            t = t + 'See the documentation for more information. ' 
-            t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'
-        self.textWindow(t,'Kombilo license')
+            t = _('Kombilo was written by Ulrich Goertz (ug@geometry.de).') + '\n' 
+            t = t + _('It is open source software, published under the MIT License.')
+            t = t + _('See the documentation for more information. ') 
+            t = t + _('This program is distributed WITHOUT ANY WARRANTY!') + '\n\n'
+        self.textWindow(t,_('Kombilo license'))
 
 
 
@@ -2242,52 +2244,52 @@ class App(v.Viewer, KEngine):
 
         # --------- FILE ---------------------------------
         self.filemenu.insert_separator(6)
-        self.filemenu.insert_command(7, label='Complete reset', command = self.completeReset)
+        self.filemenu.insert_command(7, label=_('Complete reset'), command = self.completeReset)
 
 
         # --------- DATABASE ---------------------------------
 
         self.dbmenu = Menu(self.mainMenu)
-        self.mainMenu.insert_cascade(3, label='Database', underline=0, menu=self.dbmenu)
-        self.dbmenu.add_command(label='Edit DB list', underline = 0, command=self.editDBlist)
-        self.dbmenu.add_command(label='Export search results', command=self.exportText)
-        self.dbmenu.add_command(label='Export current position', command=self.exportCurrentPos)
-        self.dbmenu.add_command(label='Export tags to file', command=self.exportTags)
-        self.dbmenu.add_command(label='Import tags from file', command=self.importTags)
-        self.dbmenu.add_command(label='Copy current SGF files to folder', command=self.copyCurrentGamesToFolder)
+        self.mainMenu.insert_cascade(3, label=_('Database'), underline=0, menu=self.dbmenu)
+        self.dbmenu.add_command(label=_('Edit DB list'), underline = 0, command=self.editDBlist)
+        self.dbmenu.add_command(label=_('Export search results'), command=self.exportText)
+        self.dbmenu.add_command(label=_('Export current position'), command=self.exportCurrentPos)
+        self.dbmenu.add_command(label=_('Export tags to file'), command=self.exportTags)
+        self.dbmenu.add_command(label=_('Import tags from file'), command=self.importTags)
+        self.dbmenu.add_command(label=_('Copy current SGF files to folder'), command=self.copyCurrentGamesToFolder)
 
-        self.dbmenu.add_command(label='Signature search', command=self.sigSearch)
+        self.dbmenu.add_command(label=_('Signature search'), command=self.sigSearch)
 
 
-        self.optionsmenu.add_checkbutton(label='Jump to match', underline = 0, variable = self.options.jumpToMatchVar)
-        self.optionsmenu.add_checkbutton(label='Smart FixedColor', underline = 1, variable = self.options.smartFixedColor)
+        self.optionsmenu.add_checkbutton(label=_('Jump to match'), underline = 0, variable = self.options.jumpToMatchVar)
+        self.optionsmenu.add_checkbutton(label=_('Smart FixedColor'), underline = 1, variable = self.options.smartFixedColor)
 
         # ------ game list submenu ------------
 
         gamelistMenu = Menu(self.optionsmenu)
-        self.optionsmenu.add_cascade(label='Game list', underline = 0, menu = gamelistMenu)
+        self.optionsmenu.add_cascade(label=_('Game list'), underline = 0, menu = gamelistMenu)
 
-        for text, value in [ ('Sort by white player', GL_PW, ), ('Sort by black player', GL_PB, ), ('Sort by filename', GL_FILENAME, ), ('Sort by date', GL_DATE, ) ]:
+        for text, value in [ (_('Sort by white player'), GL_PW, ), (_('Sort by black player'), GL_PB, ), (_('Sort by filename'), GL_FILENAME, ), (_('Sort by date'), GL_DATE, ) ]:
             gamelistMenu.add_radiobutton(label=text, variable = self.options.sortCriterion, value = value, command=self.gamelist.update)
-        gamelistMenu.add_checkbutton(label='Reverse order', variable=self.options.sortReverse, command=self.gamelist.update)
+        gamelistMenu.add_checkbutton(label=_('Reverse order'), variable=self.options.sortReverse, command=self.gamelist.update)
 
         gamelistMenu.add_separator()
 
-        gamelistMenu.add_checkbutton(label='Show filename', variable = self.options.showFilename, command = self.showFilenameInGamelist)
-        gamelistMenu.add_checkbutton(label='Show date', variable = self.options.showDate, command = self.showDateInGamelist)
+        gamelistMenu.add_checkbutton(label=_('Show filename'), variable = self.options.showFilename, command = self.showFilenameInGamelist)
+        gamelistMenu.add_checkbutton(label=_('Show date'), variable = self.options.showDate, command = self.showDateInGamelist)
 
         # -------------------------------------
 
         # self.options.invertSelection = self.board.invertSelection
-        # self.optionsmenu.add_checkbutton(label='Invert selection', variable = self.options.invertSelection)
+        # self.optionsmenu.add_checkbutton(label=_('Invert selection'), variable = self.options.invertSelection)
         advOptMenu = Menu(self.optionsmenu)
-        self.optionsmenu.add_cascade(label='Advanced', underline=0, menu=advOptMenu)
-        advOptMenu.add_checkbutton(label='Open games in external viewer', variable = self.options.externalViewer)
-        advOptMenu.add_command(label='Alternative SGF viewer', underline=0, command=self.altViewer)
-        advOptMenu.add_checkbutton(label='Use upper case labels', variable = self.options.uppercaseLabels)
+        self.optionsmenu.add_cascade(label=_('Advanced'), underline=0, menu=advOptMenu)
+        advOptMenu.add_checkbutton(label=_('Open games in external viewer'), variable = self.options.externalViewer)
+        advOptMenu.add_command(label=_('Alternative SGF viewer'), underline=0, command=self.altViewer)
+        advOptMenu.add_checkbutton(label=_('Use upper case labels'), variable = self.options.uppercaseLabels)
 
         self.custom_menus = CustomMenus(self)
-        self.optionsmenu.insert_command(1, label='Custom Menus', command=self.custom_menus.change)
+        self.optionsmenu.insert_command(1, label=_('Custom Menus'), command=self.custom_menus.change)
 
 
 
@@ -2295,16 +2297,16 @@ class App(v.Viewer, KEngine):
 
     def balloonHelpK(self):
 
-        for widget, text in [ (self.resetButtonS, 'Reset game list'), (self.backButtonS, 'Back to previous search pattern'), (self.showContButtonS, 'Show continuations'),
-                              (self.oneClickButtonS, '1-click mode'), (self.colorButtonS, "(Don't) allow color swap in search pattern"),
-                              (self.anchorButtonS, "(Don't) translate search pattern"), (self.nextMove1S, 'Black or white plays next (or no continuation)'),
-                              (self.nextMove2S, 'Black plays next'), (self.nextMove3S, 'White plays next'),
-                              (self.scaleS, 'Pattern has to occur before move n (250=no limit)'), (self.searchButtonS, 'Start pattern search'),
-                              (self.GIstart, 'Start game info search'), (self.GIclear, 'Clear all entries'),
-                              (self.GI_bwd, 'Restore entries of previous game info search'), (self.GI_fwd, 'Restore entries of next game info search'),
-                              (self.tagsearchButton, 'Search for tagged games.\nE.g.: H and not S'), (self.tagsetButton, 'Set tags of selected game.'),
-                              (self.tagallButton, 'Tag all games currently listed with given tag.'), (self.untagallButton, 'Remove given tag from all games currently listed.'),
-                              (self.tagaddButton, 'Define a new tag (give one-letter abbreviation and description).'), (self.tagdelButton, 'Remove a tag.'),
+        for widget, text in [ (self.resetButtonS, _('Reset game list')), (self.backButtonS, _('Back to previous search pattern')), (self.showContButtonS, _('Show continuations')),
+                              (self.oneClickButtonS, _('1-click mode')), (self.colorButtonS, _("(Don't) allow color swap in search pattern")),
+                              (self.anchorButtonS, _("(Don't) translate search pattern")), (self.nextMove1S, _('Black or white plays next (or no continuation)')),
+                              (self.nextMove2S, _('Black plays next')), (self.nextMove3S, _('White plays next')),
+                              (self.scaleS, _('Pattern has to occur before move n (250=no limit)')), (self.searchButtonS, _('Start pattern search')),
+                              (self.GIstart, _('Start game info search')), (self.GIclear, _('Clear all entries')),
+                              (self.GI_bwd, _('Restore entries of previous game info search')), (self.GI_fwd, _('Restore entries of next game info search')),
+                              (self.tagsearchButton, _('Search for tagged games.\nE.g.: H and not S')), (self.tagsetButton, _('Set tags of selected game.')),
+                              (self.tagallButton, _('Tag all games currently listed with given tag.')), (self.untagallButton, _('Remove given tag from all games currently listed.')),
+                              (self.tagaddButton, _('Define a new tag (give one-letter abbreviation and description).')), (self.tagdelButton, _('Remove a tag.')),
                             ]:
             ToolTip(widget, text)
 
@@ -2402,7 +2404,7 @@ class App(v.Viewer, KEngine):
                         self.fixedLabels[(x-self.sel[0][0], y-self.sel[0][1])] = text[0]
                         fixedLabs[x-self.sel[0][0] + (y-self.sel[0][1])*sizeX] = text[0]
         except:
-            showwarning('Error', 'SGF Error')
+            showwarning(_('Error'), _('SGF Error'))
         fixedLabs = ''.join(fixedLabs)
 
         CSP = Pattern(d, anchors=(self.sel[0][0], self.sel[0][0], self.sel[0][1], self.sel[0][1]),
@@ -2424,7 +2426,7 @@ class App(v.Viewer, KEngine):
             except: pass
         self.displayStatistics()
         self.progBar.stop()
-        self.logger.insert(END, 'Pattern search, %1.1f seconds\n' % (time.time() - currentTime))
+        self.logger.insert(END, _('Pattern search, %1.1f seconds\n') % (time.time() - currentTime))
 
         # append the result of this search to self.prevSearches
         self.prevSearches.append(boardData=boardData,
@@ -2456,17 +2458,17 @@ class App(v.Viewer, KEngine):
 
         self.tagButtonF = Frame(self.tagFrame2)
         self.tagButtonF.pack(side=LEFT)
-        self.tagsearchButton = Button(self.tagButtonF, text = 'Search', command = self.tagSearch)
+        self.tagsearchButton = Button(self.tagButtonF, text = _('Search'), command = self.tagSearch)
         self.tagsearchButton.pack(side=LEFT)
-        self.tagsetButton = Button(self.tagButtonF, text = 'Set', command = self.tagSet)
+        self.tagsetButton = Button(self.tagButtonF, text = _('Set tags'), command = self.tagSet)
         self.tagsetButton.pack(side=LEFT)
-        self.tagallButton = Button(self.tagButtonF, text = 'Tag all', command = self.tagAllCurrent)
+        self.tagallButton = Button(self.tagButtonF, text = _('Tag all'), command = self.tagAllCurrent)
         self.tagallButton.pack(side=LEFT)
-        self.untagallButton = Button(self.tagButtonF, text = 'Untag all', command = self.untagAllCurrent)
+        self.untagallButton = Button(self.tagButtonF, text = _('Untag all'), command = self.untagAllCurrent)
         self.untagallButton.pack(side=LEFT)
-        self.tagaddButton = Button(self.tagButtonF, text = 'Add tag', command = self.addTag)
+        self.tagaddButton = Button(self.tagButtonF, text = _('Add tag'), command = self.addTag)
         self.tagaddButton.pack(side=LEFT)
-        self.tagdelButton = Button(self.tagButtonF, text = 'Del tag', command = self.deleteTagPY)
+        self.tagdelButton = Button(self.tagButtonF, text = _('Delete tag'), command = self.deleteTagPY)
         self.tagdelButton.pack(side=LEFT)
 
 
@@ -2490,7 +2492,7 @@ class App(v.Viewer, KEngine):
 
         # check that abbr does not exist yet
         if abbr in [ self.gamelist.customTags[x][0] for x in self.gamelist.customTags.keys() ]:
-            showwarning('Error', 'This tag abbreviation exists already.')
+            showwarning(_('Error'), _('This tag abbreviation exists already.'))
             return
 
         # find unused handle
@@ -2500,20 +2502,20 @@ class App(v.Viewer, KEngine):
 
         # add tag to dict of custom tags
         self.gamelist.customTags[handle] = (abbr, ' '.join(description), )
-        self.logger.insert(END, 'Added tag %s %s.\n' % self.gamelist.customTags[handle])
+        self.logger.insert(END, _('Added tag %s %s.\n') % self.gamelist.customTags[handle])
         self.updatetaglist()
 
 
     def getTagHandle(self):
         q = self.tagSearchVar.get()
         if len(q) != 1:
-            self.logger.insert(END, 'Not a tag abbreviation: %s.\n' % q)
+            self.logger.insert(END, _('Not a tag abbreviation: %s.\n') % q)
 
         # delete tag from dict of custom tags
         for t in self.gamelist.customTags:
             if self.gamelist.customTags[t][0] == q: return int(t) # find the integer handle corresponding to the given abbreviation
         else:
-            self.logger.insert(END, 'Not a tag abbreviation.\n')
+            self.logger.insert(END, _('Not a tag abbreviation.\n'))
             return
 
 
@@ -2521,9 +2523,9 @@ class App(v.Viewer, KEngine):
         t = self.getTagHandle()
         if t is None: return
         if t < 10:
-            showwarning('Error', 'You cannot delete built-in tags.')
+            showwarning(_('Error'), _('You cannot delete built-in tags.'))
             return
-        self.logger.insert(END, 'Delete tag [%s] %s.\n' % tuple(self.gamelist.customTags[str(t)]))
+        self.logger.insert(END, _('Delete tag [%s] %s.\n') % tuple(self.gamelist.customTags[str(t)]))
         del self.gamelist.customTags[str(t)]
 
         # delete tag from all tagged games
@@ -2552,7 +2554,7 @@ class App(v.Viewer, KEngine):
         if t is None: return
         for dummy, DBindex, index in self.gamelist.gameIndex:
             self.gamelist.DBlist[DBindex]['data'].deleteTag(t, index)
-        self.logger.insert(END, 'Deleted tag %s %s from %d games.\n' % (self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1], len(self.gamelist.gameIndex),))
+        self.logger.insert(END, _('Deleted tag %s %s from %d games.\n') % (self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1], len(self.gamelist.gameIndex),))
         
         self.gamelist.upd()
         if self.gamelist.listbox.curselection():
@@ -2574,12 +2576,12 @@ class App(v.Viewer, KEngine):
                 self.leaveNode()
                 self.displayLabels(self.cursor.currentNode())
             except:
-                showwarning('Error', 'SGF Error')
+                showwarning(_('Error'), _('SGF Error'))
         tag = tag or self.tagSearchVar.get()
         KEngine.tagSearch(self, tag)
 
         self.progBar.stop()
-        self.logger.insert(END, 'Tag search %s, %1.1f seconds\n' % (tag, time.time() - currentTime))
+        self.logger.insert(END, _('Tag search %s, %1.1f seconds\n') % (tag, time.time() - currentTime))
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -2704,24 +2706,24 @@ class App(v.Viewer, KEngine):
         self.notebook = Notebook(self.notebookFrameS)
         
         self.searchStat = Frame(self.notebook)
-        self.notebook.add(self.searchStat, text='Statistics')
+        self.notebook.add(self.searchStat, text=_('Statistics'))
         self.patternSearchOptions = Frame(self.notebook)
-        self.notebook.add(self.patternSearchOptions, text='Options')
+        self.notebook.add(self.patternSearchOptions, text=_('Options'))
         self.giSFS = Frame(self.notebook)
-        self.notebook.add(self.giSFS, text='Game info')
+        self.notebook.add(self.giSFS, text=_('Game info'))
         self.gameinfoSearchFS = Frame(self.giSFS)
         self.dummyGISFS = Frame(self.giSFS)
 
         self.dateProfileFS = Frame(self.notebook)
-        self.notebook.add(self.dateProfileFS, text='Date profile')
+        self.notebook.add(self.dateProfileFS, text=_('Date profile'))
 
         self.tagFS = Frame(self.notebook)
-        self.notebook.add(self.tagFS, text='Tags')
+        self.notebook.add(self.tagFS, text=_('Tags'))
         self.tagFrameS = Frame(self.tagFS)
         self.tagFrameS.pack(expand=YES, fill=BOTH)
 
         self.logFS = Frame(self.notebook)
-        self.notebook.add(self.logFS, text='Log')
+        self.notebook.add(self.logFS, text=_('Log'))
         self.logFrameS = Frame(self.logFS)
         self.logger = Message(self.logFrameS)
         self.logFrameS.pack(expand=YES, fill=BOTH)
@@ -2751,7 +2753,7 @@ class App(v.Viewer, KEngine):
 
         if self.options.search_history_as_tab.get():
             self.prevSearchF = Frame(self.notebook)
-            self.notebook.insert(5, self.prevSearchF, text='History')
+            self.notebook.insert(5, self.prevSearchF, text=_('History'))
             self.master.bind_all('<Control-h>', lambda e, self = self: self.notebook.select(self.dateProfileFS.winfo_pathname(self.prevSearchF.winfo_id()))) # select history tab
         else:
             self.prevSearchF = Frame(self.dataWindow.win)
@@ -2780,16 +2782,16 @@ class App(v.Viewer, KEngine):
         self.buttonFrame1S = Frame(self.toolbarFrameS)
         self.buttonFrame1S.pack(side=LEFT, expand=NO)
 
-        self.resetButtonS = Button(self.buttonFrame1S, text = 'Reset', command = self.reset)
-        self.searchButtonS = Button(self.buttonFrame1S, text = 'Pattern ?', command = self.search)
-        self.backButtonS = Button(self.buttonFrame1S, text = 'Back', command = self.back)
+        self.resetButtonS = Button(self.buttonFrame1S, text = _('Reset'), command = self.reset)
+        self.searchButtonS = Button(self.buttonFrame1S, text = _('Pattern search'), command = self.search)
+        self.backButtonS = Button(self.buttonFrame1S, text = _('Back'), command = self.back)
 
         self.showContinuation = IntVar()
         self.showContinuation.set(1)
-        self.showContButtonS = Checkbutton(self.buttonFrame1S, text = 'Cont', variable = self.showContinuation, indicatoron=0, command=self.showCont)
+        self.showContButtonS = Checkbutton(self.buttonFrame1S, text = _('Continuations'), variable = self.showContinuation, indicatoron=0, command=self.showCont)
 
         self.oneClick = IntVar()
-        self.oneClickButtonS = Checkbutton(self.buttonFrame1S, text = '1 click', variable = self.oneClick, indicatoron=0)
+        self.oneClickButtonS = Checkbutton(self.buttonFrame1S, text = _('1 click'), variable = self.oneClick, indicatoron=0)
 
         for ii, b in enumerate([ self.resetButtonS, self.searchButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS ]): b.grid(row=0, column=ii)
 
@@ -2803,32 +2805,32 @@ class App(v.Viewer, KEngine):
 
         sep2 = Separator(self.toolbarFrameS, orient='vertical')
         sep2.pack(padx = 5, fill=Y, side=LEFT)
-        self.colorButtonS = Checkbutton(self.toolbarFrameS, text='Fixed Color', highlightthickness=0, variable = self.fixedColorVar)
+        self.colorButtonS = Checkbutton(self.toolbarFrameS, text=_('Fixed Color'), highlightthickness=0, variable = self.fixedColorVar)
         self.colorButtonS.pack(side=LEFT)
 
         sep1 = Separator(self.toolbarFrameS, orient='vertical')
         sep1.pack(padx = 5, fill=Y, side=LEFT)
-        l = Label(self.toolbarFrameS, text='Next:')
+        l = Label(self.toolbarFrameS, text=_('Next:'))
         l.pack(side=LEFT)
 
         self.nextMoveVar = IntVar() # 0 = either player, 1 = black, 2 = white
-        self.nextMove1S = Radiobutton(self.toolbarFrameS, text='B/W', highlightthickness=0, indicatoron=0, variable = self.nextMoveVar, value=0)
+        self.nextMove1S = Radiobutton(self.toolbarFrameS, text=_('B/W'), highlightthickness=0, indicatoron=0, variable = self.nextMoveVar, value=0)
         self.nextMove1S.pack(side=LEFT)
-        self.nextMove2S = Radiobutton(self.toolbarFrameS, text='B', highlightthickness=0, indicatoron=0, variable = self.nextMoveVar, value=1)
+        self.nextMove2S = Radiobutton(self.toolbarFrameS, text=_('B'), highlightthickness=0, indicatoron=0, variable = self.nextMoveVar, value=1)
         self.nextMove2S.pack(side=LEFT)
-        self.nextMove3S = Radiobutton(self.toolbarFrameS, text='W', highlightthickness=0, indicatoron=0, variable = self.nextMoveVar, value=2)
+        self.nextMove3S = Radiobutton(self.toolbarFrameS, text=_('W'), highlightthickness=0, indicatoron=0, variable = self.nextMoveVar, value=2)
         self.nextMove3S.pack(side=LEFT)
 
         self.fixedAnchorVar = IntVar()
-        self.anchorButtonS = Checkbutton(self.patternSearchOptions, text='Fixed Anchor', highlightthickness=0, variable = self.fixedAnchorVar)
+        self.anchorButtonS = Checkbutton(self.patternSearchOptions, text=_('Fixed Anchor'), highlightthickness=0, variable = self.fixedAnchorVar)
         self.anchorButtonS.grid(row=0, column=0, columnspan=2, sticky=W)
         
         self.searchInVariations = IntVar()
         self.searchInVariations.set(1)
-        self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text='Search in variations', highlightthickness=0, variable = self.searchInVariations)
+        self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text=_('Search in variations'), highlightthickness=0, variable = self.searchInVariations)
         self.searchInVariationsButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
-        self.mvLimLabel = Label(self.patternSearchOptions, text='Move limit')
+        self.mvLimLabel = Label(self.patternSearchOptions, text=_('Move limit'))
         self.mvLimLabel.grid(row=2, column=0, sticky=W)
         self.moveLimit = IntVar()
         self.moveLimit.set(250)
@@ -2840,12 +2842,12 @@ class App(v.Viewer, KEngine):
 
         self.algo_hash_full_search = IntVar()
         self.algo_hash_full_search.set(1)
-        self.algo_hash_full = Checkbutton(self.patternSearchOptions, text = 'Use hashing for full board positions', highlightthickness = 0, variable = self.algo_hash_full_search, pady=5)
+        self.algo_hash_full = Checkbutton(self.patternSearchOptions, text = _('Use hashing for full board positions'), highlightthickness = 0, variable = self.algo_hash_full_search, pady=5)
         self.algo_hash_full.grid(row=4, column = 0, columnspan=2, sticky=W)
 
         self.algo_hash_corner_search = IntVar()
         self.algo_hash_corner_search.set(1)
-        self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text = 'Use hashing for corner positions', highlightthickness = 0, variable = self.algo_hash_corner_search, pady=5)
+        self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text = _('Use hashing for corner positions'), highlightthickness = 0, variable = self.algo_hash_corner_search, pady=5)
         self.algo_hash_corner.grid(row=5, column = 0, columnspan=2, sticky=W)
 
 
@@ -2877,30 +2879,30 @@ class App(v.Viewer, KEngine):
         self.awVar = StringVar()
         self.sqlVar = StringVar()
         
-        l1 = Label(f1, text='White', anchor=W)
+        l1 = Label(f1, text=_('White'), anchor=W)
         e1 = Entry(f1, width=16, textvariable=self.pwVar)
-        l2 = Label(f1, text='Black', anchor=W)
+        l2 = Label(f1, text=_('Black'), anchor=W)
         e2 = Entry(f1, width=16, textvariable=self.pbVar)
-        l3 = Label(f1, text='Player', anchor=W)
+        l3 = Label(f1, text=_('Player'), anchor=W)
         e3 = Entry(f1, width=33, textvariable=self.pVar)
-        l4 = Label(f1, text='Event', anchor=W)
+        l4 = Label(f1, text=_('Event'), anchor=W)
         e4 = Entry(f1, width=33, textvariable=self.evVar)
-        l5 = Label(f1, text='From', anchor=W)
+        l5 = Label(f1, text=_('From'), anchor=W)
         e5 = Entry(f1, width=16, textvariable=self.frVar)
-        l6 = Label(f1, text='To', anchor=W)
+        l6 = Label(f1, text=_('To'), anchor=W)
         e6 = Entry(f1, width=16, textvariable=self.toVar)
 
-        l7 = Label(f1, text='Anywhere', anchor=W)
+        l7 = Label(f1, text=_('Anywhere'), anchor=W)
         e7 = Entry(f1, width=33, textvariable=self.awVar)
 
-        l8 = Label(f1, text='SQL', anchor=W)
+        l8 = Label(f1, text=_('SQL'), anchor=W)
         e8 = Entry(f1, width=43, textvariable=self.sqlVar)
 
         self.referencedVar = IntVar()
-        b1 = Checkbutton(f3, text='Referenced', variable = self.referencedVar, highlightthickness=0)
+        b1 = Checkbutton(f3, text=_('Referenced'), variable = self.referencedVar, highlightthickness=0)
         
-        self.GIstart = Button(f3, text='Start', command = self.doGISearch)
-        self.GIclear = Button(f3, text='Clear', command = self.clearGI)
+        self.GIstart = Button(f3, text=_('Start'), command = self.doGISearch)
+        self.GIclear = Button(f3, text=_('Clear'), command = self.clearGI)
 
         self.GI_bwd = Button(f3, text = '<-', command = self.historyGI_back)
         self.GI_fwd = Button(f3, text = '->', command = self.historyGI_fwd)
@@ -2939,7 +2941,7 @@ class App(v.Viewer, KEngine):
         f5 = Frame(self.gameinfoSearchFS)
         f5.pack(side=LEFT, expand=YES, fill=X)
 
-        l1 = Label(f5, text='Go to:', anchor=W)
+        l1 = Label(f5, text=_('Go to:'), anchor=W)
         l1.pack(side=LEFT)
         self.gotoVar = StringVar()
         e9 = Entry(f5, width=20, textvariable=self.gotoVar)
@@ -2991,7 +2993,7 @@ class App(v.Viewer, KEngine):
                                  options = self.config['references'] if 'references' in self.config else None)
         self.loadDBs(self.progBar, showwarning)
 
-        self.logger.insert(END, 'Kombilo %s.\nReady ...\n' % KOMBILO_RELEASE)
+        self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_RELEASE + _('Ready ...') + '\n')
         self.progBar.stop()
 
 
@@ -3010,12 +3012,12 @@ try:
     if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
         root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
 except TclError:
-    showwarning('Error', 'Error reading kombilo.app')
+    showwarning(_('Error'), _('Error reading kombilo.app'))
     
 app = App(root)
 
 root.protocol('WM_DELETE_WINDOW', app.quit)
-root.title('Kombilo: board')
+root.title('Kombilo')
 
 app.boardFrame.focus_force()
 
