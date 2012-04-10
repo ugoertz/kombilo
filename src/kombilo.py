@@ -2287,6 +2287,8 @@ class App(v.Viewer, KEngine):
         advOptMenu.add_checkbutton(label=_('Open games in external viewer'), variable = self.options.externalViewer)
         advOptMenu.add_command(label=_('Alternative SGF viewer'), underline=0, command=self.altViewer)
         advOptMenu.add_checkbutton(label=_('Use upper case labels'), variable = self.options.uppercaseLabels)
+        if sys.platform.startswith('win'):
+            advOptMenu.add_checkbutton(label=_('Maximize window'), variable = self.options.maximize_window)
 
         self.custom_menus = CustomMenus(self)
         self.optionsmenu.insert_command(1, label=_('Custom Menus'), command=self.custom_menus.change)
@@ -2688,6 +2690,12 @@ class App(v.Viewer, KEngine):
 
         # Initialization of the Viewer class
         v.Viewer.__init__(self, master, BoardWC, DataWindow)
+
+        if sys.platform.startswith('win') and self.options.maximize_window.get():
+            try:
+                master.state('zoomed')
+            except:
+                pass
 
         self.board.labelFontsize = self.options.labelFontSize
         self.fixedColorVar = self.board.fixedColor
