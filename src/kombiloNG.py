@@ -1131,12 +1131,13 @@ class KEngine(object):
             if messages:
                 messages.insert('end', 'Delete old database files.')
                 messages.update()
-            try:
-                for ext in [ 'db', 'dd', 'da' ]: os.remove(os.path.join(datap[0], datap[1]+'.%s' % ext))
-            except:
-                if messages:
-                    messages.insert('end', 'Unable to delete database files.')
-                    messages.update()
+            for ext in [ 'db', 'da', 'db1', 'db2', ]:
+                try:
+                    os.remove(os.path.join(datap[0], datap[1]+'.%s' % ext))
+                except:
+                    if messages:
+                        messages.insert('end', 'Unable to delete database file %s.' % os.path.join(datap[0], datap[1]+'.%s' % ext))
+                        messages.update()
 
         gl = lkGameList(os.path.join(datap[0], datap[1]+'.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
         # TODO boardsize
