@@ -998,6 +998,9 @@ as the height of the entried in the left hand column by dragging the
 mouse pointer slowly over the region between the columns; it should change
 its look when you are over the sash.
 
+See also the :ref:`maximize window <maximize-window>` option.
+
+
 .. index::
   pair: Options; Menu
 
@@ -1114,6 +1117,16 @@ Under Windows, the file name is put in quotes. This is necessary if the
 path contains spaces. If you don't want the quotes (or want to set them
 yourself), you can use %F instead.
 
+
+.. _maximize-window:
+
+**Maximize window** (*Windows only*)
+If this is active, Kombilo will try to maximize its main window on startup. This
+option will become effective when you start Kombilo the next time (not
+immediately).
+
+
+
 .. index::
   single: Options; kombilo.cfg
 .. _kombilocfg:
@@ -1122,8 +1135,9 @@ The kombilo.cfg configuration file
 ----------------------------------
 
 All configurable options can be changed by editing the file ``kombilo.cfg``
-in the kombilo folder. This file is created when Kombilo is started for the
-first time.
+in the kombilo folder. This file is a plain text file which you can edit
+yourself. *You should not edit this file while Kombilo is running.* It is
+created when Kombilo is started for the first time.
 
 .. note:: Location of the ``kombilo.cfg`` file
 
