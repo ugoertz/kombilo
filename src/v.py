@@ -1638,8 +1638,8 @@ class Viewer:
         self.board.delMarks()
         self.board.delLabels()
         self.board.currentColor = 'black'
-        self.setup(self.cursor.currentGame)
         self.modeVar.set('blackwhite')
+        self.setup(self.cursor.currentGame)
         self.cursor.seeCurrent()
 
 
