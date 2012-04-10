@@ -125,7 +125,7 @@ class CustomMenus:
             try:
                 webbrowser.open(self.customMenuCommands[i][0], new=1)
             except:
-                showwarning('Error', 'Failed to open the web browser.')
+                showwarning(_('Error'), _('Failed to open the web browser.'))
         if self.customMenuCommands[i][3]:   # reset game list
             self.master.reset()
         if self.customMenuCommands[i][2]:   # prepare pattern search
@@ -197,7 +197,7 @@ class CustomMenus:
                             self.master.capB = self.master.capB + len(self.master.board.undostack_top_captures())
                         if nM == 'AW':
                             self.master.capW = self.master.capW + len(self.master.board.undostack_top_captures())
-                        self.master.capVar.set('Cap - B: ' + str(self.master.capB) + ', W: ' + str(self.master.capW))
+                        self.master.capVar.set('Cap - B: %d, W: %d' % (self.master.capB, self.master.capW))
 
                     else:
                         s = ';' + nM + '[' + pos + ']'
@@ -215,8 +215,8 @@ class CustomMenus:
                             self.master.capB = self.master.capB + len(self.master.board.undostack_top_captures())
                         if nM == 'AW':
                             self.master.capW = self.master.capW + len(self.master.board.undostack_top_captures())
-                        self.master.capVar.set('Cap - B: ' + str(self.master.capB) + ', W: ' + str(self.master.capW))
-                except SGFError: showwarning('Error', 'SGF Error')
+                        self.master.capVar.set('Cap - B: %d, W: %d' % (self.master.capB, self.master.capW))
+                except SGFError: showwarning(_('Error'), _('SGF Error'))
 
         self.master.board.currentColor = self.master.modeVar.get()[:5]
 
@@ -258,7 +258,7 @@ class CustomMenus:
 
         # add entry to currently selected submenu, named 'New'
 
-        entry = {'name':'New', 'file':'', 'gisearch':(), 'psearch':(), 'reset':1}
+        entry = {'name':_('New'), 'file':'', 'gisearch':(), 'psearch':(), 'reset':1}
         self.correspEntry[index][1]['entries'].append(entry)
 
         insertIndex = index + self.count(self.correspEntry[index][1]) - 1
@@ -279,7 +279,7 @@ class CustomMenus:
 
         # add submenu to currently selected submenu, named 'New'
 
-        submenu = {'name':'New', 'entries':[], 'subm':[]}
+        submenu = {'name':_('New'), 'entries':[], 'subm':[]}
 
         if self.correspEntry[index][0] == 0:
             self.customMenuList.append(submenu)
@@ -298,7 +298,7 @@ class CustomMenus:
                                                            self.correspEntry[index][1]['subm'],
                                                            len(self.correspEntry[index][1]['subm'])-1]]
 
-        self.list.insert(insertIndex, prefix + 'New')
+        self.list.insert(insertIndex, prefix + _('New'))
         self.list.list.select_clear(self.list.list.curselection())
         self.list.list.select_set(insertIndex)
 
@@ -357,7 +357,7 @@ class CustomMenus:
                                                   self.master.moveLimit.get(),
                                                   self.master.nextMoveVar.get())
 
-        showinfo('Add pattern', 'Successfully stored pattern.')
+        showinfo(_('Add pattern'), _('Successfully stored pattern.'))
         self.window.lift()
 
 
@@ -371,7 +371,7 @@ class CustomMenus:
                                                    self.master.evVar.get(), self.master.frVar.get(), self.master.toVar.get(),
                                                    self.master.awVar.get(), self.master.referencedVar.get())
 
-        showinfo('Add game info', 'Successfully stored game info.')
+        showinfo(_('Add game info'), _('Successfully stored game info.'))
         self.window.lift()
 
 
@@ -397,7 +397,7 @@ class CustomMenus:
             cPickle.dump(self.customMenuList, file)
             file.close()
         except IOError:
-            showwarning('I/O Error', 'Could not save custom menu file.')
+            showwarning(_('I/O Error'), _('Could not save custom menu file.'))
 
         self.window.destroy()
 
@@ -420,7 +420,7 @@ class CustomMenus:
         index = int(self.current[0])
         if self.correspEntry[index][0] != 2: return
 
-        filename = tkFileDialog.askopenfilename(filetypes=[('HTML files', ('*.html', '*.htm')), ('All files', '*')],
+        filename = tkFileDialog.askopenfilename(filetypes=[(_('HTML files'), ('*.html', '*.htm')), (_('All files'), '*')],
                                                 initialdir = self.htmlpath)
 
         self.window.tkraise()
@@ -496,7 +496,7 @@ class CustomMenus:
         else: self.windowOpen = 1
 
         self.window = Toplevel()
-        self.window.title('Change custom menus')
+        self.window.title(_('Change custom menus'))
         self.window.protocol('WM_DELETE_WINDOW', self.c_cancel)
 
         # scrolled list with all submenus, entries
@@ -512,9 +512,9 @@ class CustomMenus:
         # buttons ... for currently selected entry
 
         f = Frame(self.window)
-        self.addEntryB = Button(f, text='Add entry', command = self.c_addEntry)
-        self.addSubmenuB = Button(f, text='Add submenu', command = self.c_addSubmenu)
-        self.deleteB = Button(f, text='Delete', command = self.c_delete)
+        self.addEntryB = Button(f, text=_('Add entry'), command = self.c_addEntry)
+        self.addSubmenuB = Button(f, text=_('Add submenu'), command = self.c_addSubmenu)
+        self.deleteB = Button(f, text=_('Delete'), command = self.c_delete)
         self.addEntryB.pack(side=LEFT, anchor=W)
         self.addSubmenuB.pack(side=LEFT, anchor=W)
         self.deleteB.pack(side=LEFT, anchor=W)
@@ -522,7 +522,7 @@ class CustomMenus:
 
         Frame(self.window, background='black', height=1, width=100).pack(expand=YES, fill=X, pady=10)
 
-        Label(self.window, text='Name:').pack(anchor=W)
+        Label(self.window, text=_('Name:')).pack(anchor=W)
 
         self.nameCurrent = StringVar()
         self.nameE = Entry(self.window, width=40, textvariable=self.nameCurrent, takefocus=1)
@@ -532,7 +532,7 @@ class CustomMenus:
 
         Frame(self.window, height=15, width=200).pack()
 
-        Label(self.window, text='HTML file:').pack(anchor=W)
+        Label(self.window, text=_('HTML file:')).pack(anchor=W)
 
         f = Frame(self.window)
         f.pack(anchor=W)
@@ -540,19 +540,19 @@ class CustomMenus:
         self.htmlE = Entry(f, width=35, textvariable=self.htmlCurrent, takefocus=1)
         self.htmlE.pack(side=LEFT)
 
-        self.browseB = Button(f, text='Browse ...', command = self.c_browse, height=1)
+        self.browseB = Button(f, text=_('Browse ...'), command = self.c_browse, height=1)
         self.browseB.pack(side=RIGHT)
 
         Frame(self.window, height=15, width=200).pack()
 
         f = Frame(self.window)
-        self.patternB = Button(f, text='Add pattern info', command = self.c_addPattern)
+        self.patternB = Button(f, text=_('Add pattern info'), command = self.c_addPattern)
         self.patternB.pack(side=LEFT)
-        self.giB = Button(f, text='Add game info', command = self.c_addGI)
+        self.giB = Button(f, text=_('Add game info'), command = self.c_addGI)
         self.giB.pack(side=LEFT)
 
         self.resetVar = IntVar()
-        self.resetB = Checkbutton(f, text='Reset game list', highlightthickness=0,
+        self.resetB = Checkbutton(f, text=_('Reset game list'), highlightthickness=0,
                                   variable = self.resetVar)
         self.resetB.pack(side=LEFT)
         f.pack(anchor=W)
@@ -563,8 +563,8 @@ class CustomMenus:
 
         f = Frame(self.window)
         f.pack(side=BOTTOM, anchor=E)
-        Button(f, text='Cancel', command = self.c_cancel).pack(side=RIGHT, anchor=E)
-        Button(f, text='OK', command = self.c_OK).pack(side=RIGHT, anchor=E)
+        Button(f, text=_('Cancel'), command = self.c_cancel).pack(side=RIGHT, anchor=E)
+        Button(f, text=_('OK'), command = self.c_OK).pack(side=RIGHT, anchor=E)
 
         self.list.list.select_set(0)
         self.pollList()
