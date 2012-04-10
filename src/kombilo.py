@@ -2614,8 +2614,17 @@ class App(v.Viewer, KEngine):
         self.master.bind_all('<Control-d>', lambda e, self = self: self.notebook.select(self.dateProfileFS.winfo_pathname(self.dateProfileFS.winfo_id()))) # select date profile tab
         self.master.bind_all('<Control-t>', lambda e, self = self: self.notebook.select(self.dateProfileFS.winfo_pathname(self.tagFS.winfo_id()))) # select tags tab
         self.master.bind_all('<Control-p>', lambda e, self = self: self.search()) # start pattern search
+        self.master.bind_all('<Control-b>', lambda e, self = self: self.back()) # go back to previous pattern search
         self.master.bind_all('<Control-r>', lambda e, self = self: self.reset()) # reset game list
         self.master.bind_all('<Control-e>', lambda e, self = self: self.printPattern()) # print previous search pattern to log tab 
+
+        def _button_release(event):
+            if event.num == 8:
+                self.back()
+            elif event.num == 9:
+                self.search()
+
+        self.master.bind('<ButtonRelease>', _button_release)
 
 
     def __init__(self, master):

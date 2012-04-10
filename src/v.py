@@ -2836,6 +2836,19 @@ class Viewer:
         self.board.state('normal', self.nextMove)
         self.board.bind('<Control-1>', self.labelClick)
         self.board.bind('<Shift-3>', self.gotoMove)
+
+        def _mouse_wheel(event, self=self):
+            if event.delta < 0:
+                for i in range((-event.delta)//120):
+                    self.next()
+            elif event.delta > 0:
+                for i in range(event.delta//120):
+                    self.prev()
+            return 'break'
+        self.boardFrame.bind('<MouseWheel>', _mouse_wheel)
+        self.board.bind('<Button-5>', lambda e: self.next())
+        self.board.bind('<Button-4>', lambda e: self.prev())
+
         self.moveno.set(0)
         self.capB, self.capW = 0,0
 
