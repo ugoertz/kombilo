@@ -2238,6 +2238,8 @@ class App(v.Viewer, KEngine):
         advOptMenu.add_checkbutton(label='Open games in external viewer', variable = self.options.externalViewer)
         advOptMenu.add_command(label='Alternative SGF viewer', underline=0, command=self.altViewer)
         advOptMenu.add_checkbutton(label='Use upper case labels', variable = self.options.uppercaseLabels)
+        if sys.platform.startswith('win'):
+            advOptMenu.add_checkbutton(label='Maximize window', variable = self.options.maximize_window)
 
 
     def balloonHelpK(self):
@@ -2633,6 +2635,12 @@ class App(v.Viewer, KEngine):
 
         # Initialization of the Viewer class
         v.Viewer.__init__(self, master, BoardWC, DataWindow)
+
+        if sys.platform.startswith('win') and self.options.maximize_window.get():
+            try:
+                master.state('zoomed')
+            except:
+                pass
 
         self.board.labelFontsize = self.options.labelFontSize
         self.fixedColorVar = self.board.fixedColor
