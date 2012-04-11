@@ -7,6 +7,8 @@
 # For an explanation of the format of this file, see the Kombilo
 # documentation.
 
+# NOTE: Do not use commas in the title entry. If data has only one entry,
+# append a comma.
 
 boardsize = 19
 
@@ -437,6 +439,11 @@ data = bhmcfhnpemgk, bjmcckghhkhp, ccckjfdidagq, cemirnpgnpbf, cfdinpfgmqqo, cfk
 title = The 1971 Honinbo Tournament (Iwamoto)
 data = bdggdlkckebk, bdgmffclkieh, bedjjmlcgjpm, cdeeonhcpini, chfgenheidmn, cicjjoghcknf, dgohifroojbp, dgorippqrkko, dfhhbhffgkhi, cgcjggeblcgn, fiadqlcqiqql, chehhmqmiflh, gghjqeclmiof, bbdkeikobkjd
 # }}}
+# Nie Weiping on Go --- {{{
+[NWG]
+title = Nie Weiping on Go
+data = ccbionfbjodr, bceacqgecjoc
+# }}}
 # Tournament go 1992 (ed. John Power) --- {{{
 [TG92]
 title = Tournament Go 1992 (ed. John Power)
@@ -454,14 +461,23 @@ data = afdfcjeicmil, bdnfnlndrgrn, beohnkpclglk, cfddfcdqlghi, cfnqqgcoojjn, cfp
 # }}}
 # John Fairbairn --- {{{
 [9DS]
-title = 9-dan Showdown (J. Fairbairn)
+title = 9-dan Showdown (John Fairbairn)
 data = bcapnldpojre, efkeebhenddi, deegcjfcdhdq, cgleoockmpqq, bjgcdgdqbcpi, cieicknpicph, eeengndohrqj, dfgkdqdihkdm, cjkccmkeieem, cfeherdhjppc, bdqrpqnopjnj, efhdcllqelfr, bfhfjalbgdkq, deoqnohbbomd, cjfjqbenqepp, cdcqhbcjqjqi, dfchhfbbbngo, dgkdnhomjkbq, cfjqlcqjqlpc, ciimifoihkql, ccbmldeogdhh, bdqcrncjqbpn, dflqiobdlccl, begpbnipdsdk, ccejgmkqhqmp, cgqbhqpcfibj, benpneocdmpq, bckfkojciggi, cirpkdnopjem, cijdhocejggi
 [KAM]
-title = Kamakura (J. Fairbairn)
+title = Kamakura (John Fairbairn)
 data = ciieeiomlqcg, fghgohcgqgnh, dhemabfocqgl, bfnkidojlhhi, fhqmofegpqoi, ciqnqfcejepn, dhqqfgepkdga, depeqppckppp, bdpnqlhdrpjk, bfnemiqdleni
 [FS]
-title = Final Summit (J. Fairbairn)
+title = Final Summit (John Fairbairn)
 data = cfjpmprpckql, dicdfgedqqjl, dfomqbcnohmq, cfqcnqjqlhpm, cehnelephjmo, cfkodkirklql, dfnfliqcpooj, eefgqgppgipb, efdmoddnpnlf, fgbkjjfefkgm
+[MRG]
+title = The Meijins retirement game (John Fairbairn)
+data = dejcbjffeigl,
+[OFNF]
+title = Old Fuseki vs. New Fuseki. Honinbo Shusai plays Go Seigen (John Fairbairn)
+data = chnjonpjqlnm,
+[GCons]
+title = The Go Consultants (John Fairbairn; T Mark Hall)
+data = dfqfhldhopdq,
 # }}}
 # Best of 2009 --- {{{
 [BGR09]
@@ -472,6 +488,21 @@ data = cdhdkbfgofik, cfpcebjglcfo, dhkeokdemeph, chbqkqckbmgd, cefhfjeechbm, bdq
 [MPTAK]
 title = Master Play. The style of Takemiya (Yuan Zhou)
 data = dgqdompjlmen, cdbclmjpimlr
+[MPKMCC]
+title = Master Play. The territorial styles of Kitani Minoru and Cho Chikun (Yuan Zhou)
+data = dejcbjffeigl, eebqfqepdoqg, djbhpnmcpqqr, dfnfmmccocdm
+[MPSTP]
+title = Master Play. The playing styles of seven top pros (Yuan Zhou)
+data = cdidrhkdiflf, cgrdndqcnala, dgpfrhegqari, cgncgmohpolj, dgqfbiconobo, dgmcgfnrjcgk, cjncciffjdkg, deqqcqmcpoej, bfgpllfkigof, ffekmpcqiqel, npcnpihffiec, efdeqgfbdqrp, dfgomqirfape, ehkfhpfggeer
+[MPGS]
+title = Master Play. The style of Go Seigen (Yuan Zhou)
+data = efkeebhenddi, cijdhocejggi
+[MPKMSBS]
+title = Master Play. The fighting styles of Kato Masao and Seo Bong Soo (Yuan Zhou)
+data = cdekffhihdmn, fghfodepebje, bdofdglbdjhg, ejfeljjgjilk
+[MPLC]
+title = Master Play. The style of Lee Changho (Yuan Zhou)
+data = cfnqeoldilhp, efooqcpngonb
 # }}}
 # Masterpieces of Handicap Go --- {{{
 [MH1]
