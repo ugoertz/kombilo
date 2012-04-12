@@ -10,7 +10,7 @@ giflist = ['icons/'+os.path.split(f)[1] for f in glob.glob('./icons/*')]
 
 setup(
         name = "kombilo",
-        version = "0.7.2",
+        version = "0.7.3",
         description = "Kombilo - a go database program",
         # executables = [ target ],
         windows=['kombilo.py'],
