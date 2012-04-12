@@ -618,6 +618,12 @@ SQL
     filename
     sgf (the full SFG source).
 
+  In SQL statements, you have to take care of *escaping* characters yourself;
+  inparticular, single quotes occurring inside the search string must be
+  doubled::
+
+    PB = 'Yi Ch''ang-ho'
+
 
 .. _tag-search:
 
