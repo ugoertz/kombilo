@@ -14,8 +14,8 @@ setup(
         description = "Kombilo - a go database program",
         # executables = [ target ],
         windows=['kombilo.py'],
-    py_modules=['board', 'v'],
-    options = { 'py2exe': { 'dll_excludes':  [ 'MSVCP90.dll', 'MSVCR90.dll' ], }
+        py_modules=['board', 'v'],
+        options = { 'py2exe': { 'dll_excludes':  [ 'MSVCP90.dll', 'MSVCR90.dll' ], }
                 # 'build_exe': { 'include_files': includefiles,
                 #                'includes': [ 're' ], }
                   },

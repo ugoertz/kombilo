@@ -618,6 +618,12 @@ SQL
     filename
     sgf (the full SFG source).
 
+  In SQL statements, you have to take care of *escaping* characters yourself;
+  inparticular, single quotes occurring inside the search string must be
+  doubled::
+
+    PB = 'Yi Ch''ang-ho'
+
 
 .. _tag-search:
 
@@ -1179,6 +1185,7 @@ option will become effective when you start Kombilo the next time (not
 immediately).
 
 
+
 .. index::
   single: Options; kombilo.cfg
 .. _kombilocfg:
@@ -1187,7 +1194,7 @@ The kombilo.cfg configuration file
 ----------------------------------
 
 All configurable options can be changed by editing the file ``kombilo.cfg``
-in the kombilo folder.  This file is a plain text file which you can edit
+in the kombilo folder. This file is a plain text file which you can edit
 yourself. *You should not edit this file while Kombilo is running.* It is
 created when Kombilo is started for the first time.
 
