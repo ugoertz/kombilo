@@ -31,7 +31,14 @@ History/Change log
 ^^^^^^^^^^^^^^^^^^
 
 Bug fixes. Added mouse wheel support, and - on Linux - support for back/next
-mouse buttons.
+mouse buttons. Option to always maximize window (Windows only). Updated
+references to commentaries.
+
+.. note:: Update from version 0.7 or 0.7.1 to 0.7.2:
+
+  While reprocessing your databases is not necessary for Kombilo to be working
+  correctly, it will greaty speed up the date profile computation, so it is
+  advisable to do this.
 
 
 0.7.1 (April 2012)
