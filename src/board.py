@@ -494,6 +494,7 @@ class Board(abstractBoard, Canvas):
         for x in self.stones:
             self.delete(self.stones[x])
         self.stones = {}
+        self.currentColor = 'black'
         self.onChange()
 
     def ptOnCircle(self, size, degree):

@@ -1065,8 +1065,8 @@ class App(v.Viewer, KEngine):
         queryl = []
         for key, val in [('PB', pbVar), ('PW', pwVar), ('ev', '%' + evVar), ('sgf', '%'+awVar)]:
             if val and val != '%':
-                queryl.append("%s like '%s%%'" % (key, val))
-        if pVar: queryl.append("(PB like '%s%%' or PW like '%s%%')" % (pVar, pVar))
+                queryl.append("%s like '%s%%'" % (key, val.replace("'", "''")))
+        if pVar: queryl.append("(PB like '%s%%' or PW like '%s%%')" % (pVar.replace("'", "''"), pVar.replace("'", "''")))
         if frVar: queryl.append("DATE >= '%s'" % frVar)
         if toVar: queryl.append("DATE <= '%s'" % toVar)
         if sqlVar: queryl.append("(%s)" % sqlVar)
@@ -1075,7 +1075,7 @@ class App(v.Viewer, KEngine):
         if not (pbVar or pwVar or pVar or evVar or frVar or toVar or awVar or sqlVar): return
 
         query = ' and '.join(queryl)
-        
+
         self.gamelist.clearGameInfo()
         self.configButtons(DISABLED)
         self.progBar.start(50)
@@ -1088,10 +1088,16 @@ class App(v.Viewer, KEngine):
                 self.displayLabels(self.cursor.currentNode())
             except:
                 showwarning(_('Error'), _('SGF Error'))
-                
-        self.gameinfoSearch(query)
+
+        try:
+            self.gameinfoSearch(query)
+        except lk.DBError:
+            self.logger.insert(END, _('Game info search, query "%s", Database error\n') % query)
+            self.gamelist.reset()
+        else:
+            self.logger.insert(END, _('Game info search, query "%s", %1.1f seconds\n') % (query, time.time() - currentTime))
+
         self.progBar.stop()
-        self.logger.insert(END, _('Game info search, query "%s", %1.1f seconds\n') % (query, time.time() - currentTime))
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -1258,6 +1264,7 @@ class App(v.Viewer, KEngine):
         # restore variables
         mv, fc, fa, ml, nextM = target_values['variables']
         self.modeVar.set(mv)
+        self.board.currentColor = mv[:5]
         self.fixedColorVar.set(fc)
         self.fixedAnchorVar.set(fa)
         self.moveLimit.set(ml)

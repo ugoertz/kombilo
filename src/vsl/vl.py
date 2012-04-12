@@ -6,22 +6,22 @@
 
 ##   Kombilo is a go database program.
 
-## Permission is hereby granted, free of charge, to any person obtaining a copy of 
-## this software and associated documentation files (the "Software"), to deal in 
-## the Software without restriction, including without limitation the rights to 
+## Permission is hereby granted, free of charge, to any person obtaining a copy of
+## this software and associated documentation files (the "Software"), to deal in
+## the Software without restriction, including without limitation the rights to
 ## use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-## of the Software, and to permit persons to whom the Software is furnished to do 
+## of the Software, and to permit persons to whom the Software is furnished to do
 ## so, subject to the following conditions:
-## 
-## The above copyright notice and this permission notice shall be included in all 
+##
+## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
-## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+##
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
 
@@ -41,9 +41,11 @@ class VirtualScrollbar(Scrollbar):
     def set(self, *args):
         # print 'Scrollbar.set', self.current_in_list, self.total_in_list
         if self.total_in_list == 0: return
-        multiplier = self.current_in_list*1.0/self.total_in_list
+        cil = min(self.current_in_list, self.total_in_list)
+        multiplier = cil*1.0/self.total_in_list
         alpha = float(args[0])*multiplier + self.offset[0]
         beta = float(args[1])*multiplier + self.offset[0]
+        # print args, multiplier, alpha, beta, str(alpha), str(beta)
         Scrollbar.set(self, str(alpha), str(beta))
 
 
@@ -91,8 +93,9 @@ class VirtualListbox(Listbox):
         '''
 
         if not self.current[0] <= index < self.current[1]:
-            new_start = max(0, int(index) - self.current_in_list/2)
-            new_current = (new_start, new_start + self.current_in_list)
+            cil = self.current_in_list
+            new_start = max(0, int(index) - cil/2)
+            new_current = (new_start, new_start + cil)
             self.delete(0, END)
             self.insert_interval(new_current)
             self.offset[0] = new_current[0] * 1.0/self.total_in_list
@@ -104,16 +107,17 @@ class VirtualListbox(Listbox):
 
     def adjust_scrollbar_offset(self, beta_til):
         if self.total_in_list == 0: return
-        if self.current[0] > 0 and (beta_til - self.current[0]) < self.current_in_list/6:
-            new_start = max(0, int(beta_til - self.current_in_list/2))
-            new_current = (new_start, new_start + self.current_in_list)
+        cil = min(self.current_in_list, self.total_in_list)
+        if self.current[0] > 0 and (beta_til - self.current[0]) < cil/6:
+            new_start = max(0, int(beta_til - cil/2))
+            new_current = (new_start, new_start + cil)
             self.delete(0, END)
             self.insert_interval(new_current)
             self.offset[0] = new_current[0] * 1.0/self.total_in_list
             # print '1 -------------------------------------------------', self.current, new_current, self.offset[0]
-        elif self.current[1] < self.total_in_list and (self.current[1] - beta_til) < self.current_in_list/6:
-            new_end = min(int(beta_til+self.current_in_list/2), self.total_in_list)
-            new_current = (new_end - self.current_in_list, new_end)
+        elif self.current[1] < self.total_in_list and (self.current[1] - beta_til) < cil/6:
+            new_end = min(int(beta_til+cil/2), self.total_in_list)
+            new_current = (new_end - cil, new_end)
             self.delete(0, END)
             self.insert_interval(new_current)
             self.offset[0] = new_current[0] * 1.0/self.total_in_list
@@ -126,11 +130,12 @@ class VirtualListbox(Listbox):
 
     def yview(self, *args):
         if self.total_in_list == 0: return
+        cil = min(self.current_in_list, self.total_in_list)
         if len(args)>0 and args[0] == 'moveto':
             # print "LISTBOX YVIEW", args
             beta_til = float(args[1])*self.total_in_list
             self.adjust_scrollbar_offset(beta_til)
-            moveto = str((beta_til - self.current[0])*1.0/(self.current[1]-self.current[0]))
+            moveto = str((beta_til - self.current[0])*1.0/cil)
             return Listbox.yview(self, 'moveto', moveto)
         else: # e.g. if args[0] == 'scroll'
             # print 'yview else', args
@@ -140,15 +145,15 @@ class VirtualListbox(Listbox):
             change = self.adjust_scrollbar_offset(self.nearest(0)+self.current[0])
             if change:
                 self.select_clear(0, END)
-                if index and 0 <= index-change < self.current_in_list: self.select_set(index-change)
-                return Listbox.yview(self, 'moveto', str((nearest0-change)*1.0/self.current_in_list))
+                if index and 0 <= index-change < cil: self.select_set(index-change)
+                return Listbox.yview(self, 'moveto', str((nearest0-change)*1.0/cil))
 
-           
+
 
 
 class VScrolledList(Frame):
     """ A 'virtual' listbox with dynamic vertical and horizontal scrollbars. """
-    
+
     def __init__(self, parent, current_in_list, total_in_list, get_data, **kw):
         Frame.__init__(self, parent)
         self.offset = [0] # shared "pointer" of listbox and sbar_vert
@@ -158,12 +163,12 @@ class VScrolledList(Frame):
         self.sbar_vert = VirtualScrollbar(self, self.offset, current_in_list, total_in_list)
         self.sbar_hor = Scrollbar(self) # was sbar1
         self.checking = 0
-        
+
         if not kw: kw = {}
 
         for var, value in [('height', 12), ('width', 40), ('relief', SUNKEN), ('selectmode', SINGLE), ('takefocus', 1), ('exportselection', 0)]:
             if not kw.has_key(var): kw[var] = value
-        
+
         self.listbox = VirtualListbox(self, self.offset, current_in_list, total_in_list, get_data, **kw)
         self.sbar_vert.config(command = self.listbox.yview)
         self.sbar_hor.config(command = self.listbox.xview, orient='horizontal')
@@ -186,7 +191,7 @@ class VScrolledList(Frame):
 
         self.unbind('<Configure>')
         self.bind('<Configure>', self.checkScrollbars)
-        
+
         self.sbar_vert.grid_forget()
         self.sbar_hor.grid_forget()
 
@@ -229,7 +234,7 @@ class VScrolledList(Frame):
             self.sbar_hor.grid_forget()
         self.after(500, self.checkScrollbars)
 
-            
+
     def up(self, event):
         if not self.listbox.curselection() or len(self.listbox.curselection())>1: return
         index = int(self.listbox.curselection()[0])
