@@ -19,3 +19,5 @@ src/kombilo.cfg
 src/libkombilo.py
 src/dist
 src/build
+lang/*/LC_MESSAGES/*.mo
+

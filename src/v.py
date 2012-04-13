@@ -696,7 +696,7 @@ class DataWindow:
 
                 return self.gamelist.clickedLast, i
 
-            except lk.SGFError: showwarning(_('Error'), _('SGF error in gamelistRelease.'))
+            except lk.SGFError: showwarning(_('Error'), _('SGF Error') + '(gamelistRelease)')
             except: showwarning(_('Error'), _('An error occured, please send a bug report.'))
 
         return None, None
@@ -910,7 +910,7 @@ class EnhancedCursor(Cursor):
 
             self.seeCurrent()
 
-        except: showwarning(_('Error'), _('SGF error in onButton1'))
+        except: showwarning(_('Error'), _('SGF Error') + '(onButton1)')
 
 
     def next(self, n=0, markCurrent=True):
@@ -968,7 +968,7 @@ class EnhancedCursor(Cursor):
                         if d.has_key(prop):
                             d[prop] = [ flip(split(x, ':')[0]) + ':' + flip(split(x, ':')[1]) for x in d[prop]]
                 except:
-                    showwarning(_('Error'), _('SGF error in def symmetry(self, flip).'))
+                    showwarning(_('Error'), _('SGF Error') + '(symmetry(self, flip))')
 
                 try:
                     if node.down: nodelist.append(node.down)
@@ -1059,7 +1059,7 @@ class Viewer:
                 try:
                     f.write('(' + self.cursor.outputVar(n) + ')')
                 except lk.SGFError:
-                    showwarning(_('Error'), _('SGF error in game %d') % i)
+                    showwarning(_('Error'), _('SGF Error in game %d') % i)
                 f.close()
             except IOError:
                 showwarning(_('Error'), _('I/O Error when writing %s%d.sgf') % (filename, i))
@@ -1141,7 +1141,7 @@ class Viewer:
                 self.board.play(self.convCoord(self.cursor.currentNode()['B'][0]), 'white')
 
         except lk.SGFError:
-            showwarning(_('SGF Error'), _('SGF Error in def setup().'))
+            showwarning(_('SGF Error'), _('SGF Error') + '(def setup())')
             self.gameName.set('')
             self.currentFile = ''
             self.cursor = None
@@ -1193,7 +1193,7 @@ class Viewer:
                 self.cursor.previous(0)
 
         except lk.SGFError:
-            showwarning(_('SGF Error'), _('SGF Error in def markAll()'))
+            showwarning(_('SGF Error'), _('SGF Error') + '(def markAll())')
             self.board.delMarks()
 
         if self.board.currentColor == 'black':
@@ -1279,7 +1279,7 @@ class Viewer:
         try:
             c = self.cursor.currentNode()
         except lk.SGFError:
-            showwarning(_('Error'), _('SGF Error in gotoMove().'))
+            showwarning(_('Error'), _('SGF Error') + '(gotoMove())')
             return
         
         if (c.has_key('B') and c['B'][0] == pos) or (c.has_key('W') and c['W'][0] == pos):
@@ -1395,25 +1395,25 @@ class Viewer:
                     if nM == 'AB': self.board.AB([p])
                     if nM == 'AW': self.board.AW([p])
                     self.board.currentColor = self.modeVar.get()
-                
+
                 else:
                     s = ';' + nM + '[' + pos + ']'
                     self.cursor.add(s)
                     c = self.cursor.currentNode()
-            
+
                     self.board.delMarks()
                     self.board.delLabels()
-            
+
                     self.moveno.set(str(int(self.moveno.get())+1))
 
                     self.displayNode(c)
                     self.board.currentColor = self.modeVar.get()
 
             except lk.SGFError:
-                showwarning(_('Error'), _('SGF Error in nextMove()'))
+                showwarning(_('Error'), _('SGF Error') + '(nextMove())')
 
             self.currentFileChanged()
-                    
+
             return 0
 
         if self.modeVar.get() == 'blackwhite':
@@ -1442,7 +1442,7 @@ class Viewer:
                         self.modeVar.set('whiteblack')
                     elif self.modeVar.get() == 'whiteblack':
                         self.modeVar.set('blackwhite')
-                    
+
                     self.moveno.set(str(int(self.moveno.get())+1))
 
                     self.displayNode(c)
@@ -1457,42 +1457,41 @@ class Viewer:
                         showwarning(_('Error'), _('Error in SGF file'))
                         break
 
-        
 
         if not done:
             if self.guessMode.get():
                 self.guessFailure(right_pos, p)
                 return 0
-            
+
             # print 'play', x, y
             if self.modeVar.get() == 'blackwhite':
                 self.modeVar.set('whiteblack')
             elif self.modeVar.get() == 'whiteblack':
                 self.modeVar.set('blackwhite')
-                    
+
             s = ';' + nM + '[' + chr(x+ord('a')) + chr(y+ord('a')) + ']'
 
             try:
                 self.cursor.add(s)
                 c = self.cursor.currentNode()
-            
+
                 self.board.delMarks()
                 self.board.delLabels()
 
                 self.moveno.set(str(int(self.moveno.get())+1))
 
                 self.displayNode(c)
-                
+
                 if nM == 'B': self.capB = self.capB + len(self.board.undostack_top_captures())
                 if nM == 'W': self.capW = self.capW + len(self.board.undostack_top_captures())
                 self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
             except lk.SGFError:
-                showwarning(_('Error'), _('SGF error in nextMove, 2.'))
+                showwarning(_('Error'), _('SGF Error') + '(nextMove, 2)')
 
             self.currentFileChanged()
 
         self.markAll()
-                    
+
         return done
 
 
@@ -1670,7 +1669,7 @@ class Viewer:
                         self.next(markCurrent=False)
                         break
                 else: break
-        except: showwarning(_('Error'), _('SGF error'))
+        except: showwarning(_('Error'), _('SGF Error'))
         self.cursor.seeCurrent()
 
         
@@ -1785,7 +1784,7 @@ class Viewer:
                 self.board.placeLabel((x,y), t, text)
 
         except lk.SGFError:
-            showwarning(_('Error'), _('SGF Error in def labelClick().'))
+            showwarning(_('Error'), _('SGF Error') + '(def labelClick())')
 
         self.currentFileChanged()
 
@@ -1801,7 +1800,7 @@ class Viewer:
             self.markAll()
 
             self.cursor.updateTree()
-        except lk.SGFError: showwarning(_('Error'), _('SGF error in delVar.'))
+        except lk.SGFError: showwarning(_('Error'), _('SGF Error') + '(delVar)')
         self.currentFileChanged()
         
         
@@ -2015,7 +2014,7 @@ class Viewer:
         try:
             d = self.cursor.currentNode()
         except lk.SGFError:
-            showwarning(_('Error'), _('SGF Error in leaveNode()'))
+            showwarning(_('Error'), _('SGF Error') + '(leaveNode())')
             return
         
         if 'C' in d:
@@ -2123,7 +2122,7 @@ class Viewer:
             file.write(sgf_out)
             file.close()
         except IOError: showwarning(_('Error'), _('I/O Error'))
-        except lk.SGFError: showwarning(_('Error'), _('SGF error in saveSGFfile'))
+        except lk.SGFError: showwarning(_('Error'), _('SGF Error') + '(saveSGFfile)')
 
         else:
             self.currentFileChanged(1)
@@ -2147,7 +2146,7 @@ class Viewer:
         except IOError:
             showwarning(_('I/O Error'), _('Could not write to file ') + f)
         except lk.SGFError:
-            showwarning(_('Error'), _('SGF error in saveasSGFfile'))
+            showwarning(_('Error'), _('SGF Error') + '(saveasSGFfile)')
 
         else:
             self.sgfpath, self.currentFile = os.path.split(f)
@@ -2171,7 +2170,7 @@ class Viewer:
                 TextEditor(t, self.sgfpath, (self.options.exportFont0, self.options.exportFont1, self.options.exportFont2))
             except:
                 TextEditor(t, self.sgfpath, )
-        except lk.SGFError: showwarning(_('Error'), _('SGF error'))
+        except lk.SGFError: showwarning(_('Error'), _('SGF Error'))
 
 
        
@@ -2357,7 +2356,7 @@ class Viewer:
         if not data:
             try: self.gameinfoDict = self.cursor.getRootNode(self.cursor.currentGame)
             except:
-                showwarning(_('Error'), _('SGF Error in gameinfo'))
+                showwarning(_('Error'), _('SGF Error') + '(gameinfo)')
                 return
             self.returnChanges = 0
         else:
