@@ -557,7 +557,7 @@ class GameListGUI(GameList, VScrolledList):
             showwarning(_('Error'), _('I/O Error'))
             return
         except lk.SGFError:
-            showwarning(_('Error'), _('SGF error'))
+            showwarning(_('Error'), _('SGF Error'))
             return
         
         # backup = copy(rootNode.data)
