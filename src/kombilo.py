@@ -1092,10 +1092,10 @@ class App(v.Viewer, KEngine):
         try:
             self.gameinfoSearch(query)
         except lk.DBError:
-            self.logger.insert(END, _('Game info search, query "%s", Database error\n') % query)
+            self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('Database error\n') + '\n')
             self.gamelist.reset()
         else:
-            self.logger.insert(END, _('Game info search, query "%s", %1.1f seconds\n') % (query, time.time() - currentTime))
+            self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('%1.1f seconds') % (time.time()-currentTime) + '\n')
 
         self.progBar.stop()
         self.notebookTabChanged()
@@ -2435,7 +2435,7 @@ class App(v.Viewer, KEngine):
             except: pass
         self.displayStatistics()
         self.progBar.stop()
-        self.logger.insert(END, _('Pattern search, %1.1f seconds\n') % (time.time() - currentTime))
+        self.logger.insert(END, _('Pattern search') + ', ' + _('%1.1f seconds\n') % (time.time()-currentTime))
 
         # append the result of this search to self.prevSearches
         self.prevSearches.append(boardData=boardData,
@@ -2590,7 +2590,7 @@ class App(v.Viewer, KEngine):
         KEngine.tagSearch(self, tag)
 
         self.progBar.stop()
-        self.logger.insert(END, _('Tag search %s, %1.1f seconds\n') % (tag, time.time() - currentTime))
+        self.logger.insert(END, (_('Tag search %s') % tag) + ', ' + _('%1.1f seconds') % (time.time()-currentTime) + '\n')
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
