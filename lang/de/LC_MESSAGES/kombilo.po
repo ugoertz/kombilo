@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Kombilo 0.8\n"
-"POT-Creation-Date: 2012-04-14 20:24+CEST\n"
+"POT-Creation-Date: 2012-04-16 21:02+CEST\n"
 "PO-Revision-Date: 2012-04-14 14:55+0200\n"
 "Last-Translator: Ulrich <u@g0ertz.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,520 +17,515 @@ msgstr ""
 "X-Generator: Pootle 2.1.6\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: kombilo.py:348
+#: kombilo.py:350
 msgid "Include game list"
 msgstr "Partienliste einfügen"
 
-#: kombilo.py:353 kombilo.py:2277
+#: kombilo.py:354 kombilo.py:2268
 msgid "Game list"
 msgstr "Partienliste"
 
-#: kombilo.py:497
+#: kombilo.py:479
 msgid "%d games"
 msgstr "%d Partien"
 
-#: kombilo.py:499
+#: kombilo.py:481
 msgid "B: %1.1f%%, W: %1.1f%%"
 msgstr "S: %1.1f%%, W: %1.1f%%"
 
-#: kombilo.py:557 kombilo.py:560 kombilo.py:1090 kombilo.py:1248
-#: kombilo.py:1262 kombilo.py:1613 kombilo.py:1614 kombilo.py:1616
-#: kombilo.py:1731 kombilo.py:1736 kombilo.py:1740 kombilo.py:1892
-#: kombilo.py:2100 kombilo.py:2416 kombilo.py:2504 kombilo.py:2535
-#: kombilo.py:2588 kombilo.py:3039 kombiloNG.py:1091 kombiloNG.py:1097
-#: v.py:699 v.py:700 v.py:913 v.py:971 v.py:1062 v.py:1065 v.py:1105 v.py:1111
-#: v.py:1239 v.py:1282 v.py:1413 v.py:1457 v.py:1489 v.py:1672 v.py:1787
-#: v.py:1803 v.py:2017 v.py:2124 v.py:2125 v.py:2149 v.py:2173 v.py:2229
-#: v.py:2359 v.py:2739 v.py:2752 v.py:2876
+#: kombilo.py:540 kombilo.py:543 kombilo.py:1076 kombilo.py:1233
+#: kombilo.py:1247 kombilo.py:1619 kombilo.py:1621 kombilo.py:1623
+#: kombilo.py:1734 kombilo.py:1739 kombilo.py:1743 kombilo.py:1890
+#: kombilo.py:2096 kombilo.py:2414 kombilo.py:2502 kombilo.py:2533
+#: kombilo.py:2587 kombilo.py:3029 kombiloNG.py:1099 kombiloNG.py:1106
+#: v.py:704 v.py:706 v.py:915 v.py:969 v.py:1065 v.py:1068 v.py:1105 v.py:1111
+#: v.py:1238 v.py:1281 v.py:1420 v.py:1463 v.py:1491 v.py:1669 v.py:1793
+#: v.py:1808 v.py:2025 v.py:2128 v.py:2130 v.py:2153 v.py:2177 v.py:2228
+#: v.py:2360 v.py:2729 v.py:2742 v.py:2868
 msgid "Error"
 msgstr "Fehler"
 
-#: kombilo.py:557 kombilo.py:574 kombilo.py:1793 kombilo.py:1834 v.py:2124
-#: v.py:2147 v.py:2203
+#: kombilo.py:540 kombilo.py:557 kombilo.py:1795 kombilo.py:1835
+#: kombilo.py:2138 kombiloNG.py:1042 v.py:121 v.py:2128 v.py:2151 v.py:2206
 msgid "I/O Error"
 msgstr "Eingabe-/Ausgabe-Fehler"
 
-#: kombilo.py:560 kombilo.py:1090 kombilo.py:1248 kombilo.py:2416
-#: kombilo.py:2588 v.py:699 v.py:913 v.py:971 v.py:1144 v.py:1196 v.py:1282
-#: v.py:1413 v.py:1489 v.py:1672 v.py:1787 v.py:1803 v.py:2017 v.py:2125
-#: v.py:2149 v.py:2173 v.py:2335 v.py:2359
+#: kombilo.py:543 kombilo.py:1076 kombilo.py:1233 kombilo.py:2414
+#: kombilo.py:2587 v.py:704 v.py:915 v.py:969 v.py:1143 v.py:1191 v.py:1281
+#: v.py:1420 v.py:1491 v.py:1669 v.py:1793 v.py:1808 v.py:2025 v.py:2130
+#: v.py:2153 v.py:2177 v.py:2336 v.py:2360
 msgid "SGF Error"
 msgstr "SGF-Fehler"
 
-#: kombilo.py:574 v.py:2147
+#: kombilo.py:557 v.py:2151
 msgid "Could not write to file "
 msgstr "Konnte folgende Datei nicht schreiben: "
 
-#: kombilo.py:710
+#: kombilo.py:688
 msgid "Delete"
 msgstr "Löschen"
 
-#: kombilo.py:713
+#: kombilo.py:691
 #, fuzzy
 msgid "Release"
 msgstr "Loslassen"
 
-#: kombilo.py:715
+#: kombilo.py:693
 #, fuzzy
 msgid "Hold"
 msgstr "Festhalten"
 
-#: kombilo.py:923
+#: kombilo.py:894
 msgid "Date profile, %d games"
 msgstr "Zeitachse, %d Partien"
 
-#: kombilo.py:938 kombilo.py:951 kombiloNG.py:925
+#: kombilo.py:910 kombilo.py:923 kombiloNG.py:924
 msgid "%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%"
 msgstr "%d Partien (%d/%d), S: %1.1f%%, W: %1.1f%%"
 
-#: kombilo.py:1095
+#: kombilo.py:1081
 #, fuzzy
 msgid "Database error\n"
 msgstr "Datenbank"
 
-#: kombilo.py:1095 kombilo.py:1098
+#: kombilo.py:1081 kombilo.py:1084
 #, fuzzy
 msgid "Game info search, query \"%s\""
 msgstr "Partieinfo-Suche, Anfrage \"%s\", %1.1f Sekunden\n"
 
-#: kombilo.py:1098 kombilo.py:2593
+#: kombilo.py:1084 kombilo.py:2592
 #, fuzzy
 msgid "%1.1f seconds"
 msgstr "Markierungssuche %s, %1.1f Sekunden\n"
 
-#: kombilo.py:1112
+#: kombilo.py:1097
 msgid "Signature Search"
 msgstr "Signatursuche"
 
-#: kombilo.py:1121
+#: kombilo.py:1106
 msgid "Move 20"
 msgstr "Zug 20"
 
-#: kombilo.py:1123
+#: kombilo.py:1108
 msgid "Move 40"
 msgstr "Zug 40"
 
-#: kombilo.py:1125
+#: kombilo.py:1110
 msgid "Move 60"
 msgstr "Zug 60"
 
-#: kombilo.py:1127
+#: kombilo.py:1112
 msgid "Move 31"
 msgstr "Zug 31"
 
-#: kombilo.py:1129
+#: kombilo.py:1114
 msgid "Move 51"
 msgstr "Zug 51"
 
-#: kombilo.py:1131
+#: kombilo.py:1116
 msgid "Move 71"
 msgstr "Zug 71"
 
-#: kombilo.py:1144 kombilo.py:2470
+#: kombilo.py:1129 kombilo.py:2470
 msgid "Search"
 msgstr "Suche"
 
-#: kombilo.py:1145 v.py:2418
+#: kombilo.py:1131 v.py:2420
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: kombilo.py:1203
+#: kombilo.py:1189
 msgid "Signature search, %1.1f seconds, searching for"
 msgstr "Signaturesuche, %1.1f Sekunden, gesucht nach"
 
-#: kombilo.py:1260 v.py:1126 v.py:1262 v.py:1487 v.py:1513
+#: kombilo.py:1245 v.py:1126 v.py:1261 v.py:1373
 msgid "Cap - B: %d, W: %d"
 msgstr "Gef - S. %d, W: %d"
 
-#: kombilo.py:1262
+#: kombilo.py:1247
 msgid "SGF File not found"
 msgstr "SGF-Datei nicht gefunden"
 
-#: kombilo.py:1443 kombilo.py:1549
+#: kombilo.py:1430 kombilo.py:1551
 msgid "Export position"
 msgstr "Exportiere Stellung"
 
-#: kombilo.py:1452
+#: kombilo.py:1440
 msgid "Number of moves to be shown (0-9):"
 msgstr "Anzahl der zu zeigenden Züge (0-9)"
 
-#: kombilo.py:1455 kombilo.py:1558
+#: kombilo.py:1443 kombilo.py:1561
 msgid "Export mode:"
 msgstr "Exportiere in:"
 
-#: kombilo.py:1456 kombilo.py:1559
+#: kombilo.py:1444 kombilo.py:1562
 msgid "ASCII"
 msgstr "ASCII"
 
-#: kombilo.py:1457 kombilo.py:1560
+#: kombilo.py:1445 kombilo.py:1563
 msgid "Wiki"
 msgstr "Wiki"
 
-#: kombilo.py:1459 kombilo.py:1565 kombilo.py:1695 kombilo.py:2001
-#: kombilo.py:2185 v.py:2251 v.py:2288 v.py:2419
+#: kombilo.py:1447 kombilo.py:1568 kombilo.py:1699 kombilo.py:1997
+#: kombilo.py:2178 v.py:2248 v.py:2284 v.py:2421
 msgid "OK"
 msgstr "OK"
 
-#: kombilo.py:1518
+#: kombilo.py:1520
 msgid "    A B C D E F G H J K L M N O P Q R S T"
 msgstr ""
 
-#: kombilo.py:1563
+#: kombilo.py:1566
 msgid "Show all continuations"
 msgstr "Zeige alle Fortsetzungen"
 
-#: kombilo.py:1613 kombilo.py:1616
+#: kombilo.py:1619 kombilo.py:1623
 msgid "Error starting SGF viewer"
 msgstr "Fehler beim Aufrufen des SGF-Betrachters"
 
-#: kombilo.py:1614
+#: kombilo.py:1621
 msgid "%s not found."
 msgstr "%s nicht gefunden."
 
-#: kombilo.py:1685 kombilo.py:2295
+#: kombilo.py:1689 kombilo.py:2286
 msgid "Alternative SGF viewer"
 msgstr "Alternativer SGF-Betrachter"
 
-#: kombilo.py:1690
+#: kombilo.py:1694
 msgid "Enter the command to launch the SGF viewer"
 msgstr "Geben Sie den Befehl ein, mit dem der SGF-Betrachter aufgerufen wird"
 
-#: kombilo.py:1692
+#: kombilo.py:1696
 msgid "Enter the command line options, with %f for the filename"
 msgstr "Geben Sie die Kommandozeilen-Optionen ein, mit %f für den Dateinamen."
 
-#: kombilo.py:1731
+#: kombilo.py:1734
 msgid "%s is not a directory."
 msgstr "%s ist kein Verzeichnis"
 
-#: kombilo.py:1736 kombilo.py:2100
+#: kombilo.py:1739 kombilo.py:2096
 msgid "Directory %s does not exist. Create it?"
 msgstr "Verzeichnis %s existiert nicht. Anlegen?"
 
-#: kombilo.py:1740
+#: kombilo.py:1743
 msgid "%s could not be created."
 msgstr "%s konnte nicht angelegt werden."
 
-#: kombilo.py:1757 kombilo.py:2046
+#: kombilo.py:1760 kombilo.py:2041
 msgid "All games"
 msgstr "Alle Partiern"
 
-#: kombilo.py:1757 kombilo.py:2046
+#: kombilo.py:1760 kombilo.py:2041
 msgid "All games with p-rank players"
 msgstr "Alle Partien mit p-Rang-Spielern"
 
-#: kombilo.py:1757 kombilo.py:2046
+#: kombilo.py:1760 kombilo.py:2041
 msgid "Never"
 msgstr "Nie"
 
-#: kombilo.py:1793
+#: kombilo.py:1795
 msgid "Could not delete the database files."
 msgstr "Konnte die Datenbank-Dateien nicht löschen."
 
-#: kombilo.py:1799
+#: kombilo.py:1801
 msgid "Removed %s."
 msgstr "%s gelöscht."
 
-#: kombilo.py:1834
+#: kombilo.py:1835
 msgid "Could not delete the database files %s %s ."
 msgstr "Konnte die Datenbank-Dateien %s %s nicht löschen."
 
-#: kombilo.py:1892
+#: kombilo.py:1890
 msgid "Could not write to "
 msgstr "Kein Schreibzugriff möglich auf "
 
-#: kombilo.py:1964
+#: kombilo.py:1959
 msgid "Edit database list"
 msgstr "Bearbeite Datenbank-Liste"
 
-#: kombilo.py:1994
+#: kombilo.py:1990
 msgid "DISABLED"
 msgstr "NICHT AKTIV"
 
-#: kombilo.py:1998
+#: kombilo.py:1994
 msgid "Add DB"
 msgstr "Füge DB hinzu"
 
-#: kombilo.py:1998
+#: kombilo.py:1994
 msgid "Toggle normal/disabled"
 msgstr "Aktiviere/Deaktiviere"
 
-#: kombilo.py:1999
+#: kombilo.py:1995
 msgid "Remove DB"
 msgstr "Lösche DB"
 
-#: kombilo.py:1999
+#: kombilo.py:1995
 msgid "Reprocess DB"
 msgstr "Lese DB neu ein"
 
-#: kombilo.py:2004
+#: kombilo.py:2000
 msgid "Processing options"
 msgstr "Einstellungen"
 
-#: kombilo.py:2006
+#: kombilo.py:2002
 msgid "Recursively add subdirectories"
 msgstr "Füge rekursiv alle Unterverzeichnisse hinzu"
 
-#: kombilo.py:2010
+#: kombilo.py:2006
 msgid "Files:"
 msgstr "Dateien:"
 
-#: kombilo.py:2012 v.py:1045 v.py:1943 v.py:2137
+#: kombilo.py:2008 v.py:1047 v.py:1951 v.py:2140
 msgid "All files"
 msgstr "Alle Dateien"
 
-#: kombilo.py:2034
+#: kombilo.py:2029
 msgid "Accept duplicates"
 msgstr "Akzeptiere Duplikate"
 
-#: kombilo.py:2037
+#: kombilo.py:2032
 msgid "Strict duplicate check"
 msgstr "Genauer Test für Duplikate"
 
-#: kombilo.py:2040
+#: kombilo.py:2035
 msgid "Process variations"
 msgstr "Lies Varianten ein"
 
-#: kombilo.py:2043
+#: kombilo.py:2038
 msgid "Tag as professional:"
 msgstr "Markiere als Profi-Partie"
 
-#: kombilo.py:2051
+#: kombilo.py:2046
 msgid "Store databases separately from SGF files"
 msgstr "Speichere die DB-Dateien separat von den SGF-Dateien"
 
-#: kombilo.py:2059
+#: kombilo.py:2055
 msgid "Browse"
 msgstr "Durchsuchen"
 
-#: kombilo.py:2069 kombilo.py:2869
+#: kombilo.py:2065 kombilo.py:2860
 msgid "Use hashing for full board positions"
 msgstr "Benutze Hashing-Algorithmus für Ganzbrettstellungen"
 
-#: kombilo.py:2072 kombilo.py:2874
+#: kombilo.py:2068 kombilo.py:2865
 msgid "Use hashing for corner positions"
 msgstr "Benutze Hashing-Algorithmus für Eckstellungen"
 
-#: kombilo.py:2075
+#: kombilo.py:2071
 msgid "Save messages"
 msgstr "Speichere Nachrichten"
 
-#: kombilo.py:2121 v.py:1979 v.py:2183
+#: kombilo.py:2112 v.py:1987 v.py:2185
 msgid "Confirm deletion"
 msgstr ""
 
-#: kombilo.py:2121 v.py:1979 v.py:2183
+#: kombilo.py:2112 v.py:1987 v.py:2185
 msgid "There are unsaved changes. Discard them?"
 msgstr "Es gibt nichtgespeicherte Änderungen. Verwerfen?"
 
-#: kombilo.py:2145
+#: kombilo.py:2138
 msgid "Could not write kombilo.cfg"
 msgstr "Konnte kombilo.cfg nicht schreiben."
 
-#: kombilo.py:2145 kombiloNG.py:1035
-msgid "IOError"
-msgstr "Ein-/Ausgabe-Fehler"
+#: kombilo.py:2158
+msgid "Kombilo %s - written by"
+msgstr ""
 
-#: kombilo.py:2165
-msgid "Kombilo %s - written by Ulrich Goertz (ug@geometry.de)"
-msgstr "Kombilo %s - geschrieben von Ulrich Görtz (ug@geometry.de)"
-
-#: kombilo.py:2166
+#: kombilo.py:2159
 msgid "Kombilo is a go database program."
 msgstr "Kombilo ist ein Go-Datenbankprogramm."
 
-#: kombilo.py:2167
-msgid ""
-"You can find more information on Kombilo and the newest version at http://"
-"www.u-go.net/kombilo/"
+#: kombilo.py:2160
+#, fuzzy
+msgid "You can find more information on Kombilo and the newest version at"
 msgstr ""
 "Sie finden mehr Informationen über Kombilo und die neueste Version auf "
 "http://www.u-go.net/kombilo/"
 
-#: kombilo.py:2169
+#: kombilo.py:2162
 msgid "Kombilo is free software; for more information see the documentation."
 msgstr ""
 "Kombilo ist freie Software; für genauere Informationen siehe die "
 "Dokumentation."
 
-#: kombilo.py:2172
+#: kombilo.py:2165
 msgid "About Kombilo ..."
 msgstr "Über Kombilo ..."
 
-#: kombilo.py:2202
+#: kombilo.py:2194
 msgid "Kombilo was written by Ulrich Goertz (ug@geometry.de)."
 msgstr "Kombilo wurde geschrieben von Ulrich Görtz (ug@geometry.de)."
 
-#: kombilo.py:2203 v.py:2271
+#: kombilo.py:2195 v.py:2267
 msgid "It is open source software, published under the MIT License."
 msgstr ""
 "Der Quelltext ist frei zugänglich, veröffentlicht unter der MIT-Lizenz."
 
-#: kombilo.py:2204 v.py:2272
+#: kombilo.py:2196 v.py:2268
 msgid "See the documentation for more information. "
 msgstr "Siehe die Dokumentation für genauere Informationen."
 
-#: kombilo.py:2205 v.py:2273
+#: kombilo.py:2197 v.py:2269
 msgid "This program is distributed WITHOUT ANY WARRANTY!"
 msgstr "Es gibt keinerlei Gewährleistung für dieses Programm."
 
-#: kombilo.py:2206
+#: kombilo.py:2198
 msgid "Kombilo license"
 msgstr "Kombilo-Lizenz"
 
-#: kombilo.py:2254
+#: kombilo.py:2247
 msgid "Complete reset"
 msgstr "Vollständig zurücksetzen"
 
-#: kombilo.py:2260
+#: kombilo.py:2252
 msgid "Database"
 msgstr "Datenbank"
 
-#: kombilo.py:2261
+#: kombilo.py:2253
 msgid "Edit DB list"
 msgstr "Editiere Datenbank-Liste"
 
-#: kombilo.py:2262
+#: kombilo.py:2254
 msgid "Export search results"
 msgstr "Exportiere Suchergebnisse"
 
-#: kombilo.py:2263
+#: kombilo.py:2255
 msgid "Export current position"
 msgstr "Exportiere aktuelle Stellung"
 
-#: kombilo.py:2264
+#: kombilo.py:2256
 msgid "Export tags to file"
 msgstr "Exportiere Markierungen in Datei"
 
-#: kombilo.py:2265
+#: kombilo.py:2257
 msgid "Import tags from file"
 msgstr "Importiere Markierungen aus Datei"
 
-#: kombilo.py:2266
+#: kombilo.py:2258
 msgid "Copy current SGF files to folder"
 msgstr "Kopiere aktuelle SGF-Dateien in Verzeichnis"
 
-#: kombilo.py:2268
+#: kombilo.py:2260
 msgid "Signature search"
 msgstr "Signatursuche"
 
-#: kombilo.py:2271
+#: kombilo.py:2262
 msgid "Jump to match"
 msgstr "Springe zu Treffer"
 
-#: kombilo.py:2272
+#: kombilo.py:2263
 msgid "Smart FixedColor"
 msgstr "Automatische Feste Farben"
 
-#: kombilo.py:2279
+#: kombilo.py:2270
 msgid "Sort by black player"
 msgstr "Sortiere nach schwarzem Spieler"
 
-#: kombilo.py:2279
+#: kombilo.py:2270
 msgid "Sort by date"
 msgstr "Sortiere nach Datum"
 
-#: kombilo.py:2279
+#: kombilo.py:2270
 msgid "Sort by filename"
 msgstr "Sortiere nach Dateiname"
 
-#: kombilo.py:2279
+#: kombilo.py:2270
 msgid "Sort by white player"
 msgstr "Sortiere nach weißem Spieler"
 
-#: kombilo.py:2281
+#: kombilo.py:2272
 msgid "Reverse order"
 msgstr "Umgekehrte Reihenfolge"
 
-#: kombilo.py:2285
+#: kombilo.py:2276
 msgid "Show filename"
 msgstr "Zeige Dateiname"
 
-#: kombilo.py:2286
+#: kombilo.py:2277
 msgid "Show date"
 msgstr "Zeige Datum"
 
-#: kombilo.py:2293
+#: kombilo.py:2284
 msgid "Advanced"
 msgstr "Weitere Einstellungen"
 
-#: kombilo.py:2294
+#: kombilo.py:2285
 msgid "Open games in external viewer"
 msgstr "Öffne Dateien in neuem SGF-Betrachter"
 
-#: kombilo.py:2296
+#: kombilo.py:2287
 msgid "Use upper case labels"
 msgstr "Benutze Großbuchstaben für Fortsetzungen"
 
-#: kombilo.py:2298
+#: kombilo.py:2289
 msgid "Maximize window"
 msgstr ""
 
-#: kombilo.py:2301
+#: kombilo.py:2292
 msgid "Custom Menus"
 msgstr "Eigene Menüs"
 
-#: kombilo.py:2309
+#: kombilo.py:2296
 msgid "Back to previous search pattern"
 msgstr "Zurück zum vorherigen Muster"
 
-#: kombilo.py:2309
+#: kombilo.py:2296
 msgid "Reset game list"
 msgstr "Setze Partienliste zurück"
 
-#: kombilo.py:2309
+#: kombilo.py:2296
 msgid "Show continuations"
 msgstr "Zeige Fortsetzungen"
 
-#: kombilo.py:2310
+#: kombilo.py:2297
 msgid "(Don't) allow color swap in search pattern"
 msgstr "Erlaube/verbiete Farbwechsel im Muster"
 
-#: kombilo.py:2310
+#: kombilo.py:2297
 msgid "1-click mode"
 msgstr "1-Klick-Modus"
 
-#: kombilo.py:2311
+#: kombilo.py:2298
 msgid "(Don't) translate search pattern"
 msgstr "Verschiebe/fixiere Muster"
 
-#: kombilo.py:2311
+#: kombilo.py:2298
 msgid "Black or white plays next (or no continuation)"
 msgstr "Schwarz/weiß spielt als nächster (oder keine Fortsetzung)"
 
-#: kombilo.py:2312
+#: kombilo.py:2299
 msgid "Black plays next"
 msgstr "Schwarz spielt als nächster"
 
-#: kombilo.py:2312
+#: kombilo.py:2299
 msgid "White plays next"
 msgstr "Weiß spielt als nächster"
 
-#: kombilo.py:2313
+#: kombilo.py:2300
 msgid "Pattern has to occur before move n (250=no limit)"
 msgstr "Muster muss vor Zug n vorkommen (250=keine Beschränkung)"
 
-#: kombilo.py:2313
+#: kombilo.py:2300
 msgid "Start pattern search"
 msgstr "Beginne Mustersuche"
 
-#: kombilo.py:2314
+#: kombilo.py:2301
 msgid "Clear all entries"
 msgstr "Lösche alle Einträge"
 
-#: kombilo.py:2314
+#: kombilo.py:2301
 msgid "Start game info search"
 msgstr "Beginne Partieinfo-Suche"
 
-#: kombilo.py:2315
+#: kombilo.py:2302
 msgid "Restore entries of next game info search"
 msgstr "Gehe zu nächster Partieinfo-Suche"
 
-#: kombilo.py:2315
+#: kombilo.py:2302
 msgid "Restore entries of previous game info search"
 msgstr "Gehe zu vorheriger Partieinfo-Suche"
 
-#: kombilo.py:2316
+#: kombilo.py:2303
 msgid ""
 "Search for tagged games.\n"
 "E.g.: H and not S"
@@ -538,33 +533,33 @@ msgstr ""
 "Suche nach markierten Partien.\n"
 "Z.B.: H and not S"
 
-#: kombilo.py:2316
+#: kombilo.py:2303
 msgid "Set tags of selected game."
 msgstr "Markiere ausgewählte Partie."
 
-#: kombilo.py:2317
+#: kombilo.py:2304
 msgid "Remove given tag from all games currently listed."
 msgstr "Lösche Markierung von allen aktuellen Partien."
 
-#: kombilo.py:2317
+#: kombilo.py:2304
 msgid "Tag all games currently listed with given tag."
 msgstr "Markiere alle aktuellen Partien."
 
-#: kombilo.py:2318
+#: kombilo.py:2305
 msgid "Define a new tag (give one-letter abbreviation and description)."
 msgstr ""
 "Erzeuge neue Markierung (geben Sie eine Abkürzung und eine Beschreibung ein)."
 
-#: kombilo.py:2318
+#: kombilo.py:2305
 msgid "Remove a tag."
 msgstr "Lösche eine Markierung."
 
-#: kombilo.py:2438
+#: kombilo.py:2440
 #, fuzzy
 msgid "%1.1f seconds\n"
 msgstr "Markierungssuche %s, %1.1f Sekunden\n"
 
-#: kombilo.py:2438 kombilo.py:2810
+#: kombilo.py:2440 kombilo.py:2800
 msgid "Pattern search"
 msgstr "Mustersuche"
 
@@ -588,177 +583,174 @@ msgstr "Erzeuge Markierung"
 msgid "Delete tag"
 msgstr "Lösche Markierung"
 
-#: kombilo.py:2504
+#: kombilo.py:2502
 msgid "This tag abbreviation exists already."
 msgstr "Diese Abkürzung ist schon vergeben."
 
-#: kombilo.py:2514
+#: kombilo.py:2512
 msgid "Added tag %s %s.\n"
 msgstr "Markierung %s %s hinzugefügt.\n"
 
-#: kombilo.py:2521
+#: kombilo.py:2518 kombilo.py:2525
 msgid "Not a tag abbreviation: %s.\n"
 msgstr "Keine gültige Abkürzung: %s.\n"
 
-#: kombilo.py:2527
-msgid "Not a tag abbreviation.\n"
-msgstr "Keine Markierungs-Abkürzung.\n"
-
-#: kombilo.py:2535
+#: kombilo.py:2533
 msgid "You cannot delete built-in tags."
 msgstr "Eingebaute Markierungen können nicht gelöscht werden."
 
-#: kombilo.py:2537
+#: kombilo.py:2535
 msgid "Delete tag [%s] %s.\n"
 msgstr "Lösche Markierung [%s] %s.\n"
 
-#: kombilo.py:2566
-msgid "Deleted tag %s %s from %d games.\n"
+#: kombilo.py:2565
+#, fuzzy
+msgid "Deleted tag [%s] %s from %d games.\n"
 msgstr "Markierung %s %s von %d Partien entfernt.\n"
 
-#: kombilo.py:2593
+#: kombilo.py:2592
 #, fuzzy
 msgid "Tag search %s"
 msgstr "Markierungssuche %s, %1.1f Sekunden\n"
 
-#: kombilo.py:2733 kombiloNG.py:920
+#: kombilo.py:2721 kombiloNG.py:919
 msgid "Statistics"
 msgstr "Statistik"
 
-#: kombilo.py:2735 v.py:2492
+#: kombilo.py:2723 v.py:2488
 msgid "Options"
 msgstr "Einstellungen"
 
-#: kombilo.py:2737
+#: kombilo.py:2725
 msgid "Game info"
 msgstr "Partieinfo"
 
-#: kombilo.py:2742
+#: kombilo.py:2730
 msgid "Date profile"
 msgstr "Zeitachse"
 
-#: kombilo.py:2745
+#: kombilo.py:2733
 msgid "Tags"
 msgstr "Markierungen"
 
-#: kombilo.py:2750
+#: kombilo.py:2738
 msgid "Log"
 msgstr "Log"
 
-#: kombilo.py:2780
+#: kombilo.py:2768
 msgid "History"
 msgstr "Geschichte"
 
-#: kombilo.py:2809
+#: kombilo.py:2799
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: kombilo.py:2811
+#: kombilo.py:2801
 msgid "Back"
 msgstr "Zurück"
 
-#: kombilo.py:2815 kombiloNG.py:902 kombiloNG.py:910
+#: kombilo.py:2805 kombiloNG.py:895 kombiloNG.py:906
 msgid "Continuations"
 msgstr "Fortsetzungen"
 
-#: kombilo.py:2818
+#: kombilo.py:2808
 msgid "1 click"
 msgstr "1-Klick"
 
-#: kombilo.py:2832
+#: kombilo.py:2823
 msgid "Fixed Color"
 msgstr "Feste Farben"
 
-#: kombilo.py:2837
+#: kombilo.py:2828
 msgid "Next:"
 msgstr "Nächster:"
 
-#: kombilo.py:2841
+#: kombilo.py:2832
 msgid "B/W"
 msgstr "S/W"
 
-#: kombilo.py:2843
+#: kombilo.py:2834 kombiloNG.py:932 kombiloNG.py:933 kombiloNG.py:939
 msgid "B"
 msgstr "S"
 
-#: kombilo.py:2845
+#: kombilo.py:2836 kombiloNG.py:933 kombiloNG.py:938 kombiloNG.py:939
 msgid "W"
 msgstr "W"
 
-#: kombilo.py:2849
+#: kombilo.py:2840
 msgid "Fixed Anchor"
 msgstr "Fester Anker"
 
-#: kombilo.py:2854
+#: kombilo.py:2845
 msgid "Search in variations"
 msgstr "Suche in Varianten"
 
-#: kombilo.py:2857
+#: kombilo.py:2848
 #, fuzzy
 msgid "Move limit"
 msgstr "Zugbeschränkung"
 
-#: kombilo.py:2906
+#: kombilo.py:2896
 msgid "White"
 msgstr "Weiß"
 
-#: kombilo.py:2908
+#: kombilo.py:2898
 msgid "Black"
 msgstr "Schwarz"
 
-#: kombilo.py:2910
+#: kombilo.py:2900
 msgid "Player"
 msgstr "Spieler"
 
-#: kombilo.py:2912
+#: kombilo.py:2902
 msgid "Event"
 msgstr "Ereignis"
 
-#: kombilo.py:2914
+#: kombilo.py:2904
 msgid "From"
 msgstr "Von"
 
-#: kombilo.py:2916
+#: kombilo.py:2906
 msgid "To"
 msgstr "Bis"
 
-#: kombilo.py:2919
+#: kombilo.py:2909
 msgid "Anywhere"
 msgstr "Irgendwo"
 
-#: kombilo.py:2922
+#: kombilo.py:2912
 msgid "SQL"
 msgstr "SQL"
 
-#: kombilo.py:2926
+#: kombilo.py:2916
 msgid "Referenced"
 msgstr "Verweis vorhanden"
 
-#: kombilo.py:2928
+#: kombilo.py:2918
 msgid "Start"
 msgstr "Start"
 
-#: kombilo.py:2929
+#: kombilo.py:2919
 msgid "Clear"
 msgstr "Einträge löschen"
 
-#: kombilo.py:2968
+#: kombilo.py:2958
 msgid "Go to:"
 msgstr "Gehe zu:"
 
-#: kombilo.py:3020
+#: kombilo.py:3011
 msgid "Ready ..."
 msgstr "Fertig ..."
 
-#: kombilo.py:3039
+#: kombilo.py:3029
 msgid "Error reading kombilo.app"
 msgstr "Fehler beim Lesen von kombilo.app"
 
-#: kombiloNG.py:346
+#: kombiloNG.py:344
 msgid "Handicap game"
 msgstr "Vorgabepartie"
 
-#: kombiloNG.py:346
+#: kombiloNG.py:345
 msgid "Professional game"
 msgstr "Profi-Partie"
 
@@ -766,57 +758,47 @@ msgstr "Profi-Partie"
 msgid "Reference to commentary available"
 msgstr "Verweis auf Kommentar verfügbar"
 
-#: kombiloNG.py:346
+#: kombiloNG.py:347
 msgid "Seen"
 msgstr "Gesehen"
 
-#: kombiloNG.py:591
+#: kombiloNG.py:600 v.py:758
 msgid "Komi"
 msgstr "Komi"
 
-#: kombiloNG.py:592 v.py:753
+#: kombiloNG.py:602 v.py:761
 msgid "Hcp"
 msgstr "Vorgabe"
 
-#: kombiloNG.py:610
+#: kombiloNG.py:611
 msgid "Commentary in "
 msgstr "Kommentar in "
 
-#: kombiloNG.py:901
+#: kombiloNG.py:894
 msgid "Search Pattern"
 msgstr "Suchmuster"
 
-#: kombiloNG.py:905
+#: kombiloNG.py:899
 msgid "Search results"
 msgstr "Suchergebnisse"
 
-#: kombiloNG.py:906
+#: kombiloNG.py:901
 msgid "Pattern:"
 msgstr "Muster:"
 
-#: kombiloNG.py:932
-#, fuzzy
-msgid "B%s:    %d (%d), "
-msgstr "S%s:    %d (%d), "
-
-#: kombiloNG.py:933 kombiloNG.py:938
-msgid "B %1.1f%% - W %1.1f%%"
-msgstr "S %1.1f%% - W %1.1f%%"
-
-#: kombiloNG.py:937
-#, fuzzy
-msgid "W%s:    %d (%d), "
-msgstr "W%s    %d (%d), "
-
-#: kombiloNG.py:945
+#: kombiloNG.py:948
 msgid "Hits per database\n"
 msgstr "Treffer pro Datenbank\n"
 
-#: kombiloNG.py:1035
+#: kombiloNG.py:952
+msgid "%s: %d games (of %d)"
+msgstr ""
+
+#: kombiloNG.py:1042
 msgid "Could not open database %s/%s."
 msgstr "Konnte Datenbank %s/%s nicht öffnen."
 
-#: kombiloNG.py:1091
+#: kombiloNG.py:1099
 msgid ""
 "A kombilo database already exists at %s. Please remove it first, or "
 "reprocess that database."
@@ -824,7 +806,7 @@ msgstr ""
 "Es gibt bereits eine Kombilo-Datenbank unter %s. Bitte löschen Sie diese, "
 "oder lesen Sie sie neu ein."
 
-#: kombiloNG.py:1097
+#: kombiloNG.py:1106
 msgid ""
 "A fatal error occured when processing %s. Are the directories for the "
 "database files writable?"
@@ -832,51 +814,53 @@ msgstr ""
 "Ein fataler Fehler ist beim Einlesen von %s aufgetreten. Haben Sie "
 "Schreibberechtigung für die Datenbank-Verzeichnisse?"
 
-#: kombiloNG.py:1101
+#: kombiloNG.py:1111
 msgid "Directory %s contains no sgf files.\n"
 msgstr "Verzeichnis %s enthält keine SGF-Dateien.\n"
 
-#: kombiloNG.py:1110
+#: kombiloNG.py:1121
 msgid "Added %s."
 msgstr "%s hinzugefügt."
 
-#: kombiloNG.py:1120
+#: kombiloNG.py:1130
 msgid "Processing %s."
 msgstr "Lese %s ein."
 
-#: kombiloNG.py:1145
+#: kombiloNG.py:1157
 msgid "Delete old database files."
 msgstr "Lösche alte Datenbank-Dateien."
 
-#: kombiloNG.py:1169
+#: kombiloNG.py:1164
+#, fuzzy
+msgid "Unable to delete database file %s."
+msgstr "Kann Datenbank-Dateien nicht löschen."
+
+#: kombiloNG.py:1181
 msgid "Unable to read file %s"
 msgstr "Kann Datei %s nicht lesen."
 
-#: kombiloNG.py:1184
+#: kombiloNG.py:1197
 msgid "Duplicate ... %s\n"
 msgstr "Duplikat ... %s\n"
 
-#: kombiloNG.py:1187
+#: kombiloNG.py:1200
 msgid "SGF error, file %s, %d\n"
 msgstr "SGF-Fehler, Datei %s, %d\n"
 
-#: kombiloNG.py:1190
+#: kombiloNG.py:1203
 msgid "Unacceptable board size error, file %s, %d\n"
 msgstr "Nicht erlaubte Brettgröße, Datei %s, %d\n"
 
-#: kombiloNG.py:1193
+#: kombiloNG.py:1206
 msgid "not inserted\n"
 msgstr "nicht eingefügt\n"
 
-#: kombiloNG.py:1196
-msgid "SGF error, file %s, not inserted.\n"
+#: kombiloNG.py:1209 kombiloNG.py:1213
+#, fuzzy
+msgid "SGF error, file %s, not inserted."
 msgstr "SGF-Fehler, Datei %s, nicht eingefügt.\n"
 
-#: kombiloNG.py:1200
-msgid "SGF error, file %s. Not inserted.\n"
-msgstr "SGF-Fehler, Datei %s, Nicht eingefügt.\n"
-
-#: kombiloNG.py:1203
+#: kombiloNG.py:1216
 msgid "Finalizing ... (this will take some time)\n"
 msgstr "Datenbank schreiben ... (kann etwas länger dauern)\n"
 
@@ -892,41 +876,38 @@ msgstr "Speichern als"
 msgid "Cannot write to "
 msgstr "Schreibfehler: "
 
-#: v.py:121
-msgid "IO Error"
-msgstr "Ein-/Ausgabefehler"
-
-#: v.py:492 v.py:518
+#: v.py:494 v.py:520
 msgid "NEW"
 msgstr "NEU"
 
-#: v.py:494
+#: v.py:496
 msgid "OPEN"
 msgstr "ÖFFNEN"
 
-#: v.py:496 v.py:520
+#: v.py:498 v.py:522
 msgid "DEL"
 msgstr "LÖSCHEN"
 
-#: v.py:498
+#: v.py:500
 msgid "split"
 msgstr "aufspalten"
 
-#: v.py:700
-msgid "An error occured, please send a bug report."
+#: v.py:706
+#, fuzzy
+msgid "An error occured, please submit a bug report."
 msgstr ""
 "Es ist ein Fehler aufgetreten, bitte reichen Sie einen Fehlerbericht ein."
 
-#: v.py:1045 v.py:1943 v.py:2137
+#: v.py:1047 v.py:1951 v.py:2140
 msgid "SGF files"
 msgstr "SGF-Dateien"
 
-#: v.py:1062
+#: v.py:1065
 #, fuzzy
 msgid "SGF Error in game %d"
 msgstr "SGF-Fehler in Partie %d"
 
-#: v.py:1065
+#: v.py:1068
 msgid "I/O Error when writing %s%d.sgf"
 msgstr "Ein-/Ausgabefehler beim Schreiben von %s%d.sgf"
 
@@ -938,78 +919,78 @@ msgstr "SGF-Fehler in Partie %d in der aktuellen Datei."
 msgid "The board size of this game is not 19x19."
 msgstr "Die Brettgröße dieses Spiels ist nicht 19x19."
 
-#: v.py:1239 v.py:1457
+#: v.py:1238 v.py:1463
 msgid "Error in SGF file"
 msgstr "Fehler in SGF-Datei"
 
-#: v.py:1921 v.py:1923
+#: v.py:1930 v.py:1932
 msgid "New"
 msgstr ""
 
-#: v.py:1950
+#: v.py:1958
 msgid "Cannot open this file\n"
 msgstr ""
 
-#: v.py:1950
+#: v.py:1958
 msgid "Open file"
 msgstr ""
 
-#: v.py:1960
+#: v.py:1970
 msgid "Error in SGF file!"
 msgstr ""
 
-#: v.py:1960
+#: v.py:1970
 msgid "Parsing Error"
 msgstr ""
 
-#: v.py:2203
+#: v.py:2206
 msgid "Could not write kombilo.cfg."
 msgstr ""
 
-#: v.py:2229
+#: v.py:2228
 msgid ""
 "Failed to open the web browser.\n"
 "You can find the tutorial as \n"
 "a file at: %s"
 msgstr ""
 
-#: v.py:2236
+#: v.py:2233
 msgid "v.py - written by Ulrich Goertz (ug@geometry.de)"
 msgstr ""
 
-#: v.py:2237
+#: v.py:2234
 msgid "v.py is a program to display go game records in SGF format."
 msgstr ""
 
-#: v.py:2238
+#: v.py:2235
 msgid "It comes together with the go database program Kombilo."
 msgstr ""
 
-#: v.py:2240
+#: v.py:2237
 msgid "v.py is free software; for more information see the documentation."
 msgstr ""
 
-#: v.py:2243
+#: v.py:2240
 msgid "About v.py ..."
 msgstr ""
 
-#: v.py:2270
-msgid "v.py was written by Ulrich Goertz (ug@geometry.de)."
+#: v.py:2266
+msgid "v.py was written by"
 msgstr ""
 
-#: v.py:2335
+#: v.py:2336
 msgid "Parse error in 'Other SGF tags'"
 msgstr ""
 
-#: v.py:2370
+#: v.py:2371
 msgid "Game Info"
 msgstr ""
 
-#: v.py:2408
+#: v.py:2410
 msgid "Game Comment: "
 msgstr ""
 
-#: v.py:2413
+#: v.py:2415
 msgid "Other SGF tags: "
 msgstr ""
 
@@ -1037,245 +1018,271 @@ msgstr ""
 msgid "Export SGF source"
 msgstr ""
 
-#: v.py:2466
+#: v.py:2465
 msgid "Exit"
 msgstr ""
 
-#: v.py:2471
+#: v.py:2469
 msgid "Edit"
 msgstr ""
 
-#: v.py:2472
+#: v.py:2470
 msgid "Mirror vertically"
 msgstr ""
 
-#: v.py:2473
+#: v.py:2471
 msgid "Mirror diagonally"
 msgstr ""
 
-#: v.py:2474
+#: v.py:2472
 msgid "Rotate"
 msgstr ""
 
-#: v.py:2477
+#: v.py:2475
 msgid "Ctrl-Click behavior"
 msgstr ""
 
-#: v.py:2478
+#: v.py:2476
 msgid "Delete stone"
 msgstr ""
 
-#: v.py:2478
+#: v.py:2476
 msgid "Square label"
 msgstr ""
 
-#: v.py:2478
+#: v.py:2476
 msgid "Triangle label"
 msgstr ""
 
-#: v.py:2478
+#: v.py:2476
 msgid "Upper case letter"
 msgstr ""
 
-#: v.py:2479
+#: v.py:2477
 msgid "Lower case letter"
 msgstr ""
 
-#: v.py:2479
+#: v.py:2477
 msgid "Number label"
 msgstr ""
 
-#: v.py:2486
+#: v.py:2483
 msgid "Practice"
 msgstr ""
 
-#: v.py:2487 v.py:2567
+#: v.py:2484 v.py:2559
 msgid "Guess mode"
 msgstr ""
 
-#: v.py:2494
+#: v.py:2490
 msgid "Fuzzy stone placement"
 msgstr ""
 
-#: v.py:2495
+#: v.py:2491
 msgid "Shaded stone mouse pointer"
 msgstr ""
 
-#: v.py:2496
+#: v.py:2492
 msgid "Show next move"
 msgstr ""
 
-#: v.py:2497
+#: v.py:2493
 msgid "Show last move"
 msgstr ""
 
-#: v.py:2498
+#: v.py:2494
 msgid "Show coordinates"
 msgstr ""
 
-#: v.py:2499
+#: v.py:2495
 msgid "Ask before discarding unsaved changes"
 msgstr ""
 
-#: v.py:2505
+#: v.py:2501
 msgid "Theme"
 msgstr ""
 
-#: v.py:2509
+#: v.py:2504
 msgid "help"
 msgstr ""
 
-#: v.py:2510
+#: v.py:2505
 msgid "Help"
 msgstr ""
 
-#: v.py:2512
+#: v.py:2507
 msgid "About ..."
 msgstr ""
 
-#: v.py:2514
+#: v.py:2509
 msgid "License"
 msgstr ""
 
-#: v.py:2515
+#: v.py:2510
 msgid "Documentation"
 msgstr ""
 
-#: v.py:2553 v.py:2638
+#: v.py:2545 v.py:2630
 msgid "Pass"
 msgstr ""
 
-#: v.py:2555
+#: v.py:2547
 msgid "Info"
 msgstr ""
 
-#: v.py:2558
+#: v.py:2550
 msgid "Ctrl-Click:"
 msgstr ""
 
-#: v.py:2632
+#: v.py:2624
 msgid "Back one move"
 msgstr ""
 
-#: v.py:2633
+#: v.py:2625
 msgid "Forward one move"
 msgstr ""
 
-#: v.py:2634
+#: v.py:2626
 msgid "Back 10 moves"
 msgstr ""
 
-#: v.py:2635
+#: v.py:2627
 msgid "Forward 10 moves"
 msgstr ""
 
-#: v.py:2636
+#: v.py:2628
 msgid "Start of game/Clear board"
 msgstr ""
 
-#: v.py:2637
+#: v.py:2629
 msgid "End of game"
 msgstr ""
 
-#: v.py:2639
+#: v.py:2631
 msgid "Edit game info"
 msgstr ""
 
-#: v.py:2641
+#: v.py:2633
 msgid "Play black/white stones"
 msgstr ""
 
-#: v.py:2642
+#: v.py:2634
 msgid "Play white/black stones"
 msgstr ""
 
-#: v.py:2643
+#: v.py:2635
 msgid "Place black stones"
 msgstr ""
 
-#: v.py:2644
+#: v.py:2636
 msgid "Place white stones"
 msgstr ""
 
-#: v.py:2646
+#: v.py:2638
 msgid "Number of captured stones"
 msgstr ""
 
-#: v.py:2647
+#: v.py:2639
 msgid "Number of current move"
 msgstr ""
 
-#: v.py:2648
+#: v.py:2640
 msgid "Current SGF file"
 msgstr ""
 
-#: v.py:2650
+#: v.py:2642
 msgid "Create new SGF file"
 msgstr ""
 
-#: v.py:2651
+#: v.py:2643
 msgid "Open SGF file"
 msgstr ""
 
-#: v.py:2652
+#: v.py:2644
 msgid "Delete SGF file from list"
 msgstr ""
 
-#: v.py:2653
+#: v.py:2645
 msgid "Split collection into single files"
 msgstr ""
 
-#: v.py:2654
+#: v.py:2646
 msgid "Create new game"
 msgstr ""
 
-#: v.py:2655
+#: v.py:2647
 msgid "Delete game"
 msgstr ""
 
-#: v.py:2657
+#: v.py:2649
 msgid "Ctrl-click deletes stone"
 msgstr ""
 
-#: v.py:2658
+#: v.py:2650
 msgid "Ctrl-click places/deletes triangle label"
 msgstr ""
 
-#: v.py:2659
+#: v.py:2651
 msgid "Ctrl-click places/deletes square label"
 msgstr ""
 
-#: v.py:2660
+#: v.py:2652
 msgid "Ctrl-click places/deletes uppercase label"
 msgstr ""
 
-#: v.py:2661
+#: v.py:2653
 msgid "Ctrl-click places/deletes lowercase label"
 msgstr ""
 
-#: v.py:2662
+#: v.py:2654
 msgid "Ctrl-click places/deletes number label"
 msgstr ""
 
-#: v.py:2663
+#: v.py:2655
 msgid "Delete this and all following nodes"
 msgstr ""
 
-#: v.py:2664
+#: v.py:2656
 msgid "Enter/leave guess mode"
 msgstr ""
 
-#: v.py:2739
+#: v.py:2729
 msgid "Neither kombilo.cfg nor default.cfg were found."
 msgstr ""
 
-#: v.py:2752
+#: v.py:2742
 msgid "Unable to create directory %s."
 msgstr ""
 
-#: v.py:2876
+#: v.py:2868
 msgid "Error reading v.app"
 msgstr "Fehler beim Lesen der Datei v.app"
+
+#~ msgid "IOError"
+#~ msgstr "Ein-/Ausgabe-Fehler"
+
+#~ msgid "Kombilo %s - written by Ulrich Goertz (ug@geometry.de)"
+#~ msgstr "Kombilo %s - geschrieben von Ulrich Görtz (ug@geometry.de)"
+
+#~ msgid "Not a tag abbreviation.\n"
+#~ msgstr "Keine Markierungs-Abkürzung.\n"
+
+#, fuzzy
+#~ msgid "B%s:    %d (%d), "
+#~ msgstr "S%s:    %d (%d), "
+
+#~ msgid "B %1.1f%% - W %1.1f%%"
+#~ msgstr "S %1.1f%% - W %1.1f%%"
+
+#, fuzzy
+#~ msgid "W%s:    %d (%d), "
+#~ msgstr "W%s    %d (%d), "
+
+#~ msgid "SGF error, file %s. Not inserted.\n"
+#~ msgstr "SGF-Fehler, Datei %s, Nicht eingefügt.\n"
+
+#~ msgid "IO Error"
+#~ msgstr "Ein-/Ausgabefehler"
 
 #, fuzzy
 #~ msgid "Game info search, query \"%s\", Database error\n"
@@ -1286,9 +1293,6 @@ msgstr "Fehler beim Lesen der Datei v.app"
 
 #~ msgid "SGF error"
 #~ msgstr "SGF-Fehler"
-
-#~ msgid "Unable to delete database files."
-#~ msgstr "Kann Datenbank-Dateien nicht löschen."
 
 #~ msgid "SGF error in gamelistRelease."
 #~ msgstr "SGF-Fehler in gamelistRelease"
