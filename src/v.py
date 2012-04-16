@@ -1282,7 +1282,7 @@ class Viewer:
 
         found = 0
 
-        if not self.board.status.has_key((x,y)):
+        if not self.board.getStatus(x,y) == '.':
             i = 0
             n = self.cursor.currentN
 
