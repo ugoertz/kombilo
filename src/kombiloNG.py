@@ -1039,7 +1039,7 @@ class KEngine(object):
                     db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1] + '.db'))
                 except:
                     if showwarning:
-                        showwarning(_('IOError'), _('Could not open database %s/%s.') % db['name'])
+                        showwarning(_('I/O Error'), _('Could not open database %s/%s.') % db['name'])
                     del self.gamelist.DBlist[DBlistIndex]
                     continue
             DBlistIndex += 1  # May differ from loop counter if databases which cannot be opened are omitted.
@@ -1206,11 +1206,11 @@ class KEngine(object):
                             messages.insert('end', _('not inserted\n'))
                             messages.update()
                 elif messages:
-                    messages.insert('end', _('SGF error, file %s, not inserted.\n') % filename)
+                    messages.insert('end', _('SGF error, file %s, not inserted.') % filename + '\n')
                     messages.update()
             except:
                 if messages:
-                    messages.insert('end', _('SGF error, file %s. Not inserted.\n') % filename)
+                    messages.insert('end', _('SGF error, file %s, not inserted.') % filename + '\n')
                     messages.update()
 
         messages.insert('end', _('Finalizing ... (this will take some time)\n'))

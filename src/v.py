@@ -118,7 +118,7 @@ class TextEditor:
             file.write(self.text.get('1.0', END).encode('utf-8', 'ignore'))
             file.close()
         except IOError:
-            showwarning(_('IO Error'), _('Cannot write to ') + f)
+            showwarning(_('I/O Error'), _('Cannot write to ') + f)
 
     def quit(self):
 
@@ -703,7 +703,7 @@ class DataWindow:
             except lk.SGFError:
                 showwarning(_('Error'), _('SGF Error') + '(gamelistRelease)')
             except:
-                showwarning(_('Error'), _('An error occured, please send a bug report.'))
+                showwarning(_('Error'), _('An error occured, please submit a bug report.'))
 
         return None, None
 
@@ -2263,10 +2263,10 @@ class Viewer:
             t = t + file.read()
             file.close()
         except IOError:
-            t = _('v.py was written by Ulrich Goertz (ug@geometry.de).') + '\n'
-            t = t + _('It is open source software, published under the MIT License.')
-            t = t + _('See the documentation for more information. ')
-            t = t + _('This program is distributed WITHOUT ANY WARRANTY!') + '\n\n'
+            t = _('v.py was written by') + ' Ulrich Goertz (ug@geometry.de).\n'
+            t += _('It is open source software, published under the MIT License.')
+            t += _('See the documentation for more information. ')
+            t += _('This program is distributed WITHOUT ANY WARRANTY!') + '\n\n'
         self.textWindow(t, 'v.py license')
 
     def textWindow(self, t, title='', grab=1):

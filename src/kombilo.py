@@ -2135,7 +2135,7 @@ class App(v.Viewer, KEngine):
             c.filename = os.path.join(self.optionspath, 'kombilo.cfg')
             c.write()
         except:
-            showwarning(_('IOError'), _('Could not write kombilo.cfg'))
+            showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
 
         self.master.quit()
 
@@ -2155,9 +2155,9 @@ class App(v.Viewer, KEngine):
 
         t = []
 
-        t.append(_('Kombilo %s - written by Ulrich Goertz (ug@geometry.de)') % KOMBILO_RELEASE + '\n\n')
+        t.append(_('Kombilo %s - written by') + ' Ulrich Goertz (ug@geometry.de)' % KOMBILO_RELEASE + '\n\n')
         t.append(_('Kombilo is a go database program.') + '\n')
-        t.append(_('You can find more information on Kombilo and the newest version at http://www.u-go.net/kombilo/') + '\n\n')
+        t.append(_('You can find more information on Kombilo and the newest version at') + ' http://www.u-go.net/kombilo/\n\n')
 
         t.append(_('Kombilo is free software; for more information see the documentation.') + '\n\n')
 
@@ -2522,7 +2522,7 @@ class App(v.Viewer, KEngine):
             if self.gamelist.customTags[t][0] == q:
                 return int(t)  # find the integer handle corresponding to the given abbreviation
         else:
-            self.logger.insert(END, _('Not a tag abbreviation.\n'))
+            self.logger.insert(END, _('Not a tag abbreviation: %s.\n') % q)
             return
 
     def deleteTagPY(self):
@@ -2562,7 +2562,7 @@ class App(v.Viewer, KEngine):
             return
         for dummy, DBindex, index in self.gamelist.gameIndex:
             self.gamelist.DBlist[DBindex]['data'].deleteTag(t, index)
-        self.logger.insert(END, _('Deleted tag %s %s from %d games.\n') % (self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1], len(self.gamelist.gameIndex),))
+        self.logger.insert(END, _('Deleted tag [%s] %s from %d games.\n') % (self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1], len(self.gamelist.gameIndex),))
 
         self.gamelist.upd()
         if self.gamelist.listbox.curselection():
