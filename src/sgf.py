@@ -263,7 +263,7 @@ class Node(object):
         # print 'del', item
         self.n.del_property_value(item)
 
-    def remove(ID, item):
+    def remove(self, ID, item):
         '''Remove ``item`` from the list ``self.n[ID]``.
         '''
         ll = list(self.n[ID])
