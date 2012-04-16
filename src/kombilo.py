@@ -2680,6 +2680,12 @@ class App(v.Viewer, KEngine):
 
         self.master.bind('<ButtonRelease>', _button_release)
 
+    def switch_language(self, lang, show_warning=False):
+        global _
+        t = gettext.translation('kombilo', '../lang', languages=[lang, ])
+        _ = t.ugettext
+        v.Viewer.switch_language(self, lang, show_warning)
+
     def __init__(self, master):
 
         KEngine.__init__(self)

@@ -1126,6 +1126,17 @@ Kombilo offers you to change its look according to one of a number of themes.
 Which themes are available depends on your operating system. Just try them out.
 The effects will be visible immediately.
 
+.. index:: Language, Choose language
+
+Language
+^^^^^^^^
+
+Kombilo tries to determine the language it should use from your operating
+system. If you want to change the language that Kombilo uses, you can do so
+using this menu. All languages for which a translation is available are shown,
+specified by their language code.  Note that after changing the language, you
+must restart the program to make the change become effective.
+
 The 'Game list' submenu
 ^^^^^^^^^^^^^^^^^^^^^^^
 

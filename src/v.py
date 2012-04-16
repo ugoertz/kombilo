@@ -24,6 +24,7 @@
 
 import os
 import sys
+import glob
 import webbrowser
 from configobj import ConfigObj
 
@@ -2497,8 +2498,13 @@ class Viewer:
         theme_menu = Menu(self.optionsmenu)
         for th in self.style.theme_names():
             theme_menu.add_radiobutton(label=th, variable=self.options.theme, value=th, command=lambda: self.style.theme_use(self.options.theme.get()))
-
         self.optionsmenu.add_cascade(label=_('Theme'), underline=0, menu=theme_menu)
+
+        lang_menu = Menu(self.optionsmenu)
+        languages = [os.path.basename(lang) for lang in  glob.glob('../lang/*') if os.path.basename(lang).find('.') == -1]
+        for lang in languages:
+            lang_menu.add_radiobutton(label=lang, variable=self.options.language, value=lang, command=lambda: self.switch_language(self.options.language.get(), show_warning=True))
+        self.optionsmenu.add_cascade(label=_('Language'), underline=0, menu=lang_menu)
 
         # -------------- HELP -------------------
         self.helpmenu = Menu(menu, name=_('help'))
@@ -2679,6 +2685,13 @@ class Viewer:
     def init_key_bindings(self):
         self.master.bind('<Control-q>', lambda e, self=self: self.quit())
 
+    def switch_language(self, lang, show_warning=False):
+        global _
+        t = gettext.translation('kombilo', '../lang', languages=[lang, ])
+        _ = t.ugettext
+        if show_warning:
+            showwarning(_('Note'), _('You have to restart the program to make the change become effective.'))
+
     def __init__(self, master, BoardClass=Board, DataWindowClass=DataWindow):
         """ Initialize the GUI, some variables, etc. """
 
@@ -2749,6 +2762,9 @@ class Viewer:
 
         self.style = Style()
         self.style.theme_use(self.options.theme.get())
+
+        if self.options.language.get():
+            self.switch_language(self.options.language.get())
 
         # The main window
 
