@@ -27,24 +27,23 @@
 
 from Tkinter import *
 
+
 class VirtualScrollbar(Scrollbar):
 
-
     def __init__(self, parent, offset, current_in_list, total_in_list, *args, **kwargs):
-        self.offset = offset # a "pointer", i.e. a list whose first and only entry contains the offset
+        self.offset = offset  # a "pointer", i.e. a list whose first and only entry contains the offset
         self.current_in_list = current_in_list
         self.total_in_list = total_in_list
         Scrollbar.__init__(self, parent, *args, **kwargs)
 
-
-
     def set(self, *args):
         # print 'Scrollbar.set', self.current_in_list, self.total_in_list
-        if self.total_in_list == 0: return
+        if self.total_in_list == 0:
+            return
         cil = min(self.current_in_list, self.total_in_list)
-        multiplier = cil*1.0/self.total_in_list
-        alpha = float(args[0])*multiplier + self.offset[0]
-        beta = float(args[1])*multiplier + self.offset[0]
+        multiplier = cil * 1.0 / self.total_in_list
+        alpha = float(args[0]) * multiplier + self.offset[0]
+        beta = float(args[1]) * multiplier + self.offset[0]
         # print args, multiplier, alpha, beta, str(alpha), str(beta)
         Scrollbar.set(self, str(alpha), str(beta))
 
@@ -56,7 +55,8 @@ class VirtualListbox(Listbox):
         get_data_ic, if specified (in kwargs), is a function which returns a dict to be plugged into itemconfig; this can be used to change color of background color of a line.
         '''
 
-        if not 'activestyle' in kwargs: kwargs['activestyle'] = 'none'
+        if not 'activestyle' in kwargs:
+            kwargs['activestyle'] = 'none'
         if 'get_data_ic' in kwargs:
             self.get_data_ic = kwargs['get_data_ic']
             del kwargs['get_data_ic']
@@ -70,8 +70,6 @@ class VirtualListbox(Listbox):
         self.offset = offset
         self.insert_interval()
 
-
-
     def insert_interval(self, interval=None):
         interval = interval or self.current
         for i in xrange(*interval):
@@ -81,11 +79,9 @@ class VirtualListbox(Listbox):
                 ic = self.get_data_ic(i)
                 if ic:
                     try:
-                        self.itemconfig(i-interval[0], **ic)
+                        self.itemconfig(i - interval[0], **ic)
                     except TclError:
                         pass
-
-
 
     def virt_select_set_see(self, index):
         '''
@@ -94,61 +90,61 @@ class VirtualListbox(Listbox):
 
         if not self.current[0] <= index < self.current[1]:
             cil = self.current_in_list
-            new_start = max(0, int(index) - cil/2)
+            new_start = max(0, int(index) - cil / 2)
             new_current = (new_start, new_start + cil)
             self.delete(0, END)
             self.insert_interval(new_current)
-            self.offset[0] = new_current[0] * 1.0/self.total_in_list
+            self.offset[0] = new_current[0] * 1.0 / self.total_in_list
             self.current = new_current
         i = int(index) - self.current[0]
         Listbox.select_set(self, i)
         Listbox.see(self, i)
 
-
     def adjust_scrollbar_offset(self, beta_til):
-        if self.total_in_list == 0: return
+        if self.total_in_list == 0:
+            return
         cil = min(self.current_in_list, self.total_in_list)
-        if self.current[0] > 0 and (beta_til - self.current[0]) < cil/6:
-            new_start = max(0, int(beta_til - cil/2))
+        if self.current[0] > 0 and (beta_til - self.current[0]) < cil / 6:
+            new_start = max(0, int(beta_til - cil // 2))
             new_current = (new_start, new_start + cil)
             self.delete(0, END)
             self.insert_interval(new_current)
-            self.offset[0] = new_current[0] * 1.0/self.total_in_list
+            self.offset[0] = new_current[0] * 1.0 / self.total_in_list
             # print '1 -------------------------------------------------', self.current, new_current, self.offset[0]
-        elif self.current[1] < self.total_in_list and (self.current[1] - beta_til) < cil/6:
-            new_end = min(int(beta_til+cil/2), self.total_in_list)
+        elif self.current[1] < self.total_in_list and (self.current[1] - beta_til) < cil / 6:
+            new_end = min(int(beta_til + cil // 2), self.total_in_list)
             new_current = (new_end - cil, new_end)
             self.delete(0, END)
             self.insert_interval(new_current)
-            self.offset[0] = new_current[0] * 1.0/self.total_in_list
+            self.offset[0] = new_current[0] * 1.0 / self.total_in_list
             # print '2 -------------------------------------------------', self.current, new_current, self.offset[0]
-        else: return
+        else:
+            return
         change = new_current[0] - self.current[0]
         self.current = new_current
         return change
 
-
     def yview(self, *args):
-        if self.total_in_list == 0: return
+        if self.total_in_list == 0:
+            return
         cil = min(self.current_in_list, self.total_in_list)
-        if len(args)>0 and args[0] == 'moveto':
+        if len(args) > 0 and args[0] == 'moveto':
             # print "LISTBOX YVIEW", args
-            beta_til = float(args[1])*self.total_in_list
+            beta_til = float(args[1]) * self.total_in_list
             self.adjust_scrollbar_offset(beta_til)
-            moveto = str((beta_til - self.current[0])*1.0/cil)
+            moveto = str((beta_til - self.current[0]) * 1.0 / cil)
             return Listbox.yview(self, 'moveto', moveto)
-        else: # e.g. if args[0] == 'scroll'
+        else:  # e.g. if args[0] == 'scroll'
             # print 'yview else', args
             index = int(self.curselection()[0]) if self.curselection() else None
             Listbox.yview(self, *args)
             nearest0 = self.nearest(0)
-            change = self.adjust_scrollbar_offset(self.nearest(0)+self.current[0])
+            change = self.adjust_scrollbar_offset(self.nearest(0) + self.current[0])
             if change:
                 self.select_clear(0, END)
-                if index and 0 <= index-change < cil: self.select_set(index-change)
-                return Listbox.yview(self, 'moveto', str((nearest0-change)*1.0/cil))
-
-
+                if index and 0 <= index - change < cil:
+                    self.select_set(index - change)
+                return Listbox.yview(self, 'moveto', str((nearest0 - change) * 1.0 / cil))
 
 
 class VScrolledList(Frame):
@@ -156,23 +152,22 @@ class VScrolledList(Frame):
 
     def __init__(self, parent, current_in_list, total_in_list, get_data, **kw):
         Frame.__init__(self, parent)
-        self.offset = [0] # shared "pointer" of listbox and sbar_vert
+        self.offset = [0]  # shared "pointer" of listbox and sbar_vert
         self.current_in_list = current_in_list
         self.total_in_list = total_in_list
 
         self.sbar_vert = VirtualScrollbar(self, self.offset, current_in_list, total_in_list)
-        self.sbar_hor = Scrollbar(self) # was sbar1
+        self.sbar_hor = Scrollbar(self)  # was sbar1
         self.checking = 0
 
-        if not kw: kw = {}
+        defaults = {'height': 12, 'width': 40, 'relief': SUNKEN, 'selectmode': SINGLE, 'takefocus': 1, 'exportselection': 0}
+        if kw:
+            defaults.update(kw)
 
-        for var, value in [('height', 12), ('width', 40), ('relief', SUNKEN), ('selectmode', SINGLE), ('takefocus', 1), ('exportselection', 0)]:
-            if not kw.has_key(var): kw[var] = value
-
-        self.listbox = VirtualListbox(self, self.offset, current_in_list, total_in_list, get_data, **kw)
-        self.sbar_vert.config(command = self.listbox.yview)
-        self.sbar_hor.config(command = self.listbox.xview, orient='horizontal')
-        self.listbox.config(xscrollcommand = self.sbar_hor.set, yscrollcommand = self.sbar_vert.set)
+        self.listbox = VirtualListbox(self, self.offset, current_in_list, total_in_list, get_data, **defaults)
+        self.sbar_vert.config(command=self.listbox.yview)
+        self.sbar_hor.config(command=self.listbox.xview, orient='horizontal')
+        self.listbox.config(xscrollcommand=self.sbar_hor.set, yscrollcommand=self.sbar_vert.set)
         self.listbox.grid(row=0, column=0, sticky=NSEW)
         self.sbar_vert.grid(row=0, column=1, sticky=NSEW)
         self.sbar_hor.grid(row=1, column=0, sticky=NSEW)
@@ -195,11 +190,8 @@ class VScrolledList(Frame):
         self.sbar_vert.grid_forget()
         self.sbar_hor.grid_forget()
 
-
     def get_index(self, i):
         return i + self.listbox.current[0]
-
-
 
     def reset(self):
         self.sbar_vert.current_in_list = self.current_in_list
@@ -211,7 +203,6 @@ class VScrolledList(Frame):
         self.offset[0] = 0
         self.listbox.insert_interval()
 
-
     def upd(self):
         # print 'upd', self.listbox.curselection(), self.listbox.index('active'), self.listbox.index('anchor'), self.listbox.current, self.sbar_vert.get()
         savepos = self.sbar_vert.get()
@@ -221,7 +212,6 @@ class VScrolledList(Frame):
         for s in sel:
             self.listbox.select_set(s)
         self.listbox.yview('moveto', savepos[0])
-
 
     def checkScrollbars(self, event=None):
         if self.listbox.yview() != (0.0, 1.0):
@@ -234,39 +224,41 @@ class VScrolledList(Frame):
             self.sbar_hor.grid_forget()
         self.after(500, self.checkScrollbars)
 
-
     def up(self, event):
-        if not self.listbox.curselection() or len(self.listbox.curselection())>1: return
+        if not self.listbox.curselection() or len(self.listbox.curselection()) > 1:
+            return
         index = int(self.listbox.curselection()[0])
         if index != 0:
             self.listbox.select_clear(index)
-            self.listbox.select_set(index-1)
-            self.listbox.see(index-1)
+            self.listbox.select_set(index - 1)
+            self.listbox.see(index - 1)
             if self.onSelectionChange:
-                self.onSelectionChange(None, self.get_index(index-1))
+                self.onSelectionChange(None, self.get_index(index - 1))
         return 'break'
 
     def down(self, event):
-        if not self.listbox.curselection() or len(self.listbox.curselection())>1: return
+        if not self.listbox.curselection() or len(self.listbox.curselection()) > 1:
+            return
         index = int(self.listbox.curselection()[0])
-        if index != self.listbox.size()-1:
-            self.listbox.see(index+1)
+        if index != self.listbox.size() - 1:
+            self.listbox.see(index + 1)
             self.listbox.select_clear(index)
-            self.listbox.select_set(index+1)
+            self.listbox.select_set(index + 1)
             if self.onSelectionChange:
-                self.onSelectionChange(None, self.get_index(index+1))
+                self.onSelectionChange(None, self.get_index(index + 1))
         return 'break'
 
     def pgup(self, event):
         # print 'pgup'
-        if not self.listbox.curselection() or len(self.listbox.curselection())>1: return
+        if not self.listbox.curselection() or len(self.listbox.curselection()) > 1:
+            return
         index = int(self.listbox.curselection()[0])
         if index >= 10:
             self.listbox.select_clear(index)
-            self.listbox.select_set(index-10)
-            self.listbox.see(index-10)
+            self.listbox.select_set(index - 10)
+            self.listbox.see(index - 10)
             if self.onSelectionChange:
-                self.onSelectionChange(None, self.get_index(index-10))
+                self.onSelectionChange(None, self.get_index(index - 10))
         elif self.listbox.size():
             self.listbox.see(0)
             self.listbox.select_clear(index)
@@ -277,20 +269,21 @@ class VScrolledList(Frame):
 
     def pgdown(self, event):
         # print 'pgdn'
-        if not self.listbox.curselection() or len(self.listbox.curselection())>1: return
+        if not self.listbox.curselection() or len(self.listbox.curselection()) > 1:
+            return
         index = int(self.listbox.curselection()[0])
-        if index <= self.listbox.size()-10:
+        if index <= self.listbox.size() - 10:
             self.listbox.select_clear(index)
-            self.listbox.select_set(index+10)
-            self.listbox.see(index+10)
+            self.listbox.select_set(index + 10)
+            self.listbox.see(index + 10)
             if self.onSelectionChange:
-                self.onSelectionChange(None, self.get_index(index+10))
+                self.onSelectionChange(None, self.get_index(index + 10))
         elif self.listbox.size():
             self.listbox.select_clear(index)
-            self.listbox.select_set(self.listbox.size()-1)
+            self.listbox.select_set(self.listbox.size() - 1)
             self.listbox.see(END)
             if self.onSelectionChange:
-                self.onSelectionChange(None, self.get_index(self.listbox.size()-1))
+                self.onSelectionChange(None, self.get_index(self.listbox.size() - 1))
         return 'break'
 
 
@@ -298,12 +291,10 @@ if __name__ == '__main__':
 
     def get_data(i):
         # print i
-        return str(i) + ', ' + str(2*i) + ', ' + str(i**10)
+        return str(i) + ', ' + str(2 * i) + ', ' + str(i ** 10)
 
     root = Tk()
 
     vslb = VScrolledList(root, 2000, 100000, get_data)
     vslb.pack(expand=Y, fill=BOTH)
     mainloop()
-
-
