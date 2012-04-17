@@ -1,5 +1,6 @@
 import os.path
 import urllib2
+import glob
 from fabric.api import run, cd, local, lcd, prefix, get, put
 
 # FIXME directories below depend on version!
@@ -36,7 +37,8 @@ def doc_as_pdf():
 
 # --------------- pootle
 
-LANGUAGES = ['de', 'eo']
+LANGUAGES = [os.path.basename(lang) for lang in  glob.glob('lang/*') if os.path.basename(lang).find('.') == -1]
+LANGUAGES.remove('en')
 
 
 def pootle_start_maintenance():
@@ -51,7 +53,7 @@ def pootle_end_maintenance():
     run('sudo service apache2 reload')
 
 
-def download_po():
+def download_po(ignore_errors=False):
     with prefix('source /home/ugy/.virtualenvs/pootlekombilo/bin/activate'):
         with cd('/home/ugy/devel/pootlekombilo/Pootle-2.1.6'):
             run('./manage.py sync_stores --project kombilo')
@@ -59,11 +61,22 @@ def download_po():
     with lcd('lang'):
         for lang in LANGUAGES:
             with lcd('%s/LC_MESSAGES' % lang):
-                get('/home/ugy/devel/pootlekombilo/Pootle-2.1.6/po/kombilo/%s/kombilo.po' % lang, './kombilo.po')
-                local('msgfmt -o kombilo.mo kombilo.po')
+                try:
+                    get('/home/ugy/devel/pootlekombilo/Pootle-2.1.6/po/kombilo/%s/kombilo.po' % lang, './kombilo.po')
+                except:
+                    if not ignore_errors:
+                        raise
+                else:
+                    local('msgfmt -o kombilo.mo kombilo.po')
 
 
-def upload_pot():
+def upload_pot_new():
+    """Upload po files, also for a newly created language, so that we should ignore the "file not found" error in download_po.
+    """
+    upload_pot(ignore_errors=True)
+
+
+def upload_pot(ignore_errors=False):
     '''Adds new strings to po files/removes unecessary ones. To do this:
 
     * obtain the current po files from pootle
@@ -73,7 +86,7 @@ def upload_pot():
     '''
 
     pootle_start_maintenance()
-    download_po()
+    download_po(ignore_errors=ignore_errors)
 
     # create new pot file:
     with prefix('source /home/ug/.virtualenvs/k08-bb/bin/activate'):

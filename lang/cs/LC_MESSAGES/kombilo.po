@@ -1,37 +1,34 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Kombilo pot file
+# Copyright (C) 2012 
+# Ulrich Goertz <ug@geometry.de>
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Kombilo 0.8\n"
 "POT-Creation-Date: 2012-04-17 17:58+CEST\n"
-"PO-Revision-Date: 2012-04-14 18:22+0200\n"
-"Last-Translator: Ulrich <u@g0ertz.de>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: eo\n"
+"PO-Revision-Date: 2012-04-09 23:02+0200\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: utf-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.1.6\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: kombilo.py:350
 msgid "Include game list"
-msgstr "Aldonu partiliston"
+msgstr ""
 
 #: kombilo.py:354 kombilo.py:2268
 msgid "Game list"
-msgstr "Partilisto"
+msgstr ""
 
 #: kombilo.py:479
 msgid "%d games"
-msgstr "%d partioj"
+msgstr ""
 
 #: kombilo.py:481
 msgid "B: %1.1f%%, W: %1.1f%%"
-msgstr "N: %1.1f%%, B: %1.1f%%"
+msgstr ""
 
 #: kombilo.py:540 kombilo.py:543 kombilo.py:1076 kombilo.py:1233
 #: kombilo.py:1247 kombilo.py:1619 kombilo.py:1621 kombilo.py:1623
@@ -43,52 +40,51 @@ msgstr "N: %1.1f%%, B: %1.1f%%"
 #: v.py:1809 v.py:2026 v.py:2129 v.py:2131 v.py:2154 v.py:2178 v.py:2229
 #: v.py:2361 v.py:2742 v.py:2755 v.py:2884
 msgid "Error"
-msgstr "Eraro"
+msgstr ""
 
 #: kombilo.py:540 kombilo.py:557 kombilo.py:1795 kombilo.py:1835
 #: kombilo.py:2138 kombiloNG.py:1042 v.py:122 v.py:2129 v.py:2152 v.py:2207
 msgid "I/O Error"
-msgstr "Leg-/Skrib-Eraro"
+msgstr ""
 
 #: kombilo.py:543 kombilo.py:1076 kombilo.py:1233 kombilo.py:2414
 #: kombilo.py:2587 v.py:705 v.py:916 v.py:970 v.py:1144 v.py:1192 v.py:1282
 #: v.py:1421 v.py:1492 v.py:1670 v.py:1794 v.py:1809 v.py:2026 v.py:2131
 #: v.py:2154 v.py:2178 v.py:2337 v.py:2361
 msgid "SGF Error"
-msgstr "SGF Eraro"
+msgstr ""
 
 #: kombilo.py:557 v.py:2152
 msgid "Could not write to file "
-msgstr "Ne povis skribi datumaron "
+msgstr ""
 
 #: kombilo.py:688
 msgid "Delete"
-msgstr "Forigi"
+msgstr ""
 
 #: kombilo.py:691
 msgid "Release"
-msgstr "Malteni"
+msgstr ""
 
 #: kombilo.py:693
 msgid "Hold"
-msgstr "Teni"
+msgstr ""
 
 #: kombilo.py:894
 msgid "Date profile, %d games"
-msgstr "Datoprofilo, %d partioj"
+msgstr ""
 
 #: kombilo.py:910 kombilo.py:923 kombiloNG.py:924
 msgid "%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%"
-msgstr "%d partioj(%d/%d), N: %1.1f%%, B: %1.1f%%"
+msgstr ""
 
 #: kombilo.py:1081
 msgid "Database error\n"
 msgstr ""
 
 #: kombilo.py:1081 kombilo.py:1084
-#, fuzzy
 msgid "Game info search, query \"%s\""
-msgstr "Partiinforma serĉo, imformpeto \"%s\", %1.1f sekundoj\n"
+msgstr ""
 
 #: kombilo.py:1084 kombilo.py:2592
 msgid "%1.1f seconds"
@@ -104,31 +100,31 @@ msgstr ""
 
 #: kombilo.py:1108
 msgid "Move 40"
-msgstr "Meto 40"
+msgstr ""
 
 #: kombilo.py:1110
 msgid "Move 60"
-msgstr "Meto 60"
+msgstr ""
 
 #: kombilo.py:1112
 msgid "Move 31"
-msgstr "Meto 31"
+msgstr ""
 
 #: kombilo.py:1114
 msgid "Move 51"
-msgstr "Meto 51"
+msgstr ""
 
 #: kombilo.py:1116
 msgid "Move 71"
-msgstr "Meto 71"
+msgstr ""
 
 #: kombilo.py:1129 kombilo.py:2470
 msgid "Search"
-msgstr "Serĉo"
+msgstr ""
 
 #: kombilo.py:1131 v.py:2421
 msgid "Cancel"
-msgstr "Nuligi"
+msgstr ""
 
 #: kombilo.py:1189
 msgid "Signature search, %1.1f seconds, searching for"
@@ -136,15 +132,15 @@ msgstr ""
 
 #: kombilo.py:1245 v.py:1127 v.py:1262 v.py:1374
 msgid "Cap - B: %d, W: %d"
-msgstr "Kapt - N: %d, B: %d"
+msgstr ""
 
 #: kombilo.py:1247
 msgid "SGF File not found"
-msgstr "SGF-a dosiero ne trovita"
+msgstr ""
 
 #: kombilo.py:1430 kombilo.py:1551
 msgid "Export position"
-msgstr "Eksporti pozicion"
+msgstr ""
 
 #: kombilo.py:1440
 msgid "Number of moves to be shown (0-9):"
@@ -177,7 +173,7 @@ msgstr ""
 
 #: kombilo.py:1619 kombilo.py:1623
 msgid "Error starting SGF viewer"
-msgstr "Eraro dum lanĉo de SGF-rigardilo"
+msgstr ""
 
 #: kombilo.py:1621
 msgid "%s not found."
@@ -433,7 +429,7 @@ msgstr ""
 
 #: kombilo.py:2277
 msgid "Show date"
-msgstr "Montru daton"
+msgstr ""
 
 #: kombilo.py:2284
 msgid "Advanced"
@@ -823,7 +819,7 @@ msgstr ""
 
 #: kombiloNG.py:1200
 msgid "SGF error, file %s, %d\n"
-msgstr "SGF-eraro, dosiero %s, %d\n"
+msgstr ""
 
 #: kombiloNG.py:1203
 msgid "Unacceptable board size error, file %s, %d\n"
@@ -834,9 +830,8 @@ msgid "not inserted\n"
 msgstr ""
 
 #: kombiloNG.py:1209 kombiloNG.py:1213
-#, fuzzy
 msgid "SGF error, file %s, not inserted."
-msgstr "SGF-eraro, dosiero %s, ne aldonita.\n"
+msgstr ""
 
 #: kombiloNG.py:1216
 msgid "Finalizing ... (this will take some time)\n"
@@ -880,15 +875,15 @@ msgstr ""
 
 #: v.py:1066
 msgid "SGF Error in game %d"
-msgstr "SGF Eraro en partio %d"
+msgstr ""
 
 #: v.py:1069
 msgid "I/O Error when writing %s%d.sgf"
-msgstr "En-/Eliga eraro skribante %s%d.sgf"
+msgstr ""
 
 #: v.py:1106
 msgid "SGF Error in game %d in current file."
-msgstr "SGF-eraro en partio %d en ĉi dosiero"
+msgstr ""
 
 #: v.py:1112
 msgid "The board size of this game is not 19x19."
@@ -896,7 +891,7 @@ msgstr ""
 
 #: v.py:1239 v.py:1464
 msgid "Error in SGF file"
-msgstr "Eraro in SGF-dosiero"
+msgstr ""
 
 #: v.py:1931 v.py:1933
 msgid "New"
@@ -912,7 +907,7 @@ msgstr ""
 
 #: v.py:1971
 msgid "Error in SGF file!"
-msgstr "Eraro in SGF-a dosiero!"
+msgstr ""
 
 #: v.py:1971
 msgid "Parsing Error"
@@ -955,7 +950,7 @@ msgstr ""
 
 #: v.py:2337
 msgid "Parse error in 'Other SGF tags'"
-msgstr "Analizeraro en 'Aliaj SGF-aj etikedoj'"
+msgstr ""
 
 #: v.py:2372
 msgid "Game Info"
@@ -1244,12 +1239,3 @@ msgstr ""
 #: v.py:2884
 msgid "Error reading v.app"
 msgstr ""
-
-#~ msgid "SGF error, file %s. Not inserted.\n"
-#~ msgstr "SGF-eraro, dosiero %s. Ne aldonita.\n"
-
-#~ msgid "Game info search, query \"%s\", Database error\n"
-#~ msgstr "Partiinforma serĉo, informpeto \"%s\", datumbaza eraro\n"
-
-#~ msgid "SGF error"
-#~ msgstr "SGF-eraro"
