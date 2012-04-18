@@ -227,6 +227,10 @@ Continuation::Continuation() {
   lB = 0;
   wW = 0;
   lW = 0;
+  earliest = 0;
+  latest = 0;
+  sum_dates = 0;
+  weighted_sum_dates = 0;
 }
 
 void Continuation::from_snv(SnapshotVector& snv) {
@@ -238,6 +242,10 @@ void Continuation::from_snv(SnapshotVector& snv) {
   lB = snv.retrieve_int();
   wW = snv.retrieve_int();
   lW = snv.retrieve_int();
+  earliest = snv.retrieve_int();
+  latest = snv.retrieve_int();
+  sum_dates = snv.retrieve_int();
+  weighted_sum_dates = snv.retrieve_int();
 }
 
 void Continuation::to_snv(SnapshotVector& snv) {
@@ -249,6 +257,10 @@ void Continuation::to_snv(SnapshotVector& snv) {
   snv.pb_int(lB);
   snv.pb_int(wW);
   snv.pb_int(lW);
+  snv.pb_int(earliest);
+  snv.pb_int(latest);
+  snv.pb_int(sum_dates);
+  snv.pb_int(weighted_sum_dates);
 }
 
 Symmetries::Symmetries(char sX, char sY) {
@@ -993,7 +1005,7 @@ int PatternList::size() {
 }
 
 
-char* PatternList::updateContinuations(int index, int x, int y, char co, bool tenuki, char winner) {
+char* PatternList::updateContinuations(int index, int x, int y, char co, bool tenuki, char winner, int date) {
   char xx;
   char yy;
   char cSymm;
@@ -1021,19 +1033,26 @@ char* PatternList::updateContinuations(int index, int x, int y, char co, bool te
     }
   }
 
+  Continuation* cont = &continuations[xx + pattern.sizeX*yy];
   if (cc == 'B') {
     // printf("B xx %d, yy %d\n", xx, yy);
-    continuations[xx + pattern.sizeX*yy].B++;
-    if (tenuki) continuations[xx + pattern.sizeX*yy].tB++;
-    if ((winner == 'B' && !cSymm) || (winner == 'W' && cSymm)) continuations[xx + pattern.sizeX*yy].wB++;
-    else if ((winner == 'W' && !cSymm) || (winner == 'B' && cSymm)) continuations[xx + pattern.sizeX*yy].lB++;
+    cont->B++;
+    if (tenuki) cont->tB++;
+    if ((winner == 'B' && !cSymm) || (winner == 'W' && cSymm)) cont->wB++;
+    else if ((winner == 'W' && !cSymm) || (winner == 'B' && cSymm)) cont->lB++;
   } else {
     // printf("W xx %d, yy %d\n", xx, yy);
-    continuations[xx + pattern.sizeX*yy].W++;
-    if (tenuki) continuations[xx + pattern.sizeX*yy].tW++;
-    if ((winner == 'B' && !cSymm) || (winner == 'W' && cSymm)) continuations[xx + pattern.sizeX*yy].wW++;
-    else if ((winner == 'W' && !cSymm) || (winner ='B' && cSymm)) continuations[xx + pattern.sizeX*yy].lW++;
+    cont->W++;
+    if (tenuki) cont->tW++;
+    if ((winner == 'B' && !cSymm) || (winner == 'W' && cSymm)) cont->wW++;
+    else if ((winner == 'W' && !cSymm) || (winner ='B' && cSymm)) cont->lW++;
   }
+
+  if (cont->earliest == 0 || cont->earliest > date) cont->earliest = date;
+  if (cont->latest < date) cont->latest = date;
+  cont->sum_dates += date;
+  cont->weighted_sum_dates += date; // FIXME should be weighted!
+
   char* result = new char[3];
   result[0] = xx;
   result[1] = yy;

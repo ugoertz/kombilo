@@ -832,7 +832,8 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
                     x-(*it)->mx, y-(*it)->my, // pos of continuation
                     co, // color of continuation
                     (counter.total_move_num()-(*it)->dictsF.total_move_num())>2, // tenuki?
-                    gl.all->at(gl.oldList->at(ctr).second)->winner
+                    gl.all->at(gl.oldList->at(ctr).second)->winner,
+                    gl.all->at(gl.oldList->at(ctr).second)->date
                     );
               }
 
@@ -1713,7 +1714,7 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
               label = patternList.updateContinuations((*resultIT)->orientation, 
                                                       (*resultIT)->cont->x, (*resultIT)->cont->y, (*resultIT)->cont->color,
                                                       false, // tenuki impossible with full board pattern
-                                                      gl.getCurrentWinner());
+                                                      gl.getCurrentWinner(), gl.getCurrentDate());
               if (label) {
                 hits->push_back(new Hit((*resultIT)->emn, label));
                 (*resultIT)->emn = 0;

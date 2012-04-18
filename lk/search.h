@@ -114,10 +114,11 @@ class GameListEntry {
     int id; // id within the concerning database
     std::string gameInfoStr;
     char winner;
+    int date;
     std::vector<Hit* > * hits; // used for hits
     std::vector<Candidate* > * candidates; // used for candidates
 
-    GameListEntry(int ID, char WINNER, std::string GAMEINFOSTR);
+    GameListEntry(int ID, char WINNER, std::string GAMEINFOSTR, int DATE);
     ~GameListEntry();
 
     void hits_from_snv(SnapshotVector& snv);
@@ -511,6 +512,7 @@ class GameList {
                                                    // (if available, otherwise returns -1), requires currentList to
                                                    // be sorted wrt first component (see duplicates())
     char getCurrentWinner();
+    int getCurrentDate();
     std::vector<Candidate* > *getCurrentCandidateList();
     void makeCurrentCandidate(std::vector<Candidate* > *candidates);
     void makeCurrentHit(std::vector<Hit* > *hits);
