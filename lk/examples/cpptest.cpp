@@ -7,8 +7,8 @@ using namespace std;
 using boost::filesystem::directory_iterator;
 
 
-// const string SGFPATH = "/home/ug/go/gogod11W"; // FIXME // replace by a path containing sgf files
-const string SGFPATH = "/home/ug/devel/lk/examples/t3"; // FIXME // replace by a path containing sgf files
+const string SGFPATH = "/home/ug/go/gogod11W"; // FIXME // replace by a path containing sgf files
+// const string SGFPATH = "/home/ug/devel/lk/examples/t3"; // FIXME // replace by a path containing sgf files
 
 
 int main(int argc, char** argv) {
@@ -87,18 +87,18 @@ int main(int argc, char** argv) {
   // Pattern p(CORNER_NW_PATTERN,19,8,8, "...................X.........O....O........................X....");
   // Pattern p(CORNER_NW_PATTERN,19,8,8, "...................O.........X....X........................O....");
 
-  vector<MoveNC> contList;
-  contList.push_back(MoveNC(3, 2, 'X'));
-  contList.push_back(MoveNC(3, 4, 'O'));
-  contList.push_back(MoveNC(4, 4, 'X'));
-  contList.push_back(MoveNC(4, 5, 'O'));
-  contList.push_back(MoveNC(4, 3, 'X'));
-  contList.push_back(MoveNC(3, 5, 'O'));
+  // vector<MoveNC> contList;
+  // contList.push_back(MoveNC(3, 2, 'X'));
+  // contList.push_back(MoveNC(3, 4, 'O'));
+  // contList.push_back(MoveNC(4, 4, 'X'));
+  // contList.push_back(MoveNC(4, 5, 'O'));
+  // contList.push_back(MoveNC(4, 3, 'X'));
+  // contList.push_back(MoveNC(3, 5, 'O'));
 
-  Pattern p(CORNER_NE_PATTERN,19,7,7, ".................................................", contList);
-  // Pattern p(CORNER_NW_PATTERN,19,7,7, ".................X.....X......XO.....OO..........");
+  // Pattern p(CORNER_NE_PATTERN,19,7,7, ".................................................", contList);
+  Pattern p(CORNER_NW_PATTERN,19,7,7, ".................X.....X......XO.....OO..........");
   // Pattern p(CORNER_SE_PATTERN,19,7,7, "...........X......O.....O.X..O...................");
-  // Pattern p(CORNER_SW_PATTERN,19,7,7, "...X.....X.X.X.XOXOX..OOO.X.....OOX......O.......");
+  //Pattern p(CORNER_SW_PATTERN,19,7,7, "...X.....X.X.X.XOXOX..OOO.X.....OOX......O.......");
   // 19,8,8"
   // Pattern p(CORNER_NW_PATTERN, 19, 10, 11, ".......................X.X......X.........XO........OO.......................................O................");
 
@@ -179,9 +179,10 @@ int main(int argc, char** argv) {
     for(int x=0; x<p.sizeX; x++) {
       if (gl.lookupLabel(x,y) != '.') {
         Continuation cont = gl.lookupContinuation(x,y);
-        printf("      %c      |   %3d[%3d] (    %3d /    %3d ) |   %3d[%3d] (   %3d /    %3d) | %1.1f /  %1.1f \n",
+        printf("      %c      |   %3d[%3d] (    %3d /    %3d ) |   %3d[%3d] (   %3d /    %3d) | %1.1f /  %1.1f | %d %d | %d %d |  \n",
             gl.lookupLabel(x,y), cont.B, cont.tB, cont.wB, cont.lB, cont.W, cont.tW, cont.wW, cont.lW, 
-            cont.wW*100.0/cont.W, cont.wB*100.0/cont.B);
+            cont.wW*100.0/cont.W, cont.wB*100.0/cont.B,
+            cont.earliest/12, cont.earliest%12, cont.latest/12, cont.latest%12);
       }
     }
   }

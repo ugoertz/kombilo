@@ -200,9 +200,10 @@ vector<string>* ProcessOptions::SGFTagsAsStrings() {
   return SGFtags;
 }
 
-GameListEntry::GameListEntry(int ID, char WINNER, string GAMEINFOSTR) {
+GameListEntry::GameListEntry(int ID, char WINNER, string GAMEINFOSTR, int DATE) {
   // printf("GLE %d %c %s\n", ID, WINNER, GAMEINFOSTR);
   id = ID;
+  date = DATE;
   if (WINNER == 'B' || WINNER == 'b') winner = 'B';
   else if (WINNER == 'W' || WINNER == 'w') winner = 'W';
   else if (WINNER == 'J' || WINNER == 'j') winner = 'J';
@@ -239,6 +240,14 @@ void GameListEntry::hits_from_snv(SnapshotVector& snv) {
 int insertEntry(void *gl, int argc, char **argv, char **azColName) {
   char winner = '-';
   if (argv[1] && (argv[1][0] == 'B' || argv[1][0] == 'W' || argv[1][0] == 'J')) winner = argv[1][0];
+  else if (argv[1] && (argv[1][0] == '0')) winner = 'J';  // Officially SGF format says that Jigo should be given as RE[0].
+
+  int date = 0;
+  if (argv[2]) {
+    // date is 12 * year + month; the string argv[2] has format YYYY-MM-DD.
+    date = ((int)argv[2][0] - (int)'0')*12000 + ((int)argv[2][1] - (int)'0')*1200 + ((int)argv[2][2] - (int)'0')*120 + ((int)argv[2][3] - (int)'0')*12 + ((int)argv[2][5] - (int)'0')*10 + ((int)argv[2][6] - (int)'0');
+  }
+
   string gameInfoStr = ((GameList*)gl)->format2;
   for(int i=0; i<((GameList*)gl)->numColumns; i++) {
     char strpip1[20];
@@ -265,7 +274,7 @@ int insertEntry(void *gl, int argc, char **argv, char **azColName) {
   if (p != string::npos) gameInfoStr.replace(p, 3, 1, winner);
 
   // printf("id %s\n", argv[0]);
-  ((GameList*)gl)->all->push_back(new GameListEntry(atoi(argv[0]), winner, gameInfoStr));
+  ((GameList*)gl)->all->push_back(new GameListEntry(atoi(argv[0]), winner, gameInfoStr, date));
   return 0;
 }
 
@@ -375,12 +384,12 @@ void GameList::resetFormat(string ORDERBY, string FORMAT) {
   // printf("enter resetFormat\n");
   if (FORMAT == "") { // use default format string
     numColumns = 5;
-    format1 = "id,re,pw,pb,dt";
-    format2 = "[[2 - [[3 ([[W), [[4, ";
+    format1 = "id,re,date,pw,pb,dt";
+    format2 = "[[3 - [[4 ([[W), [[5, ";
   } else {
     char buf[10];
-    numColumns = 2;
-    format1 = "id,re";
+    format1 = "id,re,date";
+    numColumns = 3; // 3 columns already assigned
     format2 = FORMAT;
     size_t p = 0;
     size_t q = 0;
@@ -390,13 +399,16 @@ void GameList::resetFormat(string ORDERBY, string FORMAT) {
       if (p+2 < format2.size() && q != string::npos) {
         string col = format2.substr(p+2, q-p-2);
         // check availability
-        if (col == "id" || col == "filename" || col == "pos" || col == "duplicate" || col == "date" || p_op->rootNodeTags.find(col) != string::npos) {
+        if (col == "id" || col == "filename" || col == "pos" || col == "duplicate" || p_op->rootNodeTags.find(col) != string::npos) {
           sprintf(buf, "[[%d", numColumns++); 
           format2.replace(p,q+2-p, buf);
           format1 += ",";
           format1 += col;
-        } else if (col == "winner") format2.replace(p,q+2-p, "[[W");
-        else if (col == "filename.") {
+        } else if (col == "winner") {
+          format2.replace(p,q+2-p, "[[W");
+        } else if (col == "date") {
+          format2.replace(p,q+2-p, "[[2");
+        } else if (col == "filename.") {
           sprintf(buf, "[[%d[[F", numColumns++); 
           format2.replace(p, q+2-p, buf);
           format1 += ",filename";
@@ -611,6 +623,10 @@ int GameList::end_sorted() {
 
 char GameList::getCurrentWinner() {
   return (*all)[(*oldList)[current].second]->winner;
+}
+
+int GameList::getCurrentDate() {
+  return (*all)[(*oldList)[current].second]->date;
 }
 
 vector<Candidate* > * GameList::getCurrentCandidateList() {

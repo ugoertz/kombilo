@@ -241,6 +241,13 @@ class Continuation {
     int lB; ///< black losses (where next play is B)
     int wW; ///< black wins (where next play is W)
     int lW; ///< black losses (where next play is W)
+
+    int earliest; ///< earliest date when this was played
+    int latest; ///< latest date when this was played
+    int sum_dates; ///< sum of all dates when this was played
+    int weighted_sum_dates; ///< weighted sum of all dates when this was played
+    /// All dates are given as year*12 + month.
+
     Continuation(); ///< initializes all member variables with 0
 
     friend class GameList;
@@ -273,7 +280,7 @@ class PatternList {
     friend class Algo_hash_full;
   
   private:
-    char* updateContinuations(int orientation, int x, int y, char co, bool tenuki, char winner);
+    char* updateContinuations(int orientation, int x, int y, char co, bool tenuki, char winner, int date);
     char* sortContinuations(); // and give them names to be used as labels
     char invertColor(char co);
 };
