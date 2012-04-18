@@ -614,7 +614,7 @@ SQL
     RE (result)
     EV (event)
     DT (the date as given in the sgf file)
-    date (the date in the form YYYY-MM,DD)
+    date (the date in the form YYYY-MM-DD)
     filename
     sgf (the full SFG source).
 
