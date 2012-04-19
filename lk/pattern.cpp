@@ -231,6 +231,7 @@ Continuation::Continuation() {
   latest = 0;
   sum_dates = 0;
   weighted_sum_dates = 0;
+  alt_weighted_sum_dates = 0;
 }
 
 void Continuation::from_snv(SnapshotVector& snv) {
@@ -246,6 +247,7 @@ void Continuation::from_snv(SnapshotVector& snv) {
   latest = snv.retrieve_int();
   sum_dates = snv.retrieve_int();
   weighted_sum_dates = snv.retrieve_int();
+  alt_weighted_sum_dates = snv.retrieve_int();
 }
 
 void Continuation::to_snv(SnapshotVector& snv) {
@@ -261,6 +263,7 @@ void Continuation::to_snv(SnapshotVector& snv) {
   snv.pb_int(latest);
   snv.pb_int(sum_dates);
   snv.pb_int(weighted_sum_dates);
+  snv.pb_int(alt_weighted_sum_dates);
 }
 
 Symmetries::Symmetries(char sX, char sY) {
@@ -1052,6 +1055,7 @@ char* PatternList::updateContinuations(int index, int x, int y, char co, bool te
   if (cont->latest < date) cont->latest = date;
   cont->sum_dates += date;
   cont->weighted_sum_dates += date; // FIXME should be weighted!
+  cont->alt_weighted_sum_dates += date; // FIXME should be weighted!
 
   char* result = new char[3];
   result[0] = xx;
