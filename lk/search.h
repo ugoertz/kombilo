@@ -201,11 +201,13 @@ class GameList {
     int num_hits;
     int num_switched;
     int Bwins;
-    int BwinsAll; // number of B wins in all games of the gamelist (independent of currentList)
+    int BwinsAll; ///< number of B wins in all games of the gamelist (independent of currentList)
     int Wwins;
-    int WwinsAll; // number of B wins in all games of the gamelist (independent of currentList)
-    Pattern* mrs_pattern; // most recent search pattern
+    int WwinsAll; ///< number of B wins in all games of the gamelist (independent of currentList)
+    Pattern* mrs_pattern; ///< most recent search pattern
     SearchOptions* searchOptions;
+    vector<int> dates_all; ///< a vector which counts, for each month between January 1600 and December 2020, the number of games in the all list
+    vector<int> dates_current; ///< a vector which counts, for each month between January 1600 and December 2020, the number of games in the current list
     // ----------------------------------------------------------------------------
     // the following methods provide the user interface
 
