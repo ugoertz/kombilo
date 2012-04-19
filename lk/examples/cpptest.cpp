@@ -157,10 +157,11 @@ int main(int argc, char** argv) {
   
   // -------------------- do pattern search --------------------------------------
   for(int i=0; i<1; i++) {
+  gl.reset();
   gl.search(p, &so);
   printf("num games: %d, num hits: %d\n", gl.size(), gl.numHits());
   // ------------------- print some statistics ------------------------------------------
-  
+
   printf("Search pattern:\n");
   printf("%s\n", p.printPattern().c_str());
   printf("Continuations:\n");
@@ -182,15 +183,13 @@ int main(int argc, char** argv) {
         printf("      %c      |   %3d[%3d] (    %3d /    %3d ) |   %3d[%3d] (   %3d /    %3d) | %1.1f /  %1.1f | %d %d | %d %d |  \n",
             gl.lookupLabel(x,y), cont.B, cont.tB, cont.wB, cont.lB, cont.W, cont.tW, cont.wW, cont.lW, 
             cont.wW*100.0/cont.W, cont.wB*100.0/cont.B,
-            cont.earliest/12, cont.earliest%12, cont.latest/12, cont.latest%12);
+            cont.earliest/12, cont.earliest%12+1, cont.latest/12, cont.latest%12+1);
       }
     }
   }
   printf("\n");
   printf("\n");
   gl.setTag(11, 0, gl.size());
-  gl.reset();
-
   }
 
   vector<int> which_tags;
@@ -200,7 +199,7 @@ int main(int argc, char** argv) {
   gl.export_tags("tags", which_tags);
 
   // create a tag for this pattern and tag all games found in the pattern search
-  
+
   int p_tag = 10;
   gl.setTag(p_tag, 0, gl.size());
 
@@ -211,7 +210,17 @@ int main(int argc, char** argv) {
   // for(vector<string>::iterator it = res.begin(); it != res.end(); it++)
   //   printf("%s\n", it->c_str());
   for(int i=0; i< (gl.size() < 10 ? gl.size() : 10); i++) printf("%s\n", gl.currentEntryAsString(i).c_str());
-  
+
+  // ------- date profile -----------------------
+
+  printf("\n\nDate profile:\n\n");
+  for(int year=1980; year<2000; year++) {
+    int sum_all = 0;
+    for(int j=0; j<12; j++) sum_all += gl.dates_all[year*12-1600*12+j];
+    int sum_current = 0;
+    for(int j=0; j<12; j++) sum_current += gl.dates_current[year*12-1600*12+j];
+    printf("%d: %d %d\n", year, sum_all, sum_current);
+  }
 
   // ------------------- game info search
 
@@ -286,4 +295,5 @@ int main(int argc, char** argv) {
   printf("%d players in the database\n", gl.plSize());
   for(int i=0; i < (gl.plSize()<10 ? gl.plSize() : 10); i++)
     printf("%s\n", gl.plEntry(i).c_str());
+
 }

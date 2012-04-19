@@ -244,8 +244,9 @@ int insertEntry(void *gl, int argc, char **argv, char **azColName) {
 
   int date = 0;
   if (argv[2]) {
-    // date is 12 * year + month; the string argv[2] has format YYYY-MM-DD.
-    date = ((int)argv[2][0] - (int)'0')*12000 + ((int)argv[2][1] - (int)'0')*1200 + ((int)argv[2][2] - (int)'0')*120 + ((int)argv[2][3] - (int)'0')*12 + ((int)argv[2][5] - (int)'0')*10 + ((int)argv[2][6] - (int)'0');
+    // date is 12 * year + month - 1, where month in [1..12];
+    // the string argv[2] has format YYYY-MM-DD.
+    date = ((int)argv[2][0] - (int)'0')*12000 + ((int)argv[2][1] - (int)'0')*1200 + ((int)argv[2][2] - (int)'0')*120 + ((int)argv[2][3] - (int)'0')*12 + ((int)argv[2][5] - (int)'0')*10 + ((int)argv[2][6] - (int)'0') - 1;
   }
 
   string gameInfoStr = ((GameList*)gl)->format2;
@@ -275,6 +276,7 @@ int insertEntry(void *gl, int argc, char **argv, char **azColName) {
 
   // printf("id %s\n", argv[0]);
   ((GameList*)gl)->all->push_back(new GameListEntry(atoi(argv[0]), winner, gameInfoStr, date));
+  if (date >= 1600*12) ((GameList*)gl)->dates_all[date - 1600*12]++; // January 1600 is 0; everything before is ignored
   return 0;
 }
 
@@ -375,6 +377,7 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
   if (rc != SQLITE_OK) throw DBError();
 
   all = 0;
+  for(int i = 0; i < 420*12; i++) dates_all.push_back(0);
   currentList = oldList = 0;
   resetFormat(ORDERBY, FORMAT);
   // printf("done\n");
@@ -614,9 +617,12 @@ int GameList::end_sorted() {
   delete oldList;
   oldList = 0;
   Bwins = Wwins = 0;
+  dates_current.clear();
+  for(int i=0; i<420*12; i++) dates_current.push_back(0);
   for(vector<pair<int,int> >::iterator it = currentList->begin(); it != currentList->end(); it++) {
     if ((*all)[it->second]->winner == 'B') Bwins++;
     if ((*all)[it->second]->winner == 'W') Wwins++;
+    if ((*all)[it->second]->date >= 1600*12) dates_current[(*all)[it->second]->date - 1600*12]++;
   }
   return 0;
 }
@@ -716,6 +722,8 @@ void GameList::reset() {
   num_switched = 0;
   Bwins = BwinsAll;
   Wwins = WwinsAll;
+  dates_current.clear();
+  for(int i = 0; i < 420*12; i++) dates_current.push_back(dates_all[i]);
 }
 
 void GameList::tagsearch(int tag) throw(DBError) {
@@ -1961,6 +1969,7 @@ void GameList::restore(int handle, bool del) throw(DBError) {
     }
   }
 
+  for(int i=0; i<420*12; i++) dates_current.push_back(0);
   int cl_size = snapshot.retrieve_int();
   for(int i=0; i<cl_size; i++) {
     int i1 = snapshot.retrieve_int();
@@ -1969,6 +1978,7 @@ void GameList::restore(int handle, bool del) throw(DBError) {
     currentList->push_back(make_pair(i1, i2));
     // if ((*currentList)[currentList->size()-1].second >= all->size()) printf("ouch %d\n", (*currentList)[currentList->size()-1].second);
     (*all)[(*currentList)[currentList->size()-1].second]->hits_from_snv(snapshot);
+    if ((*all)[(*currentList)[currentList->size()-1].second]->date >= 1600*12) dates_current[(*all)[(*currentList)[currentList->size()-1].second]->date - 1600*12]++;
   }
 
   if (mrs_pattern) delete mrs_pattern;
