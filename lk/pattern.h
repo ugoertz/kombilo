@@ -246,7 +246,8 @@ class Continuation {
     int latest; ///< latest date when this was played
     int sum_dates; ///< sum of all dates when this was played
     int weighted_sum_dates; ///< weighted sum of all dates when this was played
-    /// All dates are given as year*12 + month.
+    int alt_weighted_sum_dates; ///< alternative weighted sum of all dates when this was played
+    /// All dates are given as year*12 + month, where month is between 0 and 11.
 
     Continuation(); ///< initializes all member variables with 0
 
