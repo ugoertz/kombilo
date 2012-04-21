@@ -276,7 +276,7 @@ int insertEntry(void *gl, int argc, char **argv, char **azColName) {
 
   // printf("id %s\n", argv[0]);
   ((GameList*)gl)->all->push_back(new GameListEntry(atoi(argv[0]), winner, gameInfoStr, date));
-  if (date >= 1600*12) ((GameList*)gl)->dates_all[date - 1600*12]++; // January 1600 is 0; everything before is ignored
+  if (date >= DATE_PROFILE_START*12) ((GameList*)gl)->dates_all[date - DATE_PROFILE_START*12]++; // January of year DATE_PROFILE_START is 0; everything before is ignored
   return 0;
 }
 
@@ -377,7 +377,7 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
   if (rc != SQLITE_OK) throw DBError();
 
   all = 0;
-  for(int i = 0; i < 420*12; i++) dates_all.push_back(0);
+  for(int i = 0; i < (DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_all.push_back(0);
   currentList = oldList = 0;
   resetFormat(ORDERBY, FORMAT);
   // printf("done\n");
@@ -617,14 +617,19 @@ int GameList::end_sorted() {
   delete oldList;
   oldList = 0;
   Bwins = Wwins = 0;
-  dates_current.clear();
-  for(int i=0; i<420*12; i++) dates_current.push_back(0);
   for(vector<pair<int,int> >::iterator it = currentList->begin(); it != currentList->end(); it++) {
     if ((*all)[it->second]->winner == 'B') Bwins++;
     if ((*all)[it->second]->winner == 'W') Wwins++;
-    if ((*all)[it->second]->date >= 1600*12) dates_current[(*all)[it->second]->date - 1600*12]++;
   }
   return 0;
+}
+
+void GameList::update_dates_current() {
+  dates_current.clear();
+  for(int i=0; i<(DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_current.push_back(0);
+  for(vector<pair<int,int> >::iterator it = currentList->begin(); it != currentList->end(); it++) {
+    if ((*all)[it->second]->date >= DATE_PROFILE_START*12) dates_current[(*all)[it->second]->date - DATE_PROFILE_START*12]++;
+  }
 }
 
 char GameList::getCurrentWinner() {
@@ -723,7 +728,7 @@ void GameList::reset() {
   Bwins = BwinsAll;
   Wwins = WwinsAll;
   dates_current.clear();
-  for(int i = 0; i < 420*12; i++) dates_current.push_back(dates_all[i]);
+  for(int i = 0; i < (DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_current.push_back(dates_all[i]);
 }
 
 void GameList::tagsearch(int tag) throw(DBError) {
@@ -934,6 +939,7 @@ void GameList::sigsearch(char* sig) throw(DBError) {
       makeIndexHit(*it, 0);
     }
     end_sorted();
+    update_dates_current();
   }
 }
 
@@ -1006,6 +1012,7 @@ void GameList::gisearch(const char* sql, int complete) throw(DBError) {
     if( rc!=SQLITE_OK ) throw DBError();
 
     end_sorted();
+    update_dates_current();
   }
 }
 
@@ -1224,6 +1231,7 @@ void GameList::search(Pattern& pattern, SearchOptions* so) throw(DBError) {
   continuations = pl.continuations;
   // printf("cont %d\n", continuations[15+15*19].B+continuations[15+15*19].W);
   pl.continuations = new Continuation[pattern.sizeX*pattern.sizeY];
+  update_dates_current();
 }
 
 
@@ -1969,7 +1977,7 @@ void GameList::restore(int handle, bool del) throw(DBError) {
     }
   }
 
-  for(int i=0; i<420*12; i++) dates_current.push_back(0);
+  for(int i=0; i<(DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_current.push_back(0);
   int cl_size = snapshot.retrieve_int();
   for(int i=0; i<cl_size; i++) {
     int i1 = snapshot.retrieve_int();
@@ -1978,7 +1986,7 @@ void GameList::restore(int handle, bool del) throw(DBError) {
     currentList->push_back(make_pair(i1, i2));
     // if ((*currentList)[currentList->size()-1].second >= all->size()) printf("ouch %d\n", (*currentList)[currentList->size()-1].second);
     (*all)[(*currentList)[currentList->size()-1].second]->hits_from_snv(snapshot);
-    if ((*all)[(*currentList)[currentList->size()-1].second]->date >= 1600*12) dates_current[(*all)[(*currentList)[currentList->size()-1].second]->date - 1600*12]++;
+    if ((*all)[(*currentList)[currentList->size()-1].second]->date >= DATE_PROFILE_START*12) dates_current[(*all)[(*currentList)[currentList->size()-1].second]->date - DATE_PROFILE_START*12]++;
   }
 
   if (mrs_pattern) delete mrs_pattern;

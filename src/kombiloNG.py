@@ -612,6 +612,23 @@ class GameList(object):
 
         return t, t2
 
+    def dates_relative(self, fr=0, to=0, chunk_size=1):
+        result = []
+        to = to or (lk.DATE_PROFILE_END - lk.DATE_PROFILE_START) * 12
+        fr = max(0, fr)
+        to = min(to, (lk.DATE_PROFILE_END - lk.DATE_PROFILE_START) * 12)
+
+        l = (to - fr) // chunk_size
+
+        for db in self.DBlist:
+            if db['disabled']:
+                continue
+            for i in range(l):
+                current = sum([db['data'].dates_current[j + fr] for j in range(i * chunk_size, (i + 1) * chunk_size)])
+                all = sum([db['data'].dates_all[j + fr] for j in range(i * chunk_size, (i + 1) * chunk_size)])
+                result.append(current * 1.0 / all if all else 0)
+        return result
+
 
 class KEngine(object):
     '''
@@ -640,7 +657,7 @@ class KEngine(object):
         self.gamelist = GameList()
         self.currentSearchPattern = None
 
-    def patternSearch(self, CSP, SO=None, CL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789', FL={}, progBar=None):
+    def patternSearch(self, CSP, SO=None, CL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789', FL={}, progBar=None, sort_criterion=None):
         '''Start a pattern search on the current game list.
 
         * CSP must be an instance of :py:class:`Pattern` - it is the pattern
@@ -648,6 +665,14 @@ class KEngine(object):
         * You can specify search options as `SO` - this must be an instance of
           ``lk.SearchOptions`` (see below).
         * ``CL``, ``FL``, ``progBar`` are used with the Kombilo GUI.
+        * sort_criterion will be used for sorting the continuations:
+
+          * total: by number of occurrences
+          * earliest: by earliest occurrence (earliest first)
+          * latest: by latest occurrence (latest date first)
+          * average: by average date of occurrence (earliest date first)
+          * became popular: by weighted average which tries to measure when the move became popular (earliest date first)
+          * became unpopular: by weighted average which tries to measure when the move became unpopular (latest date first)
 
         **Search options.**
         Create an instance of ``lk.SearchOptions`` by ::
@@ -711,7 +736,7 @@ class KEngine(object):
 
             self.lookUpContinuations(gl)
 
-        self.setLabels()
+        self.set_labels(sort_criterion)
         self.gamelist.update()
 
     def lookUpContinuations(self, gl):
@@ -724,24 +749,32 @@ class KEngine(object):
             for x in range(self.currentSearchPattern.sizeX):
                 if gl.lookupLabel(x, y) != '.':
                     for c in self.continuations:
-                        if c[1] == x and c[2] == y:  # exists
+                        if c.x == x and c.y == y:  # exists
                             ll = c
                             break
                     else:
-                        ll = [0, x, y, 0, 0, 0, 0, 0, 0, 0, 0, '?']
+                        ll = lk.Continuation()
+                        ll.x = x
+                        ll.y = y
+                        ll.label == '?'
                         self.continuations.append(ll)
-                    cont = gl.lookupContinuation(x, y)
-                    ll[0] += cont.B + cont.W
-                    for i, val in enumerate([cont.B, cont.wB, cont.lB, cont.tB, cont.W, cont.wW, cont.lW, cont.tW]):
-                        ll[i + 3] += val
+                    ll.add(gl.lookupContinuation(x, y))
 
-    def setLabels(self):
-        self.continuations.sort()
+
+    def set_labels(self, sort_criterion=None):
+        sort_criteria = {'total': lambda c1, c2: c1.total() - c2.total(),
+                         'earliest': lambda c1, c2: c2.earliest - c1.earliest,
+                         'latest': lambda c1, c2: c1.latest - c2.latest,
+                         'average': lambda c1, c2: c2.average_date() - c1.average_date(),
+                         'became popular': lambda c1, c2: c2.average_date_w1() - c1.average_date_w1(),
+                         'became unpopular': lambda c1, c2: c1.average_date_w2() - c2.average_date_w2(),
+                        }
+        self.continuations.sort(cmp=sort_criteria[sort_criterion or 'total'])
         self.continuations.reverse()
         # print self.continuations
         i = 0
         for c in self.continuations:
-            x, y = c[1:3]
+            x, y = c.x, c.y
             if (x, y) in self.fixedLabels:
                 lab = self.fixedLabels[(x, y)]
             elif i < len(self.contLabels):
@@ -749,11 +782,11 @@ class KEngine(object):
                 i += 1
             else:
                 lab = '?'
-            c[-1] = lab.encode('utf-8') if type(lab) == type(u'') else lab
+            c.label = lab.encode('utf-8') if type(lab) == type(u'') else lab
             for db in self.gamelist.DBlist:
                 if db['disabled']:
                     continue
-                db['data'].setLabel(x, y, c[-1])
+                db['data'].setLabel(x, y, c.label)
 
     def gameinfoSearch(self, query):
         '''Do a game info search on the current list of games.
@@ -886,9 +919,9 @@ class KEngine(object):
 
             N = 400 if showAllCont else 10
             for cont in self.continuations[:N]:
-                x, y = cont[1] + 1, cont[2] + 1
+                x, y = cont.x + 1, cont.y + 1
                 if plist[y][x] in ['.', ',']:
-                    plist[y][x] = cont[11]  # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
+                    plist[y][x] = cont.label  # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
             l2 = [' '.join(x).strip() for x in plist]
 
             s1 = '$$B ' + _('Search Pattern') + '\n$$' + join(l1, '\n$$') + '\n' if exportMode == 'wiki' else join(l1, '\n')
@@ -928,15 +961,15 @@ class KEngine(object):
                 t.append('\n')
 
                 for cont in self.continuations[:N]:
-                    if cont[3]:  # black continuations
-                        t.append(_('B') + '%s:    %d (%d), ' % (cont[11], cont[3], cont[3] - cont[6]))
-                        t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont[4] * 100.0 / cont[3], cont[5] * 100.0 / cont[3]))
+                    if cont.B:  # black continuations
+                        t.append(_('B') + '%s:    %d (%d), ' % (cont.label, cont.B, cont.B - cont.tB))
+                        t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wB * 100.0 / cont.B, cont.lB * 100.0 / cont.B))
                         if exportMode == 'wiki':
                             t.append(' %%%')
                         t.append('\n')
-                    if cont[7]:  # white continuations
-                        t.append(_('W') + '%s:    %d (%d), ' % (cont[11], cont[7], cont[7] - cont[10]))
-                        t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont[8] * 100.0 / cont[7], cont[9] * 100.0 / cont[7]))
+                    if cont.W:  # white continuations
+                        t.append(_('W') + '%s:    %d (%d), ' % (cont.label, cont.W, cont.W - cont.tW))
+                        t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wW * 100.0 / cont.W, cont.lW * 100.0 / cont.W))
                         if exportMode == 'wiki':
                             t.append(' %%%')
                         t.append('\n')

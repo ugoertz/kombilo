@@ -219,6 +219,8 @@ char* SnapshotVector::to_charp() {
 PatternError::PatternError() {}
 
 Continuation::Continuation() {
+  x = 0;
+  y = 0;
   B  = 0;
   W  = 0;
   tB = 0;
@@ -227,6 +229,7 @@ Continuation::Continuation() {
   lB = 0;
   wW = 0;
   lW = 0;
+  label ='-';
   earliest = 0;
   latest = 0;
   sum_dates = 0;
@@ -234,7 +237,54 @@ Continuation::Continuation() {
   alt_weighted_sum_dates = 0;
 }
 
+Continuation::Continuation(const Continuation& c) {
+  x = c.x;
+  y = c.y;
+  B  = c.B;
+  W  = c.W;
+  tB = c.tB;
+  tW = c.tW;
+  wB = c.wB;
+  lB = c.lB;
+  wW = c.wW;
+  lW = c.lW;
+  label = c.label;
+  earliest = c.earliest;
+  latest = c.latest;
+  sum_dates = c.sum_dates;
+  weighted_sum_dates = c.weighted_sum_dates;
+  alt_weighted_sum_dates = c.alt_weighted_sum_dates;
+}
+
+Continuation& Continuation::operator=(const Continuation& c) {
+  if (&c != this) {
+    x = c.x;
+    y = c.y;
+    B  = c.B;
+    W  = c.W;
+    tB = c.tB;
+    tW = c.tW;
+    wB = c.wB;
+    lB = c.lB;
+    wW = c.wW;
+    lW = c.lW;
+    label = c.label;
+    earliest = c.earliest;
+    latest = c.latest;
+    sum_dates = c.sum_dates;
+    weighted_sum_dates = c.weighted_sum_dates;
+    alt_weighted_sum_dates = c.alt_weighted_sum_dates;
+  }
+  return *this;
+}
+
+int Continuation::total() {
+  return B + W;
+}
+
 void Continuation::from_snv(SnapshotVector& snv) {
+  x = snv.retrieve_int();
+  y = snv.retrieve_int();
   B = snv.retrieve_int();
   W = snv.retrieve_int();
   tB = snv.retrieve_int();
@@ -243,6 +293,7 @@ void Continuation::from_snv(SnapshotVector& snv) {
   lB = snv.retrieve_int();
   wW = snv.retrieve_int();
   lW = snv.retrieve_int();
+  label = snv.retrieve_char();
   earliest = snv.retrieve_int();
   latest = snv.retrieve_int();
   sum_dates = snv.retrieve_int();
@@ -251,6 +302,8 @@ void Continuation::from_snv(SnapshotVector& snv) {
 }
 
 void Continuation::to_snv(SnapshotVector& snv) {
+  snv.pb_int(x);
+  snv.pb_int(y);
   snv.pb_int(B);
   snv.pb_int(W);
   snv.pb_int(tB);
@@ -259,11 +312,34 @@ void Continuation::to_snv(SnapshotVector& snv) {
   snv.pb_int(lB);
   snv.pb_int(wW);
   snv.pb_int(lW);
+  snv.pb_char(label);
   snv.pb_int(earliest);
   snv.pb_int(latest);
   snv.pb_int(sum_dates);
   snv.pb_int(weighted_sum_dates);
   snv.pb_int(alt_weighted_sum_dates);
+}
+
+void Continuation::add(const Continuation c) {
+  B += c.B;
+  W += c.W;
+  tB += c.tB;
+  tW += c.tW;
+  wB += c.wB;
+  lB += c.lB;
+  wW += c.wW;
+  lW += c.lW;
+  if (earliest) earliest = min(earliest, c.earliest);
+  else earliest = c.earliest;
+  latest = max(latest, c.latest);
+  sum_dates += c.sum_dates;
+  weighted_sum_dates += c.weighted_sum_dates;
+  alt_weighted_sum_dates += c.alt_weighted_sum_dates;
+}
+
+int Continuation::average_date() {
+  if (B+W) return sum_dates/(B+W);
+  return 0;
 }
 
 Symmetries::Symmetries(char sX, char sY) {
