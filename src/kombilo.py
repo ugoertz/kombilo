@@ -879,7 +879,7 @@ class Message(ScrolledText):
 class App(v.Viewer, KEngine):
     """ The main class of Kombilo. """
 
-    def displayDateProfile(self):
+    def display_date_profile(self):
         """
         Display date profile of current game list.
         """
@@ -887,13 +887,28 @@ class App(v.Viewer, KEngine):
         d = self.dateProfileRelative()
         m = max((y * 1.0 / z if z else 0) for x, y, z in d)
         if m == 0:
-            self.displayBarChart(self.dateProfileCanv, 'stat', title='-')
+            self.display_bar_chart(self.dateProfileCanv, 'stat', title='-')
             return
 
         data = [{'black': y * 1.0 / (z * m) if z else 0, 'label': ['%d' % x[0], '-', '%d' % (x[1] - 1, )], 'label_top': ['%d/' % y, '%d' % z]} for x, y, z in d]
-        self.displayBarChart(self.dateProfileCanv, 'stat', data=data, colors=['black'], title=_('Date profile, %d games') % self.gamelist.noOfGames())
+        fr = self.options.date_profile_from.get()
+        to=self.options.date_profile_to.get()
+        self.display_bar_chart_dates(self.dateProfileCanv, 'stat',
+                                     data=self.gamelist.dates_relative(fr=(fr - lk.DATE_PROFILE_START) * 12, to=(to + 1 - lk.DATE_PROFILE_START) * 12 - 1,
+                                                                       chunk_size=self.options.date_profile_chunk_size.get()),
+                                     fr=fr, to=to, title=_('Date profile (Each bar represents %d months)') % self.options.date_profile_chunk_size.get())
+        self.redo_date_profile = False
 
-    def displayStatistics(self):
+    def display_x_indices(self, canvas, fr, to, tag):
+        """indices on x-axis"""
+        smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
+        canvas.create_text(25, 230, text=repr(fr), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(425, 230, text=repr(to), font=smallfont, anchor='nw', tags=tag)
+        for i in range(1,5):
+            canvas.create_text(25 + 80 * i, 230, text=repr(fr + i * (to - fr) // 5), font=smallfont, anchor='nw', tags='stat')
+        canvas.create_rectangle(10, 225, 460, 226, fill='black', tags='stat')
+
+    def display_statistics(self):
         """
         Display statistical information on the last search on self.statisticsCanv.
         """
@@ -906,23 +921,91 @@ class App(v.Viewer, KEngine):
         Wperc = self.Wwins * 100.0 / noMatches
 
         if not self.continuations:
-            self.displayBarChart(self.statisticsCanv, 'stat',
-                                 title=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+            self.display_bar_chart(self.statisticsCanv, 'stat',
+                                   title=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
             return
 
-        maxHeight = self.continuations[0][0]
-        data = []
-        for i, (total, x, y, B, wB, lB, tB, W, wW, lW, tW, label) in enumerate(self.continuations[:12]):
-            data.append({'black': (B - tB) * 1.0 / maxHeight, self.options.Btenuki.get(): tB * 1.0 / maxHeight,
-                         'white': (W - tW) * 1.0 / maxHeight, self.options.Wtenuki.get(): tW * 1.0 / maxHeight,
-                         'label': [label, '%1.1f' % (wW * 100.0 / W) if W else '-', '%1.1f' % (wB * 100.0 / B) if B else '-'],
-                         'label_top': ['%d' % (B + W)], })
+        if self.options.statistics_by_date.get():
+            font = (self.options.statFont.get(), self.options.statFontSize.get(), self.options.statFontStyle.get())
+            smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
 
-        self.displayBarChart(self.statisticsCanv, 'stat',
-                             data=data, colors=[self.options.Btenuki.get(), 'black', 'white', self.options.Wtenuki.get()],
-                             title=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+            self.statisticsCanv.delete('stat')
+            self.statisticsCanv.create_text(20, 5, text=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc),
+                                            font=font, anchor='nw', tags='stat')
+            fr = self.options.date_profile_from.get()
+            to = max(self.options.date_profile_to.get(), fr + 1)
+            self.display_x_indices(self.statisticsCanv, fr, to, 'stat')
 
-    def displayBarChart(self, canvas, tag, colors=[], data=[], title=''):
+            i = 0
+            ctr = 0
+            while i < 12 and ctr < len(self.continuations):
+                cont = self.continuations[ctr]
+                ctr += 1
+                if cont.earliest < fr * 12:
+                    left = 0
+                elif cont.earliest > to * 12:
+                    continue
+                else:
+                    left = (cont.earliest - fr * 12) * 400 // ((to - fr) * 12)  # 400 == width of chart
+
+                left += 30  # start 30 pixels from left border
+
+                if cont.latest > to * 12:
+                    right = 400
+                elif cont.latest < fr * 12:
+                    continue
+                else:
+                    right = (cont.latest - fr * 12) * 400 // ((to - fr) * 12)
+                right += 30
+
+                avg = (cont.average_date() - fr * 12) * 400 // ((to - fr) * 12)
+                avg += 30
+
+                self.statisticsCanv.create_text(left - 10, i * 15 + 40, text=cont.label, font=font, tags='stat')
+                self.statisticsCanv.create_rectangle(left, i * 15 + 38, right, i * 15 + 44, fill='black', tags='stat')
+                if 30 <= avg <= 430:
+                    self.statisticsCanv.create_rectangle(avg-1, i * 15 + 36, avg + 1, i * 15 + 47, fill='green', tags='stat')
+
+                i += 1
+
+        else:
+            maxHeight = max(x.total() for x in self.continuations[:12])
+            data = []
+            for cont in self.continuations[:12]:
+                data.append({'black': (cont.B - cont.tB) * 1.0 / maxHeight, self.options.Btenuki.get(): cont.tB * 1.0 / maxHeight,
+                            'white': (cont.W - cont.tW) * 1.0 / maxHeight, self.options.Wtenuki.get(): cont.tW * 1.0 / maxHeight,
+                            'label': [cont.label, '%1.1f' % (cont.wW * 100.0 / cont.W) if cont.W else '-', '%1.1f' % (cont.wB * 100.0 / cont.B) if cont.B else '-'],
+                            'label_top': ['%d' % (cont.B + cont.W)], })
+
+            self.display_bar_chart(self.statisticsCanv, 'stat',
+                                data=data, colors=[self.options.Btenuki.get(), 'black', 'white', self.options.Wtenuki.get()],
+                                title=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+
+    def display_bar_chart_dates(self, canvas, tag, data, title='', fr=None, to=None):
+        canvas.delete(tag)
+        font = (self.options.statFont.get(), self.options.statFontSize.get(), self.options.statFontStyle.get())
+        smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
+
+        W, H = 400, 190  # width, height of statisticsCanv
+        canvas.create_text(20, 5, text=title, font=font, anchor='nw', tags=tag)
+        if not data:
+            return
+
+        self.display_x_indices(canvas, fr, to, 'stat')
+
+        # indices on y-axis
+        mx = max(data)
+        canvas.create_text(2, 25, text='%1.1f %%' % (mx * 100), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(4, 120, text='%1.1f %%' % (mx * 50), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(5, 215, text='0 %', font=smallfont, anchor='nw', tags=tag)
+
+        for x, y  in enumerate(data):
+            xx = 40 + int(x * W / len(data))
+            yy = (H - int(y * H / mx) if mx else 0) + 30
+            if yy < H + 30:
+                canvas.create_rectangle(xx - 2, H + 30, xx + 2, yy, fill='black', tags=(tag, ))
+
+    def display_bar_chart(self, canvas, tag, colors=[], data=[], title=''):
         """
         Display a bar chart on canvas.
 
@@ -1084,6 +1167,7 @@ class App(v.Viewer, KEngine):
             self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('%1.1f seconds') % (time.time() - currentTime) + '\n')
 
         self.progBar.stop()
+        self.redo_date_profile = True
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -1187,6 +1271,7 @@ class App(v.Viewer, KEngine):
         self.signatureSearch(sig)
         self.progBar.stop()
         self.logger.insert(END, (_('Signature search, %1.1f seconds, searching for') % (time.time() - currentTime)) + '\n%s\n' % sig)
+        self.redo_date_profile = True
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -1271,13 +1356,14 @@ class App(v.Viewer, KEngine):
             gl = db['data']
             self.lookUpContinuations(gl)
 
-        self.setLabels()
+        self.set_labels()
         if self.showContinuation.get():
             self.showCont()
         self.board.changed.set(0)
-        self.displayStatistics()
+        self.display_statistics()
         self.gamelist.update()
         self.prevSearches.select(target)
+        self.redo_date_profile = True
         self.notebookTabChanged()
 
     def completeReset(self):
@@ -1301,6 +1387,7 @@ class App(v.Viewer, KEngine):
 
         self.showContinuation.set(1)
         self.oneClick.set(0)
+        self.redo_date_profile = True
         self.notebookTabChanged()
 
     def reset(self):
@@ -1317,6 +1404,7 @@ class App(v.Viewer, KEngine):
                 self.displayLabels(self.cursor.currentNode())
             except:
                 pass
+        self.redo_date_profile = True
         self.notebookTabChanged()
 
     def showCont(self):
@@ -1328,13 +1416,13 @@ class App(v.Viewer, KEngine):
             self.board.delLabels()  # FIXME is this what we want to do?
 
             for c in self.continuations:
-                if not c[3]:
+                if not c.B:
                     color = 'white'
-                elif not c[7]:
+                elif not c.W:
                     color = 'black'
                 else:
                     color = self.options.labelColor.get()
-                self.board.placeLabel((c[1] + self.sel[0][0], c[2] + self.sel[0][1]), '+LB', c[-1], color)
+                self.board.placeLabel((c.x + self.sel[0][0], c.y + self.sel[0][1]), '+LB', c.label, color)
 
         else:
             self.board.delLabels()
@@ -1947,6 +2035,7 @@ class App(v.Viewer, KEngine):
     def finalizeEditDB(self):
         self.dateProfileWholeDB = self.dateProfile()
         self.editDB_window.destroy()
+        self.redo_date_profile = True
         self.notebookTabChanged()
 
     def editDBlist(self):
@@ -2294,7 +2383,9 @@ class App(v.Viewer, KEngine):
     def balloonHelpK(self):
 
         for widget, text in [(self.resetButtonS, _('Reset game list')), (self.backButtonS, _('Back to previous search pattern')), (self.showContButtonS, _('Show continuations')),
-                             (self.oneClickButtonS, _('1-click mode')), (self.colorButtonS, _("(Don't) allow color swap in search pattern")),
+                             (self.oneClickButtonS, _('1-click mode')),
+                             (self.statByDateButtonS, _('Show date information for continuations')),
+                             (self.colorButtonS, _("(Don't) allow color swap in search pattern")),
                              (self.anchorButtonS, _("(Don't) translate search pattern")), (self.nextMove1S, _('Black or white plays next (or no continuation)')),
                              (self.nextMove2S, _('Black plays next')), (self.nextMove3S, _('White plays next')),
                              (self.scaleS, _('Pattern has to occur before move n (250=no limit)')), (self.searchButtonS, _('Start pattern search')),
@@ -2425,7 +2516,9 @@ class App(v.Viewer, KEngine):
         if self.algo_hash_corner_search.get():
             self.searchOptions.algos |= lk.ALGO_HASH_CORNER
 
-        self.patternSearch(CSP, self.searchOptions, self.contLabels, self.fixedLabels, self.progBar)
+        self.patternSearch(CSP, self.searchOptions, self.contLabels, self.fixedLabels, self.progBar,
+                           {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'),
+                            'average': _('average'), }[self.options.continuations_sort_crit.get()])  # translate back to the English values used in kombiloNG
 
         if self.showContinuation.get():
             self.showCont()
@@ -2435,7 +2528,7 @@ class App(v.Viewer, KEngine):
                 self.displayLabels(self.cursor.currentNode())
             except:
                 pass
-        self.displayStatistics()
+        self.display_statistics()
         self.progBar.stop()
         self.logger.insert(END, _('Pattern search') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
 
@@ -2446,6 +2539,7 @@ class App(v.Viewer, KEngine):
                                  cursorSn=[self.cursor, self.cursor.currentGame, self.cursor.currentNode().pathToNode()],
                                  variables=[self.modeVar.get(), self.fixedColorVar.get(), self.fixedAnchorVar.get(), self.moveLimit.get(), self.nextMoveVar.get(), ],
                                 )
+        self.redo_date_profile = True
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -2590,6 +2684,7 @@ class App(v.Viewer, KEngine):
 
         self.progBar.stop()
         self.logger.insert(END, (_('Tag search %s') % tag) + ', ' + _('%1.1f seconds') % (time.time() - currentTime) + '\n')
+        self.redo_date_profile = True
         self.notebookTabChanged()
         self.configButtons(NORMAL)
 
@@ -2622,7 +2717,8 @@ class App(v.Viewer, KEngine):
 
     def notebookTabChanged(self, event=None):
         if self.notebook.select() == self.dateProfileFS.winfo_pathname(self.dateProfileFS.winfo_id()):
-            self.displayDateProfile()
+            if self.redo_date_profile:
+                self.display_date_profile()
 
     # -------------------------------------------------
 
@@ -2702,6 +2798,7 @@ class App(v.Viewer, KEngine):
         self.board.labelFontsize = self.options.labelFontSize
         self.fixedColorVar = self.board.fixedColor
         self.board.smartFixedColor = self.options.smartFixedColor
+        self.redo_date_profile = True
 
         self.board.bind('<Double-1>', self.doubleClick)
 
@@ -2725,21 +2822,18 @@ class App(v.Viewer, KEngine):
 
         self.searchStat = Frame(self.notebook)
         self.notebook.add(self.searchStat, text=_('Statistics'))
+        self.dateProfileFS = Frame(self.notebook)
+        self.notebook.add(self.dateProfileFS, text=_('Date profile'))
         self.patternSearchOptions = Frame(self.notebook)
         self.notebook.add(self.patternSearchOptions, text=_('Options'))
         self.giSFS = Frame(self.notebook)
         self.notebook.add(self.giSFS, text=_('Game info'))
         self.gameinfoSearchFS = Frame(self.giSFS)
         self.dummyGISFS = Frame(self.giSFS)
-
-        self.dateProfileFS = Frame(self.notebook)
-        self.notebook.add(self.dateProfileFS, text=_('Date profile'))
-
         self.tagFS = Frame(self.notebook)
         self.notebook.add(self.tagFS, text=_('Tags'))
         self.tagFrameS = Frame(self.tagFS)
         self.tagFrameS.pack(expand=YES, fill=BOTH)
-
         self.logFS = Frame(self.notebook)
         self.notebook.add(self.logFS, text=_('Log'))
         self.logFrameS = Frame(self.logFS)
@@ -2813,7 +2907,9 @@ class App(v.Viewer, KEngine):
         self.oneClick = IntVar()
         self.oneClickButtonS = Checkbutton(self.buttonFrame1S, text=_('1 click'), variable=self.oneClick, indicatoron=0)
 
-        for ii, b in enumerate([self.resetButtonS, self.searchButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS]):
+        self.statByDateButtonS = Checkbutton(self.buttonFrame1S, text=_('Statistics by Date'), variable=self.options.statistics_by_date, indicatoron=0, command=self.display_statistics)
+
+        for ii, b in enumerate([self.resetButtonS, self.searchButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS, self.statByDateButtonS]):
             b.grid(row=0, column=ii)
 
         # -------------------------
@@ -2870,6 +2966,50 @@ class App(v.Viewer, KEngine):
         self.algo_hash_corner_search.set(1)
         self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.algo_hash_corner_search, pady=5)
         self.algo_hash_corner.grid(row=5, column=0, columnspan=2, sticky=W)
+
+        sep2 = Separator(self.patternSearchOptions, orient='horizontal')
+        sep2.grid(row=6, column=0, columnspan=2, sticky=NSEW)
+
+        # add widgets for date profile options
+
+        self.patternSearchOptions_dp = Frame(self.patternSearchOptions)
+        self.patternSearchOptions_dp.grid(row=7, columnspan=6, sticky=NSEW)
+        self.dp_label = Label(self.patternSearchOptions_dp, text=_('Date profile options'))
+        self.dp_label.grid(row=7, column=0, columnspan=4)
+        self.dp_from_lb = Label(self.patternSearchOptions_dp, text=_('From'))
+        self.dp_from = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_from)
+        self.dp_from_lb.grid(row=8, column=0, padx=3)
+        self.dp_from.grid(row=8, column=1, padx=3)
+        self.dp_to_lb = Label(self.patternSearchOptions_dp, text=_('To'))
+        self.dp_to = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_to)
+        self.dp_to_lb.grid(row=8, column=2, padx=3)
+        self.dp_to.grid(row=8, column=3, padx=3)
+        self.dp_chunk_size_lb = Label(self.patternSearchOptions_dp, text=_('Months/bar'))
+        self.dp_chunk_size = Entry(self.patternSearchOptions_dp, width=4, textvariable=self.options.date_profile_chunk_size)
+        self.dp_chunk_size_lb.grid(row=8, column=4, padx=3)
+        self.dp_chunk_size.grid(row=8, column=5, padx=3)
+        self.patternSearchOptions_dp1 = Frame(self.patternSearchOptions)
+        self.patternSearchOptions_dp1.grid(row=8, columnspan=6, sticky=NSEW)
+        self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'))
+        self.dp_sort_crit_lb.grid(row=0, column=0)
+        self.dp_sort_crit = Combobox(self.patternSearchOptions_dp1, values=(_('total'), _('earliest'), _('latest'), _('average'), ), textvariable=self.options.continuations_sort_crit,
+                                     state='readonly', width=10)
+        self.dp_sort_crit.grid(row=0, column=1, padx=3)
+
+        # validation for date profile options, and triggering of date profile update when options are changed
+
+        def validate(var, default):
+            try:
+                assert int(var.get()) >= 1
+            except:
+                var.set(default)
+            self.redo_date_profile = True
+
+        self.options.date_profile_from.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_from, default=1930: validate(var, default))
+        self.options.date_profile_to.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_to, default=2012: validate(var, default))
+        self.options.date_profile_chunk_size.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_chunk_size, default=6: validate(var, default))
+
+        # ------------------------------------------------------------------------------
 
         self.progBar = Progressbar(self.frameS)
         self.progBar.start(50)
@@ -2976,7 +3116,8 @@ class App(v.Viewer, KEngine):
 
         # icons for the buttons
         for button, filename in [(self.showContButtonS, 'abc-u.gif'), (self.backButtonS, 'edit-undo.gif'), (self.resetButtonS, 'go-home.gif'), (self.searchButtonS, 'system-search.gif'),
-                                 (self.oneClickButtonS, 'mouse.gif'), (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
+                                 (self.oneClickButtonS, 'mouse.gif'), (self.statByDateButtonS, 'date.gif'),
+                                 (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
                                  (self.GIstart, 'system-search.gif'), (self.GIclear, 'document-new.gif'), (self.GI_bwd, 'go-previous.gif'), (self.GI_fwd, 'go-next.gif'),
                                  (self.tagsearchButton, 'system-search.gif'), (self.tagaddButton, 'add.gif'), (self.tagdelButton, 'list-remove.gif'),
                                  (self.tagallButton, 'edit-select-all.gif'), (self.untagallButton, 'edit-clear.gif'), (self.tagsetButton, 'bookmark-new.gif'),

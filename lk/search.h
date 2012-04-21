@@ -162,6 +162,15 @@ const int NOT_INSERTED_INTO_DB = 8;
 const int INDEX_OUT_OF_RANGE = 16;
 /**@}*/ 
 
+/// \name date profile constants
+/**@{*/
+const int DATE_PROFILE_START = 1600;
+const int DATE_PROFILE_END = 2020;
+/**@}*/
+
+
+
+
 /*!
  * \brief The GameList class is the main interface to the libkombilo functionality.
  *
@@ -507,6 +516,7 @@ class GameList {
     int next();
     int start_sorted();
     int end_sorted();
+    void update_dates_current();
     int get_current_index(int id, int* start); // returns the index in oldList of the game with game id "id" 
                                                // (if available, otherwise returns -1),
                                                // use this between start_sorted and end_sorted

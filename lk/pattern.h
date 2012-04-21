@@ -233,6 +233,8 @@ class Pattern {
 
 class Continuation {
   public:
+    int x; ///< x coordinate of corresp. label on board
+    int y; ///< y coordinate of corresp. label on board
     int B ; ///< number of all black continuations
     int W ; ///< number of all white continuations
     int tB; ///< number of black tenuki plays
@@ -242,6 +244,8 @@ class Continuation {
     int wW; ///< black wins (where next play is W)
     int lW; ///< black losses (where next play is W)
 
+    char label;
+
     int earliest; ///< earliest date when this was played
     int latest; ///< latest date when this was played
     int sum_dates; ///< sum of all dates when this was played
@@ -250,6 +254,11 @@ class Continuation {
     /// All dates are given as year*12 + month, where month is between 0 and 11.
 
     Continuation(); ///< initializes all member variables with 0
+    Continuation(const Continuation& c);
+    Continuation& operator=(const Continuation& c);
+    void add(const Continuation c); ///< Add values for B, W, tB, tW, wB, lB, wW, lW of c to values of this
+    int total();
+    int average_date();
 
     friend class GameList;
 
