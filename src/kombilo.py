@@ -899,14 +899,14 @@ class App(v.Viewer, KEngine):
                                      fr=fr, to=to, title=_('Date profile (Each bar represents %d months)') % self.options.date_profile_chunk_size.get())
         self.redo_date_profile = False
 
-    def display_x_indices(self, canvas, fr, to, tag):
+    def display_x_indices(self, canvas, fr, to, tag, xoffset=30):
         """indices on x-axis"""
         smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
-        canvas.create_text(25, 230, text=repr(fr), font=smallfont, anchor='nw', tags=tag)
-        canvas.create_text(425, 230, text=repr(to), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(-5 + xoffset, 230, text=repr(fr), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(395 + xoffset, 230, text=repr(to), font=smallfont, anchor='nw', tags=tag)
         for i in range(1,5):
-            canvas.create_text(25 + 80 * i, 230, text=repr(fr + i * (to - fr) // 5), font=smallfont, anchor='nw', tags='stat')
-        canvas.create_rectangle(10, 225, 460, 226, fill='black', tags='stat')
+            canvas.create_text(-5 + 80 * i + xoffset, 230, text=repr(fr + i * (to - fr) // 5), font=smallfont, anchor='nw', tags='stat')
+        canvas.create_rectangle(-20 + xoffset, 225, 400 + xoffset, 226, fill='black', tags='stat')
 
     def display_statistics(self):
         """
@@ -934,7 +934,9 @@ class App(v.Viewer, KEngine):
                                             font=font, anchor='nw', tags='stat')
             fr = self.options.date_profile_from.get()
             to = max(self.options.date_profile_to.get(), fr + 1)
-            self.display_x_indices(self.statisticsCanv, fr, to, 'stat')
+            xoffset=60
+            self.display_x_indices(self.statisticsCanv, fr, to, 'stat', xoffset=xoffset)
+            font = (self.options.statFont.get(), self.options.statFontSize.get(), 'bold')
 
             i = 0
             ctr = 0
@@ -948,7 +950,7 @@ class App(v.Viewer, KEngine):
                 else:
                     left = (cont.earliest - fr * 12) * 400 // ((to - fr) * 12)  # 400 == width of chart
 
-                left += 30  # start 30 pixels from left border
+                left += xoffset  # start xoffset pixels from left border
 
                 if cont.latest > to * 12:
                     right = 400
@@ -956,14 +958,15 @@ class App(v.Viewer, KEngine):
                     continue
                 else:
                     right = (cont.latest - fr * 12) * 400 // ((to - fr) * 12)
-                right += 30
+                right += xoffset
 
                 avg = (cont.average_date() - fr * 12) * 400 // ((to - fr) * 12)
-                avg += 30
+                avg += xoffset
 
                 self.statisticsCanv.create_text(left - 10, i * 15 + 40, text=cont.label, font=font, tags='stat')
+                self.statisticsCanv.create_text(left - 17 - 3 * len(repr(cont.total())), i * 15 + 40, text=repr(cont.total()), font=smallfont, tags='stat')
                 self.statisticsCanv.create_rectangle(left, i * 15 + 38, right, i * 15 + 44, fill='black', tags='stat')
-                if 30 <= avg <= 430:
+                if xoffset <= avg <= 400 + xoffset:
                     self.statisticsCanv.create_rectangle(avg-1, i * 15 + 36, avg + 1, i * 15 + 47, fill='green', tags='stat')
 
                 i += 1
