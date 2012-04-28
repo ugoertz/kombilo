@@ -1038,7 +1038,7 @@ class Viewer:
         if self.cursor.root.numChildren <= 1: return
 
         filename = tkFileDialog.asksaveasfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')],
-                                                  initialdir = self.sgfpath)
+                                                  initialdir = self.sgfpath, defaultextension='.sgf')
         if not filename: return
         self.sgfpath = os.path.split(filename)[0]
 
@@ -2131,7 +2131,7 @@ class Viewer:
         self.leaveNode()
 
         f = tkFileDialog.asksaveasfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')],
-                                           initialdir = self.sgfpath)
+                                           initialdir = self.sgfpath, defaultextension='.sgf')
 
         if not f: return
         try:
