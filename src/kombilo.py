@@ -1054,6 +1054,31 @@ class App(v.Viewer, KEngine):
         self.configButtons(NORMAL)
 
 
+    def find_duplicates_GUI(self):
+        self.logger.insert('end', 'Searching for duplicates\n\n')
+        text = []
+        d = self.find_duplicates(strict=self.options.strictDuplCheck.get())
+        dbs = {}
+        i = 0
+        text.append('Databases:\n')
+        for index, db in enumerate(self.gamelist.DBlist):
+            if db['disabled']:
+                continue
+            text.append('[%d] %s\n' % (i, db['sgfpath']))
+            dbs[i] = index
+            i += 1
+        text.append('-----------------------------------------------\n\n')
+
+        for k in d:
+            for game in [d[k][i:i+2] for i in range(0, len(d[k]), 2)]:
+                DBindex = dbs[game[0]]
+                index = self.gamelist.DBlist[DBindex]['data'].find_by_ID(game[1])
+                text.append('[%d] %s: %s - %s\n' % (game[0], self.gamelist.DBlist[DBindex]['data'][index][GL_FILENAME],
+                                                    self.gamelist.DBlist[DBindex]['data'][index][GL_PW],
+                                                    self.gamelist.DBlist[DBindex]['data'][index][GL_PB]))
+            text.append('-----------------------------------------------\n')
+        v.TextEditor(''.join(text), self.sgfpath, (self.options.exportFont, self.options.exportFontSize, self.options.exportFontStyle))
+
 
     def sigSearch(self):
         """ Search a game by its Dyer signature (sgf coord. of moves 20, 40, 60, 31, 51, 71)."""
@@ -2217,6 +2242,7 @@ class App(v.Viewer, KEngine):
         self.dbmenu.add_command(label='Copy current SGF files to folder', command=self.copyCurrentGamesToFolder)
 
         self.dbmenu.add_command(label='Signature search', command=self.sigSearch)
+        self.dbmenu.add_command(label='Find duplicates', command=self.find_duplicates_GUI)
 
 
         self.optionsmenu.add_checkbutton(label='Jump to match', underline = 0, variable = self.options.jumpToMatchVar)
@@ -2245,6 +2271,7 @@ class App(v.Viewer, KEngine):
         advOptMenu.add_checkbutton(label='Open games in external viewer', variable = self.options.externalViewer)
         advOptMenu.add_command(label='Alternative SGF viewer', underline=0, command=self.altViewer)
         advOptMenu.add_checkbutton(label='Use upper case labels', variable = self.options.uppercaseLabels)
+        advOptMenu.add_checkbutton(label='Use strict duplicate check', variable = self.options.strictDuplCheck)
         if sys.platform.startswith('win'):
             advOptMenu.add_checkbutton(label='Maximize window', variable = self.options.maximize_window)
 
