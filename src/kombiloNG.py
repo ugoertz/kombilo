@@ -264,13 +264,16 @@ class Node(sgf.Node):
     def __init__(self, *args, **kwargs):
         sgf.Node.__init__(self, *args, **kwargs)
 
-    def exportPattern(self, boardsize=19):
+    def exportPattern(self, boardsize=19, **kwargs):
         '''Return a full board pattern with the position at this node.
+        **kwargs are passed on to :py:meth:`Pattern.__init__`.
         '''
         b = abstractBoard(boardsize=boardsize)
         path = []  # compare pathToNode; redo this here since we also need to find corresponding starting node
         n = self
 
+        sizeX = kwargs.get('sizeX', 19)
+        sizeY = kwargs.get('sizeY', 19)
         while n.previous:
             path.append(n.level)
             n = n.previous
@@ -290,8 +293,10 @@ class Node(sgf.Node):
                 n = n.down
             play(Node(n), b)
 
-        p = ''.join([{'B':'X', 'W':'O', ' ':'.'}[b.getStatus(x, y)] for y in range(boardsize) for x in range(boardsize)])
-        return Pattern(p, ptype=FULLBOARD_PATTERN)
+        p = ''.join([{'B':'X', 'W':'O', ' ':'.'}[b.getStatus(x, y)] for y in range(sizeY) for x in range(sizeX)])
+        if not kwargs:
+            kwargs['ptype'] = FULLBOARD_PATTERN
+        return Pattern(p, **kwargs)
 
 # ------ GAMELIST ---------------------------------------------------------------
 
