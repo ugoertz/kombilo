@@ -104,7 +104,7 @@ sys.path.append('../../src')
 from copy import copy
 
 from configobj import ConfigObj
-from kombiloNG import *
+from kombiloNG import KEngine, lk, Cursor
 
 def _(s):
     return s
@@ -115,22 +115,23 @@ class Messages:
         print s
 
 
-def _get_date(d):
-    return '%d-%d' % (d // 12, d % 12 + 1)
-
 if __name__ == '__main__':
     messages = Messages()
     K = KEngine()
 
-    co = ConfigObj({'options': {'min_number_of_hits': 10, 'max_number_of_branches': 20, 'depth': 10, 'gisearch': '', 'initialposition': '(;)',
+    co = ConfigObj({'options': {'min_number_of_hits': 10, 'max_number_of_branches': 20, 'depth': 10,
+                                'gisearch': '', 'initialposition': '(;)',
                                 'comment_head': '@@monospace', 'reset_game_list': False,
-                                'boardsize': 19, 'sizex': 19, 'sizey': 19, 'anchors': (0, 0, 0, 0), },
-                    'searchoptions': {'fixedColor': 1, 'nextMove': 0, 'searchInVariations': 1, 'moveLimit': 1000, },
+                                'sort_criterion': 'total',
+                                'boardsize': 19, 'sizex': 19, 'sizey': 19, 'anchors': (0, 0, 0, 0),
+                                },
+                    'searchoptions': {'fixedColor': 1, 'nextMove': 0, 'searchInVariations': 1,
+                                      'moveLimit': 1000,
+                                      },
                    })
 
     with open(sys.argv[1]) as configfile:
         co.merge(ConfigObj(infile=configfile))
-    options = co['options']
 
     K.gamelist.populateDBlist(co['databases'])
     K.loadDBs()
@@ -143,101 +144,10 @@ if __name__ == '__main__':
             setattr(searchOptions, attr, so.as_int(attr))
 
     current_game = 0  # game number within the SGF collection
+    cursor = Cursor(co['options']['initialposition'])  # add results to this Cursor
 
-    # create snapshot for initial situation:
-    K.gamelist.reset()
-    DBlist = [db for db in K.gamelist.DBlist if not db['disabled']]
-    if options['gisearch']:
-        K.gameinfoSearch(options['gisearch'])
-    snapshot_ids = [(i, db['data'].snapshot()) for i, db in enumerate(DBlist)]
-    all_snapshot_ids = copy(snapshot_ids)
-    messages.insert(_('%d games before searching for initial pattern.') % K.gamelist.noOfGames())
+    K.sgf_tree(cursor, current_game, co['options'], searchOptions, messages)
 
-    c = Cursor(options['initialposition']) # add results to this Cursor
-
-    # plist is a list of pairs consisting of a node and some information (label,
-    # number of B, W hits of this node) which will eventually be inserted into the
-    # comments of the parent node during the search, new nodes (arising as
-    # continuations) will be added to plist (as long as the criteria such as DEPTH
-    # ... are met)
-    plist = [(c.currentNode(), snapshot_ids)]
-
-    counter = 0
-
-    while plist:
-        counter += 1
-        if counter % 100 == 0:
-            messages.insert(_('Done %d searches so far, %d nodes pending.') % (counter, len(plist)))
-
-        (node, snapshot_ids_parent, ), plist = plist[0], plist[1:]
-
-        # restore snapshots ...
-        for i, sid in snapshot_ids_parent:
-            DBlist[i]['data'].restore(sid)
-
-        pattern = node.exportPattern(sizeX=options.as_int('sizex'), sizeY=options.as_int('sizey'), anchors=tuple(int(x) for x in options['anchors']), boardsize=options.as_int('boardsize'))
-        K.patternSearch(pattern, searchOptions)
-        if options.as_bool('reset_game_list'):
-            snapshot_ids_parent = snapshot_ids
-        else:
-            snapshot_ids_parent = [(i, db['data'].snapshot()) for i, db in enumerate(DBlist)]
-            all_snapshot_ids.extend(snapshot_ids_parent)
-
-        if len(node.pathToNode()) > options.as_int('depth'):
-            continue
-
-        # split continuations up according to B/W
-        continuations = []
-        for cont in K.continuations:
-            cB = lk.Continuation()
-            cB.add(cont)
-            cB.W = 0
-            cW = lk.Continuation()
-            cW.add(cont)
-            cW.B = 0
-            for sep_cont in [cB, cW]:
-                sep_cont.x, sep_cont.y, sep_cont.label = cont.x, cont.y, cont.label
-                continuations.append(sep_cont)
-        continuations.sort(cmp=lambda c1, c2: c2.total() - c1.total())
-
-        ctr = 0
-        for cont in continuations:
-            if ctr > options.as_int('max_number_of_branches'):
-                break
-            if cont.B < max(1, options.as_int('min_number_of_hits')) and cont.W < max(1, options.as_int('min_number_of_hits')):
-                continue
-            ctr += 1
-
-            if not 'C' in node:
-                node['C'] = [options['comment_head'] + '\n' + _('Label') + ' |  #  | ' + _('First played') + ' | ' + _('Last played') + ' | \n']
-
-            comment_text= '%s (%s)  %5d  %s      %s\n' % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest), _get_date(cont.latest))
-            # FIXME column sizes, in particular in case of translations
-            node['C'] = [node['C'][0] + comment_text, ]
-
-            # put label for (cont.x, cont.y) into node
-            pos = chr(cont.x + 97) + chr(cont.y + 97)  # SGF coordinates
-            for item in node['LB']:
-                if item.split(':')[1] == cont.label:  # label already present
-                    break
-            else:
-                node.add_property_value('LB', [pos + ':' + cont.label])
-
-            # append child node to SGF
-            s = ';%s[%s]' % ('B' if cont.B else 'W', pos, )
-            c.game(current_game)
-            path = node.pathToNode()
-            for i in path:
-                c.next(i)
-            c.add(s)
-            plist.append((c.currentNode(),                # store the node
-                            snapshot_ids_parent,          # store snapshots
-                         ))
-
-    outfile = open(options['output'], 'w')
-    outfile.write(c.output())
+    outfile = open(co['options']['output'], 'w')
+    outfile.write(cursor.output())
     outfile.close()
-
-    messages.insert(_('Cleaning up ...'))
-    for i, id in all_snapshot_ids:
-        DBlist[i]['data'].delete_snapshot(id)
