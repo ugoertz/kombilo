@@ -36,6 +36,7 @@ import os
 import sys
 from string import split, find, join, strip, digits
 from collections import defaultdict
+from copy import copy
 import glob
 from array import *
 from configobj import ConfigObj
@@ -635,6 +636,19 @@ class GameList(object):
         return result
 
 
+cont_sort_criteria = {'total': lambda c1, c2: c2.total() - c1.total(),
+                      'earliest': lambda c1, c2: c1.earliest - c2.earliest,
+                      'latest': lambda c1, c2: c2.latest - c1.latest,
+                      'average': lambda c1, c2: c1.average_date() - c2.average_date(),
+                      'became popular': lambda c1, c2: c1.average_date_w1() - c2.average_date_w1(),
+                      'became unpopular': lambda c1, c2: c2.average_date_w2() - c1.average_date_w2(),
+                     }
+
+
+def _get_date(d):
+    return '%d-%d' % (d // 12, d % 12 + 1)
+
+
 class KEngine(object):
     '''
     This is the class which you use to use the Kombilo search functionality.
@@ -744,6 +758,117 @@ class KEngine(object):
         self.set_labels(sort_criterion)
         self.gamelist.update()
 
+    def sgf_tree(self, cursor, current_game, options, searchOptions, messages=None, progBar=None, ):
+        # plist is a list of pairs consisting of a node and some information (label,
+        # number of B, W hits of this node) which will eventually be inserted into the
+        # comments of the parent node during the search, new nodes (arising as
+        # continuations) will be added to plist (as long as the criteria such as DEPTH
+        # ... are met)
+
+        class Messages:
+            def insert(s):
+                pass
+        messages = messages or Messages()
+
+        # create snapshot for initial situation:
+        self.gamelist.reset()
+        DBlist = [db for db in self.gamelist.DBlist if not db['disabled']]
+        if options['gisearch']:
+            self.gameinfoSearch(options['gisearch'])
+        snapshot_ids = [(i, db['data'].snapshot()) for i, db in enumerate(DBlist)]
+        all_snapshot_ids = copy(snapshot_ids)
+        messages.insert(_('%d games before searching for initial pattern.') % self.gamelist.noOfGames())
+
+        plist = [(cursor.currentNode(), snapshot_ids)]
+
+        counter = 0
+
+        while plist:
+            counter += 1
+            if counter % 100 == 0:
+                messages.insert(_('Done %d searches so far, %d nodes pending.') % (counter, len(plist)))
+
+            (node, snapshot_ids_parent, ), plist = plist[0], plist[1:]
+
+            # restore snapshots ...
+            for i, sid in snapshot_ids_parent:
+                DBlist[i]['data'].restore(sid)
+
+            pattern = node.exportPattern(sizeX=options.as_int('sizex'), sizeY=options.as_int('sizey'), anchors=tuple(int(x) for x in options['anchors']), boardsize=options.as_int('boardsize'))
+            self.patternSearch(pattern, searchOptions)
+            if options.as_bool('reset_game_list'):
+                snapshot_ids_parent = snapshot_ids
+            else:
+                snapshot_ids_parent = [(i, db['data'].snapshot()) for i, db in enumerate(DBlist)]
+                all_snapshot_ids.extend(snapshot_ids_parent)
+
+            if len(node.pathToNode()) > options.as_int('depth'):
+                continue
+
+            # split continuations up according to B/W
+            continuations = []
+            for cont in self.continuations:
+                cB = lk.Continuation()
+                cB.add(cont)
+                cB.W = 0
+                cW = lk.Continuation()
+                cW.add(cont)
+                cW.B = 0
+                for sep_cont in [cB, cW]:
+                    sep_cont.x, sep_cont.y, sep_cont.label = cont.x, cont.y, cont.label
+                    continuations.append(sep_cont)
+            continuations.sort(cont_sort_criteria[options['sort_criterion']])
+
+            # assign new labels to reflect new order
+            new_labels = {}
+            label_ctr = 0
+            label_str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+            for cont in continuations:
+                try:
+                    cont.label = new_labels[cont.label]
+                except KeyError:
+                    new_labels[cont.label] = label_str[label_ctr] if label_ctr < len(label_str) else '?'
+                    cont.label = new_labels[cont.label]
+                    label_ctr += 1
+
+            ctr = 0
+            for cont in continuations:
+                if ctr > options.as_int('max_number_of_branches'):
+                    break
+                if cont.B < max(1, options.as_int('min_number_of_hits')) and cont.W < max(1, options.as_int('min_number_of_hits')):
+                    continue
+                ctr += 1
+
+                if not 'C' in node:
+                    node['C'] = [options['comment_head'] + '\n' + _('Label') + ' |  #  | ' + _('First played') + ' | ' + _('Last played') + ' | \n']
+
+                comment_text= '%s (%s)  %5d  %s      %s\n' % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest), _get_date(cont.latest))
+                # FIXME column sizes, in particular in case of translations
+                node['C'] = [node['C'][0] + comment_text, ]
+
+                # put label for (cont.x, cont.y) into node
+                pos = chr(cont.x + 97) + chr(cont.y + 97)  # SGF coordinates
+                for item in node['LB']:
+                    if item.split(':')[1] == cont.label:  # label already present
+                        break
+                else:
+                    node.add_property_value('LB', [pos + ':' + cont.label])
+
+                # append child node to SGF
+                s = ';%s[%s]' % ('B' if cont.B else 'W', pos, )
+                cursor.game(current_game)
+                path = node.pathToNode()
+                for i in path:
+                    cursor.next(i)
+                cursor.add(s)
+                plist.append((cursor.currentNode(),                # store the node
+                                snapshot_ids_parent,          # store snapshots
+                            ))
+
+        messages.insert(_('Cleaning up ...'))
+        for i, id in all_snapshot_ids:
+            DBlist[i]['data'].delete_snapshot(id)
+
     def lookUpContinuations(self, gl):
         self.noMatches += gl.num_hits
         self.noSwitched += gl.num_switched
@@ -767,15 +892,7 @@ class KEngine(object):
 
 
     def set_labels(self, sort_criterion=None):
-        sort_criteria = {'total': lambda c1, c2: c1.total() - c2.total(),
-                         'earliest': lambda c1, c2: c2.earliest - c1.earliest,
-                         'latest': lambda c1, c2: c1.latest - c2.latest,
-                         'average': lambda c1, c2: c2.average_date() - c1.average_date(),
-                         'became popular': lambda c1, c2: c2.average_date_w1() - c1.average_date_w1(),
-                         'became unpopular': lambda c1, c2: c1.average_date_w2() - c2.average_date_w2(),
-                        }
-        self.continuations.sort(cmp=sort_criteria[sort_criterion or 'total'])
-        self.continuations.reverse()
+        self.continuations.sort(cmp=cont_sort_criteria[sort_criterion or 'total'])
         # print self.continuations
         i = 0
         for c in self.continuations:
