@@ -111,7 +111,7 @@ def _(s):
 
 class Messages:
 
-    def insert(self, s):
+    def insert(self, pos, s):
         print s
 
 
@@ -124,6 +124,7 @@ if __name__ == '__main__':
                                 'comment_head': '@@monospace', 'reset_game_list': False,
                                 'sort_criterion': 'total',
                                 'boardsize': 19, 'sizex': 19, 'sizey': 19, 'anchors': (0, 0, 0, 0),
+                                'selection': ((0, 0), (18, 18)),  # FIXME doc, TODO boardsize
                                 },
                     'searchoptions': {'fixedColor': 1, 'nextMove': 0, 'searchInVariations': 1,
                                       'moveLimit': 1000,
@@ -135,7 +136,7 @@ if __name__ == '__main__':
 
     K.gamelist.populateDBlist(co['databases'])
     K.loadDBs()
-    messages.insert(_('%d games in database.') % K.gamelist.noOfGames())
+    messages.insert('end', _('%d games in database.') % K.gamelist.noOfGames())
 
     searchOptions = lk.SearchOptions()
     if 'searchoptions' in co:
@@ -145,6 +146,11 @@ if __name__ == '__main__':
 
     current_game = 0  # game number within the SGF collection
     cursor = Cursor(co['options']['initialposition'])  # add results to this Cursor
+
+    # put game list in specified "initial state"
+    K.gamelist.reset()
+    if options['gisearch']:
+        self.gameinfoSearch(options['gisearch'])
 
     K.sgf_tree(cursor, current_game, co['options'], searchOptions, messages)
 

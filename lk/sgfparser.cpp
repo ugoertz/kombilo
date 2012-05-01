@@ -695,8 +695,7 @@ void Cursor::add(char* st) {
 
     currentN->next = node;
     currentN->numChildren = 1;
-  }
-  else {
+  } else {
     // printf("adding %s at %s\n", node->SGFstring, currentN->SGFstring);
     Node* n = currentN->next;
     while (n->down) {
@@ -727,7 +726,6 @@ void Cursor::add(char* st) {
       n = n->previous;
       if (n->down) n->down->posyD++;
     }
-
   }
 
   currentN = node;

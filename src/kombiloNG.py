@@ -265,39 +265,6 @@ class Node(sgf.Node):
     def __init__(self, *args, **kwargs):
         sgf.Node.__init__(self, *args, **kwargs)
 
-    def exportPattern(self, boardsize=19, **kwargs):
-        '''Return a full board pattern with the position at this node.
-        **kwargs are passed on to :py:meth:`Pattern.__init__`.
-        '''
-        b = abstractBoard(boardsize=boardsize)
-        path = []  # compare pathToNode; redo this here since we also need to find corresponding starting node
-        n = self
-
-        sizeX = kwargs.get('sizeX', 19)
-        sizeY = kwargs.get('sizeY', 19)
-        while n.previous:
-            path.append(n.level)
-            n = n.previous
-
-        path.reverse()
-
-        def play(n, b):
-            for s in ['AB', 'AW', 'B', 'W']:
-                if s in n:
-                    for p in n[s]:
-                        b.play((ord(p[0]) - 97, ord(p[1]) - 97), s[-1])
-
-        play(Node(n), b)
-        for i in path:
-            n = n.next
-            for j in range(i):
-                n = n.down
-            play(Node(n), b)
-
-        p = ''.join([{'B':'X', 'W':'O', ' ':'.'}[b.getStatus(x, y)] for y in range(sizeY) for x in range(sizeX)])
-        if not kwargs:
-            kwargs['ptype'] = FULLBOARD_PATTERN
-        return Pattern(p, **kwargs)
 
 # ------ GAMELIST ---------------------------------------------------------------
 
@@ -515,8 +482,7 @@ class GameList(object):
         self.Bwins, self.Wwins, self.Owins = 0, 0, 0
         self.update()
 
-    def update(self, sortcrit=GL_DATE, sortReverse=False, ):
-        self.gameIndex = []
+    def update_winning_percentages(self):
         self.Bwins, self.Wwins = 0, 0
 
         for i, db in enumerate(self.DBlist):
@@ -524,6 +490,14 @@ class GameList(object):
                 continue
             self.Bwins += db['data'].Bwins
             self.Wwins += db['data'].Wwins
+
+    def update(self, sortcrit=GL_DATE, sortReverse=False, ):
+        self.gameIndex = []
+        self.update_winning_percentages()
+
+        for i, db in enumerate(self.DBlist):
+            if db['disabled']:
+                continue
             self.gameIndex.extend([(db['data'].getCurrent(x)[sortcrit], i, x) for x in xrange(db['data'].size())])
 
         self.gameIndex.sort()
@@ -676,7 +650,7 @@ class KEngine(object):
         self.gamelist = GameList()
         self.currentSearchPattern = None
 
-    def patternSearch(self, CSP, SO=None, CL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789', FL={}, progBar=None, sort_criterion=None):
+    def patternSearch(self, CSP, SO=None, CL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789', FL={}, progBar=None, sort_criterion=None, update_gamelist=True):
         '''Start a pattern search on the current game list.
 
         * CSP must be an instance of :py:class:`Pattern` - it is the pattern
@@ -756,7 +730,8 @@ class KEngine(object):
             self.lookUpContinuations(gl)
 
         self.set_labels(sort_criterion)
-        self.gamelist.update()
+        if update_gamelist:
+            self.gamelist.update()
 
     def sgf_tree(self, cursor, current_game, options, searchOptions, messages=None, progBar=None, ):
         # plist is a list of pairs consisting of a node and some information (label,
@@ -766,27 +741,34 @@ class KEngine(object):
         # ... are met)
 
         class Messages:
-            def insert(s):
+            def insert(self, pos, s):
                 pass
         messages = messages or Messages()
 
+        # compute column widths for table of continuations in output
+        column_widths = [len(s) for s in [_('Label'), '   #  ', _('First played'), _('Last played')]]
+        head_str = '%%%ds |   #    | %%%ds | %%%ds |\n'  % (max(5, len(_('Label'))), max(7, len(_('First played'))), max(7, len(_('Last played'))))
+        head_str = head_str % (_('Label'), _('First played'), _('Last played'))
+        body_str = '%%%ds (%%s) | %%6d | %%%ds | %%%ds |\n'  % (max(5, len(_('Label'))) - 4, max(7, len(_('First played'))), max(7, len(_('Last played'))))
+
         # create snapshot for initial situation:
-        self.gamelist.reset()
         DBlist = [db for db in self.gamelist.DBlist if not db['disabled']]
-        if options['gisearch']:
-            self.gameinfoSearch(options['gisearch'])
         snapshot_ids = [(i, db['data'].snapshot()) for i, db in enumerate(DBlist)]
         all_snapshot_ids = copy(snapshot_ids)
-        messages.insert(_('%d games before searching for initial pattern.') % self.gamelist.noOfGames())
+        messages.insert('end', _('Start building SGF tree.\n'))
+        messages.insert('end', _('%d games before searching for initial pattern.\n') % self.gamelist.noOfGames())
 
+        path_to_initial_node = cursor.currentNode().pathToNode()
         plist = [(cursor.currentNode(), snapshot_ids)]
 
         counter = 0
 
         while plist:
             counter += 1
-            if counter % 100 == 0:
-                messages.insert(_('Done %d searches so far, %d nodes pending.') % (counter, len(plist)))
+            if counter % 50 == 0:
+                messages.insert('end', _('Done %d searches so far, %d nodes pending.\n') % (counter, len(plist)))
+                if progBar:
+                    progBar.update()
 
             (node, snapshot_ids_parent, ), plist = plist[0], plist[1:]
 
@@ -794,17 +776,30 @@ class KEngine(object):
             for i, sid in snapshot_ids_parent:
                 DBlist[i]['data'].restore(sid)
 
-            pattern = node.exportPattern(sizeX=options.as_int('sizex'), sizeY=options.as_int('sizey'), anchors=tuple(int(x) for x in options['anchors']), boardsize=options.as_int('boardsize'))
-            self.patternSearch(pattern, searchOptions)
+            pattern = self.get_pattern_from_node(node, sizeX=options.as_int('sizex'), sizeY=options.as_int('sizey'), anchors=tuple(int(x) for x in options['anchors']), boardsize=options.as_int('boardsize'), selection=options['selection'])
+            # FIXME (in get_pattern_from_node): wildcards?! move sequences?!
+            self.patternSearch(pattern, searchOptions, update_gamelist=False)
+            self.gamelist.update_winning_percentages()
+            noOfG = self.gamelist.noOfGames()
+            if noOfG:
+                Bperc = self.gamelist.Bwins * 100.0 / noOfG
+                Wperc = self.gamelist.Wwins * 100.0 / noOfG
+            else:
+                Bperc, Wperc = 0, 0
+            comment_text = options['comment_head'] + '\n' + _('%d games (B: %1.1f%%, W: %1.1f%%)') % (noOfG, Bperc, Wperc)
+            if not 'C' in node:
+                node['C'] = [comment_text]
+            else:
+                node['C'] = [node['C'][0] + '\n\n' + comment_text, ]
+
+            if len(node.pathToNode()) - len(path_to_initial_node) > options.as_int('depth'):
+                continue
+
             if options.as_bool('reset_game_list'):
                 snapshot_ids_parent = snapshot_ids
             else:
                 snapshot_ids_parent = [(i, db['data'].snapshot()) for i, db in enumerate(DBlist)]
                 all_snapshot_ids.extend(snapshot_ids_parent)
-
-            if len(node.pathToNode()) > options.as_int('depth'):
-                continue
-
             # split continuations up according to B/W
             continuations = []
             for cont in self.continuations:
@@ -832,6 +827,7 @@ class KEngine(object):
                     label_ctr += 1
 
             ctr = 0
+            comment_text = ''
             for cont in continuations:
                 if ctr > options.as_int('max_number_of_branches'):
                     break
@@ -839,15 +835,11 @@ class KEngine(object):
                     continue
                 ctr += 1
 
-                if not 'C' in node:
-                    node['C'] = [options['comment_head'] + '\n' + _('Label') + ' |  #  | ' + _('First played') + ' | ' + _('Last played') + ' | \n']
-
-                comment_text= '%s (%s)  %5d  %s      %s\n' % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest), _get_date(cont.latest))
+                comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest), _get_date(cont.latest))
                 # FIXME column sizes, in particular in case of translations
-                node['C'] = [node['C'][0] + comment_text, ]
 
                 # put label for (cont.x, cont.y) into node
-                pos = chr(cont.x + 97) + chr(cont.y + 97)  # SGF coordinates
+                pos = chr(cont.x + options['selection'][0][0] + 97) + chr(cont.y + options['selection'][0][1] + 97)  # SGF coordinates
                 for item in node['LB']:
                     if item.split(':')[1] == cont.label:  # label already present
                         break
@@ -856,18 +848,112 @@ class KEngine(object):
 
                 # append child node to SGF
                 s = ';%s[%s]' % ('B' if cont.B else 'W', pos, )
-                cursor.game(current_game)
+                cursor.game(current_game, update=0)
                 path = node.pathToNode()
                 for i in path:
-                    cursor.next(i)
-                cursor.add(s)
-                plist.append((cursor.currentNode(),                # store the node
-                                snapshot_ids_parent,          # store snapshots
+                    cursor.next(i, markCurrent=False)
+                cursor.add(s, update=False)
+                plist.append((cursor.currentNode(),         # store the node
+                            snapshot_ids_parent,          # store snapshots
                             ))
 
-        messages.insert(_('Cleaning up ...'))
+            if comment_text:
+                comment_text = head_str + comment_text
+            node['C'] = [node['C'][0] + '\n\n' + comment_text, ]
+
+        messages.insert('end', _('Total: %d pattern searches\n') % counter)
+        messages.insert('end', _('Cleaning up ...\n'))
+        for i, sid in snapshot_ids:
+            DBlist[i]['data'].restore(sid)
+        self.gamelist.update()
         for i, id in all_snapshot_ids:
             DBlist[i]['data'].delete_snapshot(id)
+
+        return cursor
+
+    def get_pattern_from_node(self, node, boardsize=19, **kwargs):
+        '''Return a full board pattern with the position at ``node``.
+        **kwargs are passed on to :py:meth:`Pattern.__init__`.
+        '''
+        b = abstractBoard(boardsize=boardsize)
+        path = []  # compare pathToNode; redo this here since we also need to find corresponding starting node
+
+        sizeX = kwargs.get('sizeX', 19)
+        sizeY = kwargs.get('sizeY', 19)
+        while node.previous:
+            path.append(node.level)
+            node = node.previous
+
+        path.reverse()
+
+        def play(n, b):
+            for s in ['AB', 'AW', 'B', 'W']:
+                if s in n:
+                    for p in n[s]:
+                        #print('play %s %s%s' % (s, p[0], p[1]))
+                        b.play((ord(p[0]) - 97, ord(p[1]) - 97), s[-1])
+
+        play(Node(node), b)
+        for i in path:
+            node = node.next
+            for j in range(i):
+                node = node.down
+            play(Node(node), b)
+
+        p = self.pattern_string_from_board(b, kwargs['selection'])[1]
+        if not kwargs:
+            kwargs['ptype'] = FULLBOARD_PATTERN
+        #print p
+        #print kwargs
+        return Pattern(p, **kwargs)
+
+    def pattern_string_from_board(self, board, sel, cursor=None):
+        try:
+            board.wildcards
+            board_has_wildcards = True
+        except AttributeError:
+            board_has_wildcards = False
+
+        dp = ''
+        d = ''
+        contdict = []
+
+        for i in range(sel[0][1], sel[1][1] + 1):
+            for j in range(sel[0][0], sel[1][0] + 1):
+                if board_has_wildcards and (j, i) in board.wildcards:
+                    dp += board.wildcards[(j, i)][1]
+                    d += board.wildcards[(j, i)][1]
+                elif board.getStatus(j, i) == ' ':
+                    dp += '.' if (not i in [3, 9, 15] or not j in [3, 9, 15]) else ','  # TODO board size
+                    d += '.'
+                else:
+                    inContdict = False
+                    if cursor and 'LB' in cursor.currentNode():
+                        # check whether position (j,i) is labelled by a number
+                        # (in which case we will not in the initial pattern, but in the contlist)
+
+                        pos = chr(j + 97) + chr(i + 97)
+                        labels = cursor.currentNode()['LB']
+                        for l in labels:
+                            p, mark = l.split(':')
+                            if pos == p:
+                                try:  # will fail if int(mark) does not work
+                                    contdict.append((int(mark), '%s[%s]' % (board.getStatus(j, i),  pos, )))
+                                    dp += mark
+                                    d += '.'
+                                    inContdict = True
+                                    break
+                                except ValueError:
+                                    pass
+                    if not inContdict:
+                        dp += {'B': 'X', 'W': 'O'}[board.getStatus(j, i)]
+                        d += {'B': 'X', 'W': 'O'}[board.getStatus(j, i)]
+
+        contdict.sort()
+        contlist = ';' + ';'.join([x[1] for x in contdict]) if contdict else None
+        # print 'contlist', contlist
+        #print d
+        return dp, d, contlist
 
     def lookUpContinuations(self, gl):
         self.noMatches += gl.num_hits

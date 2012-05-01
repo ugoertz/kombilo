@@ -43,21 +43,19 @@ from ScrolledText import ScrolledText
 import tkFileDialog
 from tkCommonDialog import Dialog
 from tooltip.tooltip import ToolTip
-
-from kombiloNG import *
-from custommenus import CustomMenus
-
 from Pmw import ScrolledFrame
 import Pmw
 
 from vsl.vl import VScrolledList
-
-
+from sgf import Node, Cursor
+import libkombilo as lk
 from board import *
 import v
+from kombiloNG import *
+from custommenus import CustomMenus
 
-import libkombilo as lk
-from sgf import Node, Cursor
+
+
 
 
 KOMBILO_RELEASE = '0.8'
@@ -741,16 +739,15 @@ class PrevSearchesStack:
             self.prevSF.reposition()
 
     def deleteFile(self, cursor):
-
         def f(node, del_fct):
-            if node.d['kw']['cursorSn'][0] == cursor:
+            if 'kw' in node.d and node.d['kw']['cursorSn'][0] == cursor:
                 del_fct(node, False)
         self.data.foreach(f, self.delete)
         self.prevSF.reposition()
 
     def deleteGame(self, cursor, game):
         def f(node, del_fct):
-            if node.d['kw']['cursorSn'][0] == cursor:
+            if 'kw' in node.d and node.d['kw']['cursorSn'][0] == cursor:
                 if node.d['kw']['cursorSn'][1] == game:
                     del_fct(node, False)
                 elif da[0]['cursorSn'][1] > game:
@@ -765,7 +762,7 @@ class PrevSearchesStack:
         if index1 < index2:
 
             def f(node):
-                if node.d['kw']['cursorSn'][0] == cursor:
+                if 'kw' in node.d and node.d['kw']['cursorSn'][0] == cursor:
                     if node.d['kw']['cursorSn'][1] == index1:
                         node.d['kw']['cursorSn'][1] = index2
                     elif index1 < da[0]['cursorSn'][1] <= index2:
@@ -773,7 +770,7 @@ class PrevSearchesStack:
         elif index1 > index2:
 
             def f(node):
-                if node.d['kw']['cursorSn'][0] == cursor:
+                if 'kw' in node.d and node.d['kw']['cursorSn'][0] == cursor:
                     if node.d['kw']['cursorSn'][1] == index1:
                         node.d['kw']['cursorSn'][1] = index2
                     elif index2 <= node.d['kw']['cursorSn'][1] < index1:
@@ -783,7 +780,7 @@ class PrevSearchesStack:
     def deleteNode(self, cursor, game, pathToNode):
 
         def f(node, del_fct):
-            if node.d['kw']['cursorSn'][0] == cursor and node.d['kw']['cursorSn'][1] == game:
+            if 'kw' in node.d and node.d['kw']['cursorSn'][0] == cursor and node.d['kw']['cursorSn'][1] == game:
                 j = 0
                 p = node.d['kw']['cursorSn'][2]
 
@@ -845,7 +842,7 @@ class PrevSearchesStack:
             db['data'].delete_all_snapshots()
 
         def f(node, del_fct):
-            del_fct(node.d['pos'], False)
+            del_fct(node, False)
         self.data.foreach(f, self.delete)
         self.reposition()
         self.active = False
@@ -866,6 +863,7 @@ class Message(ScrolledText):
         self.config(state=NORMAL)
         ScrolledText.insert(self, pos, text)
         self.see(END)
+        self.update_idletasks()
         self.config(state=DISABLED)
 
     def delete(self, pos1, pos2):
@@ -2345,6 +2343,7 @@ class App(v.Viewer, KEngine):
         self.dbmenu.add_command(label=_('Edit DB list'), underline=0, command=self.editDBlist)
         self.dbmenu.add_command(label=_('Export search results'), command=self.exportText)
         self.dbmenu.add_command(label=_('Export current position'), command=self.exportCurrentPos)
+        self.dbmenu.add_command(label=_('SGF tree'), command=self.do_sgf_tree)
         self.dbmenu.add_command(label=_('Export tags to file'), command=self.exportTags)
         self.dbmenu.add_command(label=_('Import tags from file'), command=self.importTags)
         self.dbmenu.add_command(label=_('Copy current SGF files to folder'), command=self.copyCurrentGamesToFolder)
@@ -2400,24 +2399,8 @@ class App(v.Viewer, KEngine):
                             ]:
             ToolTip(widget, text)
 
-    def search(self):
-        '''Do a pattern search in the current game list, for the pattern currently on the board.'''
-
-        # print 'enter pattern search'
-        if not self.gamelist.noOfGames():
-            self.reset()
-        self.gamelist.clearGameInfo()
-        currentTime = time.time()
-        self.configButtons(DISABLED)
-        self.progBar.start(50)
-
-        boardData = self.board.snapshot()
-        self.board.delLabels()
-
-        # --- get pattern from current board position
-        dp = ''
-        d = ''
-
+    def get_pattern_from_board(self):
+        #print 'get_pattern_from_board'
         if self.board.selection[0][0] > self.board.selection[1][0] or self.board.selection[0][1] > self.board.selection[1][1]:
             self.board.selection = ((0, 0), (self.board.boardsize - 1, self.board.boardsize - 1))
 
@@ -2425,41 +2408,7 @@ class App(v.Viewer, KEngine):
                                          # be changed by the user although the search is not yet finished
         # print 'selection', self.sel
 
-        contdict = []
-        for i in range(self.sel[0][1], self.sel[1][1] + 1):
-            for j in range(self.sel[0][0], self.sel[1][0] + 1):
-                if (j, i) in self.board.wildcards:
-                    dp += self.board.wildcards[(j, i)][1]
-                    d += self.board.wildcards[(j, i)][1]
-                elif self.board.getStatus(j, i) == ' ':
-                    dp += '.' if (not i in [3, 9, 15] or not j in [3, 9, 15]) else ','  # TODO board size
-                    d += '.'
-                else:
-                    inContdict = False
-                    if self.cursor and 'LB' in self.cursor.currentNode():
-                        # check whether position (j,i) is labelled by a number
-                        # (in which case we will not in the initial pattern, but in the contlist)
-
-                        pos = chr(j + 97) + chr(i + 97)
-                        labels = self.cursor.currentNode()['LB']
-                        for l in labels:
-                            p, mark = l.split(':')
-                            if pos == p:
-                                try:  # will fail if int(mark) does not work
-                                    contdict.append((int(mark), '%s[%s]' % (self.board.getStatus(j, i),  pos, )))
-                                    dp += mark
-                                    d += '.'
-                                    inContdict = True
-                                    break
-                                except ValueError:
-                                    pass
-                    if not inContdict:
-                        dp += {'B': 'X', 'W': 'O'}[self.board.getStatus(j, i)]
-                        d += {'B': 'X', 'W': 'O'}[self.board.getStatus(j, i)]
-
-        contdict.sort()
-        contlist = ';' + ';'.join([x[1] for x in contdict]) if contdict else None
-        # print 'contlist', contlist
+        dp, d, contlist = self.pattern_string_from_board(self.board, self.sel, self.cursor)
 
         if self.sel == ((0, 0), (self.board.boardsize - 1, self.board.boardsize - 1)):
             patternType = lk.FULLBOARD_PATTERN
@@ -2508,20 +2457,40 @@ class App(v.Viewer, KEngine):
             showwarning(_('Error'), _('SGF Error'))
         fixedLabs = ''.join(fixedLabs)
 
-        CSP = Pattern(d, anchors=(self.sel[0][0], self.sel[0][0], self.sel[0][1], self.sel[0][1]),
-                      boardsize=self.board.boardsize, sizeX=sizeX, sizeY=sizeY, contLabels=fixedLabs, contlist=contlist, topleft=self.sel[0]) if self.fixedAnchorVar.get() \
-         else Pattern(d, ptype=patternType, boardsize=self.board.boardsize, sizeX=sizeX, sizeY=sizeY, contLabels=fixedLabs, contlist=contlist, topleft=self.sel[0])
-        self.searchOptions = lk.SearchOptions(self.fixedColorVar.get(), self.nextMoveVar.get(), self.moveLimit.get() if self.moveLimit.get() < 250 else 1000)
-        self.searchOptions.searchInVariations = self.searchInVariations.get()
-        self.searchOptions.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
+        return Pattern(d, anchors=(self.sel[0][0], self.sel[0][0], self.sel[0][1], self.sel[0][1]),
+                       boardsize=self.board.boardsize, sizeX=sizeX, sizeY=sizeY, contLabels=fixedLabs, contlist=contlist, topleft=self.sel[0]) if self.fixedAnchorVar.get()\
+          else Pattern(d, ptype=patternType, boardsize=self.board.boardsize, sizeX=sizeX, sizeY=sizeY, contLabels=fixedLabs, contlist=contlist, topleft=self.sel[0])
+
+    def get_search_options(self):
+        so = lk.SearchOptions(self.fixedColorVar.get(), self.nextMoveVar.get(), self.moveLimit.get() if self.moveLimit.get() < 250 else 1000)
+        so.searchInVariations = self.searchInVariations.get()
+        so.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
         if self.algo_hash_full_search.get():
-            self.searchOptions.algos |= lk.ALGO_HASH_FULL
+            so.algos |= lk.ALGO_HASH_FULL
         if self.algo_hash_corner_search.get():
-            self.searchOptions.algos |= lk.ALGO_HASH_CORNER
+            so.algos |= lk.ALGO_HASH_CORNER
+        return so
+
+    def search(self):
+        '''Do a pattern search in the current game list, for the pattern currently on the board.'''
+
+        # print 'enter pattern search'
+        if not self.gamelist.noOfGames():
+            self.reset()
+        self.gamelist.clearGameInfo()
+        currentTime = time.time()
+        self.configButtons(DISABLED)
+        self.progBar.start(50)
+
+        boardData = self.board.snapshot()
+        self.board.delLabels()
+
+        CSP = self.get_pattern_from_board()
+        self.searchOptions = self.get_search_options()
 
         self.patternSearch(CSP, self.searchOptions, self.contLabels, self.fixedLabels, self.progBar,
-                           {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'),
-                            'average': _('average'), }[self.options.continuations_sort_crit.get()])  # translate back to the English values used in kombiloNG
+                           {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'), }[self.options.continuations_sort_crit.get()])
+                           # translate back to the English values used in kombiloNG
 
         if self.showContinuation.get():
             self.showCont()
@@ -2544,6 +2513,53 @@ class App(v.Viewer, KEngine):
                                 )
         self.redo_date_profile = True
         self.notebookTabChanged()
+        self.configButtons(NORMAL)
+
+    def do_sgf_tree(self):
+        currentTime = time.time()
+        self.configButtons(DISABLED)
+        self.progBar.start(50)
+
+        CSP = self.get_pattern_from_board()
+        searchOptions = self.get_search_options()
+
+        # FIXME get options from user via some dialog
+        options = ConfigObj({'min_number_of_hits': 20, 'max_number_of_branches': 20, 'depth': 5,
+                             'comment_head': '@@monospace', 'reset_game_list': False,
+                             'sort_criterion': self.options.continuations_sort_crit.get(),
+                             'boardsize': CSP.boardsize, 'sizex': CSP.sizeX, 'sizey': CSP.sizeY,
+                             'anchors': (CSP.left, CSP.right, CSP.top, CSP.bottom),
+                             'selection': self.sel,
+                             })
+
+        # FIXME setup cursor/currentgame (new/reuse)
+        #cursor = Cursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])') # FIXME AB/AW!!!
+        #current_game = 0
+        if self.cursor.noChildren():
+            showwarning(_('Error'), _('The node where the SGF tree starts must have no children.'))
+        else:
+            cursor = self.cursor
+            current_game = self.cursor.currentGame
+            self.leaveNode()
+            self.currentFileChanged()
+            path_to_initial_node = self.cursor.currentNode().pathToNode()
+
+            self.sgf_tree(cursor, current_game, options, searchOptions,
+                        messages=self.logger, progBar=self.progBar, )
+
+            # self.newFile(cursor)
+            self.cursor.game(self.cursor.currentGame)
+            self.displayNode(self.cursor.currentNode())  # make sure the Comment of this node is not
+                                                         # killed by the following self.start()
+
+            # go back to initial node
+            self.start()
+            for i in path_to_initial_node:
+                self.next(i)
+
+            self.logger.insert(END, _('Finished computing sgf tree') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
+
+        self.progBar.stop()
         self.configButtons(NORMAL)
 
     # ------------  TAGGING ----------------------------------------------
