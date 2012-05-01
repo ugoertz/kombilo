@@ -41,7 +41,6 @@ import tkFileDialog
 from tooltip.tooltip import ToolTip
 import Pmw
 
-
 from string import split, replace, join, strip
 from math import sqrt
 from random import randint
@@ -927,17 +926,18 @@ class EnhancedCursor(Cursor):
             self.seeCurrent()
         return res
 
-    def add(self, st):
+    def add(self, st, update=True):
         w = self.width
         Cursor.add(self, st)
 
-        if not self.currentN.up and not self.width > w:
-            self.SGFtreeCanv.mark(self.currentN, self.posx, self.posy)
-            self.SGFtreeCanv.link(self.posx, self.posy, 0)
-            self.SGFtreeCanv.canvas.lower('lines')
-            self.seeCurrent()
-        else:
-            self.updateTree()
+        if update:
+            if not self.currentN.up and not self.width > w:
+                self.SGFtreeCanv.mark(self.currentN, self.posx, self.posy)
+                self.SGFtreeCanv.link(self.posx, self.posy, 0)
+                self.SGFtreeCanv.canvas.lower('lines')
+                self.seeCurrent()
+            else:
+                self.updateTree()
 
     def game(self, n=0, update=1):
         Cursor.game(self, n)
@@ -1592,13 +1592,14 @@ class Viewer:
         self.comments.delete('1.0', END)
         if 'C' in c:
             comment_text = self.cursor.transcode('C', c).splitlines()
-            if comment_text[0] == '@@monospace':
-                self.dataWindow.comments.configure(text_font=('Courier', self.options.commentfontSize.get()))
-            else:
-                self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(),
-                                                              self.options.commentfontStyle.get()))
+            if comment_text:
+                if comment_text[0] == '@@monospace':
+                    self.dataWindow.comments.configure(text_font=('Courier', self.options.commentfontSize.get()))
+                else:
+                    self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(),
+                                                                  self.options.commentfontStyle.get()))
 
-            self.comments.insert('1.0', '\n'.join(comment_text))
+                self.comments.insert('1.0', '\n'.join(comment_text))
 
         for type in ['CR', 'MA', 'SQ', 'TR']:
             if type in c and c[type][0]:
@@ -1819,7 +1820,7 @@ class Viewer:
         self.cursor.currentN = self.cursor.root
         self.cursor.add(';GM[1]FF[4]SZ[19]AP[Kombilo]')
         self.cursor.currentN.previous = None
-        self.dataWindow.gamelist.insert(END, '[%d]' % self.cursor.root.numChildren - 1)
+        self.dataWindow.gamelist.insert(END, '[%d]' % (self.cursor.root.numChildren - 1))
 
         if self.dataWindow.gamelist.list.curselection():
             index = int(self.dataWindow.gamelist.list.curselection()[0])
@@ -1921,8 +1922,9 @@ class Viewer:
             self.dataWindow.filelist.insert(index, '* ' + s)
             self.dataWindow.filelist.list.select_set(index)
 
-    def newFile(self):
-        c = EnhancedCursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])', self.comments, self.dataWindow.SGFtreeC, self)
+    def newFile(self, cursor=None):
+        sgf = cursor.output() if cursor else '(;GM[1]FF[4]SZ[19]AP[Kombilo])' # TODO boardsize
+        c = EnhancedCursor(sgf, self.comments, self.dataWindow.SGFtreeC, self)
 
         if self.dataWindow.filelist.list.curselection():
             index = int(self.dataWindow.filelist.list.curselection()[0])
