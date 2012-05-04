@@ -97,7 +97,14 @@ class Cursor(lk.Cursor):
         currently points to.'''
         return Node(self.currentN)
 
-    def next(self, n=0):
+    def game(self, n, update=None):
+        # Add dummy update argument for call from kombiloNG, sgf_tree
+        lk.Cursor.game(self, n)
+
+    def add(self, st, update=None):
+        lk.Cursor.add(self, st)
+
+    def next(self, n=0, markCurrent=None):
         '''Go to n-th child of current node. Default for n is 0, so if there
         are no variations, you can traverse the game by repeatedly calling
         ``next()``.

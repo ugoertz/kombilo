@@ -792,7 +792,7 @@ class KEngine(object):
             else:
                 node['C'] = [node['C'][0] + '\n\n' + comment_text, ]
 
-            if len(node.pathToNode()) - len(path_to_initial_node) > options.as_int('depth'):
+            if len(node.pathToNode()) - len(path_to_initial_node) >= options.as_int('depth'):
                 continue
 
             if options.as_bool('reset_game_list'):
@@ -836,7 +836,6 @@ class KEngine(object):
                 ctr += 1
 
                 comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest), _get_date(cont.latest))
-                # FIXME column sizes, in particular in case of translations
 
                 # put label for (cont.x, cont.y) into node
                 pos = chr(cont.x + options['selection'][0][0] + 97) + chr(cont.y + options['selection'][0][1] + 97)  # SGF coordinates
