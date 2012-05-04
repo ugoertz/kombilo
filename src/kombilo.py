@@ -2516,38 +2516,110 @@ class App(v.Viewer, KEngine):
         self.configButtons(NORMAL)
 
     def do_sgf_tree(self):
+        options_window = Toplevel()
+        options_window.transient(self.master)
+        options_window.title(_('SGF tree options'))
+        row_ctr = 0
+
+        class Container:
+            pass
+        variables = Container()
+
+        entry_list = [('min_number_of_hits', _('Minimum number of hits'), '20'),
+                      ('max_number_of_branches', _('Maximum number of branches'), '10'),
+                      ('depth', _('Depth'), '10'),
+                      ('comment_head', _('Comment head'), '@@monospace'),
+                      ]
+
+        for s, t, v in entry_list:
+            s_var = StringVar()
+            s_var.set(v)
+            setattr(variables, s, s_var)
+            s_label = Label(options_window, anchor='e', text=t)
+            s_label.grid(row=row_ctr, column=0)
+            setattr(variables, s + '_l', s_label)
+            s_entry = Entry(options_window, textvariable=s_var, )
+            s_entry.grid(row=row_ctr, column=1)
+            setattr(variables, s + '_e', s_entry)
+            row_ctr += 1
+
+        sort_options_l = Label(options_window, anchor='e', text=_('Sort continuations by'))
+        sort_option_cb = Combobox(options_window, justify='left', textvariable=self.options.continuations_sort_crit,
+                                  values=(_('total'), _('earliest'), _('latest'), _('average'), ),
+                                  state='readonly')
+        sort_option_cb.grid(row=row_ctr, column=1)
+        row_ctr += 1
+
+        new_cursor_var = IntVar()
+        new_cursor_var.set(0)
+        new_cursor_button = Checkbutton(options_window, text=_('Put results into new SGF file'), highlightthickness=0, variable=new_cursor_var, pady=5)
+        new_cursor_button.grid(row=row_ctr, column=0)
+        row_ctr += 1
+
+        reset_game_list_var = IntVar()
+        reset_game_list_var.set(0)
+        reset_game_list_button = Checkbutton(options_window, text=_('Reset game list'), highlightthickness=0, variable=reset_game_list_var, pady=5)
+        reset_game_list_button.grid(row=row_ctr, column=0)
+        row_ctr += 1
+
+        cancel = []
+
+        def ok_fct():
+            options_window.destroy()
+
+        def cancel_fct():
+            cancel.append(1)
+            options_window.destroy()
+
+        ok_button = Button(options_window, text=_('OK'), command=ok_fct)
+        ok_button.grid(row=row_ctr, column=0)
+        cancel_button = Button(options_window, text=_('Cancel'), command=cancel_fct)
+        cancel_button.grid(row=row_ctr, column=1)
+        row_ctr += 1
+
+        options_window.update_idletasks()
+        options_window.focus()
+        options_window.grab_set()
+        options_window.wait_window()
+
+        if cancel:
+            return
+
+        self.progBar.start(50)
         currentTime = time.time()
         self.configButtons(DISABLED)
-        self.progBar.start(50)
 
         CSP = self.get_pattern_from_board()
         searchOptions = self.get_search_options()
 
-        # FIXME get options from user via some dialog
-        options = ConfigObj({'min_number_of_hits': 20, 'max_number_of_branches': 20, 'depth': 5,
-                             'comment_head': '@@monospace', 'reset_game_list': False,
-                             'sort_criterion': self.options.continuations_sort_crit.get(),
-                             'boardsize': CSP.boardsize, 'sizex': CSP.sizeX, 'sizey': CSP.sizeY,
+        options_dict = {s: getattr(variables, s).get() for s, t, v in entry_list}
+        options_dict.update({'reset_game_list': reset_game_list_var.get(),
+                             'sort_criterion': {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'), }[self.options.continuations_sort_crit.get()],
+                             'boardsize': CSP.boardsize,
+                             'sizex': CSP.sizeX, 'sizey': CSP.sizeY,
                              'anchors': (CSP.left, CSP.right, CSP.top, CSP.bottom),
                              'selection': self.sel,
                              })
+        options = ConfigObj(options_dict)
 
-        # FIXME setup cursor/currentgame (new/reuse)
-        #cursor = Cursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])') # FIXME AB/AW!!!
-        #current_game = 0
-        if self.cursor.noChildren():
-            showwarning(_('Error'), _('The node where the SGF tree starts must have no children.'))
+        if new_cursor_var.get():
+            cursor = Cursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])') # FIXME AB/AW!!!
+            current_game = 0
         else:
+            if self.cursor.noChildren():
+                showwarning(_('Error'), _('The node where the SGF tree starts must have no children.'))
+                return
             cursor = self.cursor
             current_game = self.cursor.currentGame
             self.leaveNode()
             self.currentFileChanged()
             path_to_initial_node = self.cursor.currentNode().pathToNode()
 
-            self.sgf_tree(cursor, current_game, options, searchOptions,
-                        messages=self.logger, progBar=self.progBar, )
+        self.sgf_tree(cursor, current_game, options, searchOptions, messages=self.logger, progBar=self.progBar, )
 
-            # self.newFile(cursor)
+        if new_cursor_var.get():
+            self.newFile(cursor)
+        else:
             self.cursor.game(self.cursor.currentGame)
             self.displayNode(self.cursor.currentNode())  # make sure the Comment of this node is not
                                                          # killed by the following self.start()
@@ -2557,8 +2629,7 @@ class App(v.Viewer, KEngine):
             for i in path_to_initial_node:
                 self.next(i)
 
-            self.logger.insert(END, _('Finished computing sgf tree') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
-
+        self.logger.insert(END, _('Finished computing sgf tree') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
         self.progBar.stop()
         self.configButtons(NORMAL)
 
