@@ -177,6 +177,7 @@ list, or by pressing ``Control-r``.  In the file menu, you can also choose
 to do a "complete reset" - that will reset Kombilo to the state right after
 it started up.
 
+See also :ref:`SGF tree search <sgf-tree>`.
 
 Pattern search options
 ======================

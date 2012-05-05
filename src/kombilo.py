@@ -2544,6 +2544,7 @@ class App(v.Viewer, KEngine):
             row_ctr += 1
 
         sort_options_l = Label(options_window, anchor='e', text=_('Sort continuations by'))
+        sort_options_l.grid(row=row_ctr, column=0)
         sort_option_cb = Combobox(options_window, justify='left', textvariable=self.options.continuations_sort_crit,
                                   values=(_('total'), _('earliest'), _('latest'), _('average'), ),
                                   state='readonly')
@@ -2603,7 +2604,22 @@ class App(v.Viewer, KEngine):
         options = ConfigObj(options_dict)
 
         if new_cursor_var.get():
-            cursor = Cursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])') # FIXME AB/AW!!!
+            B_list = []
+            W_list = []
+            sgf_str = '(;GM[1]FF[4]SZ[19]AP[Kombilo]'
+            for i in range(CSP.boardsize):
+                for j in range(CSP.boardsize):
+                    if self.board.getStatus(i,j) == 'B':
+                        B_list.append(chr(i + ord('a')) + chr(j + ord('a')))
+                    elif self.board.getStatus(i,j) == 'W':
+                        W_list.append(chr(i + ord('a')) + chr(j + ord('a')))
+            if B_list:
+                sgf_str += 'AB' + ''.join([('[%s]' % s) for s in B_list])
+            if W_list:
+                sgf_str += 'AW' + ''.join([('[%s]' % s) for s in W_list])
+            sgf_str += ')'
+            print sgf_str
+            cursor = Cursor(sgf_str)
             current_game = 0
         else:
             if self.cursor.noChildren():
@@ -2612,9 +2628,9 @@ class App(v.Viewer, KEngine):
             cursor = self.cursor
             current_game = self.cursor.currentGame
             self.leaveNode()
-            self.currentFileChanged()
             path_to_initial_node = self.cursor.currentNode().pathToNode()
 
+        self.currentFileChanged()
         self.sgf_tree(cursor, current_game, options, searchOptions, messages=self.logger, progBar=self.progBar, )
 
         if new_cursor_var.get():
