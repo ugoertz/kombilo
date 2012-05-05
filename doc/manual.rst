@@ -570,6 +570,66 @@ Further notes
   continuations is not consistent between the different algorithms.
 
 
+.. _sgf-tree:
+
+SGF tree
+--------
+
+Kombilo can compute a whole tree of pattern search results by recursively
+searching for all continuations arising in a pattern, then for the continuations
+in the new patterns, and so on. In this way, you can easily compile joseki or
+fuseki dictionaries. This function is available starting from an arbitrary
+search pattern.
+
+The end result will be a (possibly quite large) SGF file. In each node, some
+information about the pattern represented in that node and about the
+continuations will be printed.
+
+The searches will use the game list which is active when you start the SGF tree
+search. So if you (after a suitable game info search) have just all the games by
+a specific player in your game list, then you can create a fuseki/joseki
+dictionary for this player.
+
+To use the SGF tree search, set up a search pattern, and then select *SGF tree*
+from the *Database* menu. You can configure the SGF tree search by specifying
+the following options:
+
+Minimum number of hits
+  The search is continued only for continuations with at least as many hits as
+  specified by this number. Black/white continuations are considered separately.
+
+Maximum number of branches
+  If there are more continuations, only as many as specified here are
+  considered. Continuations are ordered with respect to the given sort criterion
+  (see below).
+
+Depth
+  The depth of the search, i.e. the highest distance (number of moves) between
+  the starting position and the search position.
+
+Comment head
+  A line that will be prepended to every comment. The default, ``@@monospace``
+  will make Kombilo print the comment in a fixed-width font, which is better
+  suited for tabular data then the default font.
+
+Sort continuations by
+  The sort criterion for continuations, compare :ref:`Sorting continuations
+  <sort-continuations>`.
+
+Put results into new SGF file
+  If checked, then a new SGF file is created for the results. Otherwise, the
+  results are appended to the current SGF file. In the latter case, the node
+  with the search pattern must not have children.
+
+Reset game list
+  If checked, the game list is reset to its state when the SGF tree search was
+  started before each pattern search. Otherwise (the default), it is reset to
+  its state after the pattern search for the parent node. In the first case,
+  the numbers given in the SGF file (number of games, number of continuations)
+  will include games where the relevant position arises with a different order
+  of moves. With the default setting, only games where the position arises by
+  the same order of moves as given by the SGF file are counted.
+
 .. _game-info-search:
 
 Game info search

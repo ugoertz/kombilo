@@ -29,8 +29,12 @@ History/Change log
 
 Major changes:
 
-* Organize pattern search history as a tree.
+* :ref:`SGF tree function <sgf-tree>` in Kombilo: continue searching recursively
+  for all continuations arising from some search pattern.
+* Improve date profile: more fine-grained information, several options
+  configurable by user.
 * Reintroduce :ref:`custom-menus` as in Kombilo 0.5.
+* Organize pattern search history as a tree.
 
 
 

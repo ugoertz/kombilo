@@ -776,7 +776,7 @@ class KEngine(object):
             for i, sid in snapshot_ids_parent:
                 DBlist[i]['data'].restore(sid)
 
-            pattern = self.get_pattern_from_node(node, sizeX=options.as_int('sizex'), sizeY=options.as_int('sizey'), anchors=tuple(int(x) for x in options['anchors']), boardsize=options.as_int('boardsize'), selection=options['selection'])
+            pattern = self.get_pattern_from_node(node, anchors=tuple(int(x) for x in options['anchors']), boardsize=options.as_int('boardsize'), selection=options['selection'])
             # FIXME (in get_pattern_from_node): wildcards?! move sequences?!
             self.patternSearch(pattern, searchOptions, update_gamelist=False)
             self.gamelist.update_winning_percentages()
@@ -872,17 +872,16 @@ class KEngine(object):
 
     def get_pattern_from_node(self, node, boardsize=19, **kwargs):
         '''Return a full board pattern with the position at ``node``.
-        **kwargs are passed on to :py:meth:`Pattern.__init__`.
+        \**kwargs are passed on to :py:meth:`Pattern.__init__`.
         '''
         b = abstractBoard(boardsize=boardsize)
-        path = []  # compare pathToNode; redo this here since we also need to find corresponding starting node
+        kwargs['sizeX'] = kwargs['selection'][1][0] - kwargs['selection'][0][0] + 1
+        kwargs['sizeY'] = kwargs['selection'][1][1] - kwargs['selection'][0][1] + 1
 
-        sizeX = kwargs.get('sizeX', 19)
-        sizeY = kwargs.get('sizeY', 19)
+        path = []  # compare pathToNode; redo this here since we also need to find corresponding starting node
         while node.previous:
             path.append(node.level)
             node = node.previous
-
         path.reverse()
 
         def play(n, b):

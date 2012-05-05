@@ -38,9 +38,16 @@ given, in the ``[options]`` section some options must be set.
 Mandatory options are ::
 
   output # name of the output file
+
 Further options::
 
   initialposition # the initial position; see below for examples, default: empty board
+  boardsize # board size, default: 19,
+  anchors # the rectangle within which the top left corner of the search pattern
+          # may move, default: (0, 0, 0, 0),
+  selection # the region on the board which is used as the search pattern,
+            # default: ((0, 0), (18, 18)),
+
   depth # the highest move number that is considered, default: 10
   min_number_of_hits # variations with less hits are not considered (black/white
                      # continuations are considered separately) default: 10
@@ -123,8 +130,8 @@ if __name__ == '__main__':
                                 'gisearch': '', 'initialposition': '(;)',
                                 'comment_head': '@@monospace', 'reset_game_list': False,
                                 'sort_criterion': 'total',
-                                'boardsize': 19, 'sizex': 19, 'sizey': 19, 'anchors': (0, 0, 0, 0),
-                                'selection': ((0, 0), (18, 18)),  # FIXME doc, TODO boardsize
+                                'boardsize': 19, 'anchors': (0, 0, 0, 0),
+                                'selection': ((0, 0), (18, 18)),
                                 },
                     'searchoptions': {'fixedColor': 1, 'nextMove': 0, 'searchInVariations': 1,
                                       'moveLimit': 1000,
@@ -149,7 +156,7 @@ if __name__ == '__main__':
 
     # put game list in specified "initial state"
     K.gamelist.reset()
-    if options['gisearch']:
+    if co['options']['gisearch']:
         self.gameinfoSearch(options['gisearch'])
 
     K.sgf_tree(cursor, current_game, co['options'], searchOptions, messages)
