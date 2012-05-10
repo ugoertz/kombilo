@@ -180,10 +180,10 @@ int main(int argc, char** argv) {
     for(int x=0; x<p.sizeX; x++) {
       if (gl.lookupLabel(x,y) != '.') {
         Continuation cont = gl.lookupContinuation(x,y);
-        printf("      %c      |   %3d[%3d] (    %3d /    %3d ) |   %3d[%3d] (   %3d /    %3d) | %1.1f /  %1.1f | %d %d | %d %d |  \n",
+        printf("      %c      |   %3d[%3d] (    %3d /    %3d ) |   %3d[%3d] (   %3d /    %3d) | %1.1f /  %1.1f | %d | %d |  \n",
             gl.lookupLabel(x,y), cont.B, cont.tB, cont.wB, cont.lB, cont.W, cont.tW, cont.wW, cont.lW, 
             cont.wW*100.0/cont.W, cont.wB*100.0/cont.B,
-            cont.earliest/12, cont.earliest%12+1, cont.latest/12, cont.latest%12+1);
+            cont.earliest_B(), cont.earliest_W());
       }
     }
   }

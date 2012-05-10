@@ -611,8 +611,8 @@ class GameList(object):
 
 
 cont_sort_criteria = {'total': lambda c1, c2: c2.total() - c1.total(),
-                      'earliest': lambda c1, c2: c1.earliest - c2.earliest,
-                      'latest': lambda c1, c2: c2.latest - c1.latest,
+                      'earliest': lambda c1, c2: c1.earliest() - c2.earliest(),
+                      'latest': lambda c1, c2: c2.latest() - c1.latest(),
                       'average': lambda c1, c2: c1.average_date() - c2.average_date(),
                       'became popular': lambda c1, c2: c1.average_date_w1() - c2.average_date_w1(),
                       'became unpopular': lambda c1, c2: c2.average_date_w2() - c1.average_date_w2(),
