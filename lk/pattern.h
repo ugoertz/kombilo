@@ -74,6 +74,12 @@ const int algo_intervals = 5;
 const int algo_hash_center = 6;
 const int algo_hash_side = 7;
 
+/// \name date profile constants
+/**@{*/
+const int DATE_PROFILE_START = 1600;
+const int DATE_PROFILE_END = 2020;
+/**@}*/
+
 char* flipped_sig(int f, char* sig, int boardsize);
 char* symmetrize(char* sig, int boardsize);
 
@@ -243,22 +249,30 @@ class Continuation {
     int lB; ///< black losses (where next play is B)
     int wW; ///< black wins (where next play is W)
     int lW; ///< black losses (where next play is W)
+    vector<int> dates_B;
+    vector<int> dates_W;
 
     char label;
 
-    int earliest; ///< earliest date when this was played
-    int latest; ///< latest date when this was played
-    int sum_dates; ///< sum of all dates when this was played
-    int weighted_sum_dates; ///< weighted sum of all dates when this was played
-    int alt_weighted_sum_dates; ///< alternative weighted sum of all dates when this was played
-    /// All dates are given as year*12 + month, where month is between 0 and 11.
 
     Continuation(); ///< initializes all member variables with 0
     Continuation(const Continuation& c);
     Continuation& operator=(const Continuation& c);
     void add(const Continuation c); ///< Add values for B, W, tB, tW, wB, lB, wW, lW of c to values of this
+    int earliest(); ///< earliest date when this was played
+    int earliest_B(); ///< earliest date when this was played by B
+    int earliest_W(); ///< earliest date when this was played by W
+    int latest(); ///< latest date when this was played
+    int latest_B();
+    int latest_W();
+    float average_date(); ///< average date when this was played
+    float average_date_B();
+    float average_date_W();
+    // TODO weighted average
+
+    /// All dates are given by year (in the interval between DATE_PROFILE_START
+    /// and DATE_PROFILE_END).
     int total();
-    int average_date();
 
     friend class GameList;
 

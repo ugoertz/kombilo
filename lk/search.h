@@ -162,12 +162,6 @@ const int NOT_INSERTED_INTO_DB = 8;
 const int INDEX_OUT_OF_RANGE = 16;
 /**@}*/ 
 
-/// \name date profile constants
-/**@{*/
-const int DATE_PROFILE_START = 1600;
-const int DATE_PROFILE_END = 2020;
-/**@}*/
-
 
 
 

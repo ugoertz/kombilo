@@ -230,11 +230,10 @@ Continuation::Continuation() {
   wW = 0;
   lW = 0;
   label ='-';
-  earliest = 0;
-  latest = 0;
-  sum_dates = 0;
-  weighted_sum_dates = 0;
-  alt_weighted_sum_dates = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    dates_B.push_back(0);
+    dates_W.push_back(0);
+  }
 }
 
 Continuation::Continuation(const Continuation& c) {
@@ -249,11 +248,10 @@ Continuation::Continuation(const Continuation& c) {
   wW = c.wW;
   lW = c.lW;
   label = c.label;
-  earliest = c.earliest;
-  latest = c.latest;
-  sum_dates = c.sum_dates;
-  weighted_sum_dates = c.weighted_sum_dates;
-  alt_weighted_sum_dates = c.alt_weighted_sum_dates;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    dates_B.push_back(c.dates_B[i]);
+    dates_W.push_back(c.dates_W[i]);
+  }
 }
 
 Continuation& Continuation::operator=(const Continuation& c) {
@@ -269,17 +267,88 @@ Continuation& Continuation::operator=(const Continuation& c) {
     wW = c.wW;
     lW = c.lW;
     label = c.label;
-    earliest = c.earliest;
-    latest = c.latest;
-    sum_dates = c.sum_dates;
-    weighted_sum_dates = c.weighted_sum_dates;
-    alt_weighted_sum_dates = c.alt_weighted_sum_dates;
+    dates_B.clear();
+    dates_W.clear();
+    for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+      dates_B.push_back(c.dates_B[i]);
+      dates_W.push_back(c.dates_W[i]);
+    }
   }
   return *this;
 }
 
 int Continuation::total() {
   return B + W;
+}
+
+int Continuation::earliest_B() {
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (dates_B[i] > 0) return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::earliest_W() {
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (dates_W[i] > 0) return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::earliest() {
+  if (!W) return earliest_B();
+  else if (!B) return earliest_W();
+  return min(earliest_B(), earliest_W());
+}
+
+int Continuation::latest_B() {
+  for(int i = DATE_PROFILE_END - DATE_PROFILE_START; i >= 0; i--) {
+    if (dates_B[i] > 0) return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::latest_W() {
+  for(int i = DATE_PROFILE_END - DATE_PROFILE_START; i >= 0; i--) {
+    if (dates_W[i] > 0) return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::latest() {
+  if (!W) return latest_B();
+  else if (!B) return latest_W();
+  return max(latest_B(), latest_W());
+}
+
+
+float Continuation::average_date_B() {
+  if (!B) return 0;
+  int sum = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    sum += dates_B[i] * (i + DATE_PROFILE_START);
+  }
+  return sum / B;
+}
+
+float Continuation::average_date_W() {
+  if (!W) return 0;
+  int sum = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    sum += dates_W[i] * (i + DATE_PROFILE_START);
+  }
+  return sum / W;
+}
+
+float Continuation::average_date() {
+  if (!W) return average_date_B();
+  else if (!B) return average_date_W();
+  int sum = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    sum += dates_B[i] * (i + DATE_PROFILE_START);
+    sum += dates_W[i] * (i + DATE_PROFILE_START);
+  }
+  return sum / total();
 }
 
 void Continuation::from_snv(SnapshotVector& snv) {
@@ -294,11 +363,14 @@ void Continuation::from_snv(SnapshotVector& snv) {
   wW = snv.retrieve_int();
   lW = snv.retrieve_int();
   label = snv.retrieve_char();
-  earliest = snv.retrieve_int();
-  latest = snv.retrieve_int();
-  sum_dates = snv.retrieve_int();
-  weighted_sum_dates = snv.retrieve_int();
-  alt_weighted_sum_dates = snv.retrieve_int();
+  dates_B.clear();
+  dates_W.clear();
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    dates_B.push_back(snv.retrieve_int());
+  }
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    dates_W.push_back(snv.retrieve_int());
+  }
 }
 
 void Continuation::to_snv(SnapshotVector& snv) {
@@ -313,11 +385,12 @@ void Continuation::to_snv(SnapshotVector& snv) {
   snv.pb_int(wW);
   snv.pb_int(lW);
   snv.pb_char(label);
-  snv.pb_int(earliest);
-  snv.pb_int(latest);
-  snv.pb_int(sum_dates);
-  snv.pb_int(weighted_sum_dates);
-  snv.pb_int(alt_weighted_sum_dates);
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    snv.pb_int(dates_B[i]);
+  }
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    snv.pb_int(dates_W[i]);
+  }
 }
 
 void Continuation::add(const Continuation c) {
@@ -329,17 +402,10 @@ void Continuation::add(const Continuation c) {
   lB += c.lB;
   wW += c.wW;
   lW += c.lW;
-  if (earliest) earliest = min(earliest, c.earliest);
-  else earliest = c.earliest;
-  latest = max(latest, c.latest);
-  sum_dates += c.sum_dates;
-  weighted_sum_dates += c.weighted_sum_dates;
-  alt_weighted_sum_dates += c.alt_weighted_sum_dates;
-}
-
-int Continuation::average_date() {
-  if (B+W) return sum_dates/(B+W);
-  return 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    dates_B[i] += c.dates_B[i];
+    dates_W[i] += c.dates_W[i];
+  }
 }
 
 Symmetries::Symmetries(char sX, char sY) {
@@ -1119,19 +1185,21 @@ char* PatternList::updateContinuations(int index, int x, int y, char co, bool te
     if (tenuki) cont->tB++;
     if ((winner == 'B' && !cSymm) || (winner == 'W' && cSymm)) cont->wB++;
     else if ((winner == 'W' && !cSymm) || (winner == 'B' && cSymm)) cont->lB++;
+
+    if (date/12 - DATE_PROFILE_START >= 0 && date/12 < DATE_PROFILE_END) {
+      cont->dates_B[date/12 - DATE_PROFILE_START]++;
+    }
   } else {
     // printf("W xx %d, yy %d\n", xx, yy);
     cont->W++;
     if (tenuki) cont->tW++;
     if ((winner == 'B' && !cSymm) || (winner == 'W' && cSymm)) cont->wW++;
     else if ((winner == 'W' && !cSymm) || (winner ='B' && cSymm)) cont->lW++;
-  }
 
-  if (cont->earliest == 0 || cont->earliest > date) cont->earliest = date;
-  if (cont->latest < date) cont->latest = date;
-  cont->sum_dates += date;
-  cont->weighted_sum_dates += date; // FIXME should be weighted!
-  cont->alt_weighted_sum_dates += date; // FIXME should be weighted!
+    if (date/12 - DATE_PROFILE_START >= 0 && date/12 < DATE_PROFILE_END) {
+      cont->dates_W[date/12 - DATE_PROFILE_START]++;
+    }
+  }
 
   char* result = new char[3];
   result[0] = xx;

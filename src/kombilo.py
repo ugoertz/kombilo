@@ -936,36 +936,56 @@ class App(v.Viewer, KEngine):
             self.display_x_indices(self.statisticsCanv, fr, to, 'stat', xoffset=xoffset)
             font = (self.options.statFont.get(), self.options.statFontSize.get(), 'bold')
 
+            # split continuations up according to B/W
+            continuations = []
+            for cont in self.continuations:
+                if cont.B:
+                    cB = lk.Continuation()
+                    cB.add(cont)
+                    cB.W = 0
+                    cB.x, cB.y, cB.label = cont.x, cont.y, cont.label
+                    continuations.append(cB)
+                if cont.W:
+                    cW = lk.Continuation()
+                    cW.add(cont)
+                    cW.B = 0
+                    cW.x, cW.y, cW.label = cont.x, cont.y, cont.label
+                    continuations.append(cW)
+            continuations.sort(cont_sort_criteria[self.options.continuations_sort_crit.get()])
+
             i = 0
             ctr = 0
-            while i < 12 and ctr < len(self.continuations):
-                cont = self.continuations[ctr]
+            while i < 12 and ctr < len(continuations):
+                cont = continuations[ctr]
+                earliest = cont.earliest_B() if cont.B else cont.earliest_W()
+                latest = cont.latest_B() if cont.B else cont.latest_W()
+                average_date = cont.average_date_B() if cont.B else cont.average_date_W()
                 ctr += 1
-                if cont.earliest < fr * 12:
+                if earliest < fr:
                     left = 0
-                elif cont.earliest > to * 12:
+                elif earliest > to:
                     continue
                 else:
-                    left = (cont.earliest - fr * 12) * 400 // ((to - fr) * 12)  # 400 == width of chart
+                    left = (earliest - fr) * 400 // (to - fr)  # 400 == width of chart
 
                 left += xoffset  # start xoffset pixels from left border
 
-                if cont.latest > to * 12:
+                if latest > to:
                     right = 400
-                elif cont.latest < fr * 12:
+                elif latest < fr:
                     continue
                 else:
-                    right = (cont.latest - fr * 12) * 400 // ((to - fr) * 12)
+                    right = (latest - fr) * 400 // (to - fr)
                 right += xoffset
 
-                avg = (cont.average_date() - fr * 12) * 400 // ((to - fr) * 12)
+                avg = (average_date - fr) * 400 // (to - fr)
                 avg += xoffset
 
                 self.statisticsCanv.create_text(left - 10, i * 15 + 40, text=cont.label, font=font, tags='stat')
-                self.statisticsCanv.create_text(left - 17 - 3 * len(repr(cont.total())), i * 15 + 40, text=repr(cont.total()), font=smallfont, tags='stat')
-                self.statisticsCanv.create_rectangle(left, i * 15 + 38, right, i * 15 + 44, fill='black', tags='stat')
-                if xoffset <= avg <= 400 + xoffset:
-                    self.statisticsCanv.create_rectangle(avg-1, i * 15 + 36, avg + 1, i * 15 + 47, fill='green', tags='stat')
+                self.statisticsCanv.create_text(left - 17 - 3 * len(repr(cont.total())), i * 15 + 41, text=repr(cont.total()), font=smallfont, tags='stat')
+                self.statisticsCanv.create_rectangle(left, i * 15 + 37, right, i * 15 + 43, fill='black' if cont.B else 'white', outline='black' if cont.B else 'white', tags='stat')
+                if xoffset <= avg <= 400 + xoffset and right - left > 3:
+                    self.statisticsCanv.create_rectangle(avg-1, i * 15 + 35, avg + 1, i * 15 + 46, fill='green', tags='stat')
 
                 i += 1
 
