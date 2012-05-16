@@ -904,7 +904,7 @@ class App(v.Viewer, KEngine):
         canvas.create_text(395 + xoffset, 230, text=repr(to), font=smallfont, anchor='nw', tags=tag)
         for i in range(1,5):
             canvas.create_text(-5 + 80 * i + xoffset, 230, text=repr(fr + i * (to - fr) // 5), font=smallfont, anchor='nw', tags='stat')
-        canvas.create_rectangle(-20 + xoffset, 225, 400 + xoffset, 226, fill='black', tags='stat')
+        canvas.create_rectangle(-10 + xoffset, 225, 420 + xoffset, 225, outline='', fill='black', tags='stat')
 
     def display_statistics(self):
         """
@@ -940,13 +940,13 @@ class App(v.Viewer, KEngine):
             continuations = []
             for cont in self.continuations:
                 if cont.B:
-                    cB = lk.Continuation()
+                    cB = lk.Continuation(cont.gamelist)
                     cB.add(cont)
                     cB.W = 0
                     cB.x, cB.y, cB.label = cont.x, cont.y, cont.label
                     continuations.append(cB)
                 if cont.W:
-                    cW = lk.Continuation()
+                    cW = lk.Continuation(cont.gamelist)
                     cW.add(cont)
                     cW.B = 0
                     cW.x, cW.y, cW.label = cont.x, cont.y, cont.label
@@ -960,6 +960,8 @@ class App(v.Viewer, KEngine):
                 earliest = cont.earliest_B() if cont.B else cont.earliest_W()
                 latest = cont.latest_B() if cont.B else cont.latest_W()
                 average_date = cont.average_date_B() if cont.B else cont.average_date_W()
+                became_popular = cont.became_popular_B() if cont.B else cont.became_popular_W()
+                became_unpopular = cont.became_unpopular_B() if cont.B else cont.became_unpopular_W()
                 ctr += 1
                 if earliest < fr:
                     left = 0
@@ -978,14 +980,19 @@ class App(v.Viewer, KEngine):
                     right = (latest - fr) * 400 // (to - fr)
                 right += xoffset
 
-                avg = (average_date - fr) * 400 // (to - fr)
-                avg += xoffset
+                average_date = (average_date - fr) * 400 // (to - fr) + xoffset
+                became_popular = (became_popular - fr) * 400 // (to - fr) + xoffset
+                became_unpopular = (became_unpopular - fr) * 400 // (to - fr) + xoffset
 
                 self.statisticsCanv.create_text(left - 10, i * 15 + 40, text=cont.label, font=font, tags='stat')
                 self.statisticsCanv.create_text(left - 17 - 3 * len(repr(cont.total())), i * 15 + 41, text=repr(cont.total()), font=smallfont, tags='stat')
                 self.statisticsCanv.create_rectangle(left, i * 15 + 37, right, i * 15 + 43, fill='black' if cont.B else 'white', outline='black' if cont.B else 'white', tags='stat')
-                if xoffset <= avg <= 400 + xoffset and right - left > 3:
-                    self.statisticsCanv.create_rectangle(avg-1, i * 15 + 35, avg + 1, i * 15 + 46, fill='green', tags='stat')
+                if xoffset <= average_date <= 400 + xoffset and right - left > 3:
+                    self.statisticsCanv.create_rectangle(average_date-1, i * 15 + 35, average_date + 1, i * 15 + 46, fill='green', outline='black', tags='stat')
+                if xoffset <= became_popular <= 400 + xoffset and right - left > 3:
+                    self.statisticsCanv.create_rectangle(became_popular-1, i * 15 + 35, became_popular + 1, i * 15 + 46, fill='yellow', outline='yellow', tags='stat')
+                if xoffset <= became_unpopular <= 400 + xoffset and right - left > 3:
+                    self.statisticsCanv.create_rectangle(became_unpopular-1, i * 15 + 35, became_unpopular + 1, i * 15 + 46, fill='red', outline='red', tags='stat')
 
                 i += 1
 
@@ -1377,7 +1384,7 @@ class App(v.Viewer, KEngine):
             gl = db['data']
             self.lookUpContinuations(gl)
 
-        self.set_labels()
+        self.set_labels(self.options.continuations_sort_crit.get())
         if self.showContinuation.get():
             self.showCont()
         self.board.changed.set(0)
@@ -2638,7 +2645,7 @@ class App(v.Viewer, KEngine):
             if W_list:
                 sgf_str += 'AW' + ''.join([('[%s]' % s) for s in W_list])
             sgf_str += ')'
-            print sgf_str
+            # print sgf_str
             cursor = Cursor(sgf_str)
             current_game = 0
         else:

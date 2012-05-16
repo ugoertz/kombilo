@@ -24,6 +24,7 @@
 #include "sgfparser.h"
 #include "abstractboard.h"
 #include "pattern.h"
+#include "search.h"
 #include <stdio.h>
 #include <string>
 #include <cstring>
@@ -218,7 +219,8 @@ char* SnapshotVector::to_charp() {
 
 PatternError::PatternError() {}
 
-Continuation::Continuation() {
+Continuation::Continuation(GameList* gl) {
+  gamelist = gl;
   x = 0;
   y = 0;
   B  = 0;
@@ -237,6 +239,7 @@ Continuation::Continuation() {
 }
 
 Continuation::Continuation(const Continuation& c) {
+  gamelist = c.gamelist;
   x = c.x;
   y = c.y;
   B  = c.B;
@@ -256,6 +259,7 @@ Continuation::Continuation(const Continuation& c) {
 
 Continuation& Continuation::operator=(const Continuation& c) {
   if (&c != this) {
+    gamelist = c.gamelist;
     x = c.x;
     y = c.y;
     B  = c.B;
@@ -324,31 +328,154 @@ int Continuation::latest() {
 
 float Continuation::average_date_B() {
   if (!B) return 0;
-  int sum = 0;
+  float sum = 0;
+  float d = 0;
   for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
-    sum += dates_B[i] * (i + DATE_PROFILE_START);
-  }
-  return sum / B;
+    if (gamelist->dates_all_per_year[i]) {
+      sum += dates_B[i] * (i + DATE_PROFILE_START) * 1.0/gamelist->dates_all_per_year[i];
+      d += dates_B[i] * 1.0/gamelist->dates_all_per_year[i];
+    }
+  };
+  return sum / d;
 }
 
 float Continuation::average_date_W() {
   if (!W) return 0;
-  int sum = 0;
+  float sum = 0;
+  float d = 0;
   for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
-    sum += dates_W[i] * (i + DATE_PROFILE_START);
+    if (gamelist->dates_all_per_year[i]) {
+      sum += dates_W[i] * (i + DATE_PROFILE_START) * 1.0/gamelist->dates_all_per_year[i];
+      d += dates_W[i] * 1.0/gamelist->dates_all_per_year[i];
+    }
   }
-  return sum / W;
+  return sum / d;
 }
 
 float Continuation::average_date() {
   if (!W) return average_date_B();
   else if (!B) return average_date_W();
-  int sum = 0;
+  float sum = 0;
+  float d = 0;
   for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
-    sum += dates_B[i] * (i + DATE_PROFILE_START);
-    sum += dates_W[i] * (i + DATE_PROFILE_START);
+    if (gamelist->dates_all_per_year[i]) {
+      sum += (dates_B[i] + dates_W[i]) * (i + DATE_PROFILE_START) * 1.0/gamelist->dates_all_per_year[i];
+      d += (dates_B[i] + dates_W[i]) * 1.0/gamelist->dates_all_per_year[i];
+    }
   }
-  return sum / total();
+  return sum / d;
+}
+
+int Continuation::became_popular_B() {
+  if (!B) return 0;
+  float sum_squares = 0;
+  int ctr = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    // printf("bcb0 %d\n", dates_B[i]);
+    if (gamelist->dates_all_per_year[i] && dates_B[i]) {
+      sum_squares += dates_B[i] * dates_B[i]*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);
+      ctr++;
+    }
+  }
+  float s = sqrt(sum_squares / ctr);
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && dates_B[i]*1.0/gamelist->dates_all_per_year[i] >= s)
+      return (i + DATE_PROFILE_START);
+  }
+  return -1;
+}
+
+int Continuation::became_popular_W() {
+  if (!W) return 0;
+  float sum_squares = 0;
+  int ctr = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && dates_W[i]) {
+      sum_squares += (float)dates_W[i] * dates_W[i]*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);
+      ctr++;
+    }
+  }
+  float s = sqrt(sum_squares / ctr);
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && dates_W[i]*1.0/gamelist->dates_all_per_year[i]>= s)
+      return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::became_popular() {
+  if (!W) return became_popular_B();
+  else if (!B) return became_popular_W();
+
+  float sum_squares = 0;
+  int ctr = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && (dates_B[i] + dates_W[i])) {
+      sum_squares += (((float)dates_B[i] + dates_W[i]) * (dates_B[i] + dates_W[i]))*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);
+      ctr++;
+    }
+  }
+  float s = sqrt(sum_squares / ctr);
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && (dates_B[i] + dates_W[i])*1.0/gamelist->dates_all_per_year[i]>= s) return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::became_unpopular_B() {
+  if (!B) return 0;
+  float sum_squares = 0;
+  int ctr = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    // printf("bcb0 %d\n", dates_B[i]);
+    if (gamelist->dates_all_per_year[i] && dates_B[i]) {
+      sum_squares += dates_B[i] * dates_B[i]*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);
+      ctr++;
+    }
+  }
+  float s = sqrt(sum_squares / ctr);
+  for(int i = (DATE_PROFILE_END - DATE_PROFILE_START); i >= 0; i--) {
+    if (gamelist->dates_all_per_year[i] && dates_B[i]*1.0/gamelist->dates_all_per_year[i] >= s)
+      return (i + DATE_PROFILE_START);
+  }
+  return -1;
+}
+
+int Continuation::became_unpopular_W() {
+  if (!W) return 0;
+  float sum_squares = 0;
+  int ctr = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && dates_W[i]) {
+      sum_squares += (float)dates_W[i] * dates_W[i]*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);
+      ctr++;
+    }
+  }
+  float s = sqrt(sum_squares / ctr);
+  for(int i = (DATE_PROFILE_END - DATE_PROFILE_START); i >= 0; i--) {
+    if (gamelist->dates_all_per_year[i] && dates_W[i]*1.0/gamelist->dates_all_per_year[i]>= s)
+      return i + DATE_PROFILE_START;
+  }
+  return -1;
+}
+
+int Continuation::became_unpopular() {
+  if (!W) return became_unpopular_B();
+  else if (!B) return became_unpopular_W();
+
+  float sum_squares = 0;
+  int ctr = 0;
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
+    if (gamelist->dates_all_per_year[i] && (dates_B[i] + dates_W[i])) {
+      sum_squares += (((float)dates_B[i] + dates_W[i]) * (dates_B[i] + dates_W[i]))*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);
+      ctr++;
+    }
+  }
+  float s = sqrt(sum_squares / ctr);
+  for(int i = (DATE_PROFILE_END - DATE_PROFILE_START); i >= 0; i--) {
+    if (gamelist->dates_all_per_year[i] && (dates_B[i] + dates_W[i])*1.0/gamelist->dates_all_per_year[i]>= s) return i + DATE_PROFILE_START;
+  }
+  return -1;
 }
 
 void Continuation::from_snv(SnapshotVector& snv) {
@@ -896,7 +1023,7 @@ int Pattern::compose_flips(int i, int j) {
   return composition_table[j+8*i];
 }
 
-PatternList::PatternList(Pattern& p, int fColor, int nMove) throw(PatternError) {
+PatternList::PatternList(Pattern& p, int fColor, int nMove, GameList* gl) throw(PatternError) {
   pattern.copy(p);
   fixedColor = fColor;
   nextMove = nMove;
@@ -905,11 +1032,14 @@ PatternList::PatternList(Pattern& p, int fColor, int nMove) throw(PatternError) 
   for(int i=0; i<16; i++) flipTable[i] = -1; // (patternList() relies on this)
 
   patternList();
-  continuations = new Continuation[pattern.sizeX * pattern.sizeY];
+  for(int i=0; i < pattern.sizeX * pattern.sizeY; i++)
+    continuations.push_back(new Continuation(gl));
 }
 
 PatternList::~PatternList() {
-  delete [] continuations;
+  for (std::vector<Continuation* >::const_iterator i = continuations.begin(); i != continuations.end(); ++i) {
+    delete *i;
+  }
   delete [] flipTable;
 }
 
@@ -1178,7 +1308,7 @@ char* PatternList::updateContinuations(int index, int x, int y, char co, bool te
     }
   }
 
-  Continuation* cont = &continuations[xx + pattern.sizeX*yy];
+  Continuation* cont = continuations[xx + pattern.sizeX*yy];
   if (cc == 'B') {
     // printf("B xx %d, yy %d\n", xx, yy);
     cont->B++;
@@ -1213,7 +1343,7 @@ char* PatternList::sortContinuations() {
   char* labels = new char[pattern.sizeX*pattern.sizeY+1];
   labels[pattern.sizeX * pattern.sizeY] = 0; // so we can just printf the labels as a string
   for(int i=0; i<pattern.sizeX*pattern.sizeY; i++) {
-    if (continuations[i].B || continuations[i].W) labels[i] = '?'; // need to assign label
+    if (continuations[i]->B || continuations[i]->W) labels[i] = '?'; // need to assign label
     else labels[i] = '.';
   }
   string labelList = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -1239,8 +1369,8 @@ char* PatternList::sortContinuations() {
   int max_hits_index = 0;
   while (max_hits != -1 && labelIndex < labelList.size()) {
     for(int i=0; i<pattern.sizeX*pattern.sizeY; i++) {
-      if (labels[i] == '?' && continuations[i].B + continuations[i].W > max_hits) {
-        max_hits = continuations[i].B + continuations[i].W;
+      if (labels[i] == '?' && continuations[i]->B + continuations[i]->W > max_hits) {
+        max_hits = continuations[i]->B + continuations[i]->W;
         max_hits_index = i;
       }
     }

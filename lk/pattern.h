@@ -237,6 +237,8 @@ class Pattern {
     static int compose_flips(int i, int j); // returns index of flip "first j, then i"
 };
 
+class GameList;
+
 class Continuation {
   public:
     int x; ///< x coordinate of corresp. label on board
@@ -254,8 +256,9 @@ class Continuation {
 
     char label;
 
+    GameList* gamelist;
 
-    Continuation(); ///< initializes all member variables with 0
+    Continuation(GameList* gl); ///< initializes all member variables with 0
     Continuation(const Continuation& c);
     Continuation& operator=(const Continuation& c);
     void add(const Continuation c); ///< Add values for B, W, tB, tW, wB, lB, wW, lW of c to values of this
@@ -268,6 +271,12 @@ class Continuation {
     float average_date(); ///< average date when this was played
     float average_date_B();
     float average_date_W();
+    int became_popular(); ///< date when this move became popular
+    int became_popular_B();
+    int became_popular_W();
+    int became_unpopular(); ///< date when this move became unpopular
+    int became_unpopular_B();
+    int became_unpopular_W();
     // TODO weighted average
 
     /// All dates are given by year (in the interval between DATE_PROFILE_START
@@ -288,11 +297,11 @@ class PatternList {
     int nextMove;                        ///< 1: next must be black, 2: next must be white, 0: no restriction
     std::vector<Pattern> data;
     std::vector<Symmetries> symmetries;
-    Continuation* continuations;
+    vector<Continuation* > continuations;
     int* flipTable;
     int special; ///< == -1, unless there exists a symmetry which yields the color-switched pattern
 
-    PatternList(Pattern& p, int fColor, int nMove) throw (PatternError);
+    PatternList(Pattern& p, int fColor, int nMove, GameList* gl) throw (PatternError);
     ~PatternList();
 
     void patternList();

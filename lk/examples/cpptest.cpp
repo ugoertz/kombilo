@@ -183,7 +183,7 @@ int main(int argc, char** argv) {
         printf("      %c      |   %3d[%3d] (    %3d /    %3d ) |   %3d[%3d] (   %3d /    %3d) | %1.1f /  %1.1f | %d | %d |  \n",
             gl.lookupLabel(x,y), cont.B, cont.tB, cont.wB, cont.lB, cont.W, cont.tW, cont.wW, cont.lW, 
             cont.wW*100.0/cont.W, cont.wB*100.0/cont.B,
-            cont.earliest_B(), cont.earliest_W());
+            cont.earliest_W(), cont.became_popular_W());
       }
     }
   }
