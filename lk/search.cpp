@@ -294,7 +294,6 @@ int dbinfo_callback(void *s, int argc, char **argv, char **asColName) {
 GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOptions* p_options, int BOARDSIZE, int cache) throw(DBError) {
   boardsize = BOARDSIZE;
   labels = 0;
-  continuations = 0;
   mrs_pattern = 0;
   searchOptions = 0;
   dbname = new char[strlen(DBNAME)+1];
@@ -378,6 +377,7 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
 
   all = 0;
   for(int i = 0; i < (DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_all.push_back(0);
+  for(int i = 0; i < DATE_PROFILE_END - DATE_PROFILE_START; i++) dates_all_per_year.push_back(0);
   currentList = oldList = 0;
   resetFormat(ORDERBY, FORMAT);
   // printf("done\n");
@@ -530,6 +530,13 @@ void GameList::readDB() throw(DBError) {
   // printf("read.\n");
   // SQLITE_ERROR may occur since table might not yet exist
 
+  for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START); i++) {
+    int sum = 0;
+    for(int j = 0; j < 12; j++)
+      sum += dates_all[i * 12 + j];
+    dates_all_per_year[i] = sum;
+    // printf("dapy %d\n", dates_all_per_year[i]);
+  }
   readPlayersList();
   readNumOfWins();
   rc = sqlite3_exec(db, "commit;", 0, 0, 0);
@@ -546,7 +553,10 @@ GameList::~GameList() {
   if (searchOptions) delete searchOptions;
   if (p_op) delete p_op;
   if (labels) delete [] labels;
-  if (continuations) delete [] continuations;
+  for (std::vector<Continuation *>::const_iterator i = continuations.begin(); i != continuations.end(); ++i) {
+    delete *i;
+  }
+
   delete [] dbname;
   if (all) {
     for(vector<GameListEntry* >::iterator it = all->begin(); it != all->end(); it++)
@@ -1100,8 +1110,8 @@ char GameList::lookupLabel(char x, char y) {
 }
 
 Continuation GameList::lookupContinuation(char x, char y) {
-  if (!continuations || !mrs_pattern || x < 0 || x >= mrs_pattern->sizeX || y < 0 || y >= mrs_pattern->sizeY) return Continuation();
-  return continuations[x+y*mrs_pattern->sizeX];
+  if (!continuations.size() || !mrs_pattern || x < 0 || x >= mrs_pattern->sizeX || y < 0 || y >= mrs_pattern->sizeY) return Continuation(this);
+  return *continuations[x+y*mrs_pattern->sizeX];
 }
 
 vector<string> GameList::currentEntriesAsStrings(int start, int end) {
@@ -1178,7 +1188,7 @@ void GameList::search(Pattern& pattern, SearchOptions* so) throw(DBError) {
   if (searchOptions) delete searchOptions;
   if (so) searchOptions = new SearchOptions(*so);
   else searchOptions = new SearchOptions();
-  PatternList pl(pattern, searchOptions->fixedColor, searchOptions->nextMove);
+  PatternList pl(pattern, searchOptions->fixedColor, searchOptions->nextMove, this);
 
   if (boardsize != pattern.boardsize) {
     delete searchOptions;
@@ -1227,10 +1237,13 @@ void GameList::search(Pattern& pattern, SearchOptions* so) throw(DBError) {
   }
   if (labels) delete [] labels;
   labels = pl.sortContinuations();
-  if (continuations) delete [] continuations;
-  continuations = pl.continuations;
+  for(vector<Continuation* >::iterator it = continuations.begin(); it != continuations.end(); it++)
+    delete *it;
+  continuations.clear();
+  for(vector<Continuation* >::iterator it = pl.continuations.begin(); it != pl.continuations.end(); it++)
+    continuations.push_back(*it);
   // printf("cont %d\n", continuations[15+15*19].B+continuations[15+15*19].W);
-  pl.continuations = new Continuation[pattern.sizeX*pattern.sizeY];
+  pl.continuations.clear();
   update_dates_current();
 }
 
@@ -1904,10 +1917,10 @@ int GameList::snapshot() throw(DBError) {
     snapshot.pb_char(1);
     searchOptions->to_snv(snapshot);
   } else snapshot.pb_char(0);
-  if (mrs_pattern && labels && continuations) {
+  if (mrs_pattern && labels && continuations.size()) {
     snapshot.pb_char(1);
     snapshot.pb_charp(labels, mrs_pattern->sizeX * mrs_pattern->sizeY);
-    for(int i=0; i<mrs_pattern->sizeX * mrs_pattern->sizeY; i++) continuations[i].to_snv(snapshot);
+    for(int i=0; i<mrs_pattern->sizeX * mrs_pattern->sizeY; i++) continuations[i]->to_snv(snapshot);
   } else snapshot.pb_char(0);
   snapshot.pb_int(num_hits);
   snapshot.pb_int(num_switched);
@@ -1998,15 +2011,20 @@ void GameList::restore(int handle, bool del) throw(DBError) {
   else searchOptions = 0;
 
   if (labels) delete [] labels;
-  if (continuations) delete [] continuations;
+  for (std::vector<Continuation* >::const_iterator i = continuations.begin(); i != continuations.end(); ++i) {
+    delete *i;
+  }
+  continuations.clear();
+
   if (snapshot.retrieve_char()) {
     labels = snapshot.retrieve_charp();
-    continuations = new Continuation[mrs_pattern->sizeX * mrs_pattern->sizeY];
-    for(int i=0; i<mrs_pattern->sizeX * mrs_pattern->sizeY; i++) 
-      continuations[i].from_snv(snapshot);
+    for(int i=0; i<mrs_pattern->sizeX * mrs_pattern->sizeY; i++) {
+      Continuation* c = new Continuation(this);
+      c->from_snv(snapshot);
+      continuations.push_back(c);
+    }
   } else {
     labels = 0;
-    continuations = 0;
   }
   num_hits = snapshot.retrieve_int();
   num_switched = snapshot.retrieve_int();

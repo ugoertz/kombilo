@@ -803,10 +803,10 @@ class KEngine(object):
             # split continuations up according to B/W
             continuations = []
             for cont in self.continuations:
-                cB = lk.Continuation()
+                cB = lk.Continuation(cont.gamelist)
                 cB.add(cont)
                 cB.W = 0
-                cW = lk.Continuation()
+                cW = lk.Continuation(cont.gamelist)
                 cW.add(cont)
                 cW.B = 0
                 for sep_cont in [cB, cW]:
@@ -967,7 +967,7 @@ class KEngine(object):
                             ll = c
                             break
                     else:
-                        ll = lk.Continuation()
+                        ll = lk.Continuation(gl)
                         ll.x = x
                         ll.y = y
                         ll.label == '?'
