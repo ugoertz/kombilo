@@ -26,6 +26,12 @@ History/Change log
 0.7
 ---
 
+0.7.3 (May 2012)
+^^^^^^^^^^^^^^^^
+
+* Add :ref:`Find duplicates <find-duplicates>` method.
+* Fix ``goto move`` method (Shift + Right click).
+* ``.sgf`` as default extension upon saving files.
 
 0.7.2 (April 2012)
 ^^^^^^^^^^^^^^^^^^
