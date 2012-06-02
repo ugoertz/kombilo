@@ -375,6 +375,8 @@ With the button depicting a labeled white stone, you can display the labels
 showing the continuations in the current search pattern (resp. remove them
 again). 
 
+.. _one-click:
+
 The button depicting a mouse toggles the *1-click mode*.  If this mode is
 active, every click on the board triggers a search. That can be quite
 practical in order to play through joseki sequences, say.  If this mode is

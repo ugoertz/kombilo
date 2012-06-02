@@ -2908,8 +2908,10 @@ class App(v.Viewer, KEngine):
         self.master.bind_all('<Control-p>', lambda e, self=self: self.search())  # start pattern search
         self.master.bind_all('<Control-b>', lambda e, self=self: self.back())  # go back to previous pattern search
         self.master.bind_all('<Control-r>', lambda e, self=self: self.reset())  # reset game list
-        self.master.bind_all('<Control-a>', lambda e, self=self: self.reset_start())  # reset game list
+        self.master.bind_all('<Control-a>', lambda e, self=self: self.reset_start())  # reset game list and clear board
         self.master.bind_all('<Control-e>', lambda e, self=self: self.printPattern())  # print previous search pattern to log tab
+        self.master.bind_all('<Control-j>', lambda e, self=self: self.oneClick.set(1 - self.oneClick.get()))  # toggle 1-click mode
+
 
         def _button_release(event):
             if event.num == 8:

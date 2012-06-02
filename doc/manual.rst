@@ -1039,6 +1039,7 @@ Global key bindings
 * ``Control-p`` start pattern search
 * ``Control-b`` go back to previous search
 * ``Control-e`` print information about previous search pattern to log tab
+* ``Control-j`` toggle :ref:`1-click mode <one-click>`
 
 If the :ref:`search-history-as-tab <search-history-as-tab>` option is 1,
 then there is also
