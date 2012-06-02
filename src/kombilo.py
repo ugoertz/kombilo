@@ -402,7 +402,7 @@ class GameListGUI(GameList, VScrolledList):
         VScrolledList.__init__(self, parent, 500, 0, self.get_data, get_data_ic=self.get_data_ic)
         self.listbox.config(width=52, height=6)
         self.onSelectionChange = self.printGameInfo
-        for key, command in [('<Return>', self.handleDoubleClick), ('<Control-a>', self.printSignature), ]:
+        for key, command in [('<Return>', self.handleDoubleClick), ('<Control-v>', self.printSignature), ]:
             self.listbox.bind(key, command)
         for key, command in [('<Button-1>', self.onSelectionChange), ('<Double-1>', self.handleDoubleClick), ('<Shift-1>', self.handleShiftClick), ('<Button-3>', self.rightMouseButton)]:
             self.listbox.bind(key, command)
@@ -980,7 +980,7 @@ class App(v.Viewer, KEngine):
                     right = (latest - fr) * 400 // (to - fr)
                 right += xoffset
 
-                print earliest, latest, average_date, became_popular, became_unpopular
+                #print earliest, latest, average_date, became_popular, became_unpopular
 
                 average_date = (average_date - fr) * 400 // (to - fr) + xoffset
                 became_popular = (became_popular - fr) * 400 // (to - fr) + xoffset
@@ -1436,6 +1436,10 @@ class App(v.Viewer, KEngine):
                 pass
         self.redo_date_profile = True
         self.notebookTabChanged()
+
+    def reset_start(self):
+        self.reset()
+        self.start()
 
     def showCont(self):
         """ Toggle 'show continuations'. """
@@ -2261,7 +2265,7 @@ class App(v.Viewer, KEngine):
     def configButtons(self, state):
         """ Disable buttons and board during search, reset them afterwards. """
 
-        for b in [self.resetButtonS, self.backButtonS, self.searchButtonS, self.nextMove1S, self.nextMove2S, self.nextMove3S]:
+        for b in [self.resetButtonS, self.resetstartButtonS, self.backButtonS, self.searchButtonS, self.nextMove1S, self.nextMove2S, self.nextMove3S]:
             b.config(state=state)
 
         if state == NORMAL:
@@ -2413,7 +2417,8 @@ class App(v.Viewer, KEngine):
 
     def balloonHelpK(self):
 
-        for widget, text in [(self.resetButtonS, _('Reset game list')), (self.backButtonS, _('Back to previous search pattern')), (self.showContButtonS, _('Show continuations')),
+        for widget, text in [(self.resetButtonS, _('Reset game list')), (self.resetstartButtonS, _('Reset game list and board')),
+                             (self.backButtonS, _('Back to previous search pattern')), (self.showContButtonS, _('Show continuations')),
                              (self.oneClickButtonS, _('1-click mode')),
                              (self.statByDateButtonS, _('Show date information for continuations')),
                              (self.colorButtonS, _("(Don't) allow color swap in search pattern")),
@@ -2903,6 +2908,7 @@ class App(v.Viewer, KEngine):
         self.master.bind_all('<Control-p>', lambda e, self=self: self.search())  # start pattern search
         self.master.bind_all('<Control-b>', lambda e, self=self: self.back())  # go back to previous pattern search
         self.master.bind_all('<Control-r>', lambda e, self=self: self.reset())  # reset game list
+        self.master.bind_all('<Control-a>', lambda e, self=self: self.reset_start())  # reset game list
         self.master.bind_all('<Control-e>', lambda e, self=self: self.printPattern())  # print previous search pattern to log tab
 
         def _button_release(event):
@@ -3034,6 +3040,7 @@ class App(v.Viewer, KEngine):
         self.buttonFrame1S.pack(side=LEFT, expand=NO)
 
         self.resetButtonS = Button(self.buttonFrame1S, text=_('Reset'), command=self.reset)
+        self.resetstartButtonS = Button(self.buttonFrame1S, text=_('Reset/start'), command=self.reset_start)
         self.searchButtonS = Button(self.buttonFrame1S, text=_('Pattern search'), command=self.search)
         self.backButtonS = Button(self.buttonFrame1S, text=_('Back'), command=self.back)
 
@@ -3046,7 +3053,7 @@ class App(v.Viewer, KEngine):
 
         self.statByDateButtonS = Checkbutton(self.buttonFrame1S, text=_('Statistics by Date'), variable=self.options.statistics_by_date, indicatoron=0, command=self.display_statistics)
 
-        for ii, b in enumerate([self.resetButtonS, self.searchButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS, self.statByDateButtonS]):
+        for ii, b in enumerate([self.searchButtonS, self.resetstartButtonS, self.resetButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS, self.statByDateButtonS]):
             b.grid(row=0, column=ii)
 
         # -------------------------
@@ -3252,7 +3259,8 @@ class App(v.Viewer, KEngine):
         self.inittags()
 
         # icons for the buttons
-        for button, filename in [(self.showContButtonS, 'abc-u.gif'), (self.backButtonS, 'edit-undo.gif'), (self.resetButtonS, 'go-home.gif'), (self.searchButtonS, 'system-search.gif'),
+        for button, filename in [(self.showContButtonS, 'abc-u.gif'), (self.backButtonS, 'edit-undo.gif'), (self.resetButtonS, 'go-home.gif'), (self.resetstartButtonS, 'go-home-start.gif'),
+                                 (self.searchButtonS, 'system-search.gif'),
                                  (self.oneClickButtonS, 'mouse.gif'), (self.statByDateButtonS, 'date.gif'),
                                  (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
                                  (self.GIstart, 'system-search.gif'), (self.GIclear, 'document-new.gif'), (self.GI_bwd, 'go-previous.gif'), (self.GI_fwd, 'go-next.gif'),

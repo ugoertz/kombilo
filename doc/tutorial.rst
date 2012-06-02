@@ -364,12 +364,12 @@ switches.
 
 .. image:: images/backreset.jpg
 
-
-The 'home' button resets the game list, so that it includes all the games
-in the database again. The 'search' button starts a pattern search. The
-'back' button jumps back to the previous search: the position on the board
-is restored as well as the game list. (Previous search patterns are also
-shown on small boards in the "History" frame of the data window.)
+The 'search' button starts a pattern search. The 'home/start' button resets the
+game list and clears the board. The 'home' button resets the game list, so that
+it includes all the games in the database again. The 'back' button jumps back to
+the previous search: the position on the board is restored as well as the game
+list. (Previous search patterns are also shown on small boards in the "History"
+frame of the data window.)
 
 With the button depicting a labeled white stone, you can display the labels
 showing the continuations in the current search pattern (resp. remove them

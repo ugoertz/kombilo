@@ -1030,6 +1030,7 @@ Global key bindings
 -------------------
 
 * ``Control-r`` reset game list
+* ``Control-a`` clear board and reset game list
 * ``Control-s`` select statistics tab
 * ``Control-o`` select options tab
 * ``Control-g`` select game info search tab
@@ -1059,7 +1060,7 @@ Game list key bindings
 * ``Up``/``down``/``PgUp``/``PgDown``: move in game list
 * ``Home``/``End``: scroll to left/right
 * ``Return``: open selected game in viewer
-* ``Control-a``: print Dyer signature of selected game to log tab
+* ``Control-v``: print Dyer signature of selected game to log tab
 
 Mouse bindings
 --------------
