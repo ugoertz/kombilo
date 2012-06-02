@@ -980,6 +980,8 @@ class App(v.Viewer, KEngine):
                     right = (latest - fr) * 400 // (to - fr)
                 right += xoffset
 
+                print earliest, latest, average_date, became_popular, became_unpopular
+
                 average_date = (average_date - fr) * 400 // (to - fr) + xoffset
                 became_popular = (became_popular - fr) * 400 // (to - fr) + xoffset
                 became_unpopular = (became_unpopular - fr) * 400 // (to - fr) + xoffset
@@ -2516,7 +2518,8 @@ class App(v.Viewer, KEngine):
         self.searchOptions = self.get_search_options()
 
         self.patternSearch(CSP, self.searchOptions, self.contLabels, self.fixedLabels, self.progBar,
-                           {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'), }[self.options.continuations_sort_crit.get()])
+                           {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'),
+                            'became popular': _('became popular'), 'became unpopular': _('became unpopular'), }[self.options.continuations_sort_crit.get()])
                            # translate back to the English values used in kombiloNG
 
         if self.showContinuation.get():
@@ -2573,7 +2576,7 @@ class App(v.Viewer, KEngine):
         sort_options_l = Label(options_window, anchor='e', text=_('Sort continuations by'))
         sort_options_l.grid(row=row_ctr, column=0)
         sort_option_cb = Combobox(options_window, justify='left', textvariable=self.options.continuations_sort_crit,
-                                  values=(_('total'), _('earliest'), _('latest'), _('average'), ),
+                                  values=(_('total'), _('earliest'), _('latest'), _('average'), ('became popular'), ('became unpopular'), ),
                                   state='readonly')
         sort_option_cb.grid(row=row_ctr, column=1)
         row_ctr += 1
@@ -2622,7 +2625,8 @@ class App(v.Viewer, KEngine):
 
         options_dict = {s: getattr(variables, s).get() for s, t, v in entry_list}
         options_dict.update({'reset_game_list': reset_game_list_var.get(),
-                             'sort_criterion': {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'), }[self.options.continuations_sort_crit.get()],
+                             'sort_criterion': {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'),
+                                                'became popular': _('became popular'), 'became unpopular': _('became unpopular'), }[self.options.continuations_sort_crit.get()],
                              'boardsize': CSP.boardsize,
                              'sizex': CSP.sizeX, 'sizey': CSP.sizeY,
                              'anchors': (CSP.left, CSP.right, CSP.top, CSP.bottom),
@@ -3122,11 +3126,11 @@ class App(v.Viewer, KEngine):
         self.dp_chunk_size_lb.grid(row=8, column=4, padx=3)
         self.dp_chunk_size.grid(row=8, column=5, padx=3)
         self.patternSearchOptions_dp1 = Frame(self.patternSearchOptions)
-        self.patternSearchOptions_dp1.grid(row=8, columnspan=6, sticky=NSEW)
+        self.patternSearchOptions_dp1.grid(row=8, columnspan=8, sticky=NSEW)
         self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'))
         self.dp_sort_crit_lb.grid(row=0, column=0)
-        self.dp_sort_crit = Combobox(self.patternSearchOptions_dp1, values=(_('total'), _('earliest'), _('latest'), _('average'), ), textvariable=self.options.continuations_sort_crit,
-                                     state='readonly', width=10)
+        self.dp_sort_crit = Combobox(self.patternSearchOptions_dp1, values=(_('total'), _('earliest'), _('latest'), _('average'), _('became popular'), _('became unpopular'), ), textvariable=self.options.continuations_sort_crit,
+                                     state='readonly', width=15)
         self.dp_sort_crit.grid(row=0, column=1, padx=3)
 
         # validation for date profile options, and triggering of date profile update when options are changed
