@@ -2411,6 +2411,7 @@ class App(v.Viewer, KEngine):
         advOptMenu.add_checkbutton(label=_('Use upper case labels'), variable=self.options.uppercaseLabels)
         if sys.platform.startswith('win'):
             advOptMenu.add_checkbutton(label=_('Maximize window'), variable=self.options.maximize_window)
+            advOptMenu.add_checkbutton(label=_('Maximize external viewer'), variable=self.options.maximize_viewer)
 
         self.custom_menus = CustomMenus(self)
         self.optionsmenu.insert_command(1, label=_('Custom Menus'), command=self.custom_menus.change)
