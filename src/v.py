@@ -2770,6 +2770,13 @@ class Viewer:
 
         # The main window
 
+        if BoardClass == Board:  # not invoked by Kombilo
+            if sys.platform.startswith('win') and self.options.maximize_viewer.get():
+                try:
+                    master.state('zoomed')
+                except:
+                    pass
+
         self.master = master
 
         navFrame = Frame(self.master)

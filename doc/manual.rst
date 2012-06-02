@@ -1257,6 +1257,8 @@ If this is active, Kombilo will try to maximize its main window on startup. This
 option will become effective when you start Kombilo the next time (not
 immediately).
 
+If you choose to open games in Kombilo's external viewer, you can use the
+'Maximize external viewer' option to have the viewer's windows maximized.
 
 
 .. index::
