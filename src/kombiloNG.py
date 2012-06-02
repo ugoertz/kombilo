@@ -614,8 +614,8 @@ cont_sort_criteria = {'total': lambda c1, c2: c2.total() - c1.total(),
                       'earliest': lambda c1, c2: c1.earliest() - c2.earliest(),
                       'latest': lambda c1, c2: c2.latest() - c1.latest(),
                       'average': lambda c1, c2: c1.average_date() - c2.average_date(),
-                      'became popular': lambda c1, c2: c1.average_date_w1() - c2.average_date_w1(),
-                      'became unpopular': lambda c1, c2: c2.average_date_w2() - c1.average_date_w2(),
+                      'became popular': lambda c1, c2: (c1.became_popular() if c1.became_popular() != -1 else 10000) - (c2.became_popular() if c2.became_popular() != -1 else 10000),
+                      'became unpopular': lambda c1, c2: c2.became_unpopular() - c1.became_unpopular(),
                      }
 
 
