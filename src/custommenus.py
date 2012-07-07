@@ -27,6 +27,11 @@ import v
 from libkombilo import SGFError
 
 
+import gettext
+t = gettext.translation('kombilo', '../lang')
+_ = t.ugettext
+
+
 class CustomMenus:
 
     def __init__(self, master):
@@ -169,11 +174,13 @@ class CustomMenus:
                     nM = 'AB'
                 elif d[(ii - 1, jj - 1)] == 'O':
                     nM = 'AW'
-                elif d[(ii - 1, jj - 1)] == '*':  # FIXME distinguish different wildcards
+                elif d[(ii - 1, jj - 1)] in ['x', 'o', '*']:
+                    wc_type = d[(ii - 1, jj - 1)]
                     x1, x2, y1, y2 = self.master.board.getPixelCoord((jj, ii), 1)
-                    self.master.board.wildcards[(jj, ii)] = self.master.board.create_oval(x1 + 4, x2 + 4, y1 - 4, y2 - 4,
-                                                                                         fill='green',
-                                                                                         tags=('wildcard', 'non-bg'))
+                    self.master.board.wildcards[(jj, ii)] = (self.master.board.create_oval(x1 + 4, x2 + 4, y1 - 4, y2 - 4,
+                                                                                          fill={'*': 'green', 'x': 'black', 'o': 'white'}[wc_type],
+                                                                                          tags=('wildcard', 'non-bg')),
+                                                             wc_type)
                     continue
                 else:
                     continue
@@ -354,7 +361,7 @@ class CustomMenus:
                 else:
                     d[(i - 1, j - 1)] = '.'
                 if (j, i) in self.master.board.wildcards:
-                    d[(i - 1, j - 1)] = '*'  # FIXME distinguish different wildcards
+                    d[(i - 1, j - 1)] = self.master.board.wildcards[(j,i)][1]
 
         self.correspEntry[index][1]['psearch'] = (sel, d,
                                                   self.master.fixedAnchorVar.get(),
