@@ -283,6 +283,9 @@ class lkGameList(lk.GameList):
     def __getitem__(self, index):
         return self.all[index].gameInfoStr.split(',,,')
 
+    def find_by_ID(self, ID):
+        return [i for i, item in enumerate(self.all) if item.id == ID][0]
+
 
 # compare def loadDBs()
 GL_FILENAME = 0
@@ -1286,6 +1289,11 @@ class KEngine(object):
         self.dateProfileWholeDB = self.dateProfile()
 
     # ---------- database administration (processing etc.)
+
+    def find_duplicates(self, strict=True, dupl_within_db=True):
+        return lk.find_duplicates([os.path.join(db['name'][0], db['name'][1]+'.db') for db in self.gamelist.DBlist if not db['disabled']],
+                                  strict, dupl_within_db)
+
 
     def addDB(self, dbp, datap=('', '#'), recursive=True, filenames='*.sgf', acceptDupl=True, strictDuplCheck=True,
               tagAsPro=0, processVariations=1, algos=None,
