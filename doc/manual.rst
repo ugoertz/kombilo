@@ -226,7 +226,7 @@ with different versions of these packages that you might have in use.
 
 **Main kombilo directory:** The Kombilo files all go into the installation
 directory that you can specify during installation; typically ``c:\Program
-Files\kombilo07`` or something similar
+Files\kombilo08`` or something similar
 
 **Source code:** The Kombilo source code is included as a zip archive in the
 main Kombilo directory.
@@ -240,7 +240,7 @@ system, in an appropriate folder.
 **Configuration/log files:** The individual configuration file ``kombilo.cfg``,
 and (if necessary) the error log file ``kombilo.err`` will be written to
 a directory inside the *APPDATA* directory (something like
-``c:\Users\yourusername\AppData\Roaming\kombilo\07\``).
+``c:\Users\yourusername\AppData\Roaming\kombilo\08\``).
 
 **Uninstall:** The installer creates an *uninstall* menu entry in the Kombilo
 menu inside your start menu (unless you disable the start menu entry
@@ -1278,10 +1278,10 @@ created when Kombilo is started for the first time.
   Depending on your platform, the kombilo.cfg file will be stored in the
   following place:
 
-  *Linux/Mac OS*: ``~/.kombilo/07/``, where ``~`` is your home directory; on
+  *Linux/Mac OS*: ``~/.kombilo/08/``, where ``~`` is your home directory; on
   Linux, this is typically ``/home/yourusername/``.
 
-  *Windows*: In the folder ``kombilo\07\`` inside the *APPDATA* folder;
+  *Windows*: In the folder ``kombilo\08\`` inside the *APPDATA* folder;
   typically *APPDATA* is something like
   ``\Users\yourusername\AppData\Roaming\``.
 
