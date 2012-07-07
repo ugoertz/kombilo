@@ -374,7 +374,7 @@ In the lower text area, Kombilo will output messages about the processed games.
   are named. Being a duplicate is tested with the method chosen in the options.
   In every case, the Dyer signature (position of moves 20, 31, 40, 51, 60, 71)
   is compared. With strict duplicate checking, in addition the final position is
-  compared.
+  compared. See :ref:`Find duplicates <find-duplicates>`.
 * **SGF Error**: If there was an SGF error, Kombilo issues a warning. It tries
   to do its best to recover, and will insert as much of the game as it
   understands into the database anyway.
@@ -942,6 +942,22 @@ In this tab, Kombilo prints out some information about its actions (timing
 of searches etc.).
 
 
+.. index:: Duplicates, Find duplicates
+
+.. _find-duplicates:
+
+Find duplicates
+---------------
+
+Use ``Find duplicates`` in the ``Database`` menu to produce a list of
+duplicates in the database (or rather, in all the databases that are currently
+active). The list will be presented in a new window and can be saved as a text
+file. The duplicate check will be strict (i.e., the Dyer signature and the final
+position will be compared) or non-strict (only the Dyer signatures will be
+compared) depending on the setting of the corresponding processing option. This
+option can be changed in the ``Edit DB list`` window or in the
+``Options-Advanced`` menu.
+
 
 The SGF editor
 ==============
@@ -1066,6 +1082,11 @@ Game list key bindings
 Mouse bindings
 --------------
 
+* Use Left-click to put stones on the board.
+* With Right-click and drag, you select the search-relevant region.
+* Use Shift + Left-click you can put (change/remove) :ref:`wildcards` on the board.
+* With Shift + Right-clicking on a stone, you can go to the point in the SGF
+  file, where this stone was played.
 * The mouse wheel lets you scroll the game list, or scroll through the current
   game, depending on where the mouse pointer is located.
 * The next button triggers a pattern search, the back button goes back to the

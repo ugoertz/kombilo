@@ -534,7 +534,20 @@ class GameList {
 };
 
 // ------- duplicates ---------------------------------------------------------
+/*! To find duplicates, pass a list of GameList instances (by specifying the
+ * file names of their .db files in a vector of strings) to this method. You
+ * can also specify whether the duplicate checks should be strict, and whether
+ * duplicates within the individual GameList instances should also be found, or
+ * whether only duplicates "spanning" at least two dbs should be found.
+ *
+ * The function returns a map<string, vector<int> > whose keys are game
+ * signatures, and for each signature, a list of duplicates with this
+ * signature. This list is in the form db_id1, game_id1, db_id2, game_id2, ...;
+ * here db_id is the place within the glists vector which was passed to
+ * find_duplicates, and game_id is the id within the gamelist db_id.
+ */
 std::map<std::string, std::vector<int> >  find_duplicates(std::vector<string> glists, bool strict=false, bool dupl_within_db=false) throw(DBError);
+
 
 
 const int HANDI_TAG = 1;
