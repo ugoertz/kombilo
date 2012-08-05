@@ -1,9 +1,9 @@
 ; -- kombilo.iss --
-; For Kombilo 0.7.3
+; For Kombilo 0.7.4
 
 [Setup]
 AppName=Kombilo
-AppVerName=Kombilo 0.7.3
+AppVerName=Kombilo 0.7.4
 AppCopyright=Copyright (C) 2001-2012 Ulrich Goertz (ug@geometry.de)
 DefaultDirName={pf}\kombilo07
 DefaultGroupName=Kombilo
@@ -11,7 +11,7 @@ UninstallDisplayIcon={app}\MyProg.exe
 Compression=bzip
 SourceDir=c:\Users\ug\kombilo\src\dist\
 OutputDir=c:\Users\ug\kombilo\installer\
-OutputBaseFilename=kombilo073
+OutputBaseFilename=kombilo074
 MinVersion=4,4
 AllowNoIcons=yes
 

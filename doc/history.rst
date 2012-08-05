@@ -26,6 +26,11 @@ History/Change log
 0.7
 ---
 
+0.7.4 (August 2012)
+^^^^^^^^^^^^^^^^^^^
+
+Fixed bug in search algorithm. Thanks to John Fairbairn for pointing it out.
+
 0.7.3 (May 2012)
 ^^^^^^^^^^^^^^^^
 
