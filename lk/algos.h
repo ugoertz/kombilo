@@ -251,6 +251,7 @@ class MovelistCand {
     ExtendedMoveNumber dictsF;
     bool dictsFound;
     ExtendedMoveNumber dictsFI;
+    bool node_changes_relevant_region;
     bool dictsFoundInitial;
     bool dictsDR;
     int dictsNO;
