@@ -3,22 +3,22 @@
 
 // Copyright (c) 2006-12 Ulrich Goertz <ug@geometry.de>
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of 
-// this software and associated documentation files (the "Software"), to deal in 
-// the Software without restriction, including without limitation the rights to 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-// of the Software, and to permit persons to whom the Software is furnished to do 
+// of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all 
+//
+// The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
 #include "sgfparser.h"
@@ -57,7 +57,7 @@ DBError::DBError() {
 
 // ------------------------------------------------------------------------------------------------
 
-    
+
 Algorithm::Algorithm(int bsize) {
   boardsize = bsize;
 }
@@ -77,8 +77,8 @@ void Algorithm::endOfVariation_process() {}
 void Algorithm::endgame_process(bool commit) {}
 void Algorithm::finalize_process() {}
 SnapshotVector Algorithm::get_data() { return SnapshotVector(); }
-int Algorithm::search(PatternList& patternList, GameList& gl, SearchOptions& options) { 
-  return -1; 
+int Algorithm::search(PatternList& patternList, GameList& gl, SearchOptions& options) {
+  return -1;
 }
 
 
@@ -211,7 +211,7 @@ vector<int> Algo_signature::search_signature(char* sig) { // sig is expected to 
                                                           // argument to process, in order to check for duplicates).
   vector<int> result;
   pair<boost::unordered_multimap<string,int>::iterator, boost::unordered_multimap<string,int>::iterator> res = data.equal_range(string(sig));
-  for (boost::unordered_multimap<string,int>::iterator it = res.first; it != res.second; it++) 
+  for (boost::unordered_multimap<string,int>::iterator it = res.first; it != res.second; it++)
     result.push_back((*it).second);
   return result;
 }
@@ -368,7 +368,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
               }
             }
             nlist[nlistIndex++] = n;
-          }              
+          }
 
           int start = 0;
           int end = nlistIndex;
@@ -378,7 +378,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
 
           nextBlock[nextBlockIndex++] = start;
           nextBlock[nextBlockIndex++] = end-start;
-          for(int current=start; current < end; current++) 
+          for(int current=start; current < end; current++)
             nextBlock[nextBlockIndex++] = nlist[current];
         }
         char* nB = new char[nextBlockIndex];
@@ -391,7 +391,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
   }
 
   int num_of_games = gl.startO();
-  
+
   #pragma omp parallel for
   for(int ctr=0; ctr < num_of_games; ctr++) {
     int index = gl.oldList->at(ctr).first;
@@ -440,7 +440,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
             }
             if (!matches) break;
             fpIndex += 10 - start - length;
-          }                
+          }
           if (matches) {
             // printf("finalpos cand %d %d %d\n", a0, a1, N);
             matchList->push_back(new Candidate(a0,a1,N));
@@ -453,7 +453,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
       GameListEntry* gle = gl.all->at(gl.oldList->at(ctr).second);
       if (gle->candidates) delete gle->candidates;
       gle->candidates = matchList;
-      
+
       #pragma omp critical
       gl.currentList->push_back(gl.oldList->at(ctr));
     } else delete matchList;
@@ -530,7 +530,7 @@ void Algo_movelist::AB_process(int x, int y) {
   movelist.push_back((char)x);
   movelist.push_back((char)(y | BLACK));
 }
-        
+
 
 void Algo_movelist::AW_process(int x, int y) {
   movelist.push_back((char)x);
@@ -632,6 +632,7 @@ MovelistCand::MovelistCand(Pattern* P, int ORIENTATION, char* DICTS, int NO, cha
   dictsFoundInitial = false;
   dictsDR = false;
   contList = p->contList;
+  node_changes_relevant_region = false;
 }
 
 MovelistCand::~MovelistCand() {
@@ -696,7 +697,7 @@ VecMC* VecMC::deepcopy(ExtendedMoveNumber& COUNTER, int CANDSSIZE) {
   return result;
 }
 
-int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions& options) { 
+int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions& options) {
   // printf("Enter Algo_movelist::search\n");
   int numOfHits = 0;
   int self_numOfSwitched = 0;
@@ -748,7 +749,6 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
     ExtendedMoveNumber counter(0);
 
     while (movelistIndex < endMovelist) {
-      // printf("\nnextmove %d\n", counter.total_move_num());
       if (counter.total_move_num() == movelimit+1) {
         for(vector<MovelistCand* >::iterator it = cands->begin(); it != cands->end(); it++) {
           if (*it == 0) continue;
@@ -759,12 +759,13 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
           }
         }
       }
+      // printf(".");
       if (options.searchInVariations && movel[movelistIndex] & BRANCHPOINT) {
         // printf("branchpoint\n");
         branchpoints.push(cands->deepcopy(counter, candssize));
         movelistIndex += 2;
         continue;
-      } 
+      }
       if (options.searchInVariations && movel[movelistIndex] & ENDOFVARIATION) {
         // printf("endofvariation\n");
         if (!patternList.nextMove) { // deal with hits w/o continuation
@@ -820,9 +821,24 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
         for(vector<MovelistCand* >::iterator it = cands->begin(); it != cands->end(); it++) {
           if (*it == 0) continue;
           if ((*it)->in_relevant_region(x,y)) {
+            (*it)->node_changes_relevant_region = true;
+            // printf("\nnextmove %d\n", counter.total_move_num());
+            // if (it == cands->begin()) {
+              // Candidate* m = (*currentMatchList)[0]; // refers to FIRST candidate
+              // Pattern* p = &patternList.data[m->orientation];
+              // for(int i=0; i<p->sizeX; i++) {
+                // for(int j=0; j<p->sizeY; j++) {
+                  // if ( (*it)->dicts[i+p->sizeX*j] == 0) printf("$");
+                  // else printf("%c", (*it)->dicts[i+p->sizeX*j]);
+                // }
+                // printf("\n");
+              // }
+              // printf("\n");
+              // printf("dictsNO %d\n", (*it)->dictsNO);
+            // }
             // printf("loop 1\n %c", (*it)->dictsget(x,y));
             if ((*it)->dictsFound) { // found, so now we have found the continuation
-              // printf("found\n");
+              // printf("found cont\n");
               char* label;
 
               # pragma omp critical
@@ -915,6 +931,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
           // printf("loop 2\n");
           if (*it == 0) continue;
           if ((*it)->in_relevant_region(x,y)) {
+            (*it)->node_changes_relevant_region = true;
             if (!(*it)->dictsFound) { // not found yet
               if ((*it)->dictsFoundInitial) { // foundInitial
                 int ii = (*it)->contListIndex;
@@ -935,17 +952,17 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
                     continue;
                   } else {
                     (*it)->contListIndex = 0;
-                    (*it)->dictsFoundInitial = false; 
+                    (*it)->dictsFoundInitial = false;
                   }
                 }
               }
-              if (!(*it)->dictsget(x,y)) { 
+              if (!(*it)->dictsget(x,y)) {
                 // the stone at this position was what we needed,
                 // since it was captured, we are once again looking for it:
                 (*it)->dictsset(x,y,co);
                 (*it)->dictsNO++; // printf("++ C\n");
               }
-              else if ((*it)->dictsget(x,y) == lower_invco) { 
+              else if ((*it)->dictsget(x,y) == lower_invco) {
                 (*it)->dictsNO--; // printf("-- B\n");
               }
               else if ((*it)->dictsget(x,y) == '.') {
@@ -964,25 +981,28 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
         // printf("si %d \n", si);
         for(int i=0; i<si; i++) {
           MovelistCand* it = (*cands)[i];
-          if (it == 0 || (co != '?' && !it->in_relevant_region(x,y))) continue;
-          if (!it->dictsNO && !it->dictsFound) {
-            if (!it->contList.size()) {
-              it->dictsF = counter;
-              it->dictsFound = true;
-            } else if (!it->dictsFoundInitial) {
-              it->dictsFI = counter;
-              it->dictsFoundInitial = true;
-              // printf("found initial\n");
-            } else if (!it->dictsDR) { // found initial position again during processing of contList   ... FIXME need test case for this
-              char* d = new char[it->p->sizeX*it->p->sizeY];
-              for (int ct=0; ct < it->p->sizeX*it->p->sizeY; ct++) d[ct] = it->dicts[ct];
-              MovelistCand* mlc = new MovelistCand(it->p, it->orientation, d, 0, it->mx, it->my);
-              mlc->dictsFI = counter;
-              cands->push_back(mlc);
-              candssize++;
-              // printf("push back\n");
+          if (it != 0 && it->node_changes_relevant_region) {
+            if (!it->dictsNO && !it->dictsFound) {
+              if (!it->contList.size()) {
+                it->dictsF = counter;
+                it->dictsFound = true;
+                // printf("found pattern\n");
+              } else if (!it->dictsFoundInitial) {
+                it->dictsFI = counter;
+                it->dictsFoundInitial = true;
+                // printf("found initial\n");
+              } else if (!it->dictsDR) { // found initial position again during processing of contList   ... FIXME need test case for this
+                char* d = new char[it->p->sizeX*it->p->sizeY];
+                for (int ct=0; ct < it->p->sizeX*it->p->sizeY; ct++) d[ct] = it->dicts[ct];
+                MovelistCand* mlc = new MovelistCand(it->p, it->orientation, d, 0, it->mx, it->my);
+                mlc->dictsFI = counter;
+                cands->push_back(mlc);
+                candssize++;
+                // printf("push back\n");
+              }
             }
           }
+          if (it) it->node_changes_relevant_region = false;
         }
         counter.next();
       }
@@ -1015,7 +1035,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
       }
     }
 
-    # pragma omp critical 
+    # pragma omp critical
     {
       if (result->size()) {
         numOfHits += result->size();
@@ -1053,20 +1073,20 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
 
 #if (defined(__BORLANDC__) || defined(_MSC_VER))
 const hashtype Algo_hash::hashCodes[] = {
-  1448047776469843i64 ,  23745670021858756i64 ,  2503503679898819i64 ,  
-  20893061577159209i64 ,  10807838381971450i64 ,  2362252468869198i64 ,  
-  24259008893265414i64 ,  12770534669822463i64 ,  6243872632612083i64 ,  
-  9878602848666731i64 ,  15403460661141300i64 ,  23328125617276831i64 ,  
-  24399618481479321i64 ,  6553504962910284i64 ,  1670313139184804i64 ,  
-  12980312942597170i64 ,  20479559860862969i64 ,  9622188310955879i64 ,  
-  240315181816498i64 ,  15806748501866401i64 ,  11025185739521454i64 ,  
-  9892014082139049i64 ,  24468178939325513i64 ,  18336761931886570i64 ,  
-  17607110247268341i64 ,  1659968630984898i64 ,  15644176636883129i64 ,  
-  21288430710467667i64 ,  21718647773405600i64 ,  8449573198599383i64 ,  
-  12949198458251018i64 ,  13260609204816340i64 ,  15942818511406502i64 ,  
-  19422389391992560i64 ,  2306873372585698i64 ,  13245768415868578i64 ,  
-  3527685889767840i64 ,  16821792770065498i64 ,  14659578113224043i64 ,  
-  8882299950073676i64 ,  7855747638699870i64 ,  11443553816792995i64 ,  
+  1448047776469843i64 ,  23745670021858756i64 ,  2503503679898819i64 ,
+  20893061577159209i64 ,  10807838381971450i64 ,  2362252468869198i64 ,
+  24259008893265414i64 ,  12770534669822463i64 ,  6243872632612083i64 ,
+  9878602848666731i64 ,  15403460661141300i64 ,  23328125617276831i64 ,
+  24399618481479321i64 ,  6553504962910284i64 ,  1670313139184804i64 ,
+  12980312942597170i64 ,  20479559860862969i64 ,  9622188310955879i64 ,
+  240315181816498i64 ,  15806748501866401i64 ,  11025185739521454i64 ,
+  9892014082139049i64 ,  24468178939325513i64 ,  18336761931886570i64 ,
+  17607110247268341i64 ,  1659968630984898i64 ,  15644176636883129i64 ,
+  21288430710467667i64 ,  21718647773405600i64 ,  8449573198599383i64 ,
+  12949198458251018i64 ,  13260609204816340i64 ,  15942818511406502i64 ,
+  19422389391992560i64 ,  2306873372585698i64 ,  13245768415868578i64 ,
+  3527685889767840i64 ,  16821792770065498i64 ,  14659578113224043i64 ,
+  8882299950073676i64 ,  7855747638699870i64 ,  11443553816792995i64 ,
   10278034782711378i64 ,  9888977721917330i64 ,  8622555585025384i64 ,
   20622776792089008i64 ,  6447699412562541i64 ,  21593237574254863i64 ,
   4100056509197325i64 ,  8358405560798101i64 ,  24120904895822569i64 ,
@@ -1172,24 +1192,24 @@ const hashtype Algo_hash::hashCodes[] = {
   17477921115358343i64 ,  24726937211646877i64 ,  22480504880004621i64 ,
   18521326635500559i64 ,  8076560603417178i64 ,  22382516625473209i64 ,
   21696842111535623i64 ,  12559160944089288i64 ,  1661142873895453i64 ,
-  18379772814447567i64 ,  10295321430586466i64 ,  12378145201769592i64 ,  
+  18379772814447567i64 ,  10295321430586466i64 ,  12378145201769592i64 ,
   11815752235866582i64 };
 #else
 const hashtype Algo_hash::hashCodes[] = {
-  1448047776469843LL ,  23745670021858756LL ,  2503503679898819LL ,  
-  20893061577159209LL ,  10807838381971450LL ,  2362252468869198LL ,  
-  24259008893265414LL ,  12770534669822463LL ,  6243872632612083LL ,  
-  9878602848666731LL ,  15403460661141300LL ,  23328125617276831LL ,  
-  24399618481479321LL ,  6553504962910284LL ,  1670313139184804LL ,  
-  12980312942597170LL ,  20479559860862969LL ,  9622188310955879LL ,  
-  240315181816498LL ,  15806748501866401LL ,  11025185739521454LL ,  
-  9892014082139049LL ,  24468178939325513LL ,  18336761931886570LL ,  
-  17607110247268341LL ,  1659968630984898LL ,  15644176636883129LL ,  
-  21288430710467667LL ,  21718647773405600LL ,  8449573198599383LL ,  
-  12949198458251018LL ,  13260609204816340LL ,  15942818511406502LL ,  
-  19422389391992560LL ,  2306873372585698LL ,  13245768415868578LL ,  
-  3527685889767840LL ,  16821792770065498LL ,  14659578113224043LL ,  
-  8882299950073676LL ,  7855747638699870LL ,  11443553816792995LL ,  
+  1448047776469843LL ,  23745670021858756LL ,  2503503679898819LL ,
+  20893061577159209LL ,  10807838381971450LL ,  2362252468869198LL ,
+  24259008893265414LL ,  12770534669822463LL ,  6243872632612083LL ,
+  9878602848666731LL ,  15403460661141300LL ,  23328125617276831LL ,
+  24399618481479321LL ,  6553504962910284LL ,  1670313139184804LL ,
+  12980312942597170LL ,  20479559860862969LL ,  9622188310955879LL ,
+  240315181816498LL ,  15806748501866401LL ,  11025185739521454LL ,
+  9892014082139049LL ,  24468178939325513LL ,  18336761931886570LL ,
+  17607110247268341LL ,  1659968630984898LL ,  15644176636883129LL ,
+  21288430710467667LL ,  21718647773405600LL ,  8449573198599383LL ,
+  12949198458251018LL ,  13260609204816340LL ,  15942818511406502LL ,
+  19422389391992560LL ,  2306873372585698LL ,  13245768415868578LL ,
+  3527685889767840LL ,  16821792770065498LL ,  14659578113224043LL ,
+  8882299950073676LL ,  7855747638699870LL ,  11443553816792995LL ,
   10278034782711378LL ,  9888977721917330LL ,  8622555585025384LL ,
   20622776792089008LL ,  6447699412562541LL ,  21593237574254863LL ,
   4100056509197325LL ,  8358405560798101LL ,  24120904895822569LL ,
@@ -1295,7 +1315,7 @@ const hashtype Algo_hash::hashCodes[] = {
   17477921115358343LL ,  24726937211646877LL ,  22480504880004621LL ,
   18521326635500559LL ,  8076560603417178LL ,  22382516625473209LL ,
   21696842111535623LL ,  12559160944089288LL ,  1661142873895453LL ,
-  18379772814447567LL ,  10295321430586466LL ,  12378145201769592LL ,  
+  18379772814447567LL ,  10295321430586466LL ,  12378145201769592LL ,
   11815752235866582LL };
 #endif
 
@@ -1426,13 +1446,13 @@ Algo_hash_full::Algo_hash_full(int bsize, SnapshotVector DATA, const string OS_D
 
   // In case the file does not exist yet, we need to create it: hence open it
   // with the ios::app flag, and close again, then open with the flags we
-  // actually want. 
-  os_data.open(OS_DATA_NAME.c_str(), ios::in | ios::out | ios::binary | ios::app); 
-  os_data.close(); 
+  // actually want.
+  os_data.open(OS_DATA_NAME.c_str(), ios::in | ios::out | ios::binary | ios::app);
+  os_data.close();
   os_data.open(OS_DATA_NAME.c_str(), ios::in | ios::out | ios::binary);
-  
+
   // initialize from DATA
-  // data is a boost::unordered_multimap<int = hashCode, ptr_to_file> 
+  // data is a boost::unordered_multimap<int = hashCode, ptr_to_file>
   if (DATA.size()) { // allow passing an empty SnapshotVector to this constructor
     hashtype si = DATA.retrieve_hashtype();
     for(hashtype i=0; i<si; i++) {
@@ -1461,7 +1481,7 @@ SnapshotVector Algo_hash_full::get_data() {
   }
 
   // Clear data:
-  
+
   data.clear();
 
   // Create list of all hashCodes
@@ -1547,7 +1567,7 @@ void Algo_hash_full::AW_process(int x, int y) {
   process_lfc(x,y,'W');
   currentHashCode -= Algo_hash::hashCodes[x + boardsize*y];
   numStones++;
-}                 
+}
 
 void Algo_hash_full::AE_process(int x, int y, char removed) {
   if (removed == 'B') currentHashCode -= Algo_hash::hashCodes[x + boardsize*y];
@@ -1616,7 +1636,7 @@ void Algo_hash_full::endgame_process(bool commit) {
 }
 
 
- 
+
 void Algo_hash_full::finalize_process() {
 }
 
@@ -1625,7 +1645,7 @@ hashtype Algo_hash_full::compute_hashkey(Pattern& pattern) {
   if (pattern.sizeX != boardsize || pattern.sizeY != boardsize)
     return NOT_HASHABLE;
   hashtype hashkey = 0;
-  int ns = 0;          
+  int ns = 0;
   for(int i=0; i<boardsize; i++) {
     for(int j=0; j<boardsize; j++) {
       char p = pattern.finalPos[i + boardsize*j];
@@ -1660,9 +1680,9 @@ void Algo_hash_full::get_HHF(int ptr, vpsip results, int orientation) {
     os_data.read((char*)&gameid, sizeof(gameid));
     int si;
     os_data.read((char*)&si, sizeof(si));
-      
+
     char* i3 = new char[si];
-    os_data.read(i3, si); 
+    os_data.read(i3, si);
     // printf("i %d gid %d si %d\n", i, gameid, si);
     HashhitF* HHF = new HashhitF(gameid, 0, i3);
     delete [] i3;
@@ -1682,7 +1702,7 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
   int hash_result = -1; // -1 = failure; 0 = ok, but have to check w/ Algo_movelist, 1 = ok, produced final result
   int plS = patternList.size();
   vpsip results = new vector<HashhitF* >;
-  
+
   // go through patternList and collect all HashhitF's with appropriate hashCode
   //
   // TODO we could reduce search time by "symmetrizing" hashCodes?!
@@ -1711,7 +1731,7 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
           if ((*resultIT)->emn->total_move_num() <= options.moveLimit) {
             char *label;
             if ((*resultIT)->cont->x != NO_CONT) { // continuation
-              label = patternList.updateContinuations((*resultIT)->orientation, 
+              label = patternList.updateContinuations((*resultIT)->orientation,
                                                       (*resultIT)->cont->x, (*resultIT)->cont->y, (*resultIT)->cont->color,
                                                       false, // tenuki impossible with full board pattern
                                                       gl.getCurrentWinner(), gl.getCurrentDate());
@@ -1800,9 +1820,9 @@ Algo_hash::Algo_hash(int bsize, SnapshotVector DATA, string OS_DATA_NAME, int MA
 
   // In case the file does not exist yet, we need to create it: hence open it
   // with the ios::app flag, and close again, then open with the flags we
-  // actually want. 
-  os_data.open(OS_DATA_NAME.c_str(), ios::in | ios::out | ios::binary | ios::app); 
-  os_data.close(); 
+  // actually want.
+  os_data.open(OS_DATA_NAME.c_str(), ios::in | ios::out | ios::binary | ios::app);
+  os_data.close();
   os_data.open(OS_DATA_NAME.c_str(), ios::in | ios::out | ios::binary);
 
   // initialize from DATA
@@ -1821,7 +1841,7 @@ SnapshotVector Algo_hash::get_data() {
   SnapshotVector v;
 
   // Add all entries of data to data_p:
-  
+
   for(vector<pair<hashtype, int> >::iterator it = data.begin(); it != data.end(); it++) {
     vector<HashhitCS* >* results = new vector<HashhitCS* >;
     get_HHCS(it->second, results, false);
@@ -1833,7 +1853,7 @@ SnapshotVector Algo_hash::get_data() {
   }
 
   // Clear data
-  
+
   data.clear();
 
   // Create list of all hashCodes
@@ -1879,7 +1899,7 @@ Algo_hash::~Algo_hash() {
 
 void Algo_hash::initialize_process() {
 }
-        
+
 void Algo_hash::newgame_process(int game_id) {
   gid = game_id;
   for(vector<HashInstance>::iterator it = hi->begin(); it != hi->end(); it++) it->initialize();
@@ -1893,12 +1913,12 @@ void Algo_hash::AB_process(int x, int y) {
 void Algo_hash::AW_process(int x, int y) {
   for(vector<HashInstance>::iterator it = hi->begin(); it != hi->end(); it++)
     it->addW(x,y);
-}                 
+}
 
 void Algo_hash::AE_process(int x, int y, char removed) {
   if (removed == 'B') {
     for(vector<HashInstance>::iterator it = hi->begin(); it != hi->end(); it++) it->removeB(x,y);
-  } else { 
+  } else {
     for(vector<HashInstance>::iterator it = hi->begin(); it != hi->end(); it++) it->removeW(x,y);
   }
 }
@@ -1956,7 +1976,7 @@ void Algo_hash::endgame_process(bool commit) {
   }
   hash_vector.clear();
 }
- 
+
 void Algo_hash::finalize_process() {
 }
 
@@ -1970,7 +1990,7 @@ void Algo_hash::get_HHCS(int ptr, vector<HashhitCS* >* results, bool cs) {
   os_data.seekg(ptr);
   int num_entries;
   os_data.read((char*)&num_entries, sizeof(num_entries));
-  
+
   for(int i=0; i<num_entries; i++) {
     int i1;
     os_data.read((char*)&i1, sizeof(i1));
@@ -2014,7 +2034,7 @@ int Algo_hash::search(PatternList& patternList, GameList& gl, SearchOptions& opt
     vector<pair<hashtype, int> >::iterator it = lower_bound(data.begin(), data.end(), pair<hashtype, int>(hashCode2,0));
     if (it != data.end() && it->first == hashCode2) get_HHCS(it->second, results, true);
   }
-  
+
   // --------------------------------------------
   // printf("enter Algo_hash::search 2, size results: %d\n", results->size());
 
@@ -2116,7 +2136,7 @@ pair<hashtype,vector<int> > Algo_hash_corner::compute_hashkey(PatternList& pl, i
 
   // find all "hashable" corners in the pattern
   // and return respective hashCodes
-  
+
   for(int offsetX = 0; offsetX <= boardsize-size; offsetX += boardsize-size) { // each corner (2d range = [0..6, 0..6], [12..18, 0..6], [0..6, 12..18], [12..18, 12..18])
     for(int offsetY = 0; offsetY <= boardsize-size; offsetY += boardsize-size) {
       // TODO could improve this a tiny bit if pattern has symmetries: then it would be enough to look at one "corner representative" for each orbit
@@ -2175,7 +2195,7 @@ pair<hashtype,vector<int> > Algo_hash_corner::compute_hashkey(PatternList& pl, i
 //   char buf[10];
 //   sprintf(buf, "%d_%d", sizeX, sizeY);
 //   dbnameext += buf;
-// 
+//
 //   hi = new vector<HashInstance>;
 //   for(int i=1; i<bsize-1-sizeX; i++)
 //     hi->push_back(HashInstance(i,0,sizeX, sizeY,boardsize));
@@ -2192,7 +2212,7 @@ HashInstance::HashInstance(char X, char Y, char SIZEX, char SIZEY, int BOARDSIZE
   xx = X;
   yy = Y;
   pos = xx + boardsize*yy;
-  sizeX = SIZEX; 
+  sizeX = SIZEX;
   sizeY = SIZEY;
   branchpoints = 0;
   currentHashCode = 0;
@@ -2227,7 +2247,7 @@ bool HashInstance::inRelevantRegion(char X, char Y) {
 void HashInstance::initialize() {
   // keep track of 8 hashCodes, corresponding to 8 symmetries
   // at the end of each node, the maximum of these values is written to the db.
-  currentHashCode = new hashtype[8]; 
+  currentHashCode = new hashtype[8];
   for(int i=0; i<8; i++) currentHashCode[i] = 0; // start with empty board
   numStones = 0;
   branchpoints = new stack<pair<hashtype*,int> >;
@@ -2277,7 +2297,7 @@ void HashInstance::removeW(char x, char y) {
 pair<hashtype,int> HashInstance::cHC() {
   int flip = 0;
   hashtype minCHC = currentHashCode[0];
-  for(int i=0; i<8; i++) { 
+  for(int i=0; i<8; i++) {
     // printf("ch %d %ld\n", i, currentHashCode[i]);
     if (currentHashCode[i] < minCHC) {
       minCHC = currentHashCode[i];

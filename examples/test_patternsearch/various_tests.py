@@ -115,10 +115,11 @@ if __name__ == '__main__':
     f.close()
 
     K = KEngine()
-    K.gamelist.DBlist.append({'sgfpath': '', 'name':(os.path.abspath(basepath), 'kombilo3'), 'data': None, 'disabled': 0})
+    K.gamelist.DBlist.append({'sgfpath': '', 'name':(os.path.abspath(basepath), 'kombilo1'), 'data': None, 'disabled': 0})
 
     dummy, data['loading'] = timer(K.loadDBs)
     data['numofgames'] = K.gamelist.noOfGames()
+    print data['numofgames'], 'games'
     try:
         f = open('/proc/self/status')
         data['memory'] = [ x for x in f.readlines() if x.startswith('VmHWM') ][0].split(':')[1].strip()
@@ -186,6 +187,14 @@ if __name__ == '__main__':
                . . . O . . . . . 
                . . . . . . . . .
         ''', {'ptype': SIDE_N_PATTERN, 'sizeX': 9 }, lk.SearchOptions(), None ),
+        ('p6','''
+           .OOOOXX
+           X.OXXOX
+           OOOXOOO
+           OXXXO.O
+           XXX.XO.
+           OO.XXXX
+        ''', {'ptype': CORNER_SE_PATTERN, 'sizeX': 7, 'sizeY': 6, }, lk.SearchOptions(), None ),
         ]
 
     parameters = [ ('Number of games', K.gamelist.noOfGames, None), 
@@ -200,10 +209,11 @@ if __name__ == '__main__':
     for id, iPos, kwargs, so, algos in patterns:
         # TODO check whether png exists and create it if not
         p_orig = Pattern(iPos, **kwargs)
-        pl = lk.PatternList(p_orig, 0, 0)
+        pl = lk.PatternList(p_orig, 0, 0, K.gamelist.DBlist[0]['data'])
         data['content'] += '<tr><td>%s</td><td><div class="pattern" style="font-size:80%%;"><pre>%s</pre></div></td><td><table style="font-size:80%%;">' % (id, iPos)
         searchresults = { }
         for p_ctr in range(pl.size()):
+            print '.',
             p = pl.get(p_ctr)
             for alg in (algos or [ lk.ALGO_FINALPOS | lk.ALGO_MOVELIST | lk.ALGO_HASH_CORNER  | lk.ALGO_HASH_FULL ]):
                 so.algos = alg
