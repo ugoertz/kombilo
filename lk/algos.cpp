@@ -632,6 +632,7 @@ MovelistCand::MovelistCand(Pattern* P, int ORIENTATION, char* DICTS, int NO, cha
   dictsFoundInitial = false;
   dictsDR = false;
   contList = p->contList;
+  node_changes_relevant_region = false;
 }
 
 MovelistCand::~MovelistCand() {
@@ -821,6 +822,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
           if (*it == 0) continue;
           if ((*it)->in_relevant_region(x,y)) {
             // printf("loop 1\n %c", (*it)->dictsget(x,y));
+            (*it)->node_changes_relevant_region = true;
             if ((*it)->dictsFound) { // found, so now we have found the continuation
               // printf("found\n");
               char* label;
@@ -914,6 +916,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
           // printf("loop 2\n");
           if (*it == 0) continue;
           if ((*it)->in_relevant_region(x,y)) {
+            (*it)->node_changes_relevant_region = true;
             if (!(*it)->dictsFound) { // not found yet
               if ((*it)->dictsFoundInitial) { // foundInitial
                 int ii = (*it)->contListIndex;
@@ -963,24 +966,26 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
         // printf("si %d \n", si);
         for(int i=0; i<si; i++) {
           MovelistCand* it = (*cands)[i];
-          if (it == 0 || (co != '?' && !it->in_relevant_region(x,y))) continue;
-          if (!it->dictsNO && !it->dictsFound) {
-            if (!it->contList.size()) {
-              it->dictsF = counter;
-              it->dictsFound = true;
-            } else if (!it->dictsFoundInitial) {
-              it->dictsFI = counter;
-              it->dictsFoundInitial = true;
-              // printf("found initial\n");
-            } else if (!it->dictsDR) { // found initial position again during processing of contList   ... FIXME need test case for this
-              char* d = new char[it->p->sizeX*it->p->sizeY];
-              for (int ct=0; ct < it->p->sizeX*it->p->sizeY; ct++) d[ct] = it->dicts[ct];
-              MovelistCand* mlc = new MovelistCand(it->p, it->orientation, d, 0, it->mx, it->my);
-              mlc->dictsFI = counter;
-              cands->push_back(mlc);
-              candssize++;
-              // printf("push back\n");
+          if (it != 0 && it->node_changes_relevant_region) {
+            if (!it->dictsNO && !it->dictsFound) {
+              if (!it->contList.size()) {
+                it->dictsF = counter;
+                it->dictsFound = true;
+              } else if (!it->dictsFoundInitial) {
+                it->dictsFI = counter;
+                it->dictsFoundInitial = true;
+                // printf("found initial\n");
+              } else if (!it->dictsDR) { // found initial position again during processing of contList   ... FIXME need test case for this
+                char* d = new char[it->p->sizeX*it->p->sizeY];
+                for (int ct=0; ct < it->p->sizeX*it->p->sizeY; ct++) d[ct] = it->dicts[ct];
+                MovelistCand* mlc = new MovelistCand(it->p, it->orientation, d, 0, it->mx, it->my);
+                mlc->dictsFI = counter;
+                cands->push_back(mlc);
+                candssize++;
+                // printf("push back\n");
+              }
             }
+            if (it) it->node_changes_relevant_region = false;
           }
         }
         counter.next();
