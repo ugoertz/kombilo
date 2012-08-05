@@ -389,6 +389,7 @@ int Continuation::became_popular_W() {
   if (!W) return 0;
   float sum_squares = 0;
   int ctr = 0;
+  // printf("dapy size %d expected %d\n", gamelist->dates_all_per_year.size(), DATE_PROFILE_END - DATE_PROFILE_START + 1);
   for(int i=0; i < (DATE_PROFILE_END - DATE_PROFILE_START + 1); i++) {
     if (gamelist->dates_all_per_year[i] && dates_W[i]) {
       sum_squares += (float)dates_W[i] * dates_W[i]*1.0/(gamelist->dates_all_per_year[i] * gamelist->dates_all_per_year[i]);

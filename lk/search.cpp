@@ -377,9 +377,10 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
 
   all = 0;
   for(int i = 0; i < (DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_all.push_back(0);
-  for(int i = 0; i < DATE_PROFILE_END - DATE_PROFILE_START; i++) dates_all_per_year.push_back(0);
+  for(int i = 0; i < DATE_PROFILE_END - DATE_PROFILE_START + 1; i++) dates_all_per_year.push_back(0);
   currentList = oldList = 0;
   resetFormat(ORDERBY, FORMAT);
+  // printf("dapy size %d expected %d\n", dates_all_per_year.size(), DATE_PROFILE_END - DATE_PROFILE_START + 1);
   // printf("done\n");
 }
 
@@ -1228,9 +1229,10 @@ void GameList::search(Pattern& pattern, SearchOptions* so) throw(DBError) {
     }
 
     if (hash_result == -1) {
+      // printf("no hashing\n");
       if (searchOptions->algos & ALGO_FINALPOS && algo_ps[algo_finalpos])
         algo_ps[algo_finalpos]->search(pl, *this, *searchOptions);
-      // printf("%d candidates\n", oldList->size());
+      // printf("%d candidates\n", currentList->size());
       if (searchOptions->algos & ALGO_MOVELIST && algo_ps[algo_movelist])
         algo_ps[algo_movelist]->search(pl, *this, *searchOptions);
     }
