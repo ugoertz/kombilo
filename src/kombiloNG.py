@@ -1192,9 +1192,10 @@ class KEngine(object):
                 if messages:
                     messages.insert('end', 'SGF error, file %s. Not inserted.\n' % filename)
                     messages.update()
-            
-        messages.insert('end', 'Finalizing ... (this will take some time)\n')
-        messages.update()
+
+        if messages:
+            messages.insert('end', 'Finalizing ... (this will take some time)\n')
+            messages.update()
         gl.finalize_processing()
 
         for ref in self.gamelist.references:
