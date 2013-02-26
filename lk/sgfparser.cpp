@@ -3,22 +3,22 @@
 
 // Copyright (c) 2006-12 Ulrich Goertz <ug@geometry.de>
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of 
-// this software and associated documentation files (the "Software"), to deal in 
-// the Software without restriction, including without limitation the rights to 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-// of the Software, and to permit persons to whom the Software is furnished to do 
+// of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all 
+//
+// The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
 #include <string.h>
@@ -117,7 +117,7 @@ char* SGFescape(const char* s) {
     if (s[i] == '\\' || s[i] == ']') t[j++]='\\';
     t[j++] = s[i];
   }
-           
+
   t[j++] = 0;
 
   char* result = new char[j];
@@ -132,14 +132,14 @@ vector<string>* parseRootNode(Node* n, vector<string>* tags) throw(SGFError) {
   int lSGFstring = s.size();
   int i = 0;
 
-  while (i < lSGFstring && s[i] != ';' && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t')) 
+  while (i < lSGFstring && s[i] != ';' && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t'))
     i++;
 
   if (i>=lSGFstring || s[i] != ';') throw SGFError();
   i++;
 
   while (i < lSGFstring) {
-    while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t')) 
+    while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t'))
       i++;
 
     if (i >= lSGFstring) break;
@@ -196,7 +196,7 @@ vector<string>* parseRootNode(Node* n, vector<string>* tags) throw(SGFError) {
       propValue[propValueIndex++] = ' ';
 
       i++;
-      while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t')) 
+      while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t'))
         i++;
       if (i >= lSGFstring || s[i] != '[') {
         propValue[propValueIndex-2] = 0;
@@ -248,7 +248,7 @@ Node::Node(Node* prev, char* SGFst) throw(SGFError) {
   } else SGFstring = "";
   posyD = 0;
 }
-        
+
 Node::~Node() {
 }
 
@@ -287,7 +287,7 @@ ExtendedMoveNumber Node::get_move_number() {
     if (n->level) l.push_back(n->level);
     else l[l.size()-1]++;
     n = n->previous;
-  }        
+  }
 
   int* result = new int[l.size()];
   for(int i = l.size()-1; i >= 0; i--) {
@@ -306,14 +306,14 @@ void Node::parseNode() throw(SGFError) {
     int lSGFstring = s.size();
     int i = 0;
 
-    while (i < lSGFstring && s[i] != ';' && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t')) 
+    while (i < lSGFstring && s[i] != ';' && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t'))
       i++;
 
     if (i>=lSGFstring || s[i] != ';')  throw SGFError();
     i++;
 
     while (i < lSGFstring) {
-      while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t')) 
+      while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t'))
         i++;
 
       if (i >= lSGFstring) break;
@@ -383,7 +383,7 @@ void Node::parseNode() throw(SGFError) {
         propValueList->push_back(propValue);
         i++;
 
-        while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t')) 
+        while (i < lSGFstring && (s[i]==' ' || s[i]=='\n' || s[i]=='\r' || s[i]=='\t'))
           i++;
         if (i >= lSGFstring || s[i] != '[') break;
         else i++;
@@ -392,7 +392,7 @@ void Node::parseNode() throw(SGFError) {
     }
     parsed = 1;
   }
-}    
+}
 
 void Node::del_property_value(const string& IDcomplete) throw(SGFError) {
   if (!parsed) parseNode();
@@ -408,7 +408,7 @@ void Node::set_property_value(const string& IDcomplete, vector<string> propValue
   data.insert(make_pair(ID, PropValue(IDcomplete, new vector<string>(propValue))));
   SGFstring = nodeToString(data);
 }
-    
+
 void Node::add_property_value(const string& IDcomplete, vector<string> propValue) throw(SGFError) {
   if (!parsed) parseNode();
   string ID = remove_lowercase(IDcomplete);
@@ -417,7 +417,7 @@ void Node::add_property_value(const string& IDcomplete, vector<string> propValue
   else it->second.pv->insert(it->second.pv->end(), propValue.begin(), propValue.end());
   SGFstring = nodeToString(data);
 }
-    
+
 
 vector<string> Node::keys() {
   vector<string> result;
@@ -441,7 +441,7 @@ Cursor::Cursor(const char* sgf, int sloppy) throw(SGFError) {
   parse(sgf);
 
   currentN = root->next;
-  setFlags();       
+  setFlags();
 }
 
 Cursor::~Cursor() {
@@ -457,7 +457,7 @@ void Cursor::setFlags() {
 
 void Cursor::parse(const char* s) throw(SGFError) {
 
-  Node* curr = root;        
+  Node* curr = root;
   int p = -1;           // start of the currently parsed node
   stack<Node* > c;       // stack of nodes from which variations started
   stack<int> c_width;
@@ -475,8 +475,8 @@ void Cursor::parse(const char* s) throw(SGFError) {
   int found_par = 0;
   while (i < lSGFstring) {
     if (s[i]=='(') {
-      found_par = i+1;
       i++;
+      found_par = i;
       continue;
     }
     if (found_par && s[i]==';') break;
@@ -485,13 +485,12 @@ void Cursor::parse(const char* s) throw(SGFError) {
       found_par = 0;
     i++;
   }
-
   if (i >= lSGFstring) throw SGFError();
 
   i = found_par-1; // found beginning of SGF file
 
   while (i < lSGFstring) {
-    while (i < lSGFstring && !(s[i]=='(' || s[i]==')' || s[i]=='[' || s[i]==']' || s[i]==';')) i++; 
+    while (i < lSGFstring && !(s[i]=='(' || s[i]==')' || s[i]=='[' || s[i]==']' || s[i]==';')) i++;
     if (i >= lSGFstring) break;
 
     if (inbrackets) {
@@ -521,13 +520,12 @@ void Cursor::parse(const char* s) throw(SGFError) {
       if (curr->next) {
         Node* last = curr->next;
         while (last->down) last = last->down;
-        nn->up = last;                                  
+        nn->up = last;
         last->down = nn;
         nn->level = last->level + 1;
         height++;
         nn->posyD = height - height_previous;
-      }
-      else {
+      } else {
         curr->next = nn;
         nn->posyD = 0;
         height_previous = height;
@@ -547,23 +545,30 @@ void Cursor::parse(const char* s) throw(SGFError) {
 
     if (s[i] == ')') {
       if (last != ')' && p != -1) {
-        curr->SGFstring = string(s+p, i-p);       
+        curr->SGFstring = string(s+p, i-p);
       }
-      if (c.size()) { 
+      if (c.size()) {
         curr = c.top();
         c.pop();
         width_currentVar = c_width.top();
         c_width.pop();
         height_previous = c_height.top();
         c_height.pop();
-      }
-      else throw SGFError();
+      } else throw SGFError();
       last = ')';
+      if (!c.size()) { // Stack of variations is empty, so we have reached end
+                       // of game. Check whether another game follows in this SGF
+                       // collection. If not, ignore the rest of the file
+        i++;
+        while (i < lSGFstring && (s[i]==' ' || s[i]=='\t' || s[i]=='\n' || s[i]=='\r')) i++; // ignore whitespace
+        if (i >= lSGFstring || s[i] != '(') break; // no further game
+        else continue; // detected possibly another game, so jump to start of loop
+      }
     }
 
     if (s[i] == ';') {
       if (p != -1) {
-        curr->SGFstring = string(s+p, i-p);       
+        curr->SGFstring = string(s+p, i-p);
 
         Node* nn = new Node(0,0);
         nn->previous = curr;
@@ -582,6 +587,10 @@ void Cursor::parse(const char* s) throw(SGFError) {
 
   if (inbrackets || c.size()) throw SGFError();
 
+  if (curr != root) throw SGFError();
+
+  // remove previous pointer from the first nodes of the games in this SGF
+  // collection
   Node* n = curr->next;
   n->previous = NULL;
   n->up = NULL;
@@ -626,7 +635,7 @@ void Cursor::delVariation(Node* c) {
       while (node->down) {
         node = node->down;
         delVar(node->up);
-      }  
+      }
       delVar(node);
     }
     c->next = 0;
@@ -645,7 +654,7 @@ void Cursor::delVar(Node* node) {
     node->down->up = node->up;
     node->down->posyD = node->posyD;
     Node* n = node->down;
-    while (n) { 
+    while (n) {
       n->level--;
       n = n->down;
     }
@@ -753,7 +762,7 @@ Node* Cursor::next(int n) throw(SGFError) {
   setFlags();
   return currentN;
 }
-    
+
 Node* Cursor::previous() throw(SGFError) {
   if (currentN->previous) {
     while (currentN->up) {
@@ -773,14 +782,14 @@ Node* Cursor::getRootNode(int n) throw(SGFError) {
 
   if (n >= root->numChildren) throw SGFError();
   Node* nn = root->next;
-  for(int i=0; i<n; i++) nn = nn->down;  
-  
+  for(int i=0; i<n; i++) nn = nn->down;
+
   if (!nn->parsed) nn->parseNode();
   return nn;
 }
 
 
- 
+
 string nodeToString(map<string, PropValue >& data) throw(SGFError) {
   string result = ";";
   int l = 0;
@@ -906,9 +915,9 @@ char* Cursor::output() {
     strcat(result, "(");
     strcat(result, t);
     strcat(result, ")\n");
-    delete [] t;    
+    delete [] t;
     n = n->down;
-  }  
+  }
 
   char* t = new char[strlen(result)+1];
   strcpy(t, result);
