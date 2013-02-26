@@ -2090,14 +2090,14 @@ class App(v.Viewer, KEngine):
             if self.options.confirmDelete.get() and s[0:2] == '* ':
                 if not askokcancel('Confirm deletion', 'There are unsaved changes. Discard them?'): return
                 else: break
-        
+
         try:
             defaultfile = open(os.path.join(self.basepath,'default.cfg'))
-            c = ConfigObj(infile=defaultfile)
+            c = ConfigObj(infile=defaultfile, encoding='utf8')
             defaultfile.close()
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
                 configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
-                c.merge(ConfigObj(infile=configfile))
+                c.merge(ConfigObj(infile=configfile, encoding='utf8'))
                 configfile.close()
 
             c['main']['sgfpath']  = self.sgfpath
@@ -2114,7 +2114,7 @@ class App(v.Viewer, KEngine):
             showwarning('IOError', 'Could not write kombilo.cfg')
 
         self.master.quit()
-        
+
 
     def configButtons(self, state):
         """ Disable buttons and board during search, reset them afterwards. """

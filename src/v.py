@@ -57,6 +57,8 @@ class BunchTkVar:
     def saveToDisk(self, d):
         for x in self.__dict__:
             d[x] = self.__dict__[x].get()
+            if type(d[x]) == type(u''):
+                d[x] = d[x].encode('utf8')
 
     def loadFromDisk(self, d):
         for x in d:
@@ -2182,12 +2184,12 @@ class Viewer:
 
         try:
             defaultfile = open(os.path.join(self.basepath,'default.cfg'))
-            c = ConfigObj(infile=defaultfile)
+            c = ConfigObj(infile=defaultfile, encoding='utf8')
             defaultfile.close()
 
             if os.path.exists(os.path.join(self.optionspath,'kombilo.cfg')):
                 configfile = open(os.path.join(self.optionspath,'kombilo.cfg'))
-                c.merge(ConfigObj(infile=configfile))
+                c.merge(ConfigObj(infile=configfile, encoding='utf8'))
                 configfile.close()
 
             c['main']['sgfpath'] = self.sgfpath
@@ -2696,7 +2698,7 @@ class Viewer:
 
         try:
             with open(os.path.join(self.basepath, 'default.cfg')) as f:
-                self.config = ConfigObj(infile=f)
+                self.config = ConfigObj(infile=f, encoding='utf8')
 
             configfile = None
             if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')):
@@ -2713,7 +2715,7 @@ class Viewer:
             if configfile and os.path.exists(configfile):
                 with open(configfile) as f:
                     self.optionspath = os.path.dirname(configfile)
-                    self.config.merge(ConfigObj(infile=f))
+                    self.config.merge(ConfigObj(infile=f, encoding='utf8'))
 
             if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
                 # otherwise this is an old .cfg file which should be ignored
@@ -2724,7 +2726,7 @@ class Viewer:
                         os.mkdir(self.optionspath)
                     try:
                         f1 = open(os.path.join(self.optionspath, 'kombilo.cfg'))
-                        ss = ConfigObj(infile=f1)
+                        ss = ConfigObj(infile=f1, encoding='utf8')
                         f1.close()
                         self.config.merge(ss)
                     except IOError:
