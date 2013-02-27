@@ -3,22 +3,22 @@
 
 ##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
-## Permission is hereby granted, free of charge, to any person obtaining a copy of 
-## this software and associated documentation files (the "Software"), to deal in 
-## the Software without restriction, including without limitation the rights to 
+## Permission is hereby granted, free of charge, to any person obtaining a copy of
+## this software and associated documentation files (the "Software"), to deal in
+## the Software without restriction, including without limitation the rights to
 ## use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-## of the Software, and to permit persons to whom the Software is furnished to do 
+## of the Software, and to permit persons to whom the Software is furnished to do
 ## so, subject to the following conditions:
-## 
-## The above copyright notice and this permission notice shall be included in all 
+##
+## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
-## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+##
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
 
@@ -36,7 +36,7 @@ import tkFileDialog
 from tooltip.tooltip import ToolTip
 import Pmw
 
-    
+
 from string import split, find, replace, join, strip
 from copy import copy, deepcopy
 from math import sqrt
@@ -53,7 +53,7 @@ KOMBILO_VERSION = 0.7
 class BunchTkVar:
     """ This class is used to collect the Tk variables where the options
         are stored. """
-    
+
     def saveToDisk(self, d):
         for x in self.__dict__:
             d[x] = self.__dict__[x].get()
@@ -73,7 +73,7 @@ class BunchTkVar:
 # ---------------------------------------------------------------------------------------
 
 class TextEditor:
-    """ A very simple text editor, based on the Tkinter ScrolledText widget.   
+    """ A very simple text editor, based on the Tkinter ScrolledText widget.
     You can perform very limited editing, and save the result to a file. """
 
     def __init__(self, t = '', defpath='', font = None):
@@ -83,7 +83,7 @@ class TextEditor:
             font[0].set('Courier')
             font[1].set(10)
             font[2].set('')
-            
+
         self.window = Toplevel()
 
         self.window.protocol('WM_DELETE_WINDOW', self.quit)
@@ -106,7 +106,7 @@ class TextEditor:
         else:
             self.defpath = os.curdir
 
-            
+
     def saveas(self):
         f = tkFileDialog.asksaveasfilename(initialdir = self.defpath)
         if not f: return
@@ -126,19 +126,19 @@ class TextEditor:
 
 class ScrolledList(Frame):
     """ A listbox with dynamic vertical and horizontal scrollbars. """
-    
+
     def __init__(self, parent, **kw):
         Frame.__init__(self, parent)
 
         self.sbar = Scrollbar(self)
         self.sbar1 = Scrollbar(self)
         self.checking = 0
-        
+
         if not kw: kw = {}
 
         for var, value in [('height', 12), ('width', 40), ('relief', SUNKEN), ('selectmode', SINGLE), ('takefocus', 1), ('exportselection', 0)]:
             if not kw.has_key(var): kw[var] = value
-        
+
         self.list = Listbox(self, kw)
         self.sbar.config(command = self.list.yview)
         self.sbar1.config(command = self.list.xview, orient='horizontal')
@@ -161,7 +161,7 @@ class ScrolledList(Frame):
 
         # self.unbind('<Configure>')
         self.bind('<Configure>', self.checkScrollbars)
-        
+
         self.sbar.grid_forget()
         self.sbar1.grid_forget()
 
@@ -170,7 +170,7 @@ class ScrolledList(Frame):
             apply(self.list.insert, [index] + data)
         else:
             self.list.insert(index, data)
-        
+
         if self.list.yview() != (0.0, 1.0):
             self.sbar.grid(row=0, column=1, sticky=NSEW)
         if self.list.xview() != (0.0, 1.0):
@@ -203,7 +203,7 @@ class ScrolledList(Frame):
             self.after(100, self.checkScrollbars)
         self.checking = 1-self.checking
 
-            
+
     def up(self, event):
         if not self.list.curselection() or len(self.list.curselection())>1: return
         index = int(self.list.curselection()[0])
@@ -267,12 +267,12 @@ class SGFtreeCanvas(Frame):
 
         Frame.__init__(self, parent)
         self.options = options
-        
+
         if not args: args = {}
 
         for var, value in [('height', 100), ('width', 150), ('relief', SUNKEN)]:
             if not var in args: args[var] = value
-        
+
         self.canvas = Canvas(self, background='lightyellow')
         apply(self.canvas.config, (), args)
         self.canvas.config(scrollregion=(0,0,1000,30))
@@ -283,13 +283,13 @@ class SGFtreeCanvas(Frame):
         self.sbar_vert.config(command = self.yview)
         self.sbar_hor.config(command = self.xview, orient='horizontal')
         self.canvas.config(xscrollcommand = self.sbar_hor.set, yscrollcommand = self.sbar_vert.set)
-        
+
         self.movenoCanvas = Canvas(self, width=150, height=15, background='white')
         self.movenoCanvas.config(scrollregion=(0,0,1000,15))
         # self.movenoCanvas.config(xscrollcommand = self.sbar_hor.set)
 
         self.updateMovenoCanvas()
-     
+
         self.movenoCanvas.grid(row=0, column=0, sticky=NSEW)
         self.sbar_vert.grid(row=1, column=1, sticky=NSEW)
         self.sbar_hor.grid(row=2, column=0, sticky=NSEW)
@@ -306,12 +306,12 @@ class SGFtreeCanvas(Frame):
 
     def updateMovenoCanvas(self):
         """ Put numbers on the small white canvas above the SGF tree canvas, to indicate move numbers."""
-        
+
         self.movenoCanvas.delete(ALL)
         for i in range(90):
             self.movenoCanvas.create_text(int(SGFtreeCanvas.UNIT*.75)+i*5*SGFtreeCanvas.UNIT,7,text=`5*i`,
                                           font=(self.options.movenoFont.get(), self.options.movenoFontSize.get()))
-   
+
 
     def xview(self, a1, a2=None, a3=None):
         if a1 == MOVETO:
@@ -341,7 +341,7 @@ class SGFtreeCanvas(Frame):
         u = max(0, (y0-300)/SGFtreeCanvas.UNIT)
         l = (y1+500)/SGFtreeCanvas.UNIT
 
-        # print 'yview', u,l 
+        # print 'yview', u,l
 
         nodelist = [(self.rootnode, 0,0)]
 
@@ -353,7 +353,7 @@ class SGFtreeCanvas(Frame):
 
             if u <= posy <= l and not posy in self.drawn:
                 self.mark(c, posx, posy)
-                
+
                 if c.previous:
                     if c.up and c.up.up:
                         self.link(posx, posy, c.posyD+1)
@@ -403,11 +403,11 @@ class SGFtreeCanvas(Frame):
                     nodelist.append((d, posx, py))
 
         self.canvas.lower('lines')
-            
+
         for i in range(u, l):
              if not i in self.drawn: self.drawn.append(i)
 
-        
+
     def mark(self, node, posx, posy):
         try:
             n = Node(node)
@@ -429,7 +429,7 @@ class SGFtreeCanvas(Frame):
                                         SGFtreeCanvas.UNIT*posx+SGFtreeCanvas.UNIT*5/6,
                                         SGFtreeCanvas.UNIT*posy+SGFtreeCanvas.UNIT*5/6, fill='blue')
         except: pass
-        
+
 
 
 
@@ -437,25 +437,25 @@ class SGFtreeCanvas(Frame):
 
         s4 = SGFtreeCanvas.UNIT/4
         s34 = 3*SGFtreeCanvas.UNIT/4
-        
+
         if delta == 0:
             self.canvas.create_line(SGFtreeCanvas.UNIT*posx-s4,
                                     SGFtreeCanvas.UNIT*posy+s34,
                                     SGFtreeCanvas.UNIT*posx+s34,
                                     SGFtreeCanvas.UNIT*posy+s34,
-                                    fill='blue', tags='lines', width=2)        
+                                    fill='blue', tags='lines', width=2)
         else:
             self.canvas.create_line(SGFtreeCanvas.UNIT*posx-s4,
                                     SGFtreeCanvas.UNIT*(posy-1)+s34,
                                     SGFtreeCanvas.UNIT*posx+s34,
                                     SGFtreeCanvas.UNIT*posy+s34,
-                                    fill='blue', tags='lines', width=2)        
+                                    fill='blue', tags='lines', width=2)
             if delta > 1:
                 self.canvas.create_line(SGFtreeCanvas.UNIT*posx-s4,
                                         SGFtreeCanvas.UNIT*(posy-delta)+s34,
                                         SGFtreeCanvas.UNIT*posx-s4,
                                         SGFtreeCanvas.UNIT*(posy-1)+s34,
-                                        fill='blue', tags='lines', width=2)        
+                                        fill='blue', tags='lines', width=2)
 
 
 SGFtreeCanvas.UNIT = 32
@@ -468,19 +468,19 @@ class DataWindow:
 
     def __init__(self, master, window):
         self.mster = master
-        
+
         window = window
 
         win = PanedWindow(window, orient='vertical', )
         self.win = win
         win.pack(expand=YES, fill=BOTH)
-        
+
         self.initPanes()
 
         self.SGFtreeC = SGFtreeCanvas(self.gametreeF, self.mster.options)
         self.SGFtreeC.pack(side=LEFT, expand=YES, fill=BOTH)
         self.guessModeCanvas = Canvas(self.gametreeF, width=160, height=100, background='white')
-        
+
         self.filelist = ScrolledList(self.filelistF)
         self.filelist.grid(row=0, column=0, rowspan=3, sticky=NSEW)
         self.filelistF.rowconfigure(2,weight=1)
@@ -524,7 +524,7 @@ class DataWindow:
                 self.tkImages.append(im)
             except:
                 pass
-        
+
         self.gamelist.onSelectionChange = self.mster.changeCurrentGame
         self.gamelist.list.bind('<1>', self.gamelistClick)
         self.gamelist.list.bind('<B1-Motion>', self.gamelistDrag)
@@ -543,7 +543,7 @@ class DataWindow:
         self.comments.pack(expand=YES, fill=BOTH)
         self.window = window
 
-        
+
     def initPanes(self):
         self.filelistF = Frame(self.win)
         self.gamelistF = Frame(self.win)
@@ -602,20 +602,20 @@ class DataWindow:
         if self.gamelist.dragLast == -1:
             if self.gamelist.clickedLast == i: return
             else: self.gamelist.dragLast = self.gamelist.clickedLast
-        
+
         if self.gamelist.dragLast != i:
             s = self.gamelist.list.get(self.gamelist.dragLast)
             self.gamelist.delete(self.gamelist.dragLast)
             self.gamelist.insert(i, s)
             self.gamelist.list.select_set(i)
-            self.gamelist.dragLast = i 
+            self.gamelist.dragLast = i
         return 'break'
 
     def gamelistRelease(self, event):
 
         if self.gamelist.dragLast == -1:
             return None, None
-        
+
         i = self.gamelist.list.nearest(event.y)
 
         if self.gamelist.dragLast != i:
@@ -761,7 +761,7 @@ class DataWindow:
             s1 = replace(s1, '\r\n', ' ')
             s1 = replace(s1, '\r', ' ')
             s1 = replace(s1, '\n', ' ')
-            
+
             t.append(s1)
 
         self.gameinfo.configure(text_state='normal')
@@ -777,9 +777,9 @@ class DataWindow:
 
 class EnhancedCursor(Cursor):
     """
-    This integrates the cursor of an SGF file with an SGFtreeCanvas. 
+    This integrates the cursor of an SGF file with an SGFtreeCanvas.
     Adds a snapshot/restore feature to Cursor. """
-    
+
     def __init__(self, sgf, comments, SGFtreeC, master, encoding='utf8'):
 
         try:
@@ -787,10 +787,10 @@ class EnhancedCursor(Cursor):
         except:
             raise lk.SGFError()
         self.mster = master
-        
+
         self.currentGame = 0
         self.updateGamelist()
-        
+
         self.comments = comments
         self.SGFtreeCanv = SGFtreeC
 
@@ -812,8 +812,8 @@ class EnhancedCursor(Cursor):
     def updateTree(self, update=1):
         self.SGFtreeCanv.canvas.delete('all')
         self.SGFtreeCanv.drawn = []
-        
-        width = SGFtreeCanvas.UNIT * (self.width+1) + 30 
+
+        width = SGFtreeCanvas.UNIT * (self.width+1) + 30
 
         if self.SGFtreeCanv.rootnode.down: h = self.SGFtreeCanv.rootnode.down.posyD
         else:
@@ -833,7 +833,7 @@ class EnhancedCursor(Cursor):
 
         if self.SGFtreeCanv.lastbind is not None: self.SGFtreeCanv.canvas.unbind('<1>', self.SGFtreeCanv.lastbind)
         self.SGFtreeCanv.lastbind = self.SGFtreeCanv.canvas.bind('<1>', self.onButton1)
-        
+
         self.SGFtreeCanv.yview('refresh')
 
         if update:
@@ -844,7 +844,7 @@ class EnhancedCursor(Cursor):
 
     def updateGamelist(self, select = 1):
         """Update the game list in the data window (i.e. the list of games in the SGF collection of self."""
-        
+
         self.mster.dataWindow.gamelist.delete(0, END)
         i = 0
         n = Node(self.root.next)
@@ -883,13 +883,13 @@ class EnhancedCursor(Cursor):
             c = self.root.next
             for i in range(self.currentGame): c = c.down
             posx, posy = 0,0
-        
+
             # set c to position of click
             while (posx, posy) != (x,y):
                 if not c.next: return
                 c = c.next
                 posx += 1
-            
+
                 if posx > x: break # have arrived
 
                 # do we have to go down here?
@@ -934,14 +934,14 @@ class EnhancedCursor(Cursor):
         else:
             self.updateTree()
 
-        
+
 
     def game(self, n=0, update = 1):
         Cursor.game(self, n)
         self.currentGame = n
         self.SGFtreeCanv.rootnode = self.currentN
         self.updateTree(update)
-        
+
 
     def symmetry(self, flip):
 
@@ -957,7 +957,7 @@ class EnhancedCursor(Cursor):
                     for prop in ['B', 'W', 'AB', 'AW', 'AE', 'CR', 'SQ', 'TR', 'MA', 'TB', 'TW', 'DD', 'L']:
                         if d.has_key(prop):
                             d[prop] = [ flip(x) for x in d[prop] ]
-                    
+
                     for prop in ['LB', 'VW']:
                         if d.has_key(prop):
                             d[prop] = [ flip(split(x, ':')[0]) + ':' + split(x, ':')[1] for x in d[prop] ]
@@ -972,13 +972,13 @@ class EnhancedCursor(Cursor):
                     node = node.next
                 except:
                     break
-                
+
 
     def seeCurrent(self):
 
         x,y = self.posx, self.posy
 
-        self.SGFtreeCanv.canvas.delete('curr')    
+        self.SGFtreeCanv.canvas.delete('curr')
         self.SGFtreeCanv.canvas.create_oval(x*SGFtreeCanvas.UNIT+SGFtreeCanvas.UNIT/2,
                                             y*SGFtreeCanvas.UNIT+SGFtreeCanvas.UNIT/2,
                                             (x+1)*SGFtreeCanvas.UNIT,
@@ -1012,10 +1012,10 @@ class EnhancedCursor(Cursor):
                 self.SGFtreeCanv.yview('moveto', (y-25)*1.0/cv1)
             elif y+15 > vert[1]*cv1:
                 self.SGFtreeCanv.yview('moveto', (y+25 - y1)*1.0/cv1)
-        
+
         # print 'x: %1.3f, [%1.3f, %1.3f], y: %1.3f, [%1.3f, %1.3f]' % (x*1.0/self.cv0, hor[0], hor[1], \
         #                                                               y*1.0/self.cv1, vert[0], vert[1])
-   
+
 
 # ---------------------------------------------------------------------------------------
 
@@ -1023,7 +1023,7 @@ class Viewer:
     """ This is the main class of v.py. """
 
     def convCoord(self, x):
-        """ This takes coordinates in SGF style (aa - ss), 
+        """ This takes coordinates in SGF style (aa - ss),
             and returns the corresponding
             integer coordinates (between 1 and boardsize). """
 
@@ -1033,7 +1033,7 @@ class Viewer:
             else: return 0
         except:
             return 0
-        
+
 
     def splitCollection(self):
 
@@ -1045,7 +1045,7 @@ class Viewer:
         self.sgfpath = os.path.split(filename)[0]
 
         if filename[-4:] == '.sgf': filename = filename[:-4]
-        
+
         i = 0
 
         n = self.cursor.root.next
@@ -1111,7 +1111,7 @@ class Viewer:
             pass
 
         # display game name
-        
+
         gameName = self.currentFile[:15]
         if self.cursor.root.numChildren > 1:
             gameName += '[' + `gameNo` + ']'
@@ -1146,7 +1146,7 @@ class Viewer:
         else:
             self.board.currentColor = 'black'
             self.modeVar.set('blackwhite')
-            
+
         try:
             self.displayLabels(self.cursor.currentNode())
             self.markAll()
@@ -1159,7 +1159,7 @@ class Viewer:
         """ Mark all variations for the next move. """
 
         if not self.cursor: return
-        
+
         passV = 0
 
         try:
@@ -1171,7 +1171,7 @@ class Viewer:
                         else: self.board.placeMark(self.convCoord(c[color][0]), '', 'black', 'small')
 
             if self.cursor.atEnd: return
-        
+
             for i in range(self.cursor.noChildren()):
                 c = self.cursor.next(i,0)
 
@@ -1200,13 +1200,13 @@ class Viewer:
             if self.modeVar.get() == 'black': self.board.currentColor = 'black'
             if self.modeVar.get() == 'blackwhite': self.modeVar.set('whiteblack')
 
-    
+
     def showNextMove(self):
         """ Toggle 'show next move' option. """
 
         self.board.delMarks()
         self.markAll()
-        
+
 
     def passFct(self):
         """ React to pass button: choose the 'pass variation' in the SGF file."""
@@ -1217,7 +1217,7 @@ class Viewer:
         if self.modeVar.get()[:5] == 'black': nM = 'B'
         else:                                 nM = 'W'
 
-        for i in range(self.cursor.noChildren()):             
+        for i in range(self.cursor.noChildren()):
             try:
                 c = self.cursor.next(i)
             except lk.SGFError:
@@ -1235,9 +1235,9 @@ class Viewer:
                 except lk.SGFError:
                     showwarning('Error', 'Error in SGF file')
                     break
-                
+
         # not found
-        
+
         if self.guessMode.get():
             self.guessFailure('', '')
             return 0
@@ -1246,7 +1246,7 @@ class Viewer:
             self.modeVar.set('whiteblack')
         elif self.modeVar.get() == 'whiteblack':
             self.modeVar.set('blackwhite')
-                    
+
         s = ';' + nM + '[]'
 
         try:
@@ -1263,12 +1263,12 @@ class Viewer:
             pass
 
         return 0
-        
+
 
     def gotoMove(self, event):
 
         x,y = self.board.getBoardCoord((event.x, event.y),
-                                       self.board.shadedStoneVar.get()) # if self.board.shadedStoneVar.get(), the position is clearly visible, so we need not be 
+                                       self.board.shadedStoneVar.get()) # if self.board.shadedStoneVar.get(), the position is clearly visible, so we need not be
                                                                         # as strict, how close (event.x, event.y) is to this intersection
         if (not x*y): return
         pos = chr(x+ord('a')) + chr(y+ord('a'))
@@ -1278,7 +1278,7 @@ class Viewer:
         except lk.SGFError:
             showwarning('Error', 'SGF Error in gotoMove().')
             return
-        
+
         if (c.has_key('B') and c['B'][0] == pos) or (c.has_key('W') and c['W'][0] == pos):
             return
 
@@ -1364,8 +1364,8 @@ class Viewer:
 
         self.dataWindow.guessRightWrong[1] += 1
         self.displayGuessPercentage()
-     
-        
+
+
     def nextMove(self, p):
         """ React to mouse-click on the board"""
 
@@ -1392,15 +1392,15 @@ class Viewer:
                     if nM == 'AB': self.board.AB([p])
                     if nM == 'AW': self.board.AW([p])
                     self.board.currentColor = self.modeVar.get()
-                
+
                 else:
                     s = ';' + nM + '[' + pos + ']'
                     self.cursor.add(s)
                     c = self.cursor.currentNode()
-            
+
                     self.board.delMarks()
                     self.board.delLabels()
-            
+
                     self.moveno.set(str(int(self.moveno.get())+1))
 
                     self.displayNode(c)
@@ -1410,7 +1410,7 @@ class Viewer:
                 showwarning('Error', 'SGF Error in nextMove()')
 
             self.currentFileChanged()
-                    
+
             return 0
 
         if self.modeVar.get() == 'blackwhite':
@@ -1439,7 +1439,7 @@ class Viewer:
                         self.modeVar.set('whiteblack')
                     elif self.modeVar.get() == 'whiteblack':
                         self.modeVar.set('blackwhite')
-                    
+
                     self.moveno.set(str(int(self.moveno.get())+1))
 
                     self.displayNode(c)
@@ -1454,32 +1454,32 @@ class Viewer:
                         showwarning('Error', 'Error in SGF file')
                         break
 
-        
+
 
         if not done:
             if self.guessMode.get():
                 self.guessFailure(right_pos, p)
                 return 0
-            
+
             # print 'play', x, y
             if self.modeVar.get() == 'blackwhite':
                 self.modeVar.set('whiteblack')
             elif self.modeVar.get() == 'whiteblack':
                 self.modeVar.set('blackwhite')
-                    
+
             s = ';' + nM + '[' + chr(x+ord('a')) + chr(y+ord('a')) + ']'
 
             try:
                 self.cursor.add(s)
                 c = self.cursor.currentNode()
-            
+
                 self.board.delMarks()
                 self.board.delLabels()
 
                 self.moveno.set(str(int(self.moveno.get())+1))
 
                 self.displayNode(c)
-                
+
                 if nM == 'B': self.capB = self.capB + len(self.board.undostack_top_captures())
                 if nM == 'W': self.capW = self.capW + len(self.board.undostack_top_captures())
                 self.capVar.set('Cap - B: ' + str(self.capB) + ', W: ' + str(self.capW))
@@ -1489,7 +1489,7 @@ class Viewer:
             self.currentFileChanged()
 
         self.markAll()
-                    
+
         return done
 
 
@@ -1518,14 +1518,14 @@ class Viewer:
                 c = self.cursor.previous(markCurrent)
                 self.moveno.set(str(int(self.moveno.get())-1))
 
-                self.board.delLabels()    
+                self.board.delLabels()
                 self.board.delMarks()
-            
+
                 self.markAll()
                 self.modeVar.set('blackwhite' if self.board.currentColor == 'black' else 'whiteblack')
                 self.displayLabels(c)
             except: pass
-        
+
 
     def next(self, n=0, markCurrent=True):
         """Go to (n-th child of) next move."""
@@ -1537,7 +1537,7 @@ class Viewer:
                 c = self.cursor.next(n, markCurrent)
             except lk.SGFError:
                 return 0 # failure
-            
+
             self.moveno.set(str(int(self.moveno.get())+1))
 
             self.board.delMarks()
@@ -1550,7 +1550,7 @@ class Viewer:
 
             self.markAll()
             self.modeVar.set('blackwhite' if self.board.currentColor == 'black' else 'whiteblack')
-                
+
             return 1 # success
 
 
@@ -1567,7 +1567,7 @@ class Viewer:
             self.next(i+1)
 
 
-        
+
     def displayNode(self, c):
         """Display the stones played in the current node,
            and call displayLabels(). """
@@ -1625,13 +1625,13 @@ class Viewer:
     def prev10(self):
         for i in range(10): self.prev(0)
         self.cursor.seeCurrent()
-        
+
     def end(self):
         """ Go to end of game. """
         if not self.cursor: return
         while not self.cursor.atEnd and self.next(0, 0): pass
         self.cursor.seeCurrent()
-        
+
     def start(self, update=1):
         """ Go to beginning of game."""
         if not self.cursor: return
@@ -1670,7 +1670,7 @@ class Viewer:
         except: showwarning('Error', 'SGF error')
         self.cursor.seeCurrent()
 
-        
+
     def labelClick(self, event):
         x, y = self.board.getBoardCoord((event.x, event.y), 1)
         if x==-1 or y==-1: return
@@ -1702,7 +1702,7 @@ class Viewer:
                     c = self.cursor.currentNode()
                     self.moveno.set(str(int(self.moveno.get())+1))
                     self.displayNode(c)
-                
+
                 return
 
             # labels
@@ -1718,7 +1718,7 @@ class Viewer:
                     else:  del cn[tt]
                     self.board.placeLabel((x,y), tt)
                     return
-            
+
             if 'LB' in cn:
                 for item in cn['LB']:
                     if split(item, ':')[0] == pos:
@@ -1729,48 +1729,30 @@ class Viewer:
                         self.board.placeLabel((x,y), 'LB', '')
                         return
 
-            if t == '12n':
+            # now place label, according to the type t
+
+            def place_first_unused(cn, labels):
                 if 'LB' in cn:
-                    max = '0'
                     for item in cn['LB']:
                         p, t = split(item, ':')
-                        if max < t < '9': max = t                
-                    text = chr(ord(max)+1)
+                        try:
+                            labels.remove(t)
+                        except ValueError:
+                            pass
+                    text = labels[0] if labels else '?'
                     cn.add_property_value('LB', [pos+':'+text, ])
                 else:
-                    text = '1'
-                    cn['LB'] = [pos+':1']
-
+                    text = labels[0]
+                    cn['LB'] = [pos+':'+text]
                 self.board.placeLabel((x,y), 'LB', text)
 
+
+            if t == '12n':  # place 'number' label
+                place_first_unused(cn, [str(i) for i in range(1, 400)])
             elif t == 'ABC':
-                if cn.has_key('LB'):
-                    max = '@'
-                    for item in cn['LB']:
-                        p, t = split(item, ':')
-                        if max < t < 'Z': max = t
-                    text = chr(ord(max)+1)
-                    cn.add_property_value('LB', [pos+':'+text, ])
-                else:
-                    text = 'A'
-                    cn['LB'] = [pos+':A']
-
-                self.board.placeLabel((x,y), 'LB', text)
-
+                place_first_unused(cn, list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
             elif t == 'abc':
-                if 'LB' in cn:
-                    max = chr(ord('a')-1)
-                    for item in cn['LB']:
-                        p, t = split(item, ':')
-                        if max < t < 'z': max = t                
-                    text = chr(ord(max)+1)
-                    cn.add_property_value('LB', (pos+':'+text, ))
-                else:
-                    text = 'a'
-                    cn['LB'] = [pos+':a']
-
-                self.board.placeLabel((x,y), 'LB', text)
-
+                place_first_unused(cn, list('abcdefghijklmnopqrstuvwxyz'))
             else:
                 text = ''
 
@@ -1786,22 +1768,22 @@ class Viewer:
 
         self.currentFileChanged()
 
-        
+
 
     def delVar(self):
         try:
             n = self.cursor.currentN
             self.prev()
             self.cursor.delVariation(n)
-            
+
             self.board.delMarks()
             self.markAll()
 
             self.cursor.updateTree()
         except lk.SGFError: showwarning('Error', 'SGF error in delVar.')
         self.currentFileChanged()
-        
-        
+
+
     def newGame(self):
         """Add a new game tree to the current collection."""
         self.leaveNode()
@@ -1814,7 +1796,7 @@ class Viewer:
         self.cursor.currentN.previous = None
         self.dataWindow.gamelist.insert(END, '[' + `self.cursor.root.numChildren-1` + ']')
 
-        if self.dataWindow.gamelist.list.curselection(): 
+        if self.dataWindow.gamelist.list.curselection():
             index = int(self.dataWindow.gamelist.list.curselection()[0])
             self.dataWindow.gamelist.list.select_clear(index)
         self.dataWindow.gamelist.list.select_set(END)
@@ -1840,12 +1822,12 @@ class Viewer:
             self.cursor.delVariation(n)
         except:
             pass
-        
+
         if n.up:
             n.up.down = n.down
         else:
             self.cursor.root.next = n.down
-            
+
         if n.down:
             n.down.up = n.up
 
@@ -1858,32 +1840,32 @@ class Viewer:
         if d.has_key(index): del d[index]
         new_d = {}
         for i in d:
-            if type(i) != type(0): continue                 # because of 'currentgame' 
+            if type(i) != type(0): continue                 # because of 'currentgame'
             if i > index: new_d[i-1] = d[i]
             else: new_d[i] = d[i]
 
         self.filelist[self.currentFileNum][4] = new_d
-        
+
         if index == self.cursor.root.numChildren and index != 0:
             index -= 1
 
         self.cursor.currentGame = -1 # for changeCurrentGame
-        
-        if self.cursor.root.numChildren == 0:    
+
+        if self.cursor.root.numChildren == 0:
             self.newGame()
             return
 
         self.changeCurrentGame(None, index, None, 1)
 
         for i in range(index, self.cursor.root.numChildren):
-            
+
             s = '[' + `i` + ']'
             t = self.dataWindow.gamelist.list.get(i)
             l = split(t, ']')
             l[0] = s
             self.dataWindow.gamelist.delete(i)
             self.dataWindow.gamelist.insert(i, join(l, ''))
-            
+
         self.dataWindow.gamelist.list.select_set(index)
         self.dataWindow.gamelist.list.see(index)
         self.dataWindow.updateGameInfo(self.cursor)
@@ -1892,7 +1874,7 @@ class Viewer:
     def currentFileChanged(self, removeMark = 0):
         """This method is called, when the current file is changed (then it puts a * before the file name
         of the current SGF file), resp. when the file is saved (then the * is removed). """
-        
+
         index = self.currentFileNum
 
         s = self.dataWindow.filelist.list.get(index)
@@ -1928,12 +1910,12 @@ class Viewer:
         self.board.clear()
         self.board.delLabels()
         self.board.delMarks()
-        
+
         self.gameName.set('')
-        
+
         self.board.state('normal', self.nextMove)
         self.master.update_idletasks()
- 
+
         if not path:
             path = '.'
 
@@ -1970,7 +1952,7 @@ class Viewer:
             return
 
         index = int(self.dataWindow.filelist.list.curselection()[0])
-        
+
         s = self.dataWindow.filelist.list.get(index)
 
         if self.options.confirmDelete.get() and s[0:2] == '* ':
@@ -1988,13 +1970,13 @@ class Viewer:
             self.currentFileNum = -2
             self.newFile()
             return 1
-        
+
         self.currentFileNum = -1
         self.changeCurrentFile(None, index)
 
         return 1
 
-        
+
     def modeChange(self):
         self.board.currentColor = self.modeVar.get()[:5]
 
@@ -2014,7 +1996,7 @@ class Viewer:
         except lk.SGFError:
             showwarning('Error', 'SGF Error in leaveNode()')
             return
-        
+
         if 'C' in d:
             if strip(d['C'][0]) != s:
                 d['C'] = [s]
@@ -2092,7 +2074,7 @@ class Viewer:
             self.leaveNode()
             self.comments.delete('1.0', END)
             self.cursor = self.filelist[index][3]
-            
+
             self.cursor.updateGamelist()
             self.cursor.currentGame = -1 # to get around 'index != self.cursor.currentGame' test in self.changeCurrentGame
             if self.filelist[index][4].has_key('currentGame'):
@@ -2103,15 +2085,15 @@ class Viewer:
 
     def saveSGFfile(self):
         if not self.cursor: return
-        
+
         if not self.dataWindow.filelist.list.curselection(): return
         index = int(self.dataWindow.filelist.list.curselection()[0])
-        
+
         filename = self.filelist[index][1]
         if not filename:
             self.saveasSGFfile()
             return
-        
+
         self.leaveNode()
 
         try:
@@ -2125,7 +2107,7 @@ class Viewer:
         else:
             self.currentFileChanged(1)
 
-        
+
     def saveasSGFfile(self):
         if not self.cursor: return
         if not self.dataWindow.filelist.list.curselection(): return
@@ -2137,7 +2119,7 @@ class Viewer:
 
         if not f: return
         try:
-            sgf_out = self.cursor.output() 
+            sgf_out = self.cursor.output()
             file = open(f, 'w')
             file.write(sgf_out)
             file.close()
@@ -2149,7 +2131,7 @@ class Viewer:
         else:
             self.sgfpath, self.currentFile = os.path.split(f)
             self.gameName.set(self.currentFile[:15])
-        
+
             index = int(self.dataWindow.filelist.list.curselection()[0])
             self.filelist[index][0] = self.currentFile
             self.filelist[index][1] = f
@@ -2171,7 +2153,7 @@ class Viewer:
         except lk.SGFError: showwarning('Error', 'SGF error')
 
 
-       
+
     def quit(self):
         """ Exit the program. """
 
@@ -2212,7 +2194,7 @@ class Viewer:
 
 
     def loadOptions(self, d):
-        """ Load options from dictionary d. """        
+        """ Load options from dictionary d. """
         self.options.loadFromDisk(d)
 
 
@@ -2224,16 +2206,16 @@ class Viewer:
             webbrowser.open('file:'+path, new=1)
         except:
             showwarning('Error', 'Failed to open the web browser.\nYou can find the tutorial as \na file at: '+ path)
-        
+
 
 
     def helpAbout(self):
         """ Display the 'About ...' window with some basic information. """
-        
+
         t = 'v.py - written by Ulrich Goertz (ug@geometry.de)\n\n'
         t = t + 'v.py is a program to display go game records in SGF format.\n'
         t = t + 'It comes together with the go database program Kombilo.\n'
-        
+
         t = t + 'v.py is free software; for more information '
         t = t + 'see the documentation.\n\n'
 
@@ -2242,15 +2224,15 @@ class Viewer:
 
         text = Text(window, height=15, width=60, relief=FLAT, wrap=WORD)
         text.insert(1.0, t)
- 
+
         text.config(state=DISABLED)
         text.pack()
 
         b = Button(window, text="OK", command = window.destroy)
         b.pack(side=RIGHT)
-        
+
         window.update_idletasks()
-        
+
         window.focus()
         window.grab_set()
         window.wait_window()
@@ -2259,40 +2241,40 @@ class Viewer:
     def helpLicense(self):
         """ Display the GNU General Public License. """
         try:
-            t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2011.\n' 
+            t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2011.\n'
             t = t + '------------------------------------------------------------------------\n\n'
             file = open(os.path.join(self.basepath,'license.rst'))
             t = t + file.read()
             file.close()
         except IOError:
-            t = 'v.py was written by Ulrich Goertz (ug@geometry.de).\n' 
+            t = 'v.py was written by Ulrich Goertz (ug@geometry.de).\n'
             t = t + 'It is open source software, published under the MIT License.'
-            t = t + 'See the documentation for more information. ' 
+            t = t + 'See the documentation for more information. '
             t = t + 'This program is distributed WITHOUT ANY WARRANTY!\n\n'
         self.textWindow(t,'v.py license')
 
     def textWindow(self, t, title='', grab=1):
         """ Open a window and display the text in the string t.
             The window has the title title, and grabs the focus if grab==1. """
-        
+
         window = Toplevel()
         window.title(title)
         text = ScrolledText(window, height=25, width=80, relief=FLAT, wrap=WORD)
         text.insert(1.0, t)
- 
+
         text.config(state=DISABLED)
         text.pack()
 
         b = Button(window, text="OK", command = window.destroy)
         b.pack(side=RIGHT)
-        
+
         window.update_idletasks()
         if grab:
             window.focus()
             window.grab_set()
             window.wait_window()
 
-    
+
     def gameinfoOK(self):
         keylist = ['PB', 'BR', 'PW', 'WR', 'EV', 'RE', 'DT', 'KM']
         for key in keylist:
@@ -2332,11 +2314,11 @@ class Viewer:
         except:
             showwarning('SGF Error', "Parse error in 'Other SGF tags'")
         else:
-            if not self.returnChanges: self.currentFileChanged()            
+            if not self.returnChanges: self.currentFileChanged()
             self.gameinfoWindow.destroy()
         self.update_window_title()
 
-        
+
     def gameinfoCancel(self):
         self.gameinfoDict = None
         self.gameinfoWindow.destroy()
@@ -2350,7 +2332,7 @@ class Viewer:
 
         if not data and not self.cursor:
             return
-        
+
         if not data:
             try: self.gameinfoDict = self.cursor.getRootNode(self.cursor.currentGame)
             except:
@@ -2360,7 +2342,7 @@ class Viewer:
         else:
             self.gameinfoDict = data
             self.returnChanges = 1
-            
+
         window = Toplevel()
         window.transient(self.master)
         window.protocol('WM_DELETE_WINDOW', self.gameinfoCancel)
@@ -2379,7 +2361,7 @@ class Viewer:
                 self.gameinfoVars[key].set('')
             else:
                 self.gameinfoVars[key].set(self.gameinfoDict[key][0])
-                
+
         self.gameinfoVars['others'] = StringVar()
         oth = ''
         for key in self.gameinfoDict.keys():
@@ -2397,25 +2379,25 @@ class Viewer:
         Entry(f, width = 5, textvariable=self.gameinfoVars['BR']).grid(row=1, column=2)
 
         i = 2
-        for key, text in [('EV', 'Event'), ('RE', 'Result'), ('DT', 'Date'), 
+        for key, text in [('EV', 'Event'), ('RE', 'Result'), ('DT', 'Date'),
                           ('KM', 'Komi')]:
             Label(f, text=text+':').grid(row=i, column=0, sticky=W)
             Entry(f, width = 35, textvariable=self.gameinfoVars[key]).grid(row=i, column=1, columnspan=2, sticky=W+E)
             i += 1
-            
+
         Label(window, text='Game Comment: ').pack(anchor=W)
         self.gameinfoGCText = ScrolledText(window, height=5, width=40, relief=SUNKEN, wrap=WORD)
         self.gameinfoGCText.pack(expand=YES, fill=BOTH)
         self.gameinfoGCText.insert(END, self.gameinfoVars['GC'].get())
-        
+
         Label(window, text='Other SGF tags: ').pack(anchor=W)
         self.gameinfoOthersText = ScrolledText(window, height=5, width=40, relief=FLAT, wrap=WORD)
         self.gameinfoOthersText.pack(expand=YES, fill=BOTH)
         self.gameinfoOthersText.insert(END, self.gameinfoVars['others'].get())
-        
+
         Button(window, text='Cancel', command = self.gameinfoCancel).pack(side=RIGHT)
         Button(window, text="OK", command = self.gameinfoOK).pack(side=RIGHT)
-        
+
         window.update_idletasks()
         window.focus()
         window.grab_set()
@@ -2444,8 +2426,8 @@ class Viewer:
             self.board.coordinates = 0
             self.board.resize()
 
-            
-    def initMenus(self): 
+
+    def initMenus(self):
 
         menu = Menu(self.master)
         self.master.config(menu=menu)
@@ -2508,7 +2490,7 @@ class Viewer:
         menu.add_cascade(label='Help', underline=0, menu=self.helpmenu)
 
         self.helpmenu.add_command(label='About ...', underline=0, command=self.helpAbout)
-        
+
         self.helpmenu.add_command(label='License', underline=0, command=self.helpLicense)
         self.helpmenu.add_command(label='Documentation', underline=0, command=self.helpDocumentation)
 
@@ -2531,10 +2513,10 @@ class Viewer:
                                    variable = self.modeVar, value='black', command=self.modeChange)
         self.Wbutton = Radiobutton(navFrame, text='W', indicatoron = 0,
                                    variable = self.modeVar, value='white', command=self.modeChange)
-        
+
         self.nextButton = Button(navFrame, text='->', command=self.next)
         self.boardFrame.bind('<Right>', lambda e, s = self.nextButton: s.invoke())
-        self.prevButton = Button(navFrame, text='<-', command=self.prev)                                
+        self.prevButton = Button(navFrame, text='<-', command=self.prev)
         self.boardFrame.bind('<Left>', lambda e, s = self.prevButton: s.invoke())
         self.next10Button = Button(navFrame, text='-> 10', command=self.next10)
         self.boardFrame.bind('<Down>', lambda e, s = self.next10Button: s.invoke())
@@ -2547,14 +2529,14 @@ class Viewer:
 
         self.boardFrame.bind('<Prior>', self.upVariation)
         self.boardFrame.bind('<Next>', self.downVariation)
-        
+
         self.passButton = Button(navFrame, text='Pass', command = self.passFct)
-        
+
         self.gameinfoButton = Button(navFrame, text = 'Info', command = self.gameinfo, underline = 0)
         self.boardFrame.bind('<Control-i>', lambda e, s = self.gameinfoButton: s.invoke())
 
         lab = Label(navFrame, text='Ctrl-Click:')
-        
+
         self.removeStoneButton = Radiobutton(navFrame, text='DEL ST', indicatoron=0, variable=self.options.labelType, value='DEL ST')
         self.triangleButton = Radiobutton(navFrame, text='TR', indicatoron=0, variable=self.options.labelType, value='TR')
         self.squareButton = Radiobutton(navFrame, text='SQ', indicatoron=0, variable=self.options.labelType, value='SQ')
@@ -2568,7 +2550,7 @@ class Viewer:
         ca0 = Separator(navFrame, orient='vertical')
         ca1 = Separator(navFrame, orient='vertical')
         ca2 = Separator(navFrame, orient='vertical')
-        
+
         # try to load icons for navigation buttons and grid the buttons
 
         buttonsize = 20 if sys.platform[:3] == 'win' else 22
@@ -2610,7 +2592,7 @@ class Viewer:
         self.currentFile = ''
 
         self.boardFrame.focus()
-        
+
         self.moveno = StringVar()
         self.movenoLabel = Label(labelFrame, height=1, width=5, relief=SUNKEN, justify=RIGHT, textvariable=self.moveno)
         self.gameName = StringVar()
@@ -2660,7 +2642,7 @@ class Viewer:
         ToolTip(self.numberButton, 'Ctrl-click places/deletes number label')
         ToolTip(self.delButton, 'Delete this and all following nodes')
         ToolTip(self.guessModeButton, 'Enter/leave guess mode')
-        
+
 
     def evalOptions(self):
         '''
@@ -2719,7 +2701,7 @@ class Viewer:
 
             if self.config['main']['version'].strip() =='kombilo%s' % KOMBILO_VERSION:
                 # otherwise this is an old .cfg file which should be ignored
-                
+
                 if 'configdir' in self.config['main']: # there is an individual cfg file for this user
                     self.optionspath = os.path.join(self.config['main']['configdir'].replace('~', os.getenv('HOME')), '.kombilo')
                     if not os.path.exists(self.optionspath):
@@ -2806,11 +2788,11 @@ class Viewer:
                 self.whiteStone = Image.open(os.path.join(gifpath, 'white.gif')).convert('RGBA')
             except (TclError, IOError, AttributeError, ImportError):
                 self.use_PIL = False
-        
+
         self.board = BoardClass(self.boardFrame, 19, (30,25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone, self.use_PIL)
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
-        
+
         self.board.pack(expand=YES, fill=BOTH)
         # self.board.pack_propagate(0)
         self.board.update_idletasks()
@@ -2828,7 +2810,7 @@ class Viewer:
         self.initButtons(navFrame, labelFrame)
         self.init_key_bindings()
         self.initMenus()
-        
+
         self.master.deiconify()
 
         self.filelist = []
@@ -2866,13 +2848,13 @@ if __name__ == '__main__':
 
     if sys.path[0].endswith('library.zip'): SYSPATH = os.path.split(sys.path[0])[0]
     else: SYSPATH = sys.path[0]
-    
+
     try:
         if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
             root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
     except TclError:
         showwarning('Error', 'Error reading v.app')
-        
+
     app = Viewer(root)
 
     root.protocol('WM_DELETE_WINDOW', app.quit)
@@ -2891,7 +2873,7 @@ if __name__ == '__main__':
             for i in range(int(sys.argv[2])):
                 app.next()
         except: pass
-        
+
     root.mainloop()
 
 
