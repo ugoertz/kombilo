@@ -1,26 +1,26 @@
 #! /usr/bin/env python
 # File: kombilo.py
-        
+
 ##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
 
-##   Kombilo is a go database program. 
+##   Kombilo is a go database program.
 
-## Permission is hereby granted, free of charge, to any person obtaining a copy of 
-## this software and associated documentation files (the "Software"), to deal in 
-## the Software without restriction, including without limitation the rights to 
+## Permission is hereby granted, free of charge, to any person obtaining a copy of
+## this software and associated documentation files (the "Software"), to deal in
+## the Software without restriction, including without limitation the rights to
 ## use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-## of the Software, and to permit persons to whom the Software is furnished to do 
+## of the Software, and to permit persons to whom the Software is furnished to do
 ## so, subject to the following conditions:
-## 
-## The above copyright notice and this permission notice shall be included in all 
+##
+## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
-## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+##
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
 
@@ -83,7 +83,7 @@ def symmetrizeSig(s):
 
     m = []
     for f in Pattern.flips:
-        k1 = [ f(x[0], x[1]) for x in l] 
+        k1 = [ f(x[0], x[1]) for x in l]
         k2 = []
         for i in range(6):
             k2.append('?' if s[2*i] == '?' else chr(k1[i][0]+oa))
@@ -109,7 +109,7 @@ class Pattern(lk.Pattern):
     * p: The pattern as a string (``...XXO..X``). Blanks and line breaks will be
       ignored. Commas (to mark hoshis) will be replaces by periods.
     * ptype (optional): one of ::
-  
+
         CORNER_NW_PATTERN, CORNER_NE_PATTERN, CORNER_SW_PATTERN, CORNER_SE_PATTERN
         # fixed in specified corner
 
@@ -137,7 +137,7 @@ class Pattern(lk.Pattern):
     * contsinpattern (optional; used only if contlist is not given): ``X``
       (black) or ``O`` (white). If given, the labels 1, 2, 3, ... in the pattern
       are extracted and handled as continuations, with 1 played by the
-      specified color. 
+      specified color.
     * contLabels (optional): A string of same size as p, with labels that
       should be used for labelling continuations.
 
@@ -164,7 +164,7 @@ class Pattern(lk.Pattern):
         if 'contlist' in kwargs and kwargs['contlist']: # FIXME does not work correctly if there are captures!
             XX, YY = kwargs.get('topleft', (0,0))
 
-            c = Cursor('(%s)' % kwargs['contlist']) 
+            c = Cursor('(%s)' % kwargs['contlist'])
             while 1:
                 n = c.currentNode()
                 if 'B' in n:
@@ -225,7 +225,7 @@ class Pattern(lk.Pattern):
             BOTTOMLEFT = '+' if self.top == self.bottom == self.boardsize - self.sizeY and self.left == self.right == 0 else ' '
             BOTTOMRIGHT = '+' if self.top==self.bottom==self.boardsize-self.sizeY and self.left==self.right==self.boardsize-self.sizeX else ' '
             plist = [ [ TOPLEFT ] + [ TOP ]*self.sizeX + [ TOPRIGHT ] ] + [ [ LEFT ] + x + [ RIGHT ] for x in plist  ] + [ [ BOTTOMLEFT ] + [ BOTTOM ]*(self.sizeX) + [ BOTTOMRIGHT ] ]
-            
+
         return plist
 
 
@@ -284,6 +284,10 @@ class Node(sgf.Node):
 class lkGameList(lk.GameList):
 
     def __init__(self, *args):
+        try:
+            args = [ (x.encode('utf8') if type(x)==type(u'') else x) for x in args ]
+        except:
+            pass
         if len(args) == 1:
             lk.GameList.__init__(self, args[0], '', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]]', lk.ProcessOptions(), 19, 50000)
         else:
@@ -437,7 +441,7 @@ class GameList(object):
 
     def sortCrit(self, index, c):
         dbIndex, j = self.getIndex(index)
-        return self.DBlist[dbIndex]['data'].getCurrent(j)[c] 
+        return self.DBlist[dbIndex]['data'].getCurrent(j)[c]
 
     def getIndex(self, i):
         """ Returns dbIndex, j, such that self.DBlist[dbIndex]['current'][j] corresponds to the
@@ -458,22 +462,22 @@ class GameList(object):
         # print ID, pos, d
         res = self.DBlist[db]['data'].resultsStr(self.DBlist[db]['data'].all[pos])
         li = []
-        
+
         if showTags:
             taglist = self.DBlist[db]['data'].getTagsID(ID,0)
             if taglist:
                 li.append('['+''.join([ ('%s' % self.customTags[str(x)][0]) for x in taglist if str(x) in self.customTags ]) + '] ')
-        
+
         if self.showFilename:
             endFilename = find(d[GL_FILENAME], '[')
             if endFilename == -1: endFilename = len(d[GL_FILENAME])
-        
+
             if d[GL_FILENAME][endFilename-1] == '.':
                 filename = d[GL_FILENAME][:endFilename-1] + d[GL_FILENAME][endFilename:]
             elif d[GL_FILENAME][endFilename-2:endFilename] == '.m':
                 filename = d[GL_FILENAME][:endFilename-2] + d[GL_FILENAME][endFilename:]
             else: filename = d[GL_FILENAME]
-        
+
             li.append(filename + ': ')
 
         li.append(d[GL_PW] + ' - ' + d[GL_PB] + ' (' + d[GL_RESULT] + '), ')
@@ -484,14 +488,14 @@ class GameList(object):
 
     def reset(self):
         """ Reset the list, s.t. it includes all the games from self.data. """
-        
+
         for db in self.DBlist:
             if db['disabled']: continue
             db['data'].reset()
         self.Bwins, self.Wwins, self.Owins = 0, 0, 0
         self.update()
 
-        
+
     def update(self, sortcrit = GL_DATE, sortReverse = False, ):
         self.gameIndex = []
         self.Bwins, self.Wwins = 0, 0
@@ -535,7 +539,7 @@ class GameList(object):
             if db['disabled']: continue
             for i in xrange(db['data'].size()):
                 l.append(os.path.join(db['sgfpath'], getFilename(db['data'].getCurrent(i)[GL_FILENAME])))
-        return l  
+        return l
 
 
     def printGameInfo(self, index):
@@ -548,7 +552,7 @@ class GameList(object):
 
         DBindex, index = self.getIndex(index)
         if DBindex == -1: return
-            
+
         f1 = strip(os.path.join(self.DBlist[DBindex]['sgfpath'], self.DBlist[DBindex]['data'].getCurrent(index)[GL_FILENAME]))
 
         if find(f1, '[') != -1:
@@ -592,14 +596,14 @@ class GameList(object):
             gc = replace(gc, '\r\n', ' ')
             gc = replace(gc, '\r', ' ')
             gc = replace(gc, '\n', ' ')
-            
+
             t = t + gc
 
         signature = self.DBlist[DBindex]['data'].getSignature(index)
         t2 = ('Commentary in ' + ', '.join(self.references[signature])) if signature in self.references else ''
 
         return t, t2
-        
+
 
 
 
@@ -635,16 +639,16 @@ class KEngine(object):
 
     def patternSearch(self, CSP, SO=None, CL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789', FL = {}, progBar=None):
         '''Start a pattern search on the current game list.
-        
+
         * CSP must be an instance of :py:class:`Pattern` - it is the pattern
           that is searched for.
         * You can specify search options as `SO` - this must be an instance of
           ``lk.SearchOptions`` (see below).
         * ``CL``, ``FL``, ``progBar`` are used with the Kombilo GUI.
 
-        **Search options.** 
+        **Search options.**
         Create an instance of ``lk.SearchOptions`` by ::
-        
+
           so = lk.SearchOptions
 
         You can then set particular options on ``so``, e.g.::
@@ -680,7 +684,7 @@ class KEngine(object):
         self.contLabels = CL
         self.fixedLabels = FL
 
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0 
+        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
         self.continuations = []
         if progBar:
             progBar.configure(value=5)
@@ -824,7 +828,7 @@ class KEngine(object):
     def signatureSearch(self, sig):
         '''Do a signature search for the Dyer signature ``sig``.
         '''
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0 
+        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
         noGames = self.gamelist.noOfGames()
 
         for db in self.gamelist.DBlist:
@@ -835,7 +839,7 @@ class KEngine(object):
             self.noSwitched += gl.num_switched
             self.Bwins += gl.Bwins
             self.Wwins += gl.Wwins
-                    
+
         self.gamelist.update()
 
 
@@ -866,7 +870,7 @@ class KEngine(object):
             db['data'].tagsearchSQL(' '.join(query))
         self.gamelist.update()
 
-        
+
 
 
 
@@ -875,10 +879,10 @@ class KEngine(object):
         '''
 
         t = []
-        if self.currentSearchPattern: 
+        if self.currentSearchPattern:
             p = self.currentSearchPattern
             plist = p.getInitialPosAsList(boundary=True, hoshi = True)
-            
+
             l1 = [ ' '.join(x).strip() for x in plist ]
 
             N = 400 if showAllCont else 10
@@ -886,8 +890,8 @@ class KEngine(object):
                 x, y = cont[1]+1, cont[2]+1
                 if plist[y][x] in ['.', ',']: plist[y][x] = cont[11] # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
             l2 = [ ' '.join(x).strip() for x in plist ]
-        
-            s1 = '$$B Search Pattern\n$$' + join(l1, '\n$$') + '\n' if exportMode=='wiki' else join(l1, '\n') 
+
+            s1 = '$$B Search Pattern\n$$' + join(l1, '\n$$') + '\n' if exportMode=='wiki' else join(l1, '\n')
             s2 = '$$B Continuations\n$$' + join(l2, '\n$$') + '\n' if exportMode=='wiki' else join(l2, '\n')
 
             if exportMode=='wiki': t.append('!')
@@ -898,7 +902,7 @@ class KEngine(object):
 
             if not exportMode=='wiki': t.append('\n\nContinuations:\n')
             else: t.append('\n\n')
-        
+
             t.append(s2)
             t.append('\n')
 
@@ -991,7 +995,7 @@ class KEngine(object):
         self.gamelist.references = defaultdict(list)
         try:
             with open(datafile) as ref_file:
-                c = ConfigObj(infile=ref_file)
+                c = ConfigObj(infile=ref_file, encoding='utf8', default_encoding='utf8')
                 if 'boardsize' in c:
                     boardsize = int(c['boardsize'])
                     del c['boardsize']
@@ -1020,7 +1024,7 @@ class KEngine(object):
             else:
                 try:
                     db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1]+'.db'))
-                except: 
+                except:
                     if showwarning: showwarning('IOError', 'Could not open database %s/%s.' % db['name'])
                     del self.gamelist.DBlist[DBlistIndex]
                     continue
@@ -1031,7 +1035,7 @@ class KEngine(object):
     # ---------- database administration (processing etc.)
 
     def find_duplicates(self, strict=True, dupl_within_db=True):
-        return lk.find_duplicates([os.path.join(db['name'][0], db['name'][1]+'.db') for db in self.gamelist.DBlist if not db['disabled']],
+        return lk.find_duplicates([os.path.join(db['name'][0], db['name'][1]+'.db').encode('utf8') for db in self.gamelist.DBlist if not db['disabled']],
                                   strict, dupl_within_db)
 
     def addDB(self, dbp, datap=('', '#'), recursive=True, filenames = '*.sgf', acceptDupl=True, strictDuplCheck=True,
@@ -1063,8 +1067,8 @@ class KEngine(object):
         else:
             self.addOneDB((filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index),
                           dbp, None)
-    
-        
+
+
 
     def addOneDB(self, arguments, dbpath, dummy):        # dummys needed for os.path.walk
 
@@ -1213,7 +1217,7 @@ class KEngine(object):
         dbindex, index = self.gamelist.getIndex(no)
         if dbindex == -1: return
         ID, pos = self.gamelist.DBlist[dbindex]['data'].currentList[index]
-        
+
         moveno = (0, )
         s = self.gamelist.DBlist[dbindex]['data'].resultsStr(self.gamelist.DBlist[dbindex]['data'].all[pos])
         if s:
@@ -1229,8 +1233,8 @@ class KEngine(object):
             f1, f2 = split(f1, '[')
             gameNumber = int(strip(f2)[:-1])
         else: gameNumber = 0
-                
-        filename = getFilename(f1)        
+
+        filename = getFilename(f1)
 
         return filename, gameNumber, moveno
 
