@@ -107,6 +107,12 @@ def symmetrizeSig(s):
     m.sort()
     return m[0]
 
+class dummyMessages:
+    def insert(self, *args):
+        pass
+    def update(self):
+        pass
+
 # ------ PATTERN ----------------------------------------------------------------
 
 from libkombilo import CORNER_NW_PATTERN, CORNER_NE_PATTERN, CORNER_SW_PATTERN, CORNER_SE_PATTERN, SIDE_N_PATTERN, SIDE_W_PATTERN, SIDE_E_PATTERN, SIDE_S_PATTERN, CENTER_PATTERN, FULLBOARD_PATTERN
@@ -743,10 +749,7 @@ class KEngine(object):
         # continuations) will be added to plist (as long as the criteria such as DEPTH
         # ... are met)
 
-        class Messages:
-            def insert(self, pos, s):
-                pass
-        messages = messages or Messages()
+        messages = messages or dummyMessages()
 
         # compute column widths for table of continuations in output
         column_widths = [len(s) for s in [_('Label'), '   #  ', _('First played'), _('Last played')]]
@@ -1329,6 +1332,7 @@ class KEngine(object):
 
         filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index = arguments
         # print 'addOneDB', datap, dbpath
+        messages = messages or dummyMessages()
 
         if datap == ('', '#'):
             datap = (dbpath, 'kombilo')
@@ -1354,8 +1358,7 @@ class KEngine(object):
             return
 
         if gl == None:
-            if messages:
-                messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
+            messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
             return
         # open the lkGameList:
         if index is None:
@@ -1364,18 +1367,17 @@ class KEngine(object):
             self.gamelist.DBlist[index:index] = [{'name':datapath, 'sgfpath':dbpath, 'data': gl, 'disabled': 0}]
         self.currentSearchPattern = None
         self.gamelist.update()
-        if messages:
-            messages.insert('end', _('Added %s.') % dbpath + '\n')
+        messages.insert('end', _('Added %s.') % dbpath + '\n')
         return gl != None
 
     def process(self, dbpath, datap, filenames='*.sgf', acceptDupl=True, strictDuplCheck=True, tagAsPro=0,
                 processVariations=1, algos=None, messages=None, progBar=None, deleteDBfiles=False):
+        messages = messages or dummyMessages()
         if progBar:
             progBar.configure(value=0)
             progBar.update()
-        if messages:
-            messages.insert('end', _('Processing %s.') % dbpath + '\n')
-            messages.update()
+        messages.insert('end', _('Processing %s.') % dbpath + '\n')
+        messages.update()
         if filenames == '*.sgf':
             filelist = glob.glob(os.path.join(dbpath, '*.sgf'))
         elif filenames == '*.sgf, *.mgt':
@@ -1400,16 +1402,14 @@ class KEngine(object):
         if algos:
             pop.algos |= algos
         if deleteDBfiles and os.path.exists(os.path.join(datap[0], datap[1] + '.db')):
-            if messages:
-                messages.insert('end', _('Delete old database files.'))
-                messages.update()
+            messages.insert('end', _('Delete old database files.'))
+            messages.update()
             for ext in ['db', 'da', 'db1', 'db2', ]:
                 try:
                     os.remove(os.path.join(datap[0], datap[1] + '.%s' % ext))
                 except:
-                    if messages:
-                        messages.insert('end', _('Unable to delete database file %s.') % os.path.join(datap[0], datap[1] + '.%s' % ext))
-                        messages.update()
+                    messages.insert('end', _('Unable to delete database file %s.') % os.path.join(datap[0], datap[1] + '.%s' % ext))
+                    messages.update()
 
         gl = lkGameList(os.path.join(datap[0], datap[1] + '.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
         # TODO boardsize
@@ -1424,9 +1424,8 @@ class KEngine(object):
                 sgf = file.read()
                 file.close()
             except:
-                if messages:
-                    messages.insert('end', _('Unable to read file %s') % filename)
-                    messages.update()
+                messages.insert('end', _('Unable to read file %s') % filename)
+                messages.update()
                 continue
 
             path, fn = os.path.split(filename)
@@ -1439,26 +1438,24 @@ class KEngine(object):
             try:
                 if gl.process(sgf, path, fn, gls, '', pops):
                     pres = gl.process_results()
-                    if messages:
-                        if pres & lk.IS_DUPLICATE:
-                            messages.insert('end', _('Duplicate ... %s\n') % filename)
-                            messages.update()
-                        if pres & lk.SGF_ERROR:
-                            messages.insert('end', _('SGF error, file %s, %d\n') % (filename, pres))
-                            messages.update()
-                        if pres & lk.UNACCEPTABLE_BOARDSIZE:
-                            messages.insert('end', _('Unacceptable board size error, file %s, %d\n') % (filename, pres))
-                            messages.update()
-                        if pres & lk.NOT_INSERTED_INTO_DB:
-                            messages.insert('end', _('not inserted\n'))
-                            messages.update()
-                elif messages:
+                    if pres & lk.IS_DUPLICATE:
+                        messages.insert('end', _('Duplicate ... %s\n') % filename)
+                        messages.update()
+                    if pres & lk.SGF_ERROR:
+                        messages.insert('end', _('SGF error, file %s, %d\n') % (filename, pres))
+                        messages.update()
+                    if pres & lk.UNACCEPTABLE_BOARDSIZE:
+                        messages.insert('end', _('Unacceptable board size error, file %s, %d\n') % (filename, pres))
+                        messages.update()
+                    if pres & lk.NOT_INSERTED_INTO_DB:
+                        messages.insert('end', _('not inserted\n'))
+                        messages.update()
+                else:
                     messages.insert('end', _('SGF error, file %s, not inserted.') % filename + '\n')
                     messages.update()
             except:
-                if messages:
-                    messages.insert('end', _('SGF error, file %s, not inserted.') % filename + '\n')
-                    messages.update()
+                messages.insert('end', _('SGF error, file %s, not inserted.') % filename + '\n')
+                messages.update()
 
         messages.insert('end', _('Finalizing ... (this will take some time)\n'))
         messages.update()
