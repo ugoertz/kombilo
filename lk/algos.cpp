@@ -804,6 +804,10 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
       char y = movel[movelistIndex+1] & 31;
 
       char co = '?';
+      // changed if node has a BLACK or WHITE flag
+      // e.g. for the very first node (which matches the empty board) remains
+      // a '?'
+
       // char invco = 'X';
       char lower_invco = 'x';
 
@@ -966,7 +970,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
         // printf("si %d \n", si);
         for(int i=0; i<si; i++) {
           MovelistCand* it = (*cands)[i];
-          if (it != 0 && it->node_changes_relevant_region) {
+          if (it != 0 && (it->node_changes_relevant_region || co == '?')) {
             if (!it->dictsNO && !it->dictsFound) {
               if (!it->contList.size()) {
                 it->dictsF = counter;
