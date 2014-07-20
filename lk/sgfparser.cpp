@@ -580,7 +580,7 @@ void Cursor::parse(const char* s) throw(SGFError) {
     i++;
   }
 
-  if (inbrackets || c.size()) throw SGFError();
+  if (inbrackets || c.size() || curr->next == NULL) throw SGFError();
 
   Node* n = curr->next;
   n->previous = NULL;
