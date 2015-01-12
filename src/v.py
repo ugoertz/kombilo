@@ -28,6 +28,11 @@ import sys
 import webbrowser
 from configobj import ConfigObj
 
+# work around to make Pmw 2.0 useable
+import Tkinter
+sys.modules['tkinter'] = Tkinter
+
+
 from Tkinter import *
 from ttk import *
 from tkMessageBox import *
