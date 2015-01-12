@@ -45,6 +45,9 @@ from tooltip.tooltip import ToolTip
 
 from kombiloNG import *
 
+# work around to make Pmw 2.0 useable
+import Tkinter
+sys.modules['tkinter'] = Tkinter
 
 from Pmw import ScrolledFrame
 import Pmw
