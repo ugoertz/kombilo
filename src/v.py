@@ -699,7 +699,7 @@ class DataWindow:
                 return self.gamelist.clickedLast, i
 
             except lk.SGFError: showwarning('Error', 'SGF error in gamelistRelease.')
-            except: showwarning('Error', 'An error occured, please send a bug report.')
+            except: showwarning('Error', 'An error occurred, please send a bug report.')
 
         return None, None
 

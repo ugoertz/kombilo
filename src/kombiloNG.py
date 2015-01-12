@@ -1093,7 +1093,7 @@ class KEngine(object):
         try:
             gl = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar)
         except:
-            if showwarning: showwarning('Error', 'A fatal error occured when processing ' + dbpath + '. Are the directories for the database files writable?')
+            if showwarning: showwarning('Error', 'A fatal error occurred when processing ' + dbpath + '. Are the directories for the database files writable?')
             return
 
         if gl == None:
