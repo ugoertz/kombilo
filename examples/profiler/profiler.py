@@ -270,7 +270,10 @@ if __name__ == '__main__':
         p = Pattern(iPos, **kwargs)
         if algos: so.algos = algos
         dummy, searchtime = timer(K.patternSearch, p, so)
-        data['content'] += '<tr><td>%s</td><td><div class="pattern" style="font-size:80%%;"><pre>%s</pre></div></td><td>%.3f</td><td>%d</td><td style="font-size:70%%;">%s<br>%s</td></tr>' % (id, iPos, searchtime, K.gamelist.noOfGames(), K.gamelist.get_data(0), K.gamelist.get_data(K.gamelist.noOfGames()-1))
+        if K.gamelist.noOfGames():
+            data['content'] += '<tr><td>%s</td><td><div class="pattern" style="font-size:80%%;"><pre>%s</pre></div></td><td>%.3f</td><td>%d</td><td style="font-size:70%%;">%s<br>%s</td></tr>' % (id, iPos, searchtime, K.gamelist.noOfGames(), K.gamelist.get_data(0), K.gamelist.get_data(K.gamelist.noOfGames()-1))
+        else:
+            data['content'] += '<tr><td>%s</td><td><div class="pattern" style="font-size:80%%;"><pre>%s</pre></div></td><td>%.3f</td><td>%d</td><td style="font-size:70%%;">%s<br>%s</td></tr>' % (id, iPos, searchtime, 0, '-', '-')
         K.gamelist.reset()
     try:
         f = open('/proc/self/status')
