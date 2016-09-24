@@ -93,8 +93,8 @@ HTML_TEMPLATE = '''
 
 <script type="application/javascript">
 $(function() {
-    $('.pattern').hide(); 
-    $('#patternhead').toggle(function() { $('.pattern').show(); }, function() { $('.pattern').hide(); });
+    $('.pattern').hide();
+    $('#patternhead').click(function() { $('.pattern').toggle(); });
     $('tr:nth-child(odd)').addClass('odd')
 });
 </script>
