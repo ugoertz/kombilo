@@ -542,6 +542,7 @@ void Algo_movelist::AE_process(int x, int y, char removed) {
   movelist.push_back((char)x);
   if (removed == 'B') movelist.push_back((char)(y | REMOVE | BLACK));
   else if (removed == 'W') movelist.push_back((char)(y | REMOVE | WHITE));
+  else movelist.push_back((char)(y | REMOVE)); // BUGFIX by Claude Brisson, taking care of empty AE tags
 }
 
 void Algo_movelist::endOfNode_process() {
