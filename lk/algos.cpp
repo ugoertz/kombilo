@@ -982,7 +982,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
         // printf("si %d \n", si);
         for(int i=0; i<si; i++) {
           MovelistCand* it = (*cands)[i];
-          if (it != 0 && it->node_changes_relevant_region) {
+          if (it != 0 && (co == '?' || it->node_changes_relevant_region)) {
             if (!it->dictsNO && !it->dictsFound) {
               if (!it->contList.size()) {
                 it->dictsF = counter;
