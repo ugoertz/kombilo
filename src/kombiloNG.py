@@ -654,7 +654,7 @@ class KEngine(object):
         You can then set particular options on ``so``, e.g.::
 
           so.fixedColor = 1
-          so.searchInVariations = false
+          so.searchInVariations = False
 
         Available options:
 
@@ -1041,7 +1041,7 @@ class KEngine(object):
                                   strict, dupl_within_db)
 
     def addDB(self, dbp, datap=('', '#'), recursive=True, filenames = '*.sgf', acceptDupl=True, strictDuplCheck=True,
-              tagAsPro=0, processVariations = 1, algos = None,
+              tagAsPro=0, processVariations = True, algos = None,
               messages=None, progBar=None, showwarning=None, index=None):
         '''
         Call this method to newly add a database of SGF files.
@@ -1111,7 +1111,7 @@ class KEngine(object):
 
 
     def process(self, dbpath, datap, filenames='*.sgf', acceptDupl = True, strictDuplCheck=True, tagAsPro = 0,
-                processVariations = 1, algos = None, messages = None, progBar = None, deleteDBfiles = False):
+                processVariations = True, algos = None, messages = None, progBar = None, deleteDBfiles = False):
         if progBar:
             progBar.configure(value=0)
             progBar.update()

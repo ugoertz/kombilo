@@ -2823,9 +2823,9 @@ class App(v.Viewer, KEngine):
         self.fixedAnchorVar = IntVar()
         self.anchorButtonS = Checkbutton(self.patternSearchOptions, text='Fixed Anchor', highlightthickness=0, variable = self.fixedAnchorVar)
         self.anchorButtonS.grid(row=0, column=0, columnspan=2, sticky=W)
-        
-        self.searchInVariations = IntVar()
-        self.searchInVariations.set(1)
+
+        self.searchInVariations = BooleanVar()
+        self.searchInVariations.set(True)
         self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text='Search in variations', highlightthickness=0, variable = self.searchInVariations)
         self.searchInVariationsButton.grid(row=1, column=0, columnspan=2, sticky=W)
 

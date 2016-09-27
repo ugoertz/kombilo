@@ -68,9 +68,13 @@ class BunchTkVar:
     def loadFromDisk(self, d):
         for x in d:
             try:
-                int(d[x])
-                self.__dict__[x] = IntVar()
-                self.__dict__[x].set(int(d[x]))
+                if d[x] in ['True', 'False']:
+                    self.__dict__[x] = BooleanVar()
+                    self.__dict__[x].set(d[x] == 'True')
+                else:
+                    int(d[x])
+                    self.__dict__[x] = IntVar()
+                    self.__dict__[x].set(int(d[x]))
             except:
                 self.__dict__[x] = StringVar()
                 self.__dict__[x].set(d[x])
