@@ -247,7 +247,7 @@ int insertEntry(void *gl, int argc, char **argv, char **azColName) {
     if (p != string::npos) {
       if (argv[i]) {
         string fn = argv[i];
-        if (fn.substr(fn.size()-4) == ".sgf" || fn.substr(fn.size()-4) == ".mgt") 
+        if (fn.size() >= 4 && (fn.substr(fn.size()-4) == ".sgf" || fn.substr(fn.size()-4) == ".mgt"))
           gameInfoStr.replace(p, strlen(strpip1), fn.substr(0,fn.size()-4));
         else gameInfoStr.replace(p, strlen(strpip1), fn);
       } else gameInfoStr.erase(gameInfoStr.find(strpip1), strlen(strpip1));
