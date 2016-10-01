@@ -67,6 +67,11 @@ class BunchTkVar:
 
     def loadFromDisk(self, d):
         for x in d:
+            # ensure compatibility with old 0.7 config files
+            if x == 'processVariations':
+                self.__dict__[x] = BooleanVar()
+                self.__dict__[x].set(d[x] in ['True', '1', 1, ])
+                continue
             try:
                 if d[x] in ['True', 'False']:
                     self.__dict__[x] = BooleanVar()
