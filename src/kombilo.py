@@ -1699,7 +1699,7 @@ class App(v.Viewer, KEngine):
         self.datapath = os.path.split(dbp)[0]
 
         if self.options.storeDatabasesSeparately.get() and self.options.whereToStoreDatabases.get():
-            datap = (self.options.whereToStoreDatabases.get(), '')
+            datap = (self.options.whereToStoreDatabases.get(), 'kombilo')
             if os.path.exists(datap[0]) and not os.path.isdir(datap[0]):
                 showwarning('Error', datap[0] + ' is not a directory.')
                 self.editDB_OK.config(state=NORMAL)
