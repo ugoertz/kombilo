@@ -86,9 +86,6 @@ If you *are* a Python specialist and want to retain finer control (and
 place Kombilo in a virtualenv environment, say), it is enough to install
 the ``python`` and ``python-tk`` packages, and then to use ``pip`` to
 install the Python packages specified in the ``requirements.txt`` file.
-In addition, in this case, you have to install the Python Mega-Widgets by
-hand: download the tar.gz file from http://pmw.sourceforge.net/, unpack and
-install using python setup.py install.
 
 
 Downloading Kombilo
@@ -211,6 +208,8 @@ Windows
 
 Installer
 ^^^^^^^^^
+
+**Currently, for version 0.7.5 there is no Windows installer.**
 
 The installer installs the Kombilo package together with all libraries etc.
 which it depends on. Using it should allow you to ignore the whole Installation
