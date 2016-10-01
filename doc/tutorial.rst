@@ -31,7 +31,7 @@ A *database* corresponds to a directory of SGF
 files; it contains all the SGF files in that directory. Kombilo does not
 come with any games. You can either download a game collection
 (:ref:`find-game-records`) from the internet, or buy a commercial
-one. The `GoGoD encyclopedia <http://www.gogod.co.uk/>`_ comes with more
+one. The `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ comes with more
 than 70.000 at the time of writing, and is highly recommended.
 
 See also the section about :ref:`requirements-on-SGF-files`

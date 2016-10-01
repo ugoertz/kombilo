@@ -1516,7 +1516,7 @@ Where to find game records
 
 Here are some sources of game records:
 
-* `GoGoD encyclopedia <http://www.gogod.co.uk/index.htm>`_ has more than
+* `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ has more than
   70,000 games.
 * `Go4go <http://www.go4go.net/v2/>`_ has more than 28,000 games.
 * `Games of strong players on KGS <http://www.u-go.net/gamerecords/>`_
