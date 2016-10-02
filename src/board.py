@@ -338,13 +338,13 @@ class Board(abstractBoard, Canvas):
         x1, x2, y1, y2 = self.getPixelCoord(pos, 1)
 
         if size == 'small':
-            tmp1 = (y1 - x1) * 1 / 5
-            tmp2 = (y2 - x2) * 1 / 5
+            tmp1 = (y1 - x1) / 4
+            tmp2 = (y2 - x2) / 4
         else:
-            tmp1 = 2
-            tmp2 = 2
+            tmp1 = 3
+            tmp2 = 3
         self.create_oval(x1+tmp1, x2+tmp2, y1-tmp1, y2-tmp2, fill = color,
-                         outline = outln, tags=('marks', 'non-bg'))
+                         width=3, outline = outln, tags=('marks', 'non-bg'))
         self.marks[pos]=color
         self.onChange()
 
@@ -419,12 +419,15 @@ class Board(abstractBoard, Canvas):
                                              font = ('Helvetica', self.labelFontsize.get() + self.canvasSize[1]/5, 'bold'),
                                              tags=('label', 'non-bg')))
         elif typ == 'SQ':
-            labelIDs.append(self.create_rectangle(x1+6, x2+6, y1-6, y2-6, fill='', outline = fcolor, tags=('label','non-bg')))
+            w = self.canvasSize[1] / 3
+            labelIDs.append(self.create_rectangle(x1+w, x2+w, y1-w, y2-w, fill='', width=2, outline = fcolor, tags=('label','non-bg')))
         elif typ == 'CR':
-            labelIDs.append(self.create_oval(x1+5, x2+5, y1-5, y2-5, fill='', outline=fcolor, tags=('label','non-bg')))
+            w = self.canvasSize[1] / 3
+            labelIDs.append(self.create_oval(x1+w, x2+w, y1-w, y2-w, fill='', width=2, outline=fcolor, tags=('label','non-bg')))
         elif typ == 'TR':
-            labelIDs.append(self.create_polygon((x1+y1)/2, x2+5, x1+5, y2-5, y1-5, y2-5,
-                                                fill='', outline = fcolor,
+            w = self.canvasSize[1] / 3
+            labelIDs.append(self.create_polygon((x1+y1)/2, x2+w, x1+w, y2-w, y1-w, y2-w,
+                                                width=2, fill='', outline = fcolor,
                                                 tags = ('label', 'non-bg')))
         elif typ == 'MA':
             labelIDs.append(self.create_oval(x1+2, x2+2, y1-2, y2-2, fill=fcolor2, outline='',
