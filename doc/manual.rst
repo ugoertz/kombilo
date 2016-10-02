@@ -38,12 +38,13 @@ details on the different steps.
 ::
 
   # Install the packages that Kombilo depends on (and wget for the next step):
-  sudo apt-get install python-tk python-imaging python-imaging-tk python-pmw
-  sudo apt-get install python-configobj g++  libsqlite3-dev
-  sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
+  sudo apt-get install python-tk python-imaging python-pil.imagetk python-pmw
+  sudo apt-get install python-configobj g++  libsqlite3-dev wget
+  sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev
 
+  # cd to the folder where you want to install kombilo
   # download the Kombilo archive
-  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.5.tar.gz
+  wget https://github.com/ugoertz/kombilo/releases/download/v0.7.5/kombilo-0.7.5.tar.gz
 
   # unpack the archive
   tar xfz kombilo-0.7.5.tar.gz
