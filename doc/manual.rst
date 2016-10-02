@@ -104,10 +104,10 @@ Unpack the archive somewhere by ::
 This will extract all the files into the kombilo subdirectory.
 
 
-Mercurial repository
-....................
+Git repository
+..............
 
-You can also clone the Kombilo mercurial repository. See :ref:`development`
+You can also clone the Kombilo git repository. See :ref:`development`
 below for some details.
 
 
@@ -137,14 +137,14 @@ Development
 ^^^^^^^^^^^
 
 If you want to work on Kombilo or Libkombilo yourself, you can clone the
-mercurial repository::
+git repository::
 
-  hg clone https://bitbucket.org/ugoertz/kombilo
+  git clone https://github.com/ugoertz/kombilo.git
 
-Make sure (before ...) that you have mercurial installed, and also install
+Make sure (before ...) that you have git installed, and also install
 SWIG::
 
-  sudo apt-get mercurial swig
+  sudo apt-get git swig
 
 Before you can compile the libkombilo extension, you need to run swig::
 
@@ -158,7 +158,7 @@ Build the documentation
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
-step. If you installed directly from its Mercurial repository, and want to
+step. If you installed directly from its git repository, and want to
 use the documentation offline (either directly or from the Kombilo Help
 menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
@@ -1350,10 +1350,10 @@ would like to learn your ideas and priorities!
 Development
 -----------
 
-If you have time to delve into Kombilo development, check out the mercurial
+If you have time to delve into Kombilo development, check out the git
 repository::
 
-  hg clone https://bitbucket.org/ugoertz/kombilo
+  git clone https://github.com/ugoertz/kombilo.git
 
 Feel free to fork the project and do send me pull requests for improvements
 or fixes you made.
