@@ -43,13 +43,13 @@ details on the different steps.
   sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
 
   # download the Kombilo archive
-  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.4.tar.gz
+  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.7.5.tar.gz
 
   # unpack the archive
-  tar xfz kombilo-0.7.4.tar.gz kombilo
+  tar xfz kombilo-0.7.5.tar.gz
 
   # compile the C++ extension
-  cd kombilo/lk
+  cd kombilo-0.7.5/lk
   python setup.py build_ext
   cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
 
@@ -94,20 +94,20 @@ Downloading Kombilo
 tar.gz files
 ............
 
-Download the ``kombilo-0.7.4.tar.gz`` archive from the `Kombilo downloads
+Download the :command:`kombilo-0.7.5.tar.gz` archive from the `Kombilo downloads
 <https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
 
 Unpack the archive somewhere by ::
 
-  tar xfz kombilo-0.7.4.tar.gz kombilo
+  tar xfz kombilo-0.7.5.tar.gz
 
-This will extract all the files into the kombilo subdirectory.
+This will extract all the files into the kombilo-0.7.5 subdirectory.
 
 
-Mercurial repository
-....................
+Git repository
+..............
 
-You can also clone the Kombilo mercurial repository. See :ref:`development`
+You can also clone the Kombilo git repository. See :ref:`development`
 below for some details.
 
 
@@ -137,14 +137,14 @@ Development
 ^^^^^^^^^^^
 
 If you want to work on Kombilo or Libkombilo yourself, you can clone the
-mercurial repository::
+git repository::
 
-  hg clone https://bitbucket.org/ugoertz/kombilo
+  git clone https://github.com/ugoertz/kombilo.git
 
-Make sure (before ...) that you have mercurial installed, and also install
+Make sure (before ...) that you have git installed, and also install
 SWIG::
 
-  sudo apt-get mercurial swig
+  sudo apt-get git swig
 
 Before you can compile the libkombilo extension, you need to run swig::
 
@@ -158,7 +158,7 @@ Build the documentation
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
-step. If you installed directly from its Mercurial repository, and want to
+step. If you installed directly from its git repository, and want to
 use the documentation offline (either directly or from the Kombilo Help
 menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
@@ -166,12 +166,9 @@ from a tar.gz file, then you can skip this step.
 Kombilo documentation
 .....................
 
-Install `Sphinx <http://sphinx.pocoo.org/>`_ either via ``pip install
-sphinx``, or globally by ::
-
-  sudo apt-get install python-sphinx
-
-and in the ``doc/`` directory, run ::
+Install `Sphinx <http://sphinx.pocoo.org/>`_ and other required packages (using
+``pip install -r requirements.text``; consider using a ``virtualenv``
+environment) and in the ``doc/`` directory, run ::
 
   make html
 
@@ -209,7 +206,8 @@ Windows
 Installer
 ^^^^^^^^^
 
-**Currently, for version 0.7.5 there is no Windows installer.**
+.. warning::
+    **Currently, for version 0.7.5 there is no Windows installer.**
 
 The installer installs the Kombilo package together with all libraries etc.
 which it depends on. Using it should allow you to ignore the whole Installation
@@ -1350,10 +1348,10 @@ would like to learn your ideas and priorities!
 Development
 -----------
 
-If you have time to delve into Kombilo development, check out the mercurial
+If you have time to delve into Kombilo development, check out the git
 repository::
 
-  hg clone https://bitbucket.org/ugoertz/kombilo
+  git clone https://github.com/ugoertz/kombilo.git
 
 Feel free to fork the project and do send me pull requests for improvements
 or fixes you made.

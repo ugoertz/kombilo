@@ -26,6 +26,17 @@ History/Change log
 0.7
 ---
 
+0.7.5 (October 2016)
+^^^^^^^^^^^^^^^^^^^^
+
+* Fix a few small bugs, most notably fix searching for the empty board (thanks
+  to Bram Vandenbon for the bug report). Thanks also to Gilles Arcas and Claude
+  Brisson for sending bug reports with fixes included.
+* Switch code versioning system to Git, hosted in Github: `Kombilo
+  <https://github.com/ugoertz/kombilo>`_
+* Small changes to reflect updates in third-party packages (SWIG, jQuery).
+
+
 0.7.4 (August 2012)
 ^^^^^^^^^^^^^^^^^^^
 
