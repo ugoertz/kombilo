@@ -1337,18 +1337,20 @@ class KEngine(object):
         if datap == ('', '#'):
             datap = (dbpath, 'kombilo')
 
-        if os.path.isfile(os.path.join(datap[0], datap[1] + '.db')):  # if file exists, append a counter
+        def db_file_exists(d):
+            return (os.path.isfile(os.path.join(d[0], d[1] + '.da')) or
+                    os.path.isfile(os.path.join(d[0], d[1] + '.db')) or
+                    os.path.isfile(os.path.join(d[0], d[1] + '.db1')) or
+                    os.path.isfile(os.path.join(d[0], d[1] + '.db2')))
+
+        if db_file_exists(datap):
+            # if file exists, append a counter
             i = 1
-            while os.path.isfile(os.path.join(datap[0], datap[1] + '%d.db' % i)):
+            while db_file_exists((datap[0], datap[1] + '%d' % i)):
                 i += 1
-            datapath = (datap[0], datap[1] + '%d' % i)
+            datapath = (datap[0], datap[1]+'%d' % i)
         else:
             datapath = datap
-
-        if os.path.isfile(os.path.join(datapath[0], datapath[1] + '.db')):
-            if showwarning:
-                showwarning(_('Error'), _('A kombilo database already exists at %s. Please remove it first, or reprocess that database.') % os.path.join(datapath[0], datapath[1]))
-            return
 
         try:
             gl = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar)
