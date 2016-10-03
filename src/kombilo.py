@@ -24,6 +24,7 @@
 ## SOFTWARE.
 
 import time
+import datetime
 import os
 import sys
 from copy import copy
@@ -879,7 +880,7 @@ class App(v.Viewer, KEngine):
 
         data = [{'black': y * 1.0 / (z * m) if z else 0, 'label': ['%d' % x[0], '-', '%d' % (x[1] - 1, )], 'label_top': ['%d/' % y, '%d' % z]} for x, y, z in d]
         fr = self.options.date_profile_from.get()
-        to=self.options.date_profile_to.get()
+        to = self.options.date_profile_to.get()
         self.display_bar_chart_dates(self.dateProfileCanv, 'stat',
                                      data=self.gamelist.dates_relative(fr=(fr - lk.DATE_PROFILE_START) * 12, to=(to + 1 - lk.DATE_PROFILE_START) * 12 - 1,
                                                                        chunk_size=self.options.date_profile_chunk_size.get()),
@@ -2896,6 +2897,7 @@ class App(v.Viewer, KEngine):
         """ Load options from dictionary d. """
 
         self.options.loadFromDisk(d)
+        self.options.date_profile_to.set(datetime.datetime.today().year)
 
     def evalOptions(self):
         self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(), self.options.commentfontStyle.get()))
@@ -3171,7 +3173,7 @@ class App(v.Viewer, KEngine):
             self.redo_date_profile = True
 
         self.options.date_profile_from.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_from, default=1930: validate(var, default))
-        self.options.date_profile_to.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_to, default=2012: validate(var, default))
+        self.options.date_profile_to.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_to, default=datetime.datetime.today().year: validate(var, default))
         self.options.date_profile_chunk_size.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_chunk_size, default=6: validate(var, default))
 
         # ------------------------------------------------------------------------------
