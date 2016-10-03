@@ -133,27 +133,7 @@ class BoardWC(Board):
             self.place_wildcard(x, y, self.wildcards[(x, y)][1])
 
         self.delete('selection')
-        if self.selection != ((0, 0), (self.boardsize - 1, self.boardsize - 1)) and self.selection[1] != (0, 0):
-            p0 = self.getPixelCoord(self.selection[0], 1)
-            p1 = self.getPixelCoord((self.selection[1][0] + 1, self.selection[1][1] + 1), 1)
-            min = self.getPixelCoord((0, 0), 1)[0] + 1
-            max = self.getPixelCoord((self.boardsize, self.boardsize), 1)[1] - 1
-            if self.canvasSize[1] <= 7:
-                self.create_rectangle(p0[0], p0[1], p1[0], p1[1], tags=('selection', 'non-bg'))
-            elif self.invertSelection.get():
-                self.create_rectangle(p0[0], p0[1], p1[0], p1[1], fill='brown', stipple='gray50', outline='', tags='selection')
-            else:
-                if p0[1] > min:
-                    self.create_rectangle(min, min, max, p0[1], fill='brown', stipple='gray50', outline='', tags='selection')
-                if p0[0] > min and p0[1] < max:
-                    self.create_rectangle(min, p0[1], p0[0], max, fill='brown', stipple='gray50', outline='', tags='selection')
-                if p1[1] < max:
-                    self.create_rectangle(p0[0], p1[1], p1[0], max, fill='brown', stipple='gray50', outline='', tags='selection')
-                if p1[0] < max and p0[1] < max:
-                    self.create_rectangle(p1[0], p0[1], max, max, fill='brown', stipple='gray50', outline='', tags='selection')
-            self.tkraise('non-bg')
-
-        self.update_idletasks()
+        self.drawSelection()
 
     def place_wildcard(self, x, y, wc_type):
         x1, x2, y1, y2 = self.getPixelCoord((x, y), 1)
@@ -227,28 +207,35 @@ class BoardWC(Board):
         if pos[0] >= self.selection[0][0] and pos[1] >= self.selection[0][1]:
             self.setSelection(self.selection[0], pos)
 
-    def setSelection(self, pos0, pos1):
-        self.selection = (pos0, pos1)
-        self.delete('selection')
+    def drawSelection(self):
+        pos0, pos1 = self.selection
         p0 = self.getPixelCoord(pos0, 1)
         p1 = self.getPixelCoord((pos1[0] + 1, pos1[1] + 1), 1)
         min = self.getPixelCoord((0, 0), 1)[0] + 1
         max = self.getPixelCoord((self.boardsize, self.boardsize), 1)[1] - 1
+        rectangle_kwargs = {'fill': 'gray50', 'stipple': 'gray50', 'outline': '', 'tags': 'selection', }
+
         if self.canvasSize[1] <= 7:
             self.create_rectangle(p0[0], p0[1], p1[0], p1[1], tags=('selection', 'non-bg'))
         elif self.invertSelection.get():
-            self.create_rectangle(p0[0], p0[1], p1[0], p1[1], fill='brown', stipple='gray50', outline='', tags='selection')
+            self.create_rectangle(p0[0], p0[1], p1[0], p1[1], **rectangle_kwargs)
         else:
             if p0[1] > min:
-                self.create_rectangle(min, min, max, p0[1], fill='brown', stipple='gray50', outline='', tags='selection')
+                self.create_rectangle(min, min, max, p0[1], **rectangle_kwargs)
             if p0[0] > min and p0[1] < max:
-                self.create_rectangle(min, p0[1], p0[0], max, fill='brown', stipple='gray50', outline='', tags='selection')
+                self.create_rectangle(min, p0[1], p0[0], max, **rectangle_kwargs)
             if p1[1] < max:
-                self.create_rectangle(p0[0], p1[1], p1[0], max, fill='brown', stipple='gray50', outline='', tags='selection')
+                self.create_rectangle(p0[0], p1[1], p1[0], max, **rectangle_kwargs)
             if p1[0] < max and p0[1] < max:
-                self.create_rectangle(p1[0], p0[1], max, max, fill='brown', stipple='gray50', outline='', tags='selection')
+                self.create_rectangle(p1[0], p0[1], max, max, **rectangle_kwargs)
 
         self.tkraise('non-bg')
+        self.update_idletasks()
+
+    def setSelection(self, pos0, pos1):
+        self.selection = (pos0, pos1)
+        self.delete('selection')
+        self.drawSelection()
 
         if self.smartFixedColor.get():
             if self.selection == ((0, 0), (self.boardsize - 1, self.boardsize - 1)):
