@@ -38,18 +38,19 @@ details on the different steps.
 ::
 
   # Install the packages that Kombilo depends on (and wget for the next step):
-  sudo apt-get install python-tk python-imaging python-imaging-tk python-pmw
-  sudo apt-get install python-configobj g++  libsqlite3-dev
+  sudo apt-get install python-tk python-imaging python-pil.imagetk python-pmw
+  sudo apt-get install python-configobj g++  libsqlite3-dev wget
   sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
 
+  # cd to the folder where you want to install kombilo
   # download the Kombilo archive
-  wget https://bitbucket.org/ugoertz/kombilo/downloads/kombilo-0.8.tar.gz
+  wget https://github.com/ugoertz/kombilo/releases/download/v0.8/kombilo-0.8.tar.gz
 
   # unpack the archive
-  tar xfz kombilo-0.8.tar.gz kombilo
+  tar xfz kombilo-0.8.tar.gz
 
   # compile the C++ extension
-  cd kombilo/lk
+  cd kombilo-0.8/lk
   python setup.py build_ext
   cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
 
@@ -86,9 +87,6 @@ If you *are* a Python specialist and want to retain finer control (and
 place Kombilo in a virtualenv environment, say), it is enough to install
 the ``python`` and ``python-tk`` packages, and then to use ``pip`` to
 install the Python packages specified in the ``requirements.txt`` file.
-In addition, in this case, you have to install the Python Mega-Widgets by
-hand: download the tar.gz file from http://pmw.sourceforge.net/, unpack and
-install using python setup.py install.
 
 
 Downloading Kombilo
@@ -98,19 +96,19 @@ tar.gz files
 ............
 
 Download the ``kombilo-0.8.tar.gz`` archive from the `Kombilo downloads
-<https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
+<https://github.com/ugoertz/kombilo/releases>`_ site.
 
 Unpack the archive somewhere by ::
 
-  tar xfz kombilo-0.8.tar.gz kombilo
+  tar xfz kombilo-0.8.tar.gz
 
-This will extract all the files into the kombilo subdirectory.
+This will extract all the files into the kombilo-0.8 subdirectory.
 
 
-Mercurial repository
-....................
+Git repository
+..............
 
-You can also clone the Kombilo mercurial repository. See :ref:`development`
+You can also clone the Kombilo git repository. See :ref:`development`
 below for some details.
 
 
@@ -140,14 +138,14 @@ Development
 ^^^^^^^^^^^
 
 If you want to work on Kombilo or Libkombilo yourself, you can clone the
-mercurial repository::
+git repository::
 
-  hg clone https://bitbucket.org/ugoertz/kombilo
+  git clone https://github.com/ugoertz/kombilo.git
 
-Make sure (before ...) that you have mercurial installed, and also install
+Make sure (before ...) that you have gitinstalled, and also install
 SWIG::
 
-  sudo apt-get mercurial swig
+  sudo apt-get gitswig
 
 Before you can compile the libkombilo extension, you need to run swig::
 
@@ -161,7 +159,7 @@ Build the documentation
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
-step. If you installed directly from its Mercurial repository, and want to
+step. If you installed directly from its Git repository, and want to
 use the documentation offline (either directly or from the Kombilo Help
 menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
@@ -169,8 +167,8 @@ from a tar.gz file, then you can skip this step.
 Kombilo documentation
 .....................
 
-Install `Sphinx <http://sphinx.pocoo.org/>`_ either via ``pip install
-sphinx``, or globally by ::
+Install `Sphinx <http://sphinx.pocoo.org/>`_ and other required packages (``pip install
+-r requirements.txt`` in a ``virtualenv`` would be the preferred way), or globally by ::
 
   sudo apt-get install python-sphinx
 
@@ -208,6 +206,9 @@ documentation in ``lk/doc/build/``.
 
 Windows
 -------
+
+.. warning::
+  **Currently, for version 0.8 there is no Windows installer.**
 
 Installer
 ^^^^^^^^^
@@ -613,8 +614,7 @@ Comment head
   suited for tabular data then the default font.
 
 Sort continuations by
-  The sort criterion for continuations, compare :ref:`Sorting continuations
-  <sort-continuations>`.
+  The sort criterion for continuations.
 
 Put results into new SGF file
   If checked, then a new SGF file is created for the results. Otherwise, the
@@ -1480,10 +1480,10 @@ would like to learn your ideas and priorities!
 Development
 -----------
 
-If you have time to delve into Kombilo development, check out the mercurial
+If you have time to delve into Kombilo development, check out the git
 repository::
 
-  hg clone https://bitbucket.org/ugoertz/kombilo
+  git clone https://github.com/ugoertz/kombilo.git
 
 Feel free to fork the project and do send me pull requests for improvements
 or fixes you made.
@@ -1645,7 +1645,7 @@ Where to find game records
 
 Here are some sources of game records:
 
-* `GoGoD encyclopedia <http://www.gogod.co.uk/index.htm>`_ has more than
+* `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ has more than
   70,000 games.
 * `Go4go <http://www.go4go.net/v2/>`_ has more than 28,000 games.
 * `Games of strong players on KGS <http://www.u-go.net/gamerecords/>`_
