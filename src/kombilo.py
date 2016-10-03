@@ -612,8 +612,9 @@ class TreeNode(list):
     def delete(self):
         for child in self:
             child.parent = self.parent
-        self.parent.extend(self)  # the children of node become children of its parent
-        self.parent.remove(self)
+        if self.parent:
+            self.parent.extend(self)  # the children of node become children of its parent
+            self.parent.remove(self)
 
 
 class PrevSearchesStack:
@@ -844,9 +845,10 @@ class PrevSearchesStack:
         def f(node, del_fct):
             del_fct(node, False)
         self.data.foreach(f, self.delete)
-        self.reposition()
+        self.prevSF.reposition()
         self.active = False
-        self.current = None
+        self.data = TreeNode()
+        self.current = self.data
 
 # ---------------------------------------------------------------------------------------
 
@@ -1333,7 +1335,7 @@ class App(v.Viewer, KEngine):
         self.configButtons(NORMAL)
 
     def back(self, target=None):
-        """ Go back to target_valuesious search (restore board, game list etc.)
+        """ Go back to target_values search (restore board, game list etc.)
         If an SGF file is currently loaded (and was loaded at the time of
         the target_valuesious search too), the position of its cursor is
         restored too.
