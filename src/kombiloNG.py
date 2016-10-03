@@ -609,13 +609,10 @@ class GameList(object):
 
         l = (to - fr) // chunk_size
 
-        for db in self.DBlist:
-            if db['disabled']:
-                continue
-            for i in range(l):
-                current = sum([db['data'].dates_current[j + fr] for j in range(i * chunk_size, (i + 1) * chunk_size)])
-                all = sum([db['data'].dates_all[j + fr] for j in range(i * chunk_size, (i + 1) * chunk_size)])
-                result.append(current * 1.0 / all if all else 0)
+        for i in range(l):
+            current = sum([db['data'].dates_current[j + fr] for j in range(i * chunk_size, (i + 1) * chunk_size) for db in self.DBlist if not db['disabled']])
+            d_all = sum([db['data'].dates_all[j + fr] for j in range(i * chunk_size, (i + 1) * chunk_size) for db in self.DBlist if not db['disabled']])
+            result.append(current * 1.0 / d_all if d_all else 0)
         return result
 
 

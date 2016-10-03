@@ -661,7 +661,7 @@ class PrevSearchesStack:
         b.resizable = 0
 
         self.prevSF.reposition()
-        node = self.current.add_child({'kw': copy(kwargs), 'board': b, 'on_hold': False, })
+        node = self.current.add_child(data={'kw': copy(kwargs), 'board': b, 'on_hold': False, })
         b.bound1 = b.bind('<1>', lambda event, self=self, l=node: self.click(l))
         b.bound3 = b.bind('<3>', lambda event, self=self, l=node: self.postMenu(event, l))
         self.select(node)
@@ -703,6 +703,9 @@ class PrevSearchesStack:
 
     def delete(self, node, reposition=True):
         node.delete()
+        if not 'board' in node.d:
+            # the root node, so there is nothing to do
+            return
 
         b = node.d['board']
         if not b:
