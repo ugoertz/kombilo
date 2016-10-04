@@ -2051,7 +2051,9 @@ void GameList::delete_snapshot(int handle) throw(DBError) {
 }
 
 void GameList::delete_all_snapshots() throw(DBError) {
-  int rc = sqlite3_exec(db, "delete from snapshots", 0, 0, 0);
+  int rc = sqlite3_exec(db, "drop table snapshots", 0, 0, 0);
+  if (rc != SQLITE_OK) throw DBError();
+  rc = sqlite3_exec(db, "create table if not exists snapshots ( data text );", 0, 0, 0);
   if (rc != SQLITE_OK) throw DBError();
 }
 
