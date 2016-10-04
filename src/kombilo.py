@@ -3332,6 +3332,7 @@ class App(v.Viewer, KEngine):
 # ---------------------------------------------------------------------------------------
 
 root = Tk()
+root.tk.call('tk', 'scaling', 3.0)
 root.withdraw()
 
 if sys.path[0].endswith('library.zip'):

@@ -630,7 +630,7 @@ cont_sort_criteria = {'total': lambda c1, c2: c2.total() - c1.total(),
 
 
 def _get_date(d):
-    return '%d-%d' % (d // 12, d % 12 + 1)
+    return '%d' % d
 
 
 class KEngine(object):
@@ -842,7 +842,7 @@ class KEngine(object):
                     continue
                 ctr += 1
 
-                comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest), _get_date(cont.latest))
+                comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
 
                 # put label for (cont.x, cont.y) into node
                 pos = chr(cont.x + options['selection'][0][0] + 97) + chr(cont.y + options['selection'][0][1] + 97)  # SGF coordinates
