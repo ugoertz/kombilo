@@ -1282,6 +1282,8 @@ class KEngine(object):
                 db['data'] = None
             else:
                 try:
+                    if not os.path.exists(lkGameList(os.path.join(db['name'][0], db['name'][1] + '.db'))):
+                        raise IOError
                     db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1] + '.db'))
                 except:
                     if showwarning:
