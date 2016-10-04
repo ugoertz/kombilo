@@ -278,6 +278,10 @@ class Node(sgf.Node):
 class lkGameList(lk.GameList):
 
     def __init__(self, *args):
+        try:
+            args = [(x.encode('utf8') if type(x)==type(u'') else x) for x in args]
+        except:
+            pass
         if len(args) == 1:
             lk.GameList.__init__(self, args[0], '', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]]', lk.ProcessOptions(), 19, 50000)
         else:
@@ -1247,7 +1251,7 @@ class KEngine(object):
         self.gamelist.references = defaultdict(list)
         try:
             with open(datafile) as ref_file:
-                c = ConfigObj(infile=ref_file)
+                c = ConfigObj(infile=ref_file, encoding='utf8', default_encoding='utf8')
                 if 'boardsize' in c:
                     boardsize = int(c['boardsize'])
                     del c['boardsize']
@@ -1291,7 +1295,7 @@ class KEngine(object):
     # ---------- database administration (processing etc.)
 
     def find_duplicates(self, strict=True, dupl_within_db=True):
-        return lk.find_duplicates([os.path.join(db['name'][0], db['name'][1]+'.db') for db in self.gamelist.DBlist if not db['disabled']],
+        return lk.find_duplicates([os.path.join(db['name'][0], db['name'][1]+'.db').encode('utf8') for db in self.gamelist.DBlist if not db['disabled']],
                                   strict, dupl_within_db)
 
 
