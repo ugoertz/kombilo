@@ -808,7 +808,7 @@ msgstr ""
 
 #: kombiloNG.py:1106
 msgid ""
-"A fatal error occured when processing %s. Are the directories for the "
+"A fatal error occurred when processing %s. Are the directories for the "
 "database files writable?"
 msgstr ""
 "Ein fataler Fehler ist beim Einlesen von %s aufgetreten. Haben Sie "
@@ -894,7 +894,7 @@ msgstr "aufspalten"
 
 #: v.py:707
 #, fuzzy
-msgid "An error occured, please submit a bug report."
+msgid "An error occurred, please submit a bug report."
 msgstr ""
 "Es ist ein Fehler aufgetreten, bitte reichen Sie einen Fehlerbericht ein."
 

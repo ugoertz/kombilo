@@ -785,7 +785,7 @@ msgstr ""
 
 #: kombiloNG.py:1106
 msgid ""
-"A fatal error occured when processing %s. Are the directories for the "
+"A fatal error occurred when processing %s. Are the directories for the "
 "database files writable?"
 msgstr ""
 
@@ -866,7 +866,7 @@ msgid "split"
 msgstr ""
 
 #: v.py:707
-msgid "An error occured, please submit a bug report."
+msgid "An error occurred, please submit a bug report."
 msgstr ""
 
 #: v.py:1048 v.py:1952 v.py:2141

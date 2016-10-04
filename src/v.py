@@ -707,7 +707,7 @@ class DataWindow:
             except lk.SGFError:
                 showwarning(_('Error'), _('SGF Error') + '(gamelistRelease)')
             except:
-                showwarning(_('Error'), _('An error occured, please submit a bug report.'))
+                showwarning(_('Error'), _('An error occurred, please submit a bug report.'))
 
         return None, None
 
