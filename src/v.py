@@ -1740,60 +1740,34 @@ class Viewer:
                         self.board.placeLabel((x, y), 'LB', '')
                         return
 
-            if t == '12n':
+            def place_first_unused(cn, labels):
                 if 'LB' in cn:
-                    mx = '0'
                     for item in cn['LB']:
                         p, t = split(item, ':')
-                        if mx < t < '9':
-                            mx = t
-                    text = chr(ord(mx) + 1)
-                    cn.add_property_value('LB', [pos + ':' + text, ])
+                        try:
+                            labels.remove(t)
+                        except ValueError:
+                            pass
+                    text = labels[0] if labels else '?'
+                    cn.add_property_value('LB', [pos+':'+text, ])
                 else:
-                    text = '1'
-                    cn['LB'] = [pos + ':1']
+                    text = labels[0]
+                    cn['LB'] = [pos+':'+text]
+                self.board.placeLabel((x,y), 'LB', text)
 
-                self.board.placeLabel((x, y), 'LB', text)
-
+            if t == '12n': # place 'number' label
+                place_first_unused(cn, [str(i) for i in range(1, 400)])
             elif t == 'ABC':
-                if 'LB' in cn:
-                    mx = '@'
-                    for item in cn['LB']:
-                        p, t = split(item, ':')
-                        if mx < t < 'Z':
-                            mx = t
-                    text = chr(ord(mx) + 1)
-                    cn.add_property_value('LB', [pos + ':' + text, ])
-                else:
-                    text = 'A'
-                    cn['LB'] = [pos + ':A']
-
-                self.board.placeLabel((x, y), 'LB', text)
-
+                place_first_unused(cn, list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
             elif t == 'abc':
-                if 'LB' in cn:
-                    mx = chr(ord('a') - 1)
-                    for item in cn['LB']:
-                        p, t = split(item, ':')
-                        if mx < t < 'z':
-                            mx = t
-                    text = chr(ord(mx) + 1)
-                    cn.add_property_value('LB', (pos + ':' + text, ))
-                else:
-                    text = 'a'
-                    cn['LB'] = [pos + ':a']
-
-                self.board.placeLabel((x, y), 'LB', text)
-
+                place_first_unused(cn, list('abcdefghijklmnopqrstuvwxyz'))
             else:
                 text = ''
-
-                if t in cn:
+                if cn.has_key(t):
                     cn.add_property_value(t, (pos, ))
                 else:
                     cn[t] = [pos]
-
-                self.board.placeLabel((x, y), t, text)
+                self.board.placeLabel((x,y), t, text)
 
         except lk.SGFError:
             showwarning(_('Error'), _('SGF Error') + '(def labelClick())')
