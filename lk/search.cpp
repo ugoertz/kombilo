@@ -970,14 +970,14 @@ vector<int> GameList::sigsearchNC(char* sig) throw(DBError) {
     }
   }
 
-  if (sig_contains_wildcards) { // if sig contains wildcards, then need to search for all flipped sigs
+  if (sig_contains_wildcards) { // if sig contains wildcards, then need to search for all flipped sigs --- this could be refined: if wildcards occur only in final positions s.t. flip giving symmetrized sig is unique, could use symmetrized sig
     string query = "select id from GAMES where signature like ? or signature like ? or signature like ? or signature like ? or signature like ? or signature like ? or signature like ? or signature like ? order by id";
     char** sigs = new char*[8];
     for (int f=0; f<8; f++) sigs[f] = flipped_sig(f, sig, boardsize);
     rc = sqlite3_prepare(db, query.c_str(), -1, &ppStmt, 0);
     if (rc != SQLITE_OK || ppStmt==0) throw DBError();
     for (int f=0; f<8; f++) {
-      rc = sqlite3_bind_blob(ppStmt, f+1, sigs[f], 12, SQLITE_TRANSIENT);
+      rc = sqlite3_bind_text(ppStmt, f+1, sigs[f], 12, SQLITE_TRANSIENT);
       if (rc != SQLITE_OK || ppStmt==0) throw DBError();
     }
     for (int f=0; f<8; f++) delete [] sigs[f];
@@ -987,7 +987,7 @@ vector<int> GameList::sigsearchNC(char* sig) throw(DBError) {
     string query = "select id from GAMES where signature like ? order by id";
     rc = sqlite3_prepare(db, query.c_str(), -1, &ppStmt, 0);
     if (rc != SQLITE_OK || ppStmt==0) throw DBError();
-    rc = sqlite3_bind_blob(ppStmt, 1, symmetrized_sig, 12, SQLITE_TRANSIENT);
+    rc = sqlite3_bind_text(ppStmt, 1, symmetrized_sig, 12, SQLITE_TRANSIENT);
     if (rc != SQLITE_OK || ppStmt==0) throw DBError();
     delete [] symmetrized_sig;
   }
