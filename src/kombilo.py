@@ -2281,6 +2281,8 @@ class App(v.Viewer, KEngine):
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
 
         for db in self.gamelist.DBlist:
+            if db['disabled']:
+                continue
             db['data'].delete_all_snapshots()
 
         self.master.quit()
