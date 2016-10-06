@@ -54,9 +54,13 @@ SEEN_TAG = 4
 if 'gettext' in sys.modules:
     # is kombiloNG imported by a module which already imported gettext?
 
-    import gettext
-    t = gettext.translation('kombilo', '../lang')
-    _ = t.ugettext
+    try:
+        import gettext
+        t = gettext.translation('kombilo', '../lang')
+        _ = t.ugettext
+    except:
+        def _(s):
+            return s
 else:
     # otherwise, ignore requests for translations
     def _(s):
@@ -82,30 +86,6 @@ def getFilename(s):
     else:
         return s + '.sgf'    # extension '.sgf'
 
-
-def symmetrizeSig(s):
-    """Given a signature s, compute the 'rotated'/'mirrored' signatures,
-    and return the first, w.r.t. lexicographic order, of all these.
-    Games which differ only by a symmetry of the board will thus have the
-    same symmetrized signature.
-    """
-
-    l = []
-    oa = ord('a')
-    for i in range(6):
-        l.append((ord(s[2 * i]) - oa, ord(s[2 * i + 1]) - oa))
-
-    m = []
-    for f in Pattern.flips:
-        k1 = [f(x[0], x[1]) for x in l]
-        k2 = []
-        for i in range(6):
-            k2.append('?' if s[2 * i] == '?' else chr(k1[i][0] + oa))
-            k2.append('?' if s[2 * i + 1] == '?' else chr(k1[i][1] + oa))
-        m.append(join(k2, ''))
-
-    m.sort()
-    return m[0]
 
 class dummyMessages:
     def insert(self, *args):
