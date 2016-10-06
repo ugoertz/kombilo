@@ -1184,10 +1184,10 @@ class App(v.Viewer, KEngine):
         try:
             self.gameinfoSearch(query)
         except lk.DBError:
-            self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('Database error\n') + '\n')
+            self.logger.insert(END, (_('Game info search, query "%s"') % query.decode('utf8')) + ', ' + _('Database error\n') + '\n')
             self.gamelist.reset()
         else:
-            self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('%1.1f seconds') % (time.time() - currentTime) + '\n')
+            self.logger.insert(END, (_('Game info search, query "%s"') % query.decode('utf8')) + ', ' + _('%1.1f seconds') % (time.time() - currentTime) + '\n')
 
         self.progBar.stop()
         self.redo_date_profile = True
