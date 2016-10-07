@@ -1911,8 +1911,8 @@ class App(v.Viewer, KEngine):
                       tagAsPro=tagAsPro, processVariations=self.options.processVariations.get(), algos=algos,
                       messages=self.processMessages, progBar=self.progBar, showwarning=showwarning, index=index)
 
-    def addOneDB(self, arguments, dbpath, dummy):        # dummys needed for os.path.walk
-        if KEngine.addOneDB(self, arguments, dbpath, dummy):
+    def addOneDB(self, arguments, dbpath):
+        if KEngine.addOneDB(self, arguments, dbpath):
             index = arguments[-1] if not arguments[-1] is None else END
             db = self.gamelist.DBlist[int(index) if index != END else -1]
             db_date = getDateOfFile(os.path.join(db['name'][0], db['name'][1] + '.da'))

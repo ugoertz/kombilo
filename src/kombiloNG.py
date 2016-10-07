@@ -1304,14 +1304,14 @@ class KEngine(object):
         * showwarning: a method which display warnings (like Tkinter showwarning)
         '''
 
+        arguments = (filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index)
         if recursive:
-            os.path.walk(dbp, self.addOneDB,
-                         (filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index))
+            for dirpath, dirnames, files in os.walk(dbp):
+                self.addOneDB(arguments, dirpath)
         else:
-            self.addOneDB((filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index),
-                          dbp, None)
+            self.addOneDB(arguments, dbp)
 
-    def addOneDB(self, arguments, dbpath, dummy):        # dummys needed for os.path.walk
+    def addOneDB(self, arguments, dbpath):
 
         filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index = arguments
         # print 'addOneDB', datap, dbpath
