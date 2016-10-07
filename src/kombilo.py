@@ -77,7 +77,8 @@ class chooseDirectory(Dialog):
 
 
 def askdirectory(**options):
-    return apply(chooseDirectory, (), options).show()
+    c = chooseDirectory(**options)
+    return c.show()
 
 #---------------------------------------------------------------------------------------
 
@@ -1859,7 +1860,7 @@ class App(v.Viewer, KEngine):
         self.editDB_OK.config(state=DISABLED)
         self.saveProcMess.config(state=DISABLED)
 
-        dbp = str(askdirectory(initialdir=self.datapath))
+        dbp = str(askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath))
 
         if not dbp:
             self.editDB_OK.config(state=NORMAL)
@@ -2073,7 +2074,7 @@ class App(v.Viewer, KEngine):
 
     def browseDatabases(self):
         initdir = self.options.whereToStoreDatabases.get() or os.curdir
-        filename = askdirectory(initialdir=initdir)
+        filename = askdirectory(parent=self.editDBlistWindow, initialdir=initdir)
         if filename:
             filename = str(filename)
         self.options.whereToStoreDatabases.set(filename)
@@ -2216,6 +2217,7 @@ class App(v.Viewer, KEngine):
         self.processMessages = Message(f5)
         self.processMessages.pack(side=TOP, expand=YES, fill=BOTH)
 
+        self.editDBlistWindow = window
         window.update_idletasks()
         window.focus()
         window.grab_set()
@@ -2231,7 +2233,7 @@ class App(v.Viewer, KEngine):
 
     def copyCurrentGamesToFolder(self, dir=None):
         if dir is None:
-            dir = askdirectory(initialdir=self.datapath)
+            dir = askdirectory(parent=self.master, initialdir=self.datapath)
             if not dir:
                 return
             dir = str(dir)
