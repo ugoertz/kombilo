@@ -1921,20 +1921,16 @@ class Viewer:
     def openFile(self, path = None, filename = None, do_not_change_sgfpath=False, encoding = ''):
         """ Read an SGF file given by filename (if None, ask for a filename). """
 
-        self.board.clear()
-        self.board.delLabels()
-        self.board.delMarks()
-
-        self.gameName.set('')
-
-        self.board.state('normal', self.nextMove)
-        self.master.update_idletasks()
-
         if not path:
             path = '.'
 
         if not filename:
-            path, filename = os.path.split(tkFileDialog.askopenfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')], initialdir=self.sgfpath))
+            r = tkFileDialog.askopenfilename(filetypes=[('SGF files', '*.sgf'), ('All files', '*')], initialdir=self.sgfpath)
+            if r:
+                path, filename = os.path.split(r)
+            else:
+                return
+
         if filename:
             try:
                 f = open(os.path.join(path,filename))
@@ -1955,8 +1951,17 @@ class Viewer:
                     return 0
 
                 self.dataWindow.filelist.insert(0, filename)
-                self.filelist.insert(0, [filename, os.path.join(path,filename), (), c, {}])
-                self.currentFileNum+=1
+                self.filelist.insert(0, [filename, os.path.join(path, filename), (), c, {}])
+                self.currentFileNum += 1
+                self.board.clear()
+                self.board.delLabels()
+                self.board.delMarks()
+
+                self.gameName.set('')
+
+                self.board.state('normal', self.nextMove)
+                self.master.update_idletasks()
+
                 self.changeCurrentFile(None, 0)
 
 
