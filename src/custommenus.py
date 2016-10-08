@@ -27,9 +27,12 @@ import v
 from libkombilo import SGFError
 
 
-import gettext
-t = gettext.translation('kombilo', '../lang')
-_ = t.ugettext
+try:
+    import gettext
+    t = gettext.translation('kombilo', '../lang')
+    _ = t.ugettext
+except:
+    _ = lambda x: x
 
 
 class CustomMenus:

@@ -28,9 +28,12 @@ import glob
 import webbrowser
 from configobj import ConfigObj
 
-import gettext
-t = gettext.translation('kombilo', '../lang')
-_ = t.ugettext
+try:
+    import gettext
+    t = gettext.translation('kombilo', '../lang')
+    _ = t.ugettext
+except:
+    _ = lambda x: x
 
 from Tkinter import *
 from ttk import *
@@ -2671,8 +2674,13 @@ class Viewer:
 
     def switch_language(self, lang, show_warning=False):
         global _
-        t = gettext.translation('kombilo', '../lang', languages=[lang, ])
-        _ = t.ugettext
+        try:
+            t = gettext.translation('kombilo', '../lang', languages=[lang, ])
+            _ = t.ugettext
+        except:
+            if show_warning:
+                showwarning(_('Warning'), _('The language files could not be found.'))
+
         if show_warning:
             showwarning(_('Note'), _('You have to restart the program to make the change become effective.'))
 

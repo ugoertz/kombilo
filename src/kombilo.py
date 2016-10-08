@@ -33,9 +33,12 @@ import re
 from array import *
 from configobj import ConfigObj
 
-import gettext
-t = gettext.translation('kombilo', '../lang')
-_ = t.ugettext
+try:
+    import gettext
+    t = gettext.translation('kombilo', '../lang')
+    _ = t.ugettext
+except:
+    _ = lambda x: x
 
 from Tkinter import *
 from ttk import *
@@ -2972,9 +2975,14 @@ class App(v.Viewer, KEngine):
 
     def switch_language(self, lang, show_warning=False):
         global _
-        t = gettext.translation('kombilo', '../lang', languages=[lang, ])
-        _ = t.ugettext
-        v.Viewer.switch_language(self, lang, show_warning)
+        try:
+            t = gettext.translation('kombilo', '../lang', languages=[lang, ])
+            _ = t.ugettext
+        except:
+            if show_warning:
+                showwarning(_('Warning'), _('The language files could not be found.'))
+        else:
+            v.Viewer.switch_language(self, lang, show_warning)
 
     def __init__(self, master):
 
@@ -3358,31 +3366,31 @@ class App(v.Viewer, KEngine):
 
 # ---------------------------------------------------------------------------------------
 
-root = Tk()
-root.tk.call('tk', 'scaling', 3.0)
-root.withdraw()
+if __name__ == '__main__':
+    root = Tk()
+    root.withdraw()
 
-if sys.path[0].endswith('library.zip'):
-    # using an exe produced by py2exe?
-    SYSPATH = os.path.split(sys.path[0])[0]
-else:
-    SYSPATH = sys.path[0]
+    if sys.path[0].endswith('library.zip'):
+        # using an exe produced by py2exe?
+        SYSPATH = os.path.split(sys.path[0])[0]
+    else:
+        SYSPATH = sys.path[0]
 
-try:
-    if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
-        root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
-except TclError:
-    showwarning(_('Error'), _('Error reading kombilo.app'))
+    try:
+        if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
+            root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
+    except TclError:
+        showwarning(_('Error'), _('Error reading kombilo.app'))
 
-app = App(root)
+    app = App(root)
 
-root.protocol('WM_DELETE_WINDOW', app.quit)
-root.title('Kombilo')
+    root.protocol('WM_DELETE_WINDOW', app.quit)
+    root.title('Kombilo')
 
-app.boardFrame.focus_force()
+    app.boardFrame.focus_force()
 
-for filename in sys.argv[1:]:              # load sgf files given as arguments
-    app.openFile(os.path.split(filename)[0], os.path.split(filename)[1])
+    for filename in sys.argv[1:]:              # load sgf files given as arguments
+        app.openFile(os.path.split(filename)[0], os.path.split(filename)[1])
 
-root.mainloop()
-root.destroy()
+    root.mainloop()
+    root.destroy()
