@@ -45,9 +45,9 @@ from ..kombiloNG import *
 from .util import create_db
 
 
-def search(K, moveno=1000):
-    so = lk.SearchOptions(0,0)
-    for i in range(K.gamelist.noOfGames()):
+def search(K, moveno=6000):
+    for i in range(K.gamelist.noOfGames()-1, -1, -1):
+        so = lk.SearchOptions(0,0)
         c = Cursor(K.gamelist.getSGF(i))
         b = abstractBoard()
 
@@ -77,21 +77,26 @@ def search(K, moveno=1000):
         assert K.gamelist.noOfGames() == 1
         K.gamelist.reset()
 
+        if not c.atEnd:
+            so.moveLimit = moveno - 2
+            K.patternSearch(p, so)
+            assert K.gamelist.noOfGames() == 0
+            K.gamelist.reset()
+
 # TODO: vary orientation; apply color switch; take non-fullboard patterns;
 
 
 def test_pattern_search_auto():
-    K = KEngine()
-    K.gamelist.populateDBlist({'1': ['sgfs', 'db', 'kombilo', ], })
-    K.loadDBs()
-
     sgfs = {}
     for f in glob.glob('./sgfs/*.sgf'):
         with open(f) as file:
             sgfs[f] = file.read()
     create_db(sgfs)
 
-    create_db(sgfs)
+    K = KEngine()
+    K.gamelist.populateDBlist({'1': ['sgfs', 'db', 'kombilo', ], })
+    K.loadDBs()
+
     search(K)
     search(K, 50)
 
