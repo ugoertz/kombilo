@@ -58,8 +58,10 @@ class Board(abstractBoard, Canvas):
     """
 
     def __init__(self, master, boardsize=19, canvasSize=(30, 25), fuzzy=1, labelFontsize=None,
-                 focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True):
+                 focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True,
+                 square_board=True):
 
+        self.square_board = square_board
         self.focus = focus
         self.coordinates = 0
 
@@ -131,10 +133,11 @@ class Board(abstractBoard, Canvas):
                 for j in range(size // 200 + 2):
                     self.create_image(200 * i, 200 * j, image=self.img, tags='board')
 
-        # place a gray rectangle over the board background picture
-        # in order to make the board quadratic
-        self.create_rectangle(size + 1, 0, size + 1000, size + 1000, fill='grey88', outline='', tags='non-bg')
-        self.create_rectangle(0, size + 1, size + 1000, size + 1000, fill='grey88', outline='', tags='non-bg')
+        if self.square_board:
+            # place a gray rectangle over the board background picture
+            # in order to make the board quadratic
+            self.create_rectangle(size + 1, 0, size + 1000, size + 1000, fill='grey88', outline='', tags='non-bg')
+            self.create_rectangle(0, size + 1, size + 1000, size + 1000, fill='grey88', outline='', tags='non-bg')
 
         color = 'black'
 

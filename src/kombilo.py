@@ -88,8 +88,11 @@ class BoardWC(Board):
         of search-relevant region. Furthermore, snapshot returns a dictionary which
         describes the current board position. It can then be restored with restore."""
 
-    def __init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, use_PIL=True, onlyOneMouseButton=0):
-        Board.__init__(self, master, boardsize, canvasSize, fuzzy, labelFontsize, focus, callOnChange, boardImg, blackImg, whiteImg, use_PIL)
+    def __init__(self, *args, **kwargs):
+        oOMB = kwargs.get('onlyOneMouseButton', 0)
+        del kwargs['onlyOneMouseButton']
+
+        Board.__init__(self, *args, **kwargs)
 
         self.wildcards = {}
 
@@ -99,7 +102,7 @@ class BoardWC(Board):
         self.smartFixedColor = IntVar()
 
         self.onlyOneMouseButton = 'init'
-        self.rebind_mouse_buttons(onlyOneMouseButton)
+        self.rebind_mouse_buttons(oOMB)
 
         self.bounds1 = self.bind('<Shift-1>', self.wildcard)
 
@@ -599,6 +602,7 @@ class TreeNode(list):
                 yield node
 
     def delete(self):
+        # print 'TreeNode.delete', self.d.get('board', 'no board'), 'num children:', len(self)
         for child in self:
             child.parent = self.parent
         if self.parent:
@@ -606,7 +610,7 @@ class TreeNode(list):
             self.parent.remove(self)
 
 
-class PrevSearchesStack:
+class PrevSearchesStack(object):
 
     """ This class provides a tree which contains the data of the previous searches,
     s.t. one can return to the previous search with the back button.
@@ -623,6 +627,7 @@ class PrevSearchesStack:
 
     def __init__(self, maxLength, boardChanged, prevSF, master):
         self.data = TreeNode()
+        self.data.d['root'] = True
         self.current = self.data
         self.active = False
         self.mster = master
@@ -649,8 +654,12 @@ class PrevSearchesStack:
                     self.delete(node)
                     break
 
-        b = SearchHistoryBoard(self.prevSF.interior(), self.mster.board.boardsize, (9, 5), 0, self.labelSize, 1, None, self.mster.boardImg, None, None,
-                               offset=min(10 * self.current.level(), 100))  # small board
+        b = SearchHistoryBoard(
+                self.prevSF.interior(), self.mster.board.boardsize, (12, 6), 0,
+                self.labelSize, 1, None, self.mster.boardImg, None, None,
+                use_PIL=True, onlyOneMouseButton=0,
+                square_board=False,
+                offset=min(10 * self.current.level(), 100))  # small board
         b.resizable = 0
         b.pack(side=LEFT, expand=YES, fill=Y)
         b.update_idletasks()
@@ -695,7 +704,7 @@ class PrevSearchesStack:
         self.unpost()
         node.d['on_hold'] = True
         c = node.d['board'].getPixelCoord((21, 21), 1)[0]
-        node.d['board'].create_rectangle(6, 6, c - 4, c - 4, fill='', outline='blue', width=2, tags='hold')
+        node.d['board'].create_rectangle(7, 7, c - 10, c - 10, fill='', outline='blue', width=2, tags='hold')
 
     def unpost_and_release(self, node):
         self.unpost()
@@ -721,12 +730,15 @@ class PrevSearchesStack:
             self.current = node.parent
             self.active = False
 
-        def rebind(n):
-            if 'board' in n.d:
-                b = n.d['board']
-                b.bound1 = b.bind('<1>', lambda event, self=self, l=n: self.click(l))
-                b.bound3 = b.bind('<3>', lambda event, self=self, l=n: self.postMenu(event, l))
-        self.data.foreach(rebind)
+        #  Comment out the rebind code because I do not understand (anymore?) why it should
+        #  be needed. Also, if we do this, shouldn't we unbind before binding?
+        #
+        #  def rebind(n):
+        #      if 'board' in n.d:
+        #          b = n.d['board']
+        #          b.bound1 = b.bind('<1>', lambda event, self=self, l=n: self.click(l))
+        #          b.bound3 = b.bind('<3>', lambda event, self=self, l=n: self.postMenu(event, l))
+        #  self.data.foreach(rebind)
 
         if reposition:
             self.prevSF.reposition()
@@ -795,10 +807,15 @@ class PrevSearchesStack:
         self.select_clear()
 
         c = b.getPixelCoord((21, 21), 1)[0]
-        b.create_rectangle(2, 2, c - 2, c - 2, width=3, outline='red', tags='sel')
+        b.create_rectangle(7, 7, c - 9, c - 9, width=3, outline='red', tags='sel')
 
         self.active = True
         self.current = node
+        l, r = self.prevSF.xview()
+        if b.winfo_x() * 1.0/ self.prevSF.interior().winfo_width() < l:
+            # b is to the left of the currently visible region (probably come here by "back to previous search" button),
+            # so move the ScrolledFrame appropriately
+            self.prevSF.xview('moveto', (b.winfo_x() * 1.0/ self.prevSF.interior().winfo_width()))
 
     def click(self, node):
         self.select(node)
@@ -835,12 +852,12 @@ class PrevSearchesStack:
             db['data'].delete_all_snapshots()
 
         def f(node, del_fct):
-            del_fct(node, False)
+            if not 'root' in node.d:
+                del_fct(node, False)
         self.data.foreach(f, self.delete)
         self.prevSF.reposition()
         self.active = False
-        self.data = TreeNode()
-        self.current = self.data
+        assert self.current == self.data
 
 # ---------------------------------------------------------------------------------------
 
@@ -1457,6 +1474,8 @@ class App(v.Viewer, KEngine):
                 pass
         self.redo_date_profile = True
         self.notebookTabChanged()
+        self.prevSearches.select_clear()
+        self.prevSearches.current = self.prevSearches.data
 
     def reset_start(self):
         self.reset()
@@ -3047,7 +3066,9 @@ class App(v.Viewer, KEngine):
             self.prevSearchF = Frame(self.dataWindow.win)
             self.dataWindow.win.add(self.prevSearchF)
             self.dataWindow.set_geometry(self.options.dataWindowGeometryK.get())
+
         self.prevSF = ScrolledFrame(self.prevSearchF, usehullsize=1, hull_width=300, hull_height=235, hscrollmode='static', vscrollmode='none', vertflex='elastic')
+
         self.prevSF.pack(expand=YES, fill=X)
         self.prevSearches = PrevSearchesStack(self.options.maxLengthSearchesStack, self.board.changed, self.prevSF, self)
         self.board.callOnChange = self.prevSearches.select_clear
