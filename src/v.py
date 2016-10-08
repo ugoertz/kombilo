@@ -356,8 +356,7 @@ class SGFtreeCanvas(Frame):
         nodelist = [(self.rootnode, 0, 0)]
 
         while nodelist:
-            c, posx, posy = nodelist[-1]
-            del nodelist[-1]
+            c, posx, posy = nodelist.pop()
 
             # print posx, posy
 
@@ -957,8 +956,7 @@ class EnhancedCursor(Cursor):
         nodelist = [self.root.next]
 
         while nodelist:
-            node = nodelist[-1]
-            del nodelist[-1]
+            node = nodelist.pop()
 
             while node:
                 try:

@@ -162,9 +162,8 @@ class BoardWC(Board):
             return
 
         if (x, y) in self.wildcards:
-            wc, wc_type = self.wildcards[(x, y)]
+            wc, wc_type = self.wildcards.pop((x, y))
             self.delete(wc)
-            del self.wildcards[(x, y)]
 
             if wc_type == '*':
                 self.place_wildcard(x, y, 'x')
@@ -303,11 +302,8 @@ class SearchHistoryBoard(BoardWC):
     '''Used for the small boards in the list of previous searches. Does not display text labels.'''
 
     def __init__(self, *args, **kwargs):
-        if 'offset' in kwargs:
-            self.offset = kwargs['offset']
-            del kwargs['offset']
-        else:
-            self.offset = 0
+        self.offset = kwargs.pop('offset', 0)
+
         for f in ['create_polygon', 'create_rectangle', 'create_line', 'create_image', 'create_oval', 'create_text']:
             setattr(self, f, self.add_offset(getattr(self, f)))
         BoardWC.__init__(self, *args, **kwargs)
@@ -1519,8 +1515,7 @@ class App(v.Viewer, KEngine):
         self.board.delMarks()
 
         if pos in self.board.wildcards:
-            self.board.delete(self.board.wildcards[pos])
-            del self.board.wildcards[pos]
+            self.board.delete(self.board.wildcards.pop(pos))
 
         v.Viewer.nextMove(self, pos)
 
@@ -1564,8 +1559,7 @@ class App(v.Viewer, KEngine):
             return
 
         if (x, y) in self.board.wildcards:
-            self.board.delete(self.board.wildcards[(x, y)])
-            del self.board.wildcards[(x, y)]
+            self.board.delete(self.board.wildcards.pop((x, y)))
         else:
             Viewer.delStone(self, event)
 
@@ -2086,8 +2080,7 @@ class App(v.Viewer, KEngine):
             self.db_list.dragLast = i
 
         if self.db_list.clickedLast != i:
-            db = self.gamelist.DBlist[self.db_list.clickedLast]
-            del self.gamelist.DBlist[self.db_list.clickedLast]
+            db = self.gamelist.DBlist.pop(self.db_list.clickedLast)
             self.gamelist.DBlist.insert(i, db)
             self.gamelist.reset()
             self.prevSearches.clear()
@@ -2819,8 +2812,7 @@ class App(v.Viewer, KEngine):
         if t < 10:
             showwarning(_('Error'), _('You cannot delete built-in tags.'))
             return
-        self.logger.insert(END, _('Delete tag [%s] %s.\n') % tuple(self.gamelist.customTags[str(t)]))
-        del self.gamelist.customTags[str(t)]
+        self.logger.insert(END, _('Delete tag [%s] %s.\n') % tuple(self.gamelist.customTags.pop(str(t))))
 
         # delete tag from all tagged games
         for db in self.gamelist.DBlist:
