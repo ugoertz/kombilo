@@ -89,8 +89,7 @@ class BoardWC(Board):
         describes the current board position. It can then be restored with restore."""
 
     def __init__(self, *args, **kwargs):
-        oOMB = kwargs.get('onlyOneMouseButton', 0)
-        del kwargs['onlyOneMouseButton']
+        oOMB = kwargs.pop('onlyOneMouseButton', 0)
 
         Board.__init__(self, *args, **kwargs)
 
