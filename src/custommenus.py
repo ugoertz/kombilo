@@ -278,7 +278,7 @@ class CustomMenus:
                                                self.correspEntry[index][1]['entries'],
                                                len(self.correspEntry[index][1]['entries']) - 1]]
 
-        self.list.insert(insertIndex, self.correspEntry[index][2][:-1] + '* ' + 'New')
+        self.list.insert(insertIndex, self.correspEntry[index][2][:-1] + '* ' + _('New'))
         self.list.list.select_clear(self.list.list.curselection())
         self.list.list.select_set(insertIndex)
 
