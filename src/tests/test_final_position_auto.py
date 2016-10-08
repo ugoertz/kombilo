@@ -2,7 +2,7 @@
 
 # File: examples/test_patternsearch/final_position.py
 
-##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
+##   Copyright (C) 2001-16 Ulrich Goertz (ug@geometry.de)
 
 ##   Kombilo is a go database program.
 
@@ -25,39 +25,28 @@
 ## SOFTWARE.
 
 '''
-This script takes a database, and searches for the final position of each game
-in the database. If the number of results is different from 1, the file names
-of the games having this patterns are printed. (Typically these are games which
-have duplicates in the database, or which are very short.)
+This script creates a database from the sgf files in the folder sgfs, and
+searches for the final position of each game in the database. If the number of
+results is different from 1, an error is thrown.
 
 After searching for each final position, the script searches for the position
 at move 50 in each game.
-
-Usage: invoke as ::
-
-  ./various_tests.py s1
-
-where ``s1`` is a subdirectory which contains data as for the
-:py:mod:`profiler` script. Output is to the console (instead of an HTML file).
 '''
 
+from __future__ import absolute_import
 
-import sys
-basepath = sys.argv[1]
-sys.path.insert(0, basepath)
-sys.path.append('../../src')
-import time, os, os.path
+import os
+import os.path
+import glob
 
-import libkombilo as lk
-from kombiloNG import *
+from .. import libkombilo as lk
+from ..kombiloNG import *
 
+from .util import create_db
 
-def timer(f, *args, **kwargs):
-    t = time.time()
-    result = f(*args, **kwargs)
-    return result, time.time()-t
 
 def search(K, moveno=1000):
+    so = lk.SearchOptions(0,0)
     for i in range(K.gamelist.noOfGames()):
         c = Cursor(K.gamelist.getSGF(i))
         b = abstractBoard()
@@ -85,30 +74,25 @@ def search(K, moveno=1000):
 
         p = Pattern(''.join({ ' ': '.', 'B': 'X', 'W': 'O' }[b.getStatus(i,j)] for i in range(19) for j in range(19)), ptype=FULLBOARD_PATTERN)
         K.patternSearch(p, so)
-        if K.gamelist.noOfGames() != 1:
-            print K.gamelist.noOfGames(), 'games in db'
-            for i in range(K.gamelist.noOfGames()):
-                print K.gamelist.get_data(i)
+        assert K.gamelist.noOfGames() == 1
         K.gamelist.reset()
-
 
 # TODO: vary orientation; apply color switch; take non-fullboard patterns;
 
 
-if __name__ == '__main__':
+def test_pattern_search_auto():
     K = KEngine()
-    K.gamelist.DBlist.append({'sgfpath': '', 'name':(os.path.abspath(basepath), 'kombilo3'), 'data': None, 'disabled': 0})
+    K.gamelist.populateDBlist({'1': ['sgfs', 'db', 'kombilo', ], })
+    K.loadDBs()
 
-    print 'loading db, %1.1f seconds' % timer(K.loadDBs)[1]
-    print '%d games in db' % K.gamelist.noOfGames()
+    sgfs = {}
+    for f in glob.glob('./sgfs/*.sgf'):
+        with open(f) as file:
+            sgfs[f] = file.read()
+    create_db(sgfs)
 
-    so = lk.SearchOptions(0,0)
-
-
-    print 'searching for final position'
+    create_db(sgfs)
     search(K)
-
-    print 'searching for position at move 50'
     search(K, 50)
 
 

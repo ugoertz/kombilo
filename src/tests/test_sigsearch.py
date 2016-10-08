@@ -31,27 +31,7 @@ import os.path
 from .. import libkombilo as lk
 from ..kombiloNG import *
 
-
-def create_db(sgfs):
-    pop = lk.ProcessOptions()
-    pop.rootNodeTags = 'PW,PB,RE,DT,EV'
-    pop.sgfInDB = True
-    pop.professional_tag = False
-    pop.processVariations = True
-    pop.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST | lk.ALGO_HASH_FULL | lk.ALGO_HASH_CORNER
-
-    gls = lk.vectorGL()
-
-    os.system('rm -f db/kombilo.d*')
-    gl = lkGameList('db/kombilo.db', 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
-
-    path = 'sgfs'
-
-    gl.start_processing()
-    for fn, sgf in sgfs.items():
-        gl.process(sgf, path, fn, gls, '', lk.CHECK_FOR_DUPLICATES)
-
-    gl.finalize_processing()
+from .util import create_db
 
 
 def flip_sig(sig, flip):
