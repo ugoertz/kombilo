@@ -753,7 +753,7 @@ class KEngine(object):
         while plist:
             counter += 1
             if counter % 50 == 0:
-                messages.insert('end', _('Done %d searches so far, %d nodes pending.\n') % (counter, len(plist)))
+                messages.insert('end', _('Done {0} searches so far, {1} nodes pending.\n').format(counter, len(plist)))
                 if progBar:
                     progBar.update()
 
@@ -773,7 +773,7 @@ class KEngine(object):
                 Wperc = self.gamelist.Wwins * 100.0 / noOfG
             else:
                 Bperc, Wperc = 0, 0
-            comment_text = options['comment_head'] + '\n' + _('%d games (B: %1.1f%%, W: %1.1f%%)') % (noOfG, Bperc, Wperc)
+            comment_text = options['comment_head'] + '\n' + _('{0} games (B: {1:1.1f}%, W: {2:1.1f}%)').format(noOfG, Bperc, Wperc)
             if not 'C' in node:
                 node['C'] = [comment_text]
             else:
@@ -1147,7 +1147,7 @@ class KEngine(object):
                 Bperc = self.Bwins * 100.0 / self.noMatches
                 Wperc = self.Wwins * 100.0 / self.noMatches
 
-                t.append(_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (self.noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+                t.append(_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:%1.1f}').format(self.noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
 
                 if exportMode == 'wiki':
                     t.append(' %%%\n')
@@ -1175,7 +1175,7 @@ class KEngine(object):
                 for db in self.gamelist.DBlist:
                     if db['disabled']:
                         continue
-                    t.append(_('%s: %d games (of %d)') % (db['sgfpath'], db['data'].size(), db['data'].all.size()))
+                    t.append(_('{0}: {1} games (of {2})').format(db['sgfpath'], db['data'].size(), db['data'].all.size()))
                     if exportMode == 'wiki':
                         t.append(' %%%')
                     t.append('\n')
@@ -1267,7 +1267,7 @@ class KEngine(object):
                     db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1] + '.db'))
                 except:
                     if showwarning:
-                        showwarning(_('I/O Error'), _('Could not open database %s/%s.') % db['name'])
+                        showwarning(_('I/O Error'), _('Could not open database {0}/{1}.').format(*db['name']))
                     del self.gamelist.DBlist[DBlistIndex]
                     continue
             DBlistIndex += 1  # May differ from loop counter if databases which cannot be opened are omitted.
@@ -1427,10 +1427,10 @@ class KEngine(object):
                         messages.insert('end', _('Duplicate ... %s\n') % filename)
                         messages.update()
                     if pres & lk.SGF_ERROR:
-                        messages.insert('end', _('SGF error, file %s, %d\n') % (filename, pres))
+                        messages.insert('end', _('SGF error, file {0}, {1}\n').format(filename, pres))
                         messages.update()
                     if pres & lk.UNACCEPTABLE_BOARDSIZE:
-                        messages.insert('end', _('Unacceptable board size error, file %s, %d\n') % (filename, pres))
+                        messages.insert('end', _('Unacceptable board size error, file {0}, {1}\n').format(filename, pres))
                         messages.update()
                     if pres & lk.NOT_INSERTED_INTO_DB:
                         messages.insert('end', _('not inserted\n'))

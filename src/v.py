@@ -1071,7 +1071,7 @@ class Viewer:
                     showwarning(_('Error'), _('SGF Error in game %d') % i)
                 f.close()
             except IOError:
-                showwarning(_('Error'), _('I/O Error when writing %s%d.sgf') % (filename, i))
+                showwarning(_('Error'), _('I/O Error when writing {0}{1}.sgf').format(filename, i))
                 break
             n = n.down
             i += 1
@@ -1129,7 +1129,7 @@ class Viewer:
         self.moveno.set('0')
         self.capW = 0
         self.capB = 0
-        self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
+        self.capVar.set(_('Cap - B: {0}, W: {1}').format(self.capB, self.capW))
 
         try:
             self.update_window_title()
@@ -1264,7 +1264,7 @@ class Viewer:
             self.board.delLabels()
             self.moveno.set(str(int(self.moveno.get()) + 1))
             self.displayNode(c)
-            self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
+            self.capVar.set(_('Cap - B: {0}, W: {1}').format(self.capB, self.capW))
             self.currentFileChanged()
             self.board.currentColor = self.modeVar.get()[:5]
         except lk.SGFError:
@@ -1376,7 +1376,7 @@ class Viewer:
             self.capB = self.capB + sign * len(self.board.undostack_top_captures())
         if 'W' in c:
             self.capW = self.capW + sign * len(self.board.undostack_top_captures())
-        self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
+        self.capVar.set(_('Cap - B: {0}, W: {1}').format(self.capB, self.capW))
 
     def nextMove(self, p):
         """ React to mouse-click on the board"""

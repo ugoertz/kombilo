@@ -464,7 +464,7 @@ class GameListGUI(GameList, VScrolledList):
         self.total_in_list = noOfG
         self.noGamesLabel.config(text=_('%d games') % noOfG)
         if noOfG:
-            self.winPercLabel.config(text=_('B: %1.1f%%, W: %1.1f%%') % (Bperc, Wperc))
+            self.winPercLabel.config(text=_('B: {0:1.1f}%, W: {1:1.1f}%').format(Bperc, Wperc))
         else:
             self.winPercLabel.config(text='')
         VScrolledList.reset(self)
@@ -926,8 +926,9 @@ class App(v.Viewer, KEngine):
         Wperc = self.Wwins * 100.0 / noMatches
 
         if not self.continuations:
-            self.display_bar_chart(self.statisticsCanv, 'stat',
-                                   title=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+            self.display_bar_chart(
+                    self.statisticsCanv, 'stat',
+                    title=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%').format(noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
             return
 
         if self.options.statistics_by_date.get():
@@ -935,7 +936,7 @@ class App(v.Viewer, KEngine):
             smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
 
             self.statisticsCanv.delete('stat')
-            self.statisticsCanv.create_text(20, 5, text=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc),
+            self.statisticsCanv.create_text(20, 5, text=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%').format(noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc),
                                             font=font, anchor='nw', tags='stat')
             fr = self.options.date_profile_from.get()
             to = max(self.options.date_profile_to.get(), fr + 1)
@@ -1016,7 +1017,7 @@ class App(v.Viewer, KEngine):
 
             self.display_bar_chart(self.statisticsCanv, 'stat',
                                 data=data, colors=[self.options.Btenuki.get(), 'black', 'white', self.options.Wtenuki.get()],
-                                title=_('%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%') % (noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+                                title=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1}%').format(noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
 
     def display_bar_chart_dates(self, canvas, tag, data, title='', fr=None, to=None):
         canvas.delete(tag)
@@ -1391,7 +1392,7 @@ class App(v.Viewer, KEngine):
 
                 self.board.restore(target_values['boardData'], fromSGF=True)
                 self.sel = self.board.selection      # used in self.showCont()
-                self.capVar.set(_('Cap - B: %d, W: %d') % (self.capB, self.capW))
+                self.capVar.set(_('Cap - B: {0}, W: {1}').format(self.capB, self.capW))
             else:
                 showwarning(_('Error'), _('SGF File not found'))
 
@@ -1988,7 +1989,7 @@ class App(v.Viewer, KEngine):
                 os.remove(os.path.join(datap[0], datap[1] + '.db'))
                 os.remove(os.path.join(datap[0], datap[1] + '.da'))
             except:
-                showwarning(_('I/O Error'), _('Could not delete the database files %s %s .') % datap)
+                showwarning(_('I/O Error'), _('Could not delete the database files {0}/{1}.').format(*datap))
             try:  # these files will only be present if hashing algos were used, so do not issue a warning when they are not found
                 os.remove(os.path.join(datap[0], datap[1] + '.db1'))
                 os.remove(os.path.join(datap[0], datap[1] + '.db2'))
@@ -2317,7 +2318,7 @@ class App(v.Viewer, KEngine):
 
         t = []
 
-        t.append(_('Kombilo %s - written by') + ' Ulrich Goertz (ug@geometry.de)' % KOMBILO_RELEASE + '\n\n')
+        t.append(_('Kombilo %s - written by') % KOMBILO_RELEASE + ' Ulrich Goertz (ug@geometry.de)' + '\n\n')
         t.append(_('Kombilo is a go database program.') + '\n')
         t.append(_('You can find more information on Kombilo and the newest version at') + ' http://www.u-go.net/kombilo/\n\n')
 
@@ -2787,7 +2788,7 @@ class App(v.Viewer, KEngine):
 
         # add tag to dict of custom tags
         self.gamelist.customTags[handle] = (abbr, ' '.join(description), )
-        self.logger.insert(END, _('Added tag %s %s.\n') % self.gamelist.customTags[handle])
+        self.logger.insert(END, _('Added tag {0} {1}.\n').format(*self.gamelist.customTags[handle]))
         self.updatetaglist()
 
     def getTagHandle(self):
@@ -2810,7 +2811,7 @@ class App(v.Viewer, KEngine):
         if t < 10:
             showwarning(_('Error'), _('You cannot delete built-in tags.'))
             return
-        self.logger.insert(END, _('Delete tag [%s] %s.\n') % tuple(self.gamelist.customTags.pop(str(t))))
+        self.logger.insert(END, _('Delete tag [{0}] {1}.\n').format(*self.gamelist.customTags.pop(str(t))))
 
         # delete tag from all tagged games
         for db in self.gamelist.DBlist:
@@ -2839,7 +2840,7 @@ class App(v.Viewer, KEngine):
             return
         for dummy, DBindex, index in self.gamelist.gameIndex:
             self.gamelist.DBlist[DBindex]['data'].deleteTag(t, index)
-        self.logger.insert(END, _('Deleted tag [%s] %s from %d games.\n') % (self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1], len(self.gamelist.gameIndex),))
+        self.logger.insert(END, _('Deleted tag [{0}] {1} from {2} games.\n').format(self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1], len(self.gamelist.gameIndex)))
 
         self.gamelist.upd()
         if self.gamelist.listbox.curselection():
