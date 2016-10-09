@@ -2416,25 +2416,25 @@ class App(v.Viewer, KEngine):
         # --------- DATABASE ---------------------------------
 
         self.dbmenu = Menu(self.mainMenu)
-        self.mainMenu.insert_cascade(3, label=_('Database'), underline=0, menu=self.dbmenu)
-        self.dbmenu.add_command(label=_('Edit DB list'), underline=0, command=self.editDBlist)
-        self.dbmenu.add_command(label=_('Export search results'), command=self.exportText)
-        self.dbmenu.add_command(label=_('Export current position'), command=self.exportCurrentPos)
-        self.dbmenu.add_command(label=_('SGF tree'), command=self.do_sgf_tree)
+        self.mainMenu.insert_cascade(3, **v.get_addmenu_options(label=_('_Database'), menu=self.dbmenu))
+        self.dbmenu.add_command(v.get_addmenu_options(label=_('_Edit DB list'), command=self.editDBlist))
+        self.dbmenu.add_command(v.get_addmenu_options(label=_('Export search _results'), command=self.exportText))
+        self.dbmenu.add_command(v.get_addmenu_options(label=_('Export current _position'), command=self.exportCurrentPos))
+        self.dbmenu.add_command(v.get_addmenu_options(label=_('SGF _tree'), command=self.do_sgf_tree))
         self.dbmenu.add_command(label=_('Export tags to file'), command=self.exportTags)
         self.dbmenu.add_command(label=_('Import tags from file'), command=self.importTags)
-        self.dbmenu.add_command(label=_('Copy current SGF files to folder'), command=self.copyCurrentGamesToFolder)
+        self.dbmenu.add_command(v.get_addmenu_options(label=_('_Copy current SGF files to folder'), command=self.copyCurrentGamesToFolder))
 
         self.dbmenu.add_command(label=_('Signature search'), command=self.sigSearch)
         self.dbmenu.add_command(label=_('Find duplicates'), command=self.find_duplicates_GUI)
 
-        self.optionsmenu.add_checkbutton(label=_('Jump to match'), underline=0, variable=self.options.jumpToMatchVar)
-        self.optionsmenu.add_checkbutton(label=_('Smart FixedColor'), underline=1, variable=self.options.smartFixedColor)
+        self.optionsmenu.add_checkbutton(v.get_addmenu_options(label=_('_Jump to match'), variable=self.options.jumpToMatchVar))
+        self.optionsmenu.add_checkbutton(v.get_addmenu_options(label=_('S_mart FixedColor'), variable=self.options.smartFixedColor))
 
         # ------ game list submenu ------------
 
         gamelistMenu = Menu(self.optionsmenu)
-        self.optionsmenu.add_cascade(label=_('Game list'), underline=0, menu=gamelistMenu)
+        self.optionsmenu.add_cascade(v.get_addmenu_options(label=_('_Game list'), menu=gamelistMenu))
 
         for text, value in [(_('Sort by white player'), GL_PW, ), (_('Sort by black player'), GL_PB, ), (_('Sort by filename'), GL_FILENAME, ), (_('Sort by date'), GL_DATE, )]:
             gamelistMenu.add_radiobutton(label=text, variable=self.options.sortCriterion, value=value, command=self.gamelist.update)
@@ -2450,11 +2450,11 @@ class App(v.Viewer, KEngine):
         # self.options.invertSelection = self.board.invertSelection
         # self.optionsmenu.add_checkbutton(label=_('Invert selection'), variable = self.options.invertSelection)
         advOptMenu = Menu(self.optionsmenu)
-        self.optionsmenu.add_cascade(label=_('Advanced'), underline=0, menu=advOptMenu)
+        self.optionsmenu.add_cascade(v.get_addmenu_options(label=_('_Advanced'), menu=advOptMenu))
         advOptMenu.add_checkbutton(label=_('Open games in external viewer'), variable=self.options.externalViewer)
-        advOptMenu.add_command(label=_('Alternative SGF viewer'), underline=0, command=self.altViewer)
+        advOptMenu.add_command(v.get_addmenu_options(label=_('_Alternative SGF viewer'), command=self.altViewer))
         advOptMenu.add_checkbutton(label=_('Use upper case labels'), variable=self.options.uppercaseLabels)
-        advOptMenu.add_checkbutton(label='Use strict duplicate check', variable = self.options.strictDuplCheck)
+        advOptMenu.add_checkbutton(label=_('Use strict duplicate check'), variable = self.options.strictDuplCheck)
         if sys.platform.startswith('win'):
             advOptMenu.add_checkbutton(label=_('Maximize window'), variable=self.options.maximize_window)
             advOptMenu.add_checkbutton(label=_('Maximize external viewer'), variable=self.options.maximize_viewer)

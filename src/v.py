@@ -57,6 +57,24 @@ KOMBILO_VERSION = 0.8
 # ---------------------------------------------------------------------------------------
 
 
+def get_addmenu_options(**kwargs):
+    '''
+    For i18n of menu entries, takes care of finding index of the letter which
+    should be underlined. The given label should mark the concerning letter with
+    an underscore before the letter, e.g., '_File', 'E_xit'. The function sets
+    underline to the correct position (index of underscore), and removes the
+    underscore from the label.'''
+
+    pos = kwargs.get('label', '').find('_')
+
+    if pos == -1:
+        return kwargs
+
+    kwargs['underline'] = pos
+    kwargs['label'] = kwargs['label'].replace('_', '', 1)
+    return kwargs
+
+
 class BunchTkVar:
     """ This class is used to collect the Tk variables where the options
         are stored. """
@@ -2435,6 +2453,7 @@ class Viewer:
             self.board.coordinates = 0
             self.board.resize()
 
+
     def initMenus(self):
 
         menu = Menu(self.master)
@@ -2442,65 +2461,65 @@ class Viewer:
 
         # -------------- FILE -------------------
         self.filemenu = Menu(menu)
-        menu.add_cascade(label=_('File'), underline=0, menu=self.filemenu)
-        self.filemenu.add_command(label=_('New SGF'), underline=0, command=self.newFile)
-        self.filemenu.add_command(label=_('Open SGF'), underline=0, command=self.openFile)
-        self.filemenu.add_command(label=_('Save SGF'), underline=0, command=self.saveSGFfile)
-        self.filemenu.add_command(label=_('Save SGF as'), underline=9, command=self.saveasSGFfile)
+        menu.add_cascade(get_addmenu_options(label=_('_File'), menu=self.filemenu))
+        self.filemenu.add_command(get_addmenu_options(label=_('_New SGF'), command=self.newFile))
+        self.filemenu.add_command(get_addmenu_options(label=_('_Open SGF'), command=self.openFile))
+        self.filemenu.add_command(get_addmenu_options(label=_('_Save SGF'), command=self.saveSGFfile))
+        self.filemenu.add_command(get_addmenu_options(label=_('Save SGF _as'), command=self.saveasSGFfile))
         self.filemenu.add_command(label=_('Export SGF source'), command=self.exportSGF)
 
         self.filemenu.add_separator()
-        self.filemenu.add_command(label=_('Exit'), underline=1, command=self.quit)
+        self.filemenu.add_command(get_addmenu_options(label=_('E_xit'), command=self.quit))
 
         # --------------- EDIT ------------------
         self.editmenu = Menu(menu)
-        menu.add_cascade(label=_('Edit'), underline=0, menu=self.editmenu)
-        self.editmenu.add_command(label=_('Mirror vertically'), underline=9, command=lambda self=self, flip=flip_mirror1: self.mirrorSGF(flip))
-        self.editmenu.add_command(label=_('Mirror diagonally'), underline=9, command=lambda self=self, flip=flip_mirror2: self.mirrorSGF(flip))
-        self.editmenu.add_command(label=_('Rotate'), underline=9, command=lambda self=self, flip=flip_rotate: self.mirrorSGF(flip))
+        menu.add_cascade(get_addmenu_options(label=_('_Edit'), menu=self.editmenu))
+        self.editmenu.add_command(get_addmenu_options(label=_('Mirror _vertically'), command=lambda self=self, flip=flip_mirror1: self.mirrorSGF(flip)))
+        self.editmenu.add_command(get_addmenu_options(label=_('Mirror _diagonally'), command=lambda self=self, flip=flip_mirror2: self.mirrorSGF(flip)))
+        self.editmenu.add_command(get_addmenu_options(label=_('_Rotate'), command=lambda self=self, flip=flip_rotate: self.mirrorSGF(flip)))
 
         ctrlclickmenu = Menu(self.editmenu)
         self.editmenu.add_cascade(label=_('Ctrl-Click behavior'), menu=ctrlclickmenu)
-        for text, value in [(_('Delete stone'), 'DEL ST', ), (_('Triangle label'), 'TR', ), (_('Square label'), 'SQ', ), (_('Upper case letter'), 'ABC', ),
-                            (_('Lower case letter'), 'abc', ), (_('Number label'), '12n', ), ]:
-            ctrlclickmenu.add_radiobutton(label=text, variable=self.options.labelType, value=value)
+        for text, value in [(_('_Delete stone'), 'DEL ST', ), (_('_Triangle label'), 'TR', ), (_('_Square label'), 'SQ', ), (_('_Upper case letter'), 'ABC', ),
+                            (_('_Lower case letter'), 'abc', ), (_('_Number label'), '12n', ), ]:
+            ctrlclickmenu.add_radiobutton(get_addmenu_options(label=text, variable=self.options.labelType, value=value))
 
         # -------------- PRACTICE ------------------
 
         self.practicemenu = Menu(menu)
-        menu.add_cascade(label=_('Practice'), underline=0, menu=self.practicemenu)
-        self.practicemenu.add_checkbutton(label=_('Guess mode'), underline=0, variable=self.guessMode, command=self.dataWindow.toggleGuessMode)
+        menu.add_cascade(get_addmenu_options(label=_('_Practice'), menu=self.practicemenu))
+        self.practicemenu.add_checkbutton(get_addmenu_options(label=_('_Guess mode'), variable=self.guessMode, command=self.dataWindow.toggleGuessMode))
 
         # -------------- OPTIONS -------------------
         self.optionsmenu = Menu(menu)
-        menu.add_cascade(label=_('Options'), underline=0, menu=self.optionsmenu)
+        menu.add_cascade(get_addmenu_options(label=_('_Options'), menu=self.optionsmenu))
 
-        self.optionsmenu.add_checkbutton(label=_('Fuzzy stone placement'), underline=0, variable=self.options.fuzzy, command=self.board.fuzzyStones)
+        self.optionsmenu.add_checkbutton(get_addmenu_options(label=_('_Fuzzy stone placement'), variable=self.options.fuzzy, command=self.board.fuzzyStones))
         self.optionsmenu.add_checkbutton(label=_('Shaded stone mouse pointer'), variable=self.options.shadedStoneVar)
-        self.optionsmenu.add_checkbutton(label=_('Show next move'), underline=5, variable=self.options.showNextMoveVar, command=self.showNextMove)
-        self.optionsmenu.add_checkbutton(label=_('Show last move'), underline=5, variable=self.options.showCurrMoveVar, command=self.showNextMove)
+        self.optionsmenu.add_checkbutton(get_addmenu_options(label=_('Show _next move'), variable=self.options.showNextMoveVar, command=self.showNextMove))
+        self.optionsmenu.add_checkbutton(get_addmenu_options(label=_('Show _last move'), variable=self.options.showCurrMoveVar, command=self.showNextMove))
         self.optionsmenu.add_checkbutton(label=_('Show coordinates'), variable=self.options.showCoordinates, command=self.toggleCoordinates)
         self.optionsmenu.add_checkbutton(label=_('Ask before discarding unsaved changes'), variable=self.options.confirmDelete)
 
         theme_menu = Menu(self.optionsmenu)
         for th in self.style.theme_names():
             theme_menu.add_radiobutton(label=th, variable=self.options.theme, value=th, command=lambda: self.style.theme_use(self.options.theme.get()))
-        self.optionsmenu.add_cascade(label=_('Theme'), underline=0, menu=theme_menu)
+        self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Theme'), menu=theme_menu))
 
         lang_menu = Menu(self.optionsmenu)
         languages = [os.path.basename(lang) for lang in  glob.glob('../lang/*') if os.path.basename(lang).find('.') == -1]
         for lang in languages:
             lang_menu.add_radiobutton(label=lang, variable=self.options.language, value=lang, command=lambda: self.switch_language(self.options.language.get(), show_warning=True))
-        self.optionsmenu.add_cascade(label=_('Language'), underline=0, menu=lang_menu)
+        self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Language'), menu=lang_menu))
 
         # -------------- HELP -------------------
         self.helpmenu = Menu(menu, name=_('help'))
-        menu.add_cascade(label=_('Help'), underline=0, menu=self.helpmenu)
+        menu.add_cascade(get_addmenu_options(label=_('_Help'), menu=self.helpmenu))
 
-        self.helpmenu.add_command(label=_('About ...'), underline=0, command=self.helpAbout)
+        self.helpmenu.add_command(get_addmenu_options(label=_('_About ...'), command=self.helpAbout))
 
-        self.helpmenu.add_command(label=_('License'), underline=0, command=self.helpLicense)
-        self.helpmenu.add_command(label=_('Documentation'), underline=0, command=self.helpDocumentation)
+        self.helpmenu.add_command(get_addmenu_options(label=_('License'), command=self.helpLicense))
+        self.helpmenu.add_command(get_addmenu_options(label=_('Documentation'), command=self.helpDocumentation))
 
         self.mainMenu = menu
 
