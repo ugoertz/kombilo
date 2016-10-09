@@ -2778,8 +2778,11 @@ class App(v.Viewer, KEngine):
         """
 
         # parse input
-        abbr = self.tagSearchVar.get().split()[0]
-        description = self.tagSearchVar.get().split()[1:]
+        try:
+            abbr = self.tagSearchVar.get().split()[0]
+            description = self.tagSearchVar.get().split()[1:]
+        except:
+            return
 
         # check that abbr does not exist yet
         if abbr in [self.gamelist.customTags[x][0] for x in self.gamelist.customTags.keys()]:
