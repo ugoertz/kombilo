@@ -959,7 +959,11 @@ class App(v.Viewer, KEngine):
                     cW.B = 0
                     cW.x, cW.y, cW.label = cont.x, cont.y, cont.label
                     continuations.append(cW)
-            continuations.sort(cont_sort_criteria[self.options.continuations_sort_crit.get()])
+            continuations.sort(
+                    cont_sort_criteria[
+                        {_('total'): 'total', _('earliest'): 'earliest', _('latest'): 'latest', _('average'): 'average',
+                         _('became popular'): 'became popular', _('became unpopular'): 'became unpopular', }[self.options.continuations_sort_crit.get()]
+                        ])
 
             i = 0
             ctr = 0
@@ -2566,8 +2570,8 @@ class App(v.Viewer, KEngine):
         self.searchOptions = self.get_search_options()
 
         self.patternSearch(CSP, self.searchOptions, self.contLabels, self.fixedLabels, self.progBar,
-                           {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'),
-                            'became popular': _('became popular'), 'became unpopular': _('became unpopular'), }[self.options.continuations_sort_crit.get()])
+                           {_('total'): 'total', _('earliest'): 'earliest', _('latest'): 'latest', _('average'): 'average',
+                            _('became popular'): 'became popular', _('became unpopular'): 'became unpopular', }[self.options.continuations_sort_crit.get()])
                            # translate back to the English values used in kombiloNG
 
         if self.showContinuation.get():
@@ -2624,7 +2628,7 @@ class App(v.Viewer, KEngine):
         sort_options_l = Label(options_window, anchor='e', text=_('Sort continuations by'))
         sort_options_l.grid(row=row_ctr, column=0)
         sort_option_cb = Combobox(options_window, justify='left', textvariable=self.options.continuations_sort_crit,
-                                  values=(_('total'), _('earliest'), _('latest'), _('average'), ('became popular'), ('became unpopular'), ),
+                                  values=(_('total'), _('earliest'), _('latest'), _('average'), _('became popular'), _('became unpopular'), ),
                                   state='readonly')
         sort_option_cb.grid(row=row_ctr, column=1)
         row_ctr += 1
@@ -2673,8 +2677,9 @@ class App(v.Viewer, KEngine):
 
         options_dict = {s: getattr(variables, s).get() for s, t, v in entry_list}
         options_dict.update({'reset_game_list': reset_game_list_var.get(),
-                             'sort_criterion': {'total': _('total'), 'earliest': _('earliest'), 'latest': _('latest'), 'average': _('average'),
-                                                'became popular': _('became popular'), 'became unpopular': _('became unpopular'), }[self.options.continuations_sort_crit.get()],
+                             'sort_criterion': {
+                                 _('total'): 'total', _('earliest'): 'earliest', _('latest'): 'latest', _('average'): 'average',
+                                 _('became popular'): 'became popular', _('became unpopular'): 'became unpopular', }[self.options.continuations_sort_crit.get()],
                              'boardsize': CSP.boardsize,
                              'sizex': CSP.sizeX, 'sizey': CSP.sizeY,
                              'anchors': (CSP.left, CSP.right, CSP.top, CSP.bottom),

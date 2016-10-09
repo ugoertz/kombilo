@@ -1477,7 +1477,7 @@ msgid "{0} games (B: {1:1.1f}%, W: {2:1.1f}%)"
 msgstr ""
 
 #: kombiloNG.py:1150
-msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:%1.1f}"
+msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%"
 msgstr ""
 
 #: kombilo.py:931 kombilo.py:939

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Kombilo 0.8\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-09 20:16+0200\n"
-"PO-Revision-Date: 2016-10-09 17:42+0200\n"
+"PO-Revision-Date: 2016-10-09 21:09+0200\n"
 "Last-Translator: Administrator <>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -40,7 +40,7 @@ msgstr "%d Partien"
 #: kombiloNG.py:746
 #, python-format
 msgid "%d games before searching for initial pattern.\n"
-msgstr ""
+msgstr "%d Partien vor der Suche für Anfangsmuster\n"
 
 #: kombilo.py:1900
 #, python-format
@@ -108,23 +108,23 @@ msgstr "Füge DB hinzu"
 
 #: custommenus.py:531
 msgid "Add entry"
-msgstr ""
+msgstr "Eintrag hinzufügen"
 
 #: custommenus.py:389 custommenus.py:567
 msgid "Add game info"
-msgstr ""
+msgstr "Partieinfo hinzufügen"
 
 #: custommenus.py:375
 msgid "Add pattern"
-msgstr ""
+msgstr "Muster hinzufügen"
 
 #: custommenus.py:565
 msgid "Add pattern info"
-msgstr ""
+msgstr "Musterinfo hinzufügen"
 
 #: custommenus.py:532
 msgid "Add submenu"
-msgstr ""
+msgstr "Untermenü hinzufügen"
 
 #: kombilo.py:2757
 msgid "Add tag"
@@ -138,7 +138,7 @@ msgstr "%s hinzugefügt."
 #: kombilo.py:2791
 #, python-brace-format
 msgid "Added tag {0} {1}.\n"
-msgstr ""
+msgstr "Markierung hinzufügen {0} {1}.\n"
 
 #: kombilo.py:2449
 msgid "Advanced"
@@ -184,7 +184,7 @@ msgstr "S/W"
 #: kombilo.py:467
 #, python-brace-format
 msgid "B: {0:1.1f}%, W: {1:1.1f}%"
-msgstr ""
+msgstr "S: {0:1.1f}%, W: {1:1.1f}%"
 
 #: kombilo.py:3097
 msgid "Back"
@@ -220,7 +220,7 @@ msgstr "Durchsuchen"
 
 #: custommenus.py:559
 msgid "Browse ..."
-msgstr ""
+msgstr "Durchsuchen ..."
 
 #: custommenus.py:582 kombilo.py:1280 kombilo.py:2655 v.py:2408
 msgid "Cancel"
@@ -237,15 +237,15 @@ msgstr "Schreibfehler: "
 #: kombilo.py:1395 v.py:1132 v.py:1267 v.py:1379
 #, python-brace-format
 msgid "Cap - B: {0}, W: {1}"
-msgstr ""
+msgstr "Gef - S: {0}, W: {1}"
 
 #: custommenus.py:515
 msgid "Change custom menus"
-msgstr ""
+msgstr "Eigene Menüs bearbeiten"
 
 #: kombiloNG.py:851
 msgid "Cleaning up ...\n"
-msgstr ""
+msgstr "Aufräumen ...\n"
 
 #: kombilo.py:3261
 msgid "Clear"
@@ -257,7 +257,7 @@ msgstr "Lösche alle Einträge"
 
 #: kombilo.py:2609
 msgid "Comment head"
-msgstr ""
+msgstr "Kommentar-Kopfzeile"
 
 #: kombiloNG.py:584
 msgid "Commentary in "
@@ -282,7 +282,7 @@ msgstr "Kopiere aktuelle SGF-Dateien in Verzeichnis"
 #: kombilo.py:1992
 #, python-brace-format
 msgid "Could not delete the database files {0}/{1}."
-msgstr ""
+msgstr "Konnte die Datenbankdateien {0}/{1} nicht löschen."
 
 #: kombilo.py:1952
 msgid "Could not delete the database files."
@@ -291,11 +291,11 @@ msgstr "Konnte die Datenbank-Dateien nicht löschen."
 #: kombiloNG.py:1270
 #, python-brace-format
 msgid "Could not open database {0}/{1}."
-msgstr ""
+msgstr "Konnte die Datenbank {0}/{1} nicht öffnen."
 
 #: custommenus.py:414
 msgid "Could not save custom menu file."
-msgstr ""
+msgstr "Konnte Eigene Menüs nicht abspeichern."
 
 #: kombilo.py:2296
 msgid "Could not write kombilo.cfg"
@@ -379,7 +379,7 @@ msgstr "Datenbankfehler\n"
 
 #: kombilo.py:1219
 msgid "Databases:"
-msgstr ""
+msgstr "Datenbanken:"
 
 #: kombilo.py:3019
 msgid "Date profile"
@@ -388,11 +388,11 @@ msgstr "Zeitachse"
 #: kombilo.py:904
 #, python-format
 msgid "Date profile (Each bar represents %d months)"
-msgstr ""
+msgstr "Zeitachse (Jeder Balken entspricht %d Monaten)"
 
 #: kombilo.py:3173
 msgid "Date profile options"
-msgstr ""
+msgstr "Einstellungen Zeitachse"
 
 #: kombilo.py:2475
 msgid "Define a new tag (give one-letter abbreviation and description)."
@@ -426,7 +426,7 @@ msgstr "Lösche Markierung"
 #: kombilo.py:2814
 #, python-brace-format
 msgid "Delete tag [{0}] {1}.\n"
-msgstr ""
+msgstr "Lösche Markierung [{0}] {1}\n"
 
 #: v.py:2648
 msgid "Delete this and all following nodes"
@@ -435,11 +435,11 @@ msgstr "Diesen und alle folgenden Knoten löschen"
 #: kombilo.py:2843
 #, python-brace-format
 msgid "Deleted tag [{0}] {1} from {2} games.\n"
-msgstr ""
+msgstr "Markierung [{0}] {1} von {2} Partien gelöscht.\n"
 
 #: kombilo.py:2608
 msgid "Depth"
-msgstr ""
+msgstr "Tiefe"
 
 #: kombiloNG.py:1346
 #, python-format
@@ -458,7 +458,7 @@ msgstr "Dokumentation"
 #: kombiloNG.py:756
 #, python-brace-format
 msgid "Done {0} searches so far, {1} nodes pending.\n"
-msgstr ""
+msgstr "{0} Suchvorgänge erledigt, {1} Knoten in Warteschlange.\n"
 
 #: kombiloNG.py:1427
 #, python-format
@@ -565,7 +565,7 @@ msgstr "Exportiere Markierungen in Datei"
 
 #: custommenus.py:136
 msgid "Failed to open the web browser."
-msgstr ""
+msgstr "Konnte den Webbrowser nicht öffnen."
 
 #: v.py:2216
 #, python-format
@@ -592,15 +592,15 @@ msgstr "Datenbank schreiben ... (kann etwas länger dauern)\n"
 
 #: kombilo.py:2425
 msgid "Find duplicates"
-msgstr ""
+msgstr "Finde Duplikate"
 
 #: kombilo.py:2727
 msgid "Finished computing sgf tree"
-msgstr ""
+msgstr "Berechnung des SGF-Baumes abgeschlossen"
 
 #: kombiloNG.py:736 kombiloNG.py:737 kombiloNG.py:738 kombiloNG.py:739
 msgid "First played"
-msgstr ""
+msgstr "Zuerst gespielt"
 
 #: kombilo.py:3138
 msgid "Fixed Anchor"
@@ -657,11 +657,11 @@ msgstr "Ratemodus"
 
 #: custommenus.py:551
 msgid "HTML file:"
-msgstr ""
+msgstr "HTML-Datei:"
 
 #: custommenus.py:438
 msgid "HTML files"
-msgstr ""
+msgstr "HTML-Dateien"
 
 #: kombiloNG.py:310
 msgid "Handicap game"
@@ -696,7 +696,7 @@ msgstr "Eingabe-/Ausgabe-Fehler"
 #: v.py:1074
 #, python-brace-format
 msgid "I/O Error when writing {0}{1}.sgf"
-msgstr ""
+msgstr "Ein-/Ausgabe-Fehler beim Schreiben von {0}{1}.sgf"
 
 #: kombilo.py:2421
 msgid "Import tags from file"
@@ -752,7 +752,7 @@ msgstr "Komi"
 
 #: kombiloNG.py:736 kombiloNG.py:737 kombiloNG.py:738 kombiloNG.py:739
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #: v.py:2494
 msgid "Language"
@@ -760,7 +760,7 @@ msgstr "Sprache"
 
 #: kombiloNG.py:736 kombiloNG.py:737 kombiloNG.py:738 kombiloNG.py:739
 msgid "Last played"
-msgstr ""
+msgstr "Zuletzt gespielt"
 
 #: v.py:2502
 msgid "License"
@@ -776,7 +776,7 @@ msgstr "Kleinbuchstabe"
 
 #: kombilo.py:2456
 msgid "Maximize external viewer"
-msgstr ""
+msgstr "Neuen SGF-Betrachter maximieren"
 
 #: kombilo.py:2455
 msgid "Maximize window"
@@ -784,11 +784,11 @@ msgstr "Fenstergröße maximieren"
 
 #: kombilo.py:2607
 msgid "Maximum number of branches"
-msgstr ""
+msgstr "Maximale Anzahl von Varianten"
 
 #: kombilo.py:2606
 msgid "Minimum number of hits"
-msgstr ""
+msgstr "Minimale Anzahl von Treffern"
 
 #: v.py:2459
 msgid "Mirror diagonally"
@@ -800,7 +800,7 @@ msgstr "Vertikal spiegeln"
 
 #: kombilo.py:3183
 msgid "Months/bar"
-msgstr ""
+msgstr "Monate/Balken"
 
 #: kombilo.py:1255
 msgid "Move 20"
@@ -836,7 +836,7 @@ msgstr "NEU"
 
 #: custommenus.py:541
 msgid "Name:"
-msgstr ""
+msgstr "Name:"
 
 #: v.py:2734
 msgid "Neither kombilo.cfg nor default.cfg were found."
@@ -987,7 +987,7 @@ msgstr "Profi-Partie"
 
 #: kombilo.py:2634
 msgid "Put results into new SGF file"
-msgstr ""
+msgstr "Lege neue SGF-Datei mit den Ergebnissen an"
 
 #: v.py:108
 msgid "Quit"
@@ -1044,11 +1044,11 @@ msgstr "Setze Partienliste zurück"
 
 #: kombilo.py:2463
 msgid "Reset game list and board"
-msgstr ""
+msgstr "Partieliste und Brett zurücksetzen"
 
 #: kombilo.py:3095
 msgid "Reset/start"
-msgstr ""
+msgstr "Zurücksetzen/Start"
 
 #: kombilo.py:2472
 msgid "Restore entries of next game info search"
@@ -1095,7 +1095,7 @@ msgstr "SGF-Fehler, Datei %s, nicht eingefügt."
 #: kombiloNG.py:1430
 #, python-brace-format
 msgid "SGF error, file {0}, {1}\n"
-msgstr ""
+msgstr "SGF-Fehler, Datei {0}, {1}\n"
 
 #: v.py:1053 v.py:1926 v.py:2128
 msgid "SGF files"
@@ -1103,11 +1103,11 @@ msgstr "SGF-Dateien"
 
 #: kombilo.py:2419
 msgid "SGF tree"
-msgstr ""
+msgstr "SGF-Baum"
 
 #: kombilo.py:2599
 msgid "SGF tree options"
-msgstr ""
+msgstr "Einstellungen SGF-Baum"
 
 #: kombilo.py:3254
 msgid "SQL"
@@ -1155,7 +1155,7 @@ msgstr "Suchergebnisse"
 
 #: kombilo.py:1214
 msgid "Searching for duplicates"
-msgstr ""
+msgstr "Suche für Duplikate"
 
 #: kombilo.py:2359 v.py:2256
 msgid "See the documentation for more information. "
@@ -1195,7 +1195,7 @@ msgstr "Zeige Datum"
 
 #: kombilo.py:2466
 msgid "Show date information for continuations"
-msgstr ""
+msgstr "Zeige Zeitinformationen für Fortsetzungen"
 
 #: kombilo.py:2441
 msgid "Show filename"
@@ -1244,7 +1244,7 @@ msgstr "Sortiere nach weißem Spieler"
 
 #: kombilo.py:2624 kombilo.py:3189
 msgid "Sort continuations by"
-msgstr ""
+msgstr "Sortiere Fortsetzungen nach"
 
 #: v.py:2638
 msgid "Split collection into single files"
@@ -1260,7 +1260,7 @@ msgstr "Start"
 
 #: kombiloNG.py:745
 msgid "Start building SGF tree.\n"
-msgstr ""
+msgstr "Beginne, SGF-Baum zu berechnen.\n"
 
 #: kombilo.py:2471
 msgid "Start game info search"
@@ -1280,7 +1280,7 @@ msgstr "Statistik"
 
 #: kombilo.py:3106
 msgid "Statistics by Date"
-msgstr ""
+msgstr "Statistik nach Datum"
 
 #: kombilo.py:2203
 msgid "Store databases separately from SGF files"
@@ -1292,11 +1292,11 @@ msgstr "Genauer Test für Duplikate"
 
 #: custommenus.py:389
 msgid "Successfully stored game info."
-msgstr ""
+msgstr "Partieinfo erfolgreich gespeichert."
 
 #: custommenus.py:375
 msgid "Successfully stored pattern."
-msgstr ""
+msgstr "Muster erfolgreich gespeichert."
 
 #: kombilo.py:2753
 msgid "Tag all"
@@ -1325,11 +1325,11 @@ msgstr "Die Brettgröße dieses Spiels ist nicht 19x19."
 
 #: kombilo.py:2974 v.py:2682
 msgid "The language files could not be found."
-msgstr ""
+msgstr "Die Übersetzungdateien konnten nicht gefunden werden."
 
 #: kombilo.py:2705
 msgid "The node where the SGF tree starts must have no children."
-msgstr ""
+msgstr "Der Knoten, an dem der SGF-Baum startet, darf keine Kinder haben."
 
 #: v.py:2488
 msgid "Theme"
@@ -1358,7 +1358,7 @@ msgstr "Aktiviere/Deaktiviere"
 #: kombiloNG.py:850
 #, python-format
 msgid "Total: %d pattern searches\n"
-msgstr ""
+msgstr "Gesamt: %d Mustersuchen\n"
 
 #: v.py:2464
 msgid "Triangle label"
@@ -1382,7 +1382,7 @@ msgstr "Kann Datei %s nicht lesen."
 #: kombiloNG.py:1433
 #, python-brace-format
 msgid "Unacceptable board size error, file {0}, {1}\n"
-msgstr ""
+msgstr "Brettgröße nicht erlaubt, Datei {0}, {1}\n"
 
 #: kombilo.py:2755
 msgid "Untag all"
@@ -1410,7 +1410,7 @@ msgstr "W"
 
 #: kombilo.py:2974 v.py:2682
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #: kombilo.py:3238
 msgid "White"
@@ -1439,19 +1439,19 @@ msgstr ""
 
 #: kombilo.py:2569 kombilo.py:2627 kombilo.py:2676 kombilo.py:3191
 msgid "average"
-msgstr ""
+msgstr "Durchschnitt"
 
 #: kombilo.py:2570 kombilo.py:2677 kombilo.py:3191
 msgid "became popular"
-msgstr ""
+msgstr "wurde beliebt"
 
 #: kombilo.py:2570 kombilo.py:2677 kombilo.py:3191
 msgid "became unpopular"
-msgstr ""
+msgstr "wurde unbeliebt"
 
 #: kombilo.py:2569 kombilo.py:2627 kombilo.py:2676 kombilo.py:3191
 msgid "earliest"
-msgstr ""
+msgstr "zuerst gespielt"
 
 #: v.py:2497
 msgid "help"
@@ -1459,7 +1459,7 @@ msgstr "hilfe"
 
 #: kombilo.py:2569 kombilo.py:2627 kombilo.py:2676 kombilo.py:3191
 msgid "latest"
-msgstr ""
+msgstr "zuletzt gespielt"
 
 #: kombiloNG.py:1436
 msgid "not inserted\n"
@@ -1471,7 +1471,7 @@ msgstr "aufspalten"
 
 #: kombilo.py:2569 kombilo.py:2627 kombilo.py:2676 kombilo.py:3191
 msgid "total"
-msgstr ""
+msgstr "Anzahl Treffer"
 
 #: v.py:2221
 msgid "v.py - written by Ulrich Goertz (ug@geometry.de)"
@@ -1494,26 +1494,26 @@ msgstr "v.py wurde geschrieben von"
 #: kombiloNG.py:776
 #, python-brace-format
 msgid "{0} games (B: {1:1.1f}%, W: {2:1.1f}%)"
-msgstr ""
+msgstr "{0} Partien (S: {1:1.1f}%, W: {2:1.1f}%)"
 
 #: kombiloNG.py:1150
-msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:%1.1f}"
-msgstr ""
+msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%"
+msgstr "{0} Treffer ({1}/{2}), S: {3:1.1f}%, W: {4:1.1f}%"
 
 #: kombilo.py:931 kombilo.py:939
 #, python-brace-format
 msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%"
-msgstr ""
+msgstr "{0} Treffer ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%"
 
 #: kombilo.py:1020
 #, python-brace-format
 msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1}%"
-msgstr ""
+msgstr "{0} Treffer ({1}/{2}), B: {3:1.1f}%, W: {4:1.1}%"
 
 #: kombiloNG.py:1178
 #, python-brace-format
 msgid "{0}: {1} games (of {2})"
-msgstr ""
+msgstr "{0}: {1} Partien (von {2})"
 
 #~ msgid "B: %1.1f%%, W: %1.1f%%"
 #~ msgstr "S: %1.1f%%, W: %1.1f%%"

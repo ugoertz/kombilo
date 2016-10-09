@@ -1147,7 +1147,7 @@ class KEngine(object):
                 Bperc = self.Bwins * 100.0 / self.noMatches
                 Wperc = self.Wwins * 100.0 / self.noMatches
 
-                t.append(_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:%1.1f}').format(self.noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+                t.append(_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%').format(self.noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
 
                 if exportMode == 'wiki':
                     t.append(' %%%\n')
