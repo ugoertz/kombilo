@@ -1,21 +1,21 @@
 # Kombilo pot file
-# Copyright (C) 2012 
+# Copyright (C) 2012
 # Ulrich Goertz <ug@geometry.de>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Kombilo 0.8\n"
 "POT-Creation-Date: 2012-04-17 17:58+CEST\n"
-"PO-Revision-Date: 2012-04-16 22:01+0200\n"
+"PO-Revision-Date: 2016-10-09 17:42+0200\n"
 "Last-Translator: Administrator <>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.1.6\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Generated-By: pygettext.py 1.5\n"
+"Language-Team: \n"
 
 #: kombilo.py:350
 msgid "Include game list"
@@ -37,11 +37,11 @@ msgstr "S: %1.1f%%, W: %1.1f%%"
 #: kombilo.py:1247 kombilo.py:1619 kombilo.py:1621 kombilo.py:1623
 #: kombilo.py:1734 kombilo.py:1739 kombilo.py:1743 kombilo.py:1890
 #: kombilo.py:2096 kombilo.py:2414 kombilo.py:2502 kombilo.py:2533
-#: kombilo.py:2587 kombilo.py:3035 kombiloNG.py:1099 kombiloNG.py:1106
-#: v.py:705 v.py:707 v.py:916 v.py:970 v.py:1066 v.py:1069 v.py:1106 v.py:1112
-#: v.py:1239 v.py:1282 v.py:1421 v.py:1464 v.py:1492 v.py:1670 v.py:1794
-#: v.py:1809 v.py:2026 v.py:2129 v.py:2131 v.py:2154 v.py:2178 v.py:2229
-#: v.py:2361 v.py:2742 v.py:2755 v.py:2884
+#: kombilo.py:2587 kombilo.py:3035 kombiloNG.py:1099 kombiloNG.py:1106 v.py:705
+#: v.py:707 v.py:916 v.py:970 v.py:1066 v.py:1069 v.py:1106 v.py:1112 v.py:1239
+#: v.py:1282 v.py:1421 v.py:1464 v.py:1492 v.py:1670 v.py:1794 v.py:1809
+#: v.py:2026 v.py:2129 v.py:2131 v.py:2154 v.py:2178 v.py:2229 v.py:2361
+#: v.py:2742 v.py:2755 v.py:2884
 msgid "Error"
 msgstr "Fehler"
 
@@ -66,12 +66,10 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: kombilo.py:691
-#, fuzzy
 msgid "Release"
 msgstr "Loslassen"
 
 #: kombilo.py:693
-#, fuzzy
 msgid "Hold"
 msgstr "Festhalten"
 
@@ -84,19 +82,16 @@ msgid "%d matches (%d/%d), B: %1.1f%%, W: %1.1f%%"
 msgstr "%d Partien (%d/%d), S: %1.1f%%, W: %1.1f%%"
 
 #: kombilo.py:1081
-#, fuzzy
 msgid "Database error\n"
-msgstr "Datenbank"
+msgstr "Datenbankfehler\n"
 
 #: kombilo.py:1081 kombilo.py:1084
-#, fuzzy
 msgid "Game info search, query \"%s\""
-msgstr "Partieinfo-Suche, Anfrage \"%s\", %1.1f Sekunden\n"
+msgstr "Partieinfo-Suche, Anfrage \"%s\""
 
 #: kombilo.py:1084 kombilo.py:2592
-#, fuzzy
 msgid "%1.1f seconds"
-msgstr "Markierungssuche %s, %1.1f Sekunden\n"
+msgstr "%1.1f Sekunden"
 
 #: kombilo.py:1097
 msgid "Signature Search"
@@ -173,7 +168,7 @@ msgstr "OK"
 
 #: kombilo.py:1520
 msgid "    A B C D E F G H J K L M N O P Q R S T"
-msgstr ""
+msgstr "    A B C D E F G H J K L M N O P Q R S T"
 
 #: kombilo.py:1566
 msgid "Show all continuations"
@@ -317,7 +312,7 @@ msgstr "Speichere Nachrichten"
 
 #: kombilo.py:2112 v.py:1988 v.py:2186
 msgid "Confirm deletion"
-msgstr ""
+msgstr "Löschen bestätigen"
 
 #: kombilo.py:2112 v.py:1988 v.py:2186
 msgid "There are unsaved changes. Discard them?"
@@ -329,18 +324,15 @@ msgstr "Konnte kombilo.cfg nicht schreiben."
 
 #: kombilo.py:2158
 msgid "Kombilo %s - written by"
-msgstr ""
+msgstr "Kombilo %s - von"
 
 #: kombilo.py:2159
 msgid "Kombilo is a go database program."
 msgstr "Kombilo ist ein Go-Datenbankprogramm."
 
 #: kombilo.py:2160
-#, fuzzy
 msgid "You can find more information on Kombilo and the newest version at"
-msgstr ""
-"Sie finden mehr Informationen über Kombilo und die neueste Version auf "
-"http://www.u-go.net/kombilo/"
+msgstr "Du findest mehr Informationen über Kombilo und die neueste Version auf"
 
 #: kombilo.py:2162
 msgid "Kombilo is free software; for more information see the documentation."
@@ -459,7 +451,7 @@ msgstr "Benutze Großbuchstaben für Fortsetzungen"
 
 #: kombilo.py:2289
 msgid "Maximize window"
-msgstr ""
+msgstr "Fenstergröße maximieren"
 
 #: kombilo.py:2292
 msgid "Custom Menus"
@@ -555,9 +547,8 @@ msgid "Remove a tag."
 msgstr "Lösche eine Markierung."
 
 #: kombilo.py:2440
-#, fuzzy
 msgid "%1.1f seconds\n"
-msgstr "Markierungssuche %s, %1.1f Sekunden\n"
+msgstr "%1.1f Sekunden\n"
 
 #: kombilo.py:2440 kombilo.py:2806
 msgid "Pattern search"
@@ -604,14 +595,12 @@ msgid "Delete tag [%s] %s.\n"
 msgstr "Lösche Markierung [%s] %s.\n"
 
 #: kombilo.py:2565
-#, fuzzy
 msgid "Deleted tag [%s] %s from %d games.\n"
-msgstr "Markierung %s %s von %d Partien entfernt.\n"
+msgstr "Markierung [%s] %s von %d Partien entfernt.\n"
 
 #: kombilo.py:2592
-#, fuzzy
 msgid "Tag search %s"
-msgstr "Markierungssuche %s, %1.1f Sekunden\n"
+msgstr "Markierungssuche %s"
 
 #: kombilo.py:2727 kombiloNG.py:919
 msgid "Statistics"
@@ -686,9 +675,8 @@ msgid "Search in variations"
 msgstr "Suche in Varianten"
 
 #: kombilo.py:2854
-#, fuzzy
 msgid "Move limit"
-msgstr "Zugbeschränkung"
+msgstr "Treffer vor Zug"
 
 #: kombilo.py:2902
 msgid "White"
@@ -792,7 +780,7 @@ msgstr "Treffer pro Datenbank\n"
 
 #: kombiloNG.py:952
 msgid "%s: %d games (of %d)"
-msgstr ""
+msgstr "%s: %d Spiele (von %d)"
 
 #: kombiloNG.py:1042
 msgid "Could not open database %s/%s."
@@ -831,9 +819,8 @@ msgid "Delete old database files."
 msgstr "Lösche alte Datenbank-Dateien."
 
 #: kombiloNG.py:1164
-#, fuzzy
 msgid "Unable to delete database file %s."
-msgstr "Kann Datenbank-Dateien nicht löschen."
+msgstr "Kann Datenbank-Datei %s nicht löschen."
 
 #: kombiloNG.py:1181
 msgid "Unable to read file %s"
@@ -856,9 +843,8 @@ msgid "not inserted\n"
 msgstr "nicht eingefügt\n"
 
 #: kombiloNG.py:1209 kombiloNG.py:1213
-#, fuzzy
 msgid "SGF error, file %s, not inserted."
-msgstr "SGF-Fehler, Datei %s, nicht eingefügt.\n"
+msgstr "SGF-Fehler, Datei %s, nicht eingefügt."
 
 #: kombiloNG.py:1216
 msgid "Finalizing ... (this will take some time)\n"
@@ -893,7 +879,6 @@ msgid "split"
 msgstr "aufspalten"
 
 #: v.py:707
-#, fuzzy
 msgid "An error occurred, please submit a bug report."
 msgstr ""
 "Es ist ein Fehler aufgetreten, bitte reichen Sie einen Fehlerbericht ein."
@@ -903,7 +888,6 @@ msgid "SGF files"
 msgstr "SGF-Dateien"
 
 #: v.py:1066
-#, fuzzy
 msgid "SGF Error in game %d"
 msgstr "SGF-Fehler in Partie %d"
 
@@ -925,27 +909,27 @@ msgstr "Fehler in SGF-Datei"
 
 #: v.py:1931 v.py:1933
 msgid "New"
-msgstr ""
+msgstr "Neu"
 
 #: v.py:1959
 msgid "Cannot open this file\n"
-msgstr ""
+msgstr "Kann diese Datei nicht öffnen\n"
 
 #: v.py:1959
 msgid "Open file"
-msgstr ""
+msgstr "Datei öffnen"
 
 #: v.py:1971
 msgid "Error in SGF file!"
-msgstr ""
+msgstr "Fehler in SGF-Datei"
 
 #: v.py:1971
 msgid "Parsing Error"
-msgstr ""
+msgstr "Fehler beim Einlesen"
 
 #: v.py:2207
 msgid "Could not write kombilo.cfg."
-msgstr ""
+msgstr "Konnte Konfigurationsdatei kombilo.cfg nicht schreiben"
 
 #: v.py:2229
 msgid ""
@@ -953,306 +937,311 @@ msgid ""
 "You can find the tutorial as \n"
 "a file at: %s"
 msgstr ""
+"Konnte den Web-Browser nicht öffnen.\n"
+"Du findest das Tutorial als \n"
+"Datei hier: %s"
 
 #: v.py:2234
 msgid "v.py - written by Ulrich Goertz (ug@geometry.de)"
-msgstr ""
+msgstr "v.py - von Ulrich Görtz (ug@geometry.de)"
 
 #: v.py:2235
 msgid "v.py is a program to display go game records in SGF format."
-msgstr ""
+msgstr "v.py ist ein Programm, um Go-Partien im SGF-Format anzuzeigen."
 
 #: v.py:2236
 msgid "It comes together with the go database program Kombilo."
-msgstr ""
+msgstr "Es ist ein Teil des Go-Datenbankprogramms Kombilo."
 
 #: v.py:2238
 msgid "v.py is free software; for more information see the documentation."
 msgstr ""
+"v.py ist freie Software (open source); mehr Informationen dazu findest Du in "
+"der Dokumentation."
 
 #: v.py:2241
 msgid "About v.py ..."
-msgstr ""
+msgstr "Über v.py ..."
 
 #: v.py:2267
 msgid "v.py was written by"
-msgstr ""
+msgstr "v.py wurde geschrieben von"
 
 #: v.py:2337
 msgid "Parse error in 'Other SGF tags'"
-msgstr ""
+msgstr "Fehler beim Einlesen der 'Anderen SGF-Markierungen'"
 
 #: v.py:2372
 msgid "Game Info"
-msgstr ""
+msgstr "Partie-Informationen"
 
 #: v.py:2411
 msgid "Game Comment: "
-msgstr ""
+msgstr "Partie-Kommentar: "
 
 #: v.py:2416
 msgid "Other SGF tags: "
-msgstr ""
+msgstr "Andere SGF-Markierungen: "
 
 #: v.py:2458
 msgid "File"
-msgstr ""
+msgstr "Datei"
 
 #: v.py:2459
 msgid "New SGF"
-msgstr ""
+msgstr "Neue SGF-Datei"
 
 #: v.py:2460
 msgid "Open SGF"
-msgstr ""
+msgstr "SGF-Datei öffnen"
 
 #: v.py:2461
 msgid "Save SGF"
-msgstr ""
+msgstr "SGF-Datei speichern"
 
 #: v.py:2462
 msgid "Save SGF as"
-msgstr ""
+msgstr "SGF-Datei speichern als"
 
 #: v.py:2463
 msgid "Export SGF source"
-msgstr ""
+msgstr "SGF exportieren"
 
 #: v.py:2466
 msgid "Exit"
-msgstr ""
+msgstr "Beenden"
 
 #: v.py:2470
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: v.py:2471
 msgid "Mirror vertically"
-msgstr ""
+msgstr "Vertikal spiegeln"
 
 #: v.py:2472
 msgid "Mirror diagonally"
-msgstr ""
+msgstr "Diagonal spiegeln"
 
 #: v.py:2473
 msgid "Rotate"
-msgstr ""
+msgstr "Um 90° drehen"
 
 #: v.py:2476
 msgid "Ctrl-Click behavior"
-msgstr ""
+msgstr "Ctrl-Klick"
 
 #: v.py:2477
 msgid "Delete stone"
-msgstr ""
+msgstr "Stein löschen"
 
 #: v.py:2477
 msgid "Square label"
-msgstr ""
+msgstr "Quadrat-Markierung"
 
 #: v.py:2477
 msgid "Triangle label"
-msgstr ""
+msgstr "Dreieck-Markierung"
 
 #: v.py:2477
 msgid "Upper case letter"
-msgstr ""
+msgstr "Großbuchstabe"
 
 #: v.py:2478
 msgid "Lower case letter"
-msgstr ""
+msgstr "Kleinbuchstabe"
 
 #: v.py:2478
 msgid "Number label"
-msgstr ""
+msgstr "Ziffer"
 
 #: v.py:2484
 msgid "Practice"
-msgstr ""
+msgstr "Üben"
 
 #: v.py:2485 v.py:2565
 msgid "Guess mode"
-msgstr ""
+msgstr "Ratemodus"
 
 #: v.py:2491
 msgid "Fuzzy stone placement"
-msgstr ""
+msgstr "Ungenaue Steinplatzierung"
 
 #: v.py:2492
 msgid "Shaded stone mouse pointer"
-msgstr ""
+msgstr "Mauszeiger als schattierter Stein"
 
 #: v.py:2493
 msgid "Show next move"
-msgstr ""
+msgstr "Zeige nächsten Zug"
 
 #: v.py:2494
 msgid "Show last move"
-msgstr ""
+msgstr "Zeige letzten Zug"
 
 #: v.py:2495
 msgid "Show coordinates"
-msgstr ""
+msgstr "Zeige Koordinaten"
 
 #: v.py:2496
 msgid "Ask before discarding unsaved changes"
-msgstr ""
+msgstr "Nachfragen, bevor Änderungen verworfen werden"
 
 #: v.py:2501
 msgid "Theme"
-msgstr ""
+msgstr "Theme"
 
 #: v.py:2507
 msgid "Language"
-msgstr ""
+msgstr "Sprache"
 
 #: v.py:2510
 msgid "help"
-msgstr ""
+msgstr "hilfe"
 
 #: v.py:2511
 msgid "Help"
-msgstr ""
+msgstr "Hilfe"
 
 #: v.py:2513
 msgid "About ..."
-msgstr ""
+msgstr "Über ..."
 
 #: v.py:2515
 msgid "License"
-msgstr ""
+msgstr "Lizenz"
 
 #: v.py:2516
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentation"
 
 #: v.py:2551 v.py:2636
 msgid "Pass"
-msgstr ""
+msgstr "Passen"
 
 #: v.py:2553
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: v.py:2556
 msgid "Ctrl-Click:"
-msgstr ""
+msgstr "Ctrl-Klick:"
 
 #: v.py:2630
 msgid "Back one move"
-msgstr ""
+msgstr "Einen Zug zurück"
 
 #: v.py:2631
 msgid "Forward one move"
-msgstr ""
+msgstr "Einen Zug vor"
 
 #: v.py:2632
 msgid "Back 10 moves"
-msgstr ""
+msgstr "10 Züge zurück"
 
 #: v.py:2633
 msgid "Forward 10 moves"
-msgstr ""
+msgstr "10 Züge vor"
 
 #: v.py:2634
 msgid "Start of game/Clear board"
-msgstr ""
+msgstr "Anfang der Partie/Leeres Brett"
 
 #: v.py:2635
 msgid "End of game"
-msgstr ""
+msgstr "Ende der Partie"
 
 #: v.py:2637
 msgid "Edit game info"
-msgstr ""
+msgstr "Partieinfo bearbeiten"
 
 #: v.py:2639
 msgid "Play black/white stones"
-msgstr ""
+msgstr "Schwarze/weiße Steine setzen"
 
 #: v.py:2640
 msgid "Play white/black stones"
-msgstr ""
+msgstr "Weiße/schwarze Steine setzen"
 
 #: v.py:2641
 msgid "Place black stones"
-msgstr ""
+msgstr "Schwarze Steine setzen"
 
 #: v.py:2642
 msgid "Place white stones"
-msgstr ""
+msgstr "Weiße Steine setzen"
 
 #: v.py:2644
 msgid "Number of captured stones"
-msgstr ""
+msgstr "Anzahl gefangener Steine"
 
 #: v.py:2645
 msgid "Number of current move"
-msgstr ""
+msgstr "Aktueller Zug"
 
 #: v.py:2646
 msgid "Current SGF file"
-msgstr ""
+msgstr "Aktuelle SGF-Datei"
 
 #: v.py:2648
 msgid "Create new SGF file"
-msgstr ""
+msgstr "Neue SGF-Datei anlegen"
 
 #: v.py:2649
 msgid "Open SGF file"
-msgstr ""
+msgstr "SGF-Datei öffnen"
 
 #: v.py:2650
 msgid "Delete SGF file from list"
-msgstr ""
+msgstr "SGF-Datei von Liste löschen"
 
 #: v.py:2651
 msgid "Split collection into single files"
-msgstr ""
+msgstr "Kollektion in einzelne Dateien aufteilen"
 
 #: v.py:2652
 msgid "Create new game"
-msgstr ""
+msgstr "Neue Partie anlegen"
 
 #: v.py:2653
 msgid "Delete game"
-msgstr ""
+msgstr "Partie löschen"
 
 #: v.py:2655
 msgid "Ctrl-click deletes stone"
-msgstr ""
+msgstr "Ctrl-Klick löscht Stein"
 
 #: v.py:2656
 msgid "Ctrl-click places/deletes triangle label"
-msgstr ""
+msgstr "Ctrl-Klick erzeugt/löscht Dreieck-Marker"
 
 #: v.py:2657
 msgid "Ctrl-click places/deletes square label"
-msgstr ""
+msgstr "Ctrl-Klick erzeugt/löscht Quadrat-Marker"
 
 #: v.py:2658
 msgid "Ctrl-click places/deletes uppercase label"
-msgstr ""
+msgstr "Ctrl-Klick erzeugt/löscht Großbuchstaben-Marker"
 
 #: v.py:2659
 msgid "Ctrl-click places/deletes lowercase label"
-msgstr ""
+msgstr "Ctrl-Klick erzeugt/löscht Kleinbuchstaben-Marker"
 
 #: v.py:2660
 msgid "Ctrl-click places/deletes number label"
-msgstr ""
+msgstr "Ctrl-Klick erzeugt/löscht Ziffer-Marker"
 
 #: v.py:2661
 msgid "Delete this and all following nodes"
-msgstr ""
+msgstr "Diesen und alle folgenden Knoten löschen"
 
 #: v.py:2662
 msgid "Enter/leave guess mode"
-msgstr ""
+msgstr "Ratemodus starten/beenden"
 
 #: v.py:2693
 msgid "Note"
-msgstr ""
+msgstr "Hinweis"
 
 #: v.py:2693
 msgid "You have to restart the program to make the change become effective."
@@ -1262,10 +1251,12 @@ msgstr ""
 #: v.py:2742
 msgid "Neither kombilo.cfg nor default.cfg were found."
 msgstr ""
+"Keine der Konfigurationsdateien kombilo.cfg und default.cfg konnten gefunden "
+"werden."
 
 #: v.py:2755
 msgid "Unable to create directory %s."
-msgstr ""
+msgstr "Verzeichnis %s konnte nicht angelegt werden."
 
 #: v.py:2884
 msgid "Error reading v.app"
