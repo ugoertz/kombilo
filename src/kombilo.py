@@ -33,12 +33,12 @@ import re
 from array import *
 from configobj import ConfigObj
 
+import __builtin__
 try:
     import gettext
-    t = gettext.translation('kombilo', '../lang')
-    _ = t.ugettext
+    gettext.install('kombilo', localedir='../lang', unicode=True)
 except:
-    _ = lambda x: x
+    _ = lambda s: s
 
 from Tkinter import *
 from ttk import *
@@ -2769,7 +2769,7 @@ class App(v.Viewer, KEngine):
         l = [int(x) for x in self.gamelist.customTags.keys()]
         l.sort()
         for ctr, t in enumerate(l):
-            self.taglist.list.insert(END, '[%s] %s' % (self.gamelist.customTags[str(t)][0], self.gamelist.customTags[str(t)][1]))
+            self.taglist.list.insert(END, '[%s] %s' % (self.gamelist.customTags[str(t)][0], _(self.gamelist.customTags[str(t)][1])))
             self.taglist.list.itemconfig(ctr, **self.gamelist.taglook.get(str(t), {}))
 
     def addTag(self):
@@ -2971,17 +2971,6 @@ class App(v.Viewer, KEngine):
                 self.search()
 
         self.master.bind('<ButtonRelease>', _button_release)
-
-    def switch_language(self, lang, show_warning=False):
-        global _
-        try:
-            t = gettext.translation('kombilo', '../lang', languages=[lang, ])
-            _ = t.ugettext
-        except:
-            if show_warning:
-                showwarning(_('Warning'), _('The language files could not be found.'))
-        else:
-            v.Viewer.switch_language(self, lang, show_warning)
 
     def __init__(self, master):
 

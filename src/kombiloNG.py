@@ -45,26 +45,16 @@ import libkombilo as lk
 from abstractboard import abstractBoard
 import sgf
 
+import __builtin__
+if not '_' in __builtin__.__dict__:
+    # print 'kombiloNG ignores translations'
+    _ = lambda s: s
+
 KOMBILO_VERSION = '0.8'
 
 REFERENCED_TAG = 3
 SEEN_TAG = 4
 
-
-if 'gettext' in sys.modules:
-    # is kombiloNG imported by a module which already imported gettext?
-
-    try:
-        import gettext
-        t = gettext.translation('kombilo', '../lang')
-        _ = t.ugettext
-    except:
-        def _(s):
-            return s
-else:
-    # otherwise, ignore requests for translations
-    def _(s):
-        return s
 
 # -------------- TOOLS --------------------------------------------------
 
@@ -92,6 +82,42 @@ class dummyMessages:
         pass
     def update(self):
         pass
+
+
+def translateRE(s):
+    '''
+    Try to provide accurate translation of REsult string in an SGF file.
+    See also the notes of Andries Brouwer at
+    http://homepages.cwi.nl/~aeb/go/misc/sgfnotes.html
+    '''
+
+    if s in ['0', 'J', 'Jigo', 'Draw']:
+        return _('Jigo')
+
+    if s in ['Void', ]:
+        return _('No result')
+
+    if s in ['?', 'Unknown', ]:
+        return _('Result unknown')
+
+    if s in ['Both lost', ]:
+        return _('Both lost')
+
+    if s in ['Unfinished', 'Left unfinished', 'U', 'UF', ]:
+        return _('Unfinished')
+
+    for reason in ['Time', 'Forfeit', 'Resign']:
+        if s[1:].startswith('+' + reason):
+            return _(s[0]) + '+' + _(reason) + (_(s[len(reason)+2:]) if s[len(reason)+2:] else '')
+        if s[1:].startswith('+' + reason[0]):
+            return _(s[0]) + '+' + _(reason) + (_(s[3:]) if s[3:] else '')
+
+    if s.startswith('B+') or s.startswith('W+'):
+        # print(s, ' --- ', _(s[0]) + s[1:])
+        return _(s[0]) + s[1:]
+
+    # print('unable to translate RE')
+    return s
 
 # ------ PATTERN ----------------------------------------------------------------
 
@@ -307,10 +333,10 @@ class GameList(object):
         self.gameIndex = []
         self.showFilename = 1
         self.showDate = 0
-        self.customTags = {'1': ('H', _('Handicap game'), ),
-                           '2': ('P', _('Professional game'), ),
-                           str(REFERENCED_TAG): ('C', _('Reference to commentary available'), ),
-                           str(SEEN_TAG): ('S', _('Seen'), ), }
+        self.customTags = {'1': ('H', 'Handicap game', ),
+                           '2': ('P', 'Professional game', ),
+                           str(REFERENCED_TAG): ('C', 'Reference to commentary available', ),
+                           str(SEEN_TAG): ('S', 'Seen', ), }
 
     def populateDBlist(self, d):
         '''Add the databases specified in the dictionary ``d`` to this
@@ -459,7 +485,7 @@ class GameList(object):
 
             li.append(filename + ': ')
 
-        li.append(d[GL_PW] + ' - ' + d[GL_PB] + ' (' + d[GL_RESULT] + '), ')
+        li.append(d[GL_PW] + ' - ' + d[GL_PB] + ' (' + _(d[GL_RESULT]).encode('utf8') + '), ')
         if self.showDate:
             li.append(d[GL_DATE] + ', ')
         li.append(res)
@@ -568,7 +594,7 @@ class GameList(object):
         t += (' ' + node['BR'][0]) if 'BR' in node else ''
 
         if 'RE' in node:
-            t = t + ', ' + node['RE'][0]
+            t = t + ', ' + translateRE(node['RE'][0])
         if 'KM' in node:
             t = t + ' (' + _('Komi') + ' ' + node['KM'][0] + ')'
         if 'HA' in node:

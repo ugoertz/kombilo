@@ -21,19 +21,15 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from __future__ import absolute_import
 
+import __builtin__
 import os
 import sys
+import gettext
 import glob
 import webbrowser
 from configobj import ConfigObj
-
-try:
-    import gettext
-    t = gettext.translation('kombilo', '../lang')
-    _ = t.ugettext
-except:
-    _ = lambda x: x
 
 from Tkinter import *
 from ttk import *
@@ -2692,16 +2688,15 @@ class Viewer:
         self.master.bind('<Control-q>', lambda e, self=self: self.quit())
 
     def switch_language(self, lang, show_warning=False):
-        global _
         try:
             t = gettext.translation('kombilo', '../lang', languages=[lang, ])
-            _ = t.ugettext
-        except:
+            __builtin__.__dict__['_'] = t.ugettext
+        except KeyError:
             if show_warning:
                 showwarning(_('Warning'), _('The language files could not be found.'))
-
-        if show_warning:
-            showwarning(_('Note'), _('You have to restart the program to make the change become effective.'))
+        else:
+            if show_warning:
+                showwarning(_('Note'), _('You have to restart the program to make the change become effective.'))
 
     def __init__(self, master, BoardClass=Board, DataWindowClass=DataWindow):
         """ Initialize the GUI, some variables, etc. """
@@ -2886,6 +2881,14 @@ class Viewer:
 # ---------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
+
+    import __builtin__
+    if not '_' in __builtin__.__dict__:
+        try:
+            import gettext
+            gettext.install('kombilo', localedir='../lang', unicode=True)
+        except:
+            _ = lambda s: s
 
     root = Tk()
     root.withdraw()
