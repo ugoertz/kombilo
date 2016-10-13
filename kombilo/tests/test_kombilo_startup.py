@@ -25,35 +25,25 @@
 ## SOFTWARE.
 
 '''
-Miscellaneous utilities for the test suite.
+Test whether kombilo.py starts up.
 '''
+
 
 from __future__ import absolute_import
 
-import os
-from .. import libkombilo as lk
-from ..kombiloNG import *
+from Tkinter import Tk
 
+from kombilo.kombilo import App
 
-def create_db(sgfs):
-    pop = lk.ProcessOptions()
-    pop.rootNodeTags = 'PW,PB,RE,DT,EV'
-    pop.sgfInDB = True
-    pop.professional_tag = False
-    pop.processVariations = True
-    pop.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST | lk.ALGO_HASH_FULL | lk.ALGO_HASH_CORNER
+def test_kombilo_startup():
+    root = Tk()
+    root.withdraw()
 
-    gls = lk.vectorGL()
+    app = App(root)
 
-    os.system('rm -f db/kombilo.d*')
-    gl = lkGameList('db/kombilo.db', 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
+    root.protocol('WM_DELETE_WINDOW', app.quit)
+    root.title('Kombilo')
 
-    path = 'sgfs'
-
-    gl.start_processing()
-    for fn, sgf in sgfs.items():
-        gl.process(sgf, path, fn, gls, '', lk.CHECK_FOR_DUPLICATES)
-
-    gl.finalize_processing()
-
+    app.boardFrame.focus_force()
+    root.destroy()
 

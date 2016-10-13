@@ -165,10 +165,10 @@ class Board(abstractBoard, Canvas):
             for i in range(self.boardsize):
                 a = 'ABCDEFGHJKLMNOPQRST'[i]
                 self.create_text(c0 + c1 * i, c1 * self.boardsize + 3 * c0 // 4 + 4, text=a,
-                                 font=('Helvetica', 5 + c1 // 7, ''))
-                self.create_text(c0 + c1 * i, c0 // 4 + 1, text=a, font=('Helvetica', 5 + c1 // 7, ''))
-                self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''))
-                self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''))
+                                 font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
+                self.create_text(c0 + c1 * i, c0 // 4 + 1, text=a, font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
+                self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
+                self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
 
         if self.PILinstalled:
             try:

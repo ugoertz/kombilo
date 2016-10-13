@@ -37,16 +37,16 @@ from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
 
-from tooltip.tooltip import ToolTip
+from .tooltip.tooltip import ToolTip
 import Pmw
 
 from string import split, replace, join, strip
 from math import sqrt
 from random import randint
 
-import libkombilo as lk
-from board import *
-from sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
+from . import libkombilo as lk
+from .board import *
+from .sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
 KOMBILO_VERSION = 0.8
 
@@ -2503,7 +2503,7 @@ class Viewer:
         self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Theme'), menu=theme_menu))
 
         lang_menu = Menu(self.optionsmenu)
-        languages = [os.path.basename(lang) for lang in  glob.glob('../lang/*') if os.path.basename(lang).find('.') == -1]
+        languages = [os.path.basename(lang) for lang in  glob.glob('lang/*') if os.path.basename(lang).find('.') == -1]
         for lang in languages:
             lang_menu.add_radiobutton(label=lang, variable=self.options.language, value=lang, command=lambda: self.switch_language(self.options.language.get(), show_warning=True))
         self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Language'), menu=lang_menu))
@@ -2689,7 +2689,7 @@ class Viewer:
 
     def switch_language(self, lang, show_warning=False):
         try:
-            t = gettext.translation('kombilo', '../lang', languages=[lang, ])
+            t = gettext.translation('kombilo', os.path.join(os.path.dirname(__file__), 'lang'), languages=[lang, ])
             __builtin__.__dict__['_'] = t.ugettext
         except KeyError:
             if show_warning:
@@ -2702,7 +2702,7 @@ class Viewer:
         """ Initialize the GUI, some variables, etc. """
 
         self.options = BunchTkVar()
-        self.basepath = sys.path[0] if not sys.path[0].endswith('library.zip') else os.path.split(sys.path[0])[0]  # py2exe
+        self.basepath = os.path.dirname(__file__)
         self.sgfpath = os.curdir
         self.optionspath = None
 
@@ -2800,12 +2800,7 @@ class Viewer:
 
         # The board
 
-        if sys.path[0].endswith('library.zip'):
-            SYSPATH = os.path.split(sys.path[0])[0]  # py2exe
-        else:
-            SYSPATH = sys.path[0]
-
-        gifpath = os.path.join(SYSPATH, 'icons')
+        gifpath = os.path.join(os.path.dirname(__file__), 'icons')
 
         try:
             self.boardImg = PhotoImage(file=os.path.join(gifpath, 'board.gif'))
@@ -2880,23 +2875,20 @@ class Viewer:
 
 # ---------------------------------------------------------------------------------------
 
-if __name__ == '__main__':
+def run():
 
     import __builtin__
     if not '_' in __builtin__.__dict__:
         try:
             import gettext
-            gettext.install('kombilo', localedir='../lang', unicode=True)
+            gettext.install('kombilo', localedir=os.path.join(os.path.dirname(__file__), 'lang'), unicode=True)
         except:
             _ = lambda s: s
 
     root = Tk()
     root.withdraw()
 
-    if sys.path[0].endswith('library.zip'):
-        SYSPATH = os.path.split(sys.path[0])[0]
-    else:
-        SYSPATH = sys.path[0]
+    SYSPATH = os.path.dirname(__file__)
 
     try:
         if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
@@ -2925,3 +2917,7 @@ if __name__ == '__main__':
             pass
 
     root.mainloop()
+
+if __name__ == '__main__':
+    run()
+

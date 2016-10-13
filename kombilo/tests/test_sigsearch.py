@@ -59,12 +59,13 @@ def test_sigsearch():
 
     sgfs = {}
     for f, _ in files_sigs:
-        with open(os.path.join('sgfs', f)) as file:
+        with open(os.path.join(os.path.dirname(__file__), 'sgfs', f)) as file:
             sgfs[f] = file.read()
     create_db(sgfs)
 
     K = KEngine()
-    K.gamelist.populateDBlist({'1': ['sgfs', 'db', 'kombilo', ], })
+    print os.path.join(os.path.dirname(__file__), 'db')
+    K.gamelist.populateDBlist({'1': ['sgfs', os.path.join(os.path.dirname(__file__), 'db'), 'kombilo', ], })
     K.loadDBs()
 
     #  for i in range(K.gamelist.noOfGames()):

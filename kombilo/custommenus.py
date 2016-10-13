@@ -26,13 +26,9 @@ from Tkconstants import *
 import v
 from libkombilo import SGFError
 
-
-try:
-    import gettext
-    t = gettext.translation('kombilo', '../lang')
-    _ = t.ugettext
-except:
-    _ = lambda x: x
+import __builtin__
+if not '_' in __builtin__.__dict__:
+    _ = lambda s: s
 
 
 class CustomMenus:

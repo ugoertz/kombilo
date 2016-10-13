@@ -88,13 +88,13 @@ def search(K, moveno=6000):
 
 def test_pattern_search_auto():
     sgfs = {}
-    for f in glob.glob('./sgfs/*.sgf'):
+    for f in glob.glob(os.path.join(os.path.dirname(__file__), 'sgfs/*.sgf')):
         with open(f) as file:
             sgfs[f] = file.read()
     create_db(sgfs)
 
     K = KEngine()
-    K.gamelist.populateDBlist({'1': ['sgfs', 'db', 'kombilo', ], })
+    K.gamelist.populateDBlist({'1': ['sgfs', os.path.join(os.path.dirname(__file__), 'db'), 'kombilo', ], })
     K.loadDBs()
 
     search(K)

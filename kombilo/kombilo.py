@@ -23,6 +23,8 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from __future__ import absolute_import
+
 import time
 import datetime
 import os
@@ -36,7 +38,7 @@ from configobj import ConfigObj
 import __builtin__
 try:
     import gettext
-    gettext.install('kombilo', localedir='../lang', unicode=True)
+    gettext.install('kombilo', localedir=os.path.join(os.path.dirname('__file__'), 'lang'), unicode=True)
 except:
     _ = lambda s: s
 
@@ -46,17 +48,17 @@ from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
 from tkCommonDialog import Dialog
-from tooltip.tooltip import ToolTip
+from .tooltip.tooltip import ToolTip
 from Pmw import ScrolledFrame
 import Pmw
 
-from vsl.vl import VScrolledList
-from sgf import Node, Cursor
-import libkombilo as lk
-from board import *
-import v
-from kombiloNG import *
-from custommenus import CustomMenus
+from .vsl.vl import VScrolledList
+from .sgf import Node, Cursor
+from . import libkombilo as lk
+from .board import *
+import kombilo.v as v
+from .kombiloNG import *
+from .custommenus import CustomMenus
 
 
 
@@ -3354,15 +3356,11 @@ class App(v.Viewer, KEngine):
 
 # ---------------------------------------------------------------------------------------
 
-if __name__ == '__main__':
+def run():
     root = Tk()
     root.withdraw()
 
-    if sys.path[0].endswith('library.zip'):
-        # using an exe produced by py2exe?
-        SYSPATH = os.path.split(sys.path[0])[0]
-    else:
-        SYSPATH = sys.path[0]
+    SYSPATH = os.path.dirname(__file__)
 
     try:
         if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
@@ -3382,3 +3380,7 @@ if __name__ == '__main__':
 
     root.mainloop()
     root.destroy()
+
+if __name__ == '__main__':
+    run()
+
