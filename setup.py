@@ -34,8 +34,7 @@ setup(
             'icons/*.*',
             'tests/sgfs/*.sgf', 'tests/db/.keep',
             'libkombilo/*.h',
-            'lang/en/LC_MESSAGES/kombilo.?o',
-            'lang/de/LC_MESSAGES/kombilo.?o',
+            'lang/*/LC_MESSAGES/kombilo.?o',
             ], },
         install_requires = [
             'configobj',

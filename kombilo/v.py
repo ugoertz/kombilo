@@ -28,6 +28,7 @@ import os
 import sys
 import gettext
 import glob
+import pkg_resources
 import webbrowser
 from configobj import ConfigObj
 
@@ -2503,9 +2504,9 @@ class Viewer:
         self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Theme'), menu=theme_menu))
 
         lang_menu = Menu(self.optionsmenu)
-        languages = [os.path.basename(lang) for lang in  glob.glob('lang/*') if os.path.basename(lang).find('.') == -1]
-        for lang in languages:
-            lang_menu.add_radiobutton(label=lang, variable=self.options.language, value=lang, command=lambda: self.switch_language(self.options.language.get(), show_warning=True))
+        languages = [('en', 'English'), ('de', 'Deutsch'), ]
+        for code, lang in languages:
+            lang_menu.add_radiobutton(label=lang, variable=self.options.language, value=code, command=lambda: self.switch_language(self.options.language.get(), show_warning=True))
         self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Language'), menu=lang_menu))
 
         # -------------- HELP -------------------
@@ -2689,9 +2690,11 @@ class Viewer:
 
     def switch_language(self, lang, show_warning=False):
         try:
-            t = gettext.translation('kombilo', os.path.join(os.path.dirname(__file__), 'lang'), languages=[lang, ])
-            __builtin__.__dict__['_'] = t.ugettext
-        except KeyError:
+            resource = os.path.join('lang', lang, 'LC_MESSAGES', 'kombilo.mo')
+
+            translation = gettext.GNUTranslations(pkg_resources.resource_stream(__name__, resource))
+            translation.install(unicode=True)
+        except:
             if show_warning:
                 showwarning(_('Warning'), _('The language files could not be found.'))
         else:
@@ -2879,11 +2882,7 @@ def run():
 
     import __builtin__
     if not '_' in __builtin__.__dict__:
-        try:
-            import gettext
-            gettext.install('kombilo', localedir=os.path.join(os.path.dirname(__file__), 'lang'), unicode=True)
-        except:
-            _ = lambda s: s
+        __builtin__.__dict__['_'] = lambda s: s
 
     root = Tk()
     root.withdraw()

@@ -35,13 +35,6 @@ import re
 from array import *
 from configobj import ConfigObj
 
-import __builtin__
-try:
-    import gettext
-    gettext.install('kombilo', localedir=os.path.join(os.path.dirname('__file__'), 'lang'), unicode=True)
-except:
-    _ = lambda s: s
-
 from Tkinter import *
 from ttk import *
 from tkMessageBox import *
@@ -3357,6 +3350,11 @@ class App(v.Viewer, KEngine):
 # ---------------------------------------------------------------------------------------
 
 def run():
+
+    import __builtin__
+    if not '_' in __builtin__.__dict__:
+        __builtin__.__dict__['_'] = lambda s: s
+
     root = Tk()
     root.withdraw()
 
