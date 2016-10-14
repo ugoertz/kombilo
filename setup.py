@@ -22,6 +22,9 @@ setup(
         author = 'Ulrich Goertz',
         author_email = 'ug@geometry.de',
         url = 'http://u-go.net/kombilo/',
+        classifiers=[
+            'Programming Language :: Python :: 2.7',
+            ],
         entry_points = {'gui_scripts': [
             'kombilo = kombilo.kombilo:run',
             'v = kombilo.v:run',
