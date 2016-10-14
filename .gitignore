@@ -13,6 +13,8 @@ kombilo/libkombilo/doc/libkombilo.tag
 kombilo/libkombilo/libkombilo.py
 kombilo/libkombilo/libkombilo_wrap.cxx
 kombilo/libkombilo/boost
+kombilo/libkombilo/examples/sgftest
+kombilo/libkombilo/examples/tags
 kombilo/kombilo.cfg
 kombilo/libkombilo.py
 kombilo/dist
