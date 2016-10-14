@@ -3358,13 +3358,11 @@ def run():
     root = Tk()
     root.withdraw()
 
-    SYSPATH = os.path.dirname(__file__)
-
     try:
-        if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
-            root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
+        if os.path.exists(os.path.join(v.get_configfile_directory(), 'kombilo.app')):
+            root.option_readfile(os.path.join(v.get_configfile_directory(), 'kombilo.app'))
     except TclError:
-        showwarning(_('Error'), _('Error reading kombilo.app'))
+        showwarning(_('Error'), _('Error reading kombilo.app file.'))
 
     app = App(root)
 

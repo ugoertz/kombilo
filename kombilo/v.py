@@ -53,6 +53,12 @@ KOMBILO_VERSION = 0.8
 
 # ---------------------------------------------------------------------------------------
 
+def get_configfile_directory():
+    if sys.platform.startswith('win'):
+        return os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.', ''))
+    else:
+        return os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.', ''))
+
 
 def get_addmenu_options(**kwargs):
     '''
@@ -2721,10 +2727,7 @@ class Viewer:
                 # (or, on Windows, to a kombilo directory below %APPDATA)
                 configfile = os.path.join(self.basepath, 'kombilo.cfg')
             else:
-                if sys.platform.startswith('win'):
-                    configfile = os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.', ''), 'kombilo.cfg')
-                else:
-                    configfile = os.path.expanduser('~/.kombilo/%s/kombilo.cfg' % ('%s' % KOMBILO_VERSION).replace('.', ''))
+                configfile = os.path.join(get_configfile_directory(), 'kombilo.cfg')
             if configfile and os.path.exists(configfile):
                 with open(configfile) as f:
                     self.optionspath = os.path.dirname(configfile)
@@ -2753,10 +2756,7 @@ class Viewer:
 
         if not self.optionspath:
             # no kombilo.cfg found, so we will set self.optionspath now, to be used in quit method when we write kombilo.cfg
-            if sys.platform.startswith('win'):
-                self.optionspath = os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.', ''))
-            else:
-                self.optionspath = os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.', ''))
+            self.optionspath = get_configfile_directory()
             try:
                 os.makedirs(self.optionspath)
             except:
@@ -2887,13 +2887,11 @@ def run():
     root = Tk()
     root.withdraw()
 
-    SYSPATH = os.path.dirname(__file__)
-
     try:
-        if os.path.exists(os.path.join(SYSPATH, 'kombilo.app')):
-            root.option_readfile(os.path.join(SYSPATH, 'kombilo.app'))
+        if os.path.exists(os.path.join(get_configfile_directory(), 'kombilo.app')):
+            root.option_readfile(os.path.join(get_configfile_directory(), 'kombilo.app'))
     except TclError:
-        showwarning(_('Error'), _('Error reading v.app'))
+        showwarning(_('Error'), _('Error reading kombilo.app file.'))
 
     app = Viewer(root)
 
