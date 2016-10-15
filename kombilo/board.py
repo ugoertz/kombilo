@@ -26,6 +26,8 @@
 
 
 from Tkinter import *
+from PIL import Image as PILImage
+from PIL import ImageTk as PILImageTk
 from random import randint
 import math
 import sys
@@ -60,6 +62,7 @@ class Board(abstractBoard, Canvas):
     def __init__(self, master, boardsize=19, canvasSize=(30, 25), fuzzy=1, labelFontsize=None,
                  focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True,
                  square_board=True):
+        # FIXME should refactor code: use_PIL not used anymore
 
         self.square_board = square_board
         self.focus = focus
@@ -99,8 +102,6 @@ class Board(abstractBoard, Canvas):
         self.boundConf = self.bind("<Configure>", self.resize)
         self.resizable = 1
 
-        self.PILinstalled = use_PIL
-
         self.use3Dstones = IntVar()
         self.use3Dstones.set(1)
 
@@ -118,7 +119,7 @@ class Board(abstractBoard, Canvas):
     def drawBoard(self):
         """ Displays the background picture, and draws the lines and hoshi points of
             the go board.
-            If PIL is installed, this also creates the PhotoImages for black, white stones. """
+            This also creates the PhotoImages for black, white stones. """
 
         sres = self.resizable
         self.resizable = False
@@ -170,13 +171,8 @@ class Board(abstractBoard, Canvas):
                 self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
                 self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
 
-        if self.PILinstalled:
-            try:
-                from PIL import ImageTk, Image
-                self.bStone = ImageTk.PhotoImage(self.blackStone.resize((c1 + 1, c1 + 1), Image.NEAREST))
-                self.wStone = ImageTk.PhotoImage(self.whiteStone.resize((c1 + 1, c1 + 1), Image.NEAREST))
-            except:
-                self.PILinstalled = 0
+        self.bStone = PILImageTk.PhotoImage(self.blackStone.resize((c1 + 1, c1 + 1), PILImage.NEAREST))
+        self.wStone = PILImageTk.PhotoImage(self.whiteStone.resize((c1 + 1, c1 + 1), PILImage.NEAREST))
 
         self.update_idletasks()
         self.resizable = sres
@@ -452,7 +448,7 @@ class Board(abstractBoard, Canvas):
             return
         self.onChange()
         p = self.getPixelCoord(pos)
-        if not self.use3Dstones.get() or not self.PILinstalled or self.canvasSize[1] <= 7:
+        if not self.use3Dstones.get() or self.canvasSize[1] <= 7:
             self.stones[pos] = self.create_oval(*p, fill=color, tags='non-bg')
         else:
             if color == 'black':

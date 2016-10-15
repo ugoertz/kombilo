@@ -34,6 +34,7 @@ from string import split, find, join, strip, replace
 import re
 from array import *
 from configobj import ConfigObj
+import pkg_resources
 
 from Tkinter import *
 from ttk import *
@@ -42,6 +43,8 @@ from ScrolledText import ScrolledText
 import tkFileDialog
 from tkCommonDialog import Dialog
 from .tooltip.tooltip import ToolTip
+from PIL import Image as PILImage
+from PIL import ImageTk as PILImageTk
 from Pmw import ScrolledFrame
 import Pmw
 
@@ -647,7 +650,7 @@ class PrevSearchesStack(object):
 
         b = SearchHistoryBoard(
                 self.prevSF.interior(), self.mster.board.boardsize, (12, 6), 0,
-                self.labelSize, 1, None, self.mster.boardImg, None, None,
+                self.labelSize, 1, None, self.mster.boardImg, self.mster.blackStone, self.mster.whiteStone,
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
                 offset=min(10 * self.current.level(), 100))  # small board
@@ -2272,7 +2275,7 @@ class App(v.Viewer, KEngine):
                     break
 
         try:
-            defaultfile = open(os.path.join(self.basepath, 'default.cfg'))
+            defaultfile = pkg_resources.resource_stream(__name__, 'default.cfg')
             c = ConfigObj(infile=defaultfile, encoding='utf8', default_encoding='utf8')
             defaultfile.close()
             if os.path.exists(os.path.join(self.optionspath, 'kombilo.cfg')):
@@ -2349,9 +2352,7 @@ class App(v.Viewer, KEngine):
     def helpLicense(self):
         """ Display the Kombilo license. """
         try:
-            file = open(os.path.join(self.basepath, 'license.rst'))
-            t = file.read()
-            file.close()
+            t = pkg_resources.resource_string(__name__, 'license.rst')
         except:
             t = _('Kombilo was written by Ulrich Goertz (ug@geometry.de).') + '\n'
             t = t + _('It is open source software, published under the MIT License.')
@@ -3067,7 +3068,7 @@ class App(v.Viewer, KEngine):
 
         # evaluate kombilo.cfg file (default databases etc.)
 
-        self.datapath = self.config['main']['datapath'] if 'datapath' in self.config['main'] else self.basepath
+        self.datapath = self.config['main']['datapath'] if 'datapath' in self.config['main'] else v.get_configfile_directory()
 
         # read databases section
         self.gamelist.populateDBlist(self.config['databases'])
@@ -3311,19 +3312,14 @@ class App(v.Viewer, KEngine):
                                  (self.tagsearchButton, 'system-search.gif'), (self.tagaddButton, 'add.gif'), (self.tagdelButton, 'list-remove.gif'),
                                  (self.tagallButton, 'edit-select-all.gif'), (self.untagallButton, 'edit-clear.gif'), (self.tagsetButton, 'bookmark-new.gif'),
                                 ]:
-            try:
-                im = PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
-                self.tkImages.append(im)
-                button.config(image=im)
-            except:
-                pass
+            v.load_icon(button, filename, self.tkImages)
 
         self.custom_menus.path = self.optionspath
-        self.custom_menus.buildMenus(1, self.basepath)
+        self.custom_menus.buildMenus()
 
         # load logo
         try:
-            self.logo = PhotoImage(file=os.path.join(self.basepath, 'icons/logok.gif'))
+            self.logo = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/logok.gif')))
         except TclError:
             self.logo = None
 
@@ -3340,7 +3336,7 @@ class App(v.Viewer, KEngine):
             self.fixedColorVar.set(1)
         self.gamelist.showFilename = self.options.showFilename.get()
         self.gamelist.showDate = self.options.showDate.get()
-        self.parseReferencesFile(datafile=os.path.join(self.basepath, 'data', 'references'),
+        self.parseReferencesFile(datafile=pkg_resources.resource_stream(__name__, 'data/references'),
                                  options=self.config['references'] if 'references' in self.config else None)
         self.loadDBs(self.progBar, showwarning)
 

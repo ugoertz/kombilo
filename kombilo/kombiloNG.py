@@ -1232,6 +1232,8 @@ class KEngine(object):
         The method builds up ``self.gamelist.references``, a dictionary which
         for each Dyer signature has a list of all references for the
         corresponding game.
+
+        datafile is expected to be a "file-like object" (like an opened file) with a .read() method.
         '''
 
         include = []  # if no items are explicitly included, we take that as "include everything that's not excluded"
@@ -1256,21 +1258,20 @@ class KEngine(object):
 
         self.gamelist.references = defaultdict(list)
         try:
-            with open(datafile) as ref_file:
-                c = ConfigObj(infile=ref_file, encoding='utf8', default_encoding='utf8')
-                if 'boardsize' in c:
-                    boardsize = int(c['boardsize'])
-                    del c['boardsize']
-                else:
-                    boardsize = 19
-                for k in c:
-                    if k in exclude:
-                        continue
-                    if include and not k in include:
-                        continue
-                    for sig in c[k]['data']:
-                        symmsig = lk.symmetrize(sig, boardsize)
-                        self.gamelist.references[symmsig].append(c[k]['title'])
+            c = ConfigObj(infile=datafile, encoding='utf8', default_encoding='utf8')
+            if 'boardsize' in c:
+                boardsize = int(c['boardsize'])
+                del c['boardsize']
+            else:
+                boardsize = 19
+            for k in c:
+                if k in exclude:
+                    continue
+                if include and not k in include:
+                    continue
+                for sig in c[k]['data']:
+                    symmsig = lk.symmetrize(sig, boardsize)
+                    self.gamelist.references[symmsig].append(c[k]['title'])
         except:
             pass
 

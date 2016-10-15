@@ -39,6 +39,8 @@ from ScrolledText import ScrolledText
 import tkFileDialog
 
 from .tooltip.tooltip import ToolTip
+from PIL import Image as PILImage
+from PIL import ImageTk as PILImageTk
 import Pmw
 
 from string import split, replace, join, strip
@@ -59,6 +61,13 @@ def get_configfile_directory():
     else:
         return os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.', ''))
 
+def load_icon(button, filename, imagelist):
+    try:
+        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s' % filename)))
+        button.config(image=im)
+        imagelist.append(im)
+    except AttributeError:
+        pass
 
 def get_addmenu_options(**kwargs):
     '''
@@ -529,12 +538,7 @@ class DataWindow:
 
         self.tkImages = []
         for button, filename in [(self.filelistB1, 'document-new.gif'), (self.filelistB2, 'document-open.gif'), (self.filelistB3, 'user-trash.gif'), (self.filelistB4, 'edit-cut.gif')]:
-            try:
-                im = PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
-                button.config(image=im)
-                self.tkImages.append(im)
-            except:
-                pass
+            load_icon(button, filename, self.tkImages)
 
         self.filelist.onSelectionChange = self.mster.changeCurrentFile
         self.filelist.list.bind('<1>', self.mster.changeCurrentFile)
@@ -550,12 +554,7 @@ class DataWindow:
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
         for button, filename in [(self.gamelistB1, 'document-new.gif'), (self.gamelistB2, 'user-trash.gif')]:
-            try:
-                im = PhotoImage(file=os.path.join(self.mster.basepath, 'icons/', filename))
-                button.config(image=im)
-                self.tkImages.append(im)
-            except:
-                pass
+            load_icon(button, filename, self.tkImages)
 
         self.gamelist.onSelectionChange = self.mster.changeCurrentGame
         self.gamelist.list.bind('<1>', self.gamelistClick)
@@ -2197,7 +2196,7 @@ class Viewer:
                     break
 
         try:
-            defaultfile = open(os.path.join(self.basepath, 'default.cfg'))
+            defaultfile = pkg_resources.resource_stream(__name__, 'default.cfg')
             c = ConfigObj(infile=defaultfile, encoding='utf8', default_encoding='utf8')
             defaultfile.close()
 
@@ -2229,12 +2228,10 @@ class Viewer:
         self.options.loadFromDisk(d)
 
     def helpDocumentation(self):
-        docpath = '../doc/_build/html' if not sys.path[0].endswith('library.zip') else 'doc/'  # py2exe
-        path = os.path.abspath(os.path.join(self.basepath, docpath, 'index.html'))
         try:
-            webbrowser.open('file:' + path, new=1)
+            webbrowser.open('http://dl.u-go.net/kombilo/doc/', new=1)
         except:
-            showwarning(_('Error'), _('Failed to open the web browser.\nYou can find the tutorial as \na file at: %s') % path)
+            showwarning(_('Error'), _('Failed to open the web browser.\nYou can find the documentation at') + ' http://dl.u-go.net/kombilo/doc/')
 
     def helpAbout(self):
         """ Display the 'About ...' window with some basic information. """
@@ -2268,9 +2265,7 @@ class Viewer:
         try:
             t = 'v.py\n (C) Ulrich Goertz (ug@geometry.de), 2001-2012.\n'
             t = t + '------------------------------------------------------------------------\n\n'
-            file = open(os.path.join(self.basepath, 'license.rst'))
-            t = t + file.read()
-            file.close()
+            t = t + pkg_resources.resource_string(__name__, 'license.rst')
         except IOError:
             t = _('v.py was written by') + ' Ulrich Goertz (ug@geometry.de).\n'
             t += _('It is open source software, published under the MIT License.')
@@ -2608,13 +2603,9 @@ class Viewer:
                                  (self.delButton, 'process-stop.gif', {}),
                                  (ca2, None, {'padx': 10}),
                                  (self.guessModeButton, 'stock_help.gif', {}), ]):
-            try:
-                if filename:
-                    im = PhotoImage(file=os.path.join(self.basepath, 'icons', filename))
-                    button.config(image=im, width=buttonsize, height=buttonsize)
-                    self.tkImages.append(im)
-            except:
-                pass
+            if filename:
+                load_icon(button, filename, self.tkImages)
+                button.config(width=buttonsize, height=buttonsize)
             button.grid(row=0, column=i, **options)
 
         self.currentFile = ''
@@ -2711,24 +2702,15 @@ class Viewer:
         """ Initialize the GUI, some variables, etc. """
 
         self.options = BunchTkVar()
-        self.basepath = os.path.dirname(__file__)
         self.sgfpath = os.curdir
         self.optionspath = None
 
         try:
-            with open(os.path.join(self.basepath, 'default.cfg')) as f:
+            with pkg_resources.resource_stream(__name__, 'default.cfg') as f:
                 self.config = ConfigObj(infile=f, encoding='utf8', default_encoding='utf8')
 
-            configfile = None
-            if os.path.exists(os.path.join(self.basepath, 'kombilo.cfg')):
-                # does kombilo.cfg exist in self.basepath?
-                # we do not expect this, because typically kombilo.cfg will be written to
-                # a .kombilo directory in the user's home directory
-                # (or, on Windows, to a kombilo directory below %APPDATA)
-                configfile = os.path.join(self.basepath, 'kombilo.cfg')
-            else:
-                configfile = os.path.join(get_configfile_directory(), 'kombilo.cfg')
-            if configfile and os.path.exists(configfile):
+            configfile = os.path.join(get_configfile_directory(), 'kombilo.cfg')
+            if os.path.exists(configfile):
                 with open(configfile) as f:
                     self.optionspath = os.path.dirname(configfile)
                     self.config.merge(ConfigObj(infile=f, encoding='utf8', default_encoding='utf8'))
@@ -2803,31 +2785,19 @@ class Viewer:
 
         # The board
 
-        gifpath = os.path.join(os.path.dirname(__file__), 'icons')
-
         try:
-            self.boardImg = PhotoImage(file=os.path.join(gifpath, 'board.gif'))
-        except (TclError, IOError):
+            self.boardImg = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/board.gif')))
+        except (TclError, IOError, AttributeError):
             self.boardImg = None
 
-        # use PIL?
-        if sys.platform.startswith('darwin'):
-            # on Macs, auto means False
-            self.use_PIL = True if self.options.use_PIL.get() == 1 else False
-        else:
-            self.use_PIL = True if (self.options.use_PIL.get() in [1, 'auto']) else False
+        try:
+            self.blackStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/black.gif')).convert('RGBA')
+            self.whiteStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/white.gif')).convert('RGBA')
+        except (TclError, IOError, AttributeError):
+            self.blackStone = None
+            self.whiteStone = None
 
-        self.blackStone = None
-        self.whiteStone = None
-        if self.use_PIL:
-            try:
-                from PIL import Image
-                self.blackStone = Image.open(os.path.join(gifpath, 'black.gif')).convert('RGBA')
-                self.whiteStone = Image.open(os.path.join(gifpath, 'white.gif')).convert('RGBA')
-            except (TclError, IOError, AttributeError, ImportError):
-                self.use_PIL = False
-
-        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone, self.use_PIL)
+        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone, True)
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
 

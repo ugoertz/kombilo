@@ -38,7 +38,7 @@ class CustomMenus:
         self.master = master
         self.htmlpath = os.curdir
         self.windowOpen = 0
-        self.path = os.curdir
+        self.path = v.get_configfile_directory()
 
     def compare(self, entry1, entry2):
         if entry1['name'] < entry2['name']:
