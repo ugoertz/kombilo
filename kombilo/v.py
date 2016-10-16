@@ -353,7 +353,7 @@ class SGFtreeCanvas(Frame):
         self.movenoCanvas.delete(ALL)
         for i in range(90):
             self.movenoCanvas.create_text(int(self.UNIT * .75) + i * 5 *self.UNIT, 7, text=repr(5 * i),
-                                          font=(self.options.movenoFont.get(), self.options.movenoFontSize.get()))
+                                          font=(self.options.statFont.get(), self.options.statFontSize.get()))
 
     def xview(self, a1, a2=None, a3=None):
         if a1 == MOVETO:
@@ -567,7 +567,7 @@ class DataWindow:
         self.gamelist.dragLast = -1
 
         self.gameinfo = Pmw.ScrolledText(self.gameinfoF, text_wrap=WORD)
-        self.gameinfo.configure(text_state='disabled', text_font=(self.mster.options.gameinfoFont.get(), self.mster.options.gameinfoFontSize.get()))
+        self.gameinfo.configure(text_state='disabled', text_font=(self.mster.options.commentFont.get(), self.mster.options.commentFontSize.get()))
         self.gameinfo.pack(fill=BOTH, expand=YES)
         self.SNM = 0
         self.guessRightWrong = [0, 0]
@@ -2769,8 +2769,6 @@ class Viewer:
                     (self.options.labelFontSize, 5, 7),
                     (self.options.exportFontSize, 10, 12),
                     (self.options.guessmodeFontSize, 16, 18),
-                    (self.options.movenoFontSize, 8, 10),
-                    (self.options.gameinfoFontSize, 10, 12),
                     ]
 
             if master.winfo_screenwidth() > 2200:

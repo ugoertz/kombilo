@@ -3175,7 +3175,7 @@ class App(v.Viewer, KEngine):
         self.listFrameS = Frame(self.frameS)
         self.frameS.add(self.listFrameS, minsize=100, sticky="NSEW")
         self.gameinfoS = Pmw.ScrolledText(self.frameS, usehullsize=1, hull_height=160, text_wrap=WORD,
-                                          text_font=(self.options.gameinfoFont.get(), self.options.gameinfoFontSize.get()))
+                                          text_font=(self.options.commentFont.get(), self.options.commentFontSize.get()))
         self.gameinfoS.configure(text_state=DISABLED)
         self.gameinfoS.tag_config('blue', foreground='blue')
         self.frameS.add(self.gameinfoS, minsize=100, sticky="NSEW")
