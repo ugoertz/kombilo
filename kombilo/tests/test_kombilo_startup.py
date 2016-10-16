@@ -36,6 +36,10 @@ from Tkinter import Tk
 from kombilo.kombilo import App
 
 def test_kombilo_startup():
+    import __builtin__
+    if not '_' in __builtin__.__dict__:
+        __builtin__.__dict__['_'] = lambda s: s
+
     root = Tk()
     root.withdraw()
 

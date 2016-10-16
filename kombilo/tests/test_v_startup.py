@@ -42,7 +42,10 @@ KOMBILO_VERSION = 0.8
 # ---------------------------------------------------------------------------------------
 
 def test_v_startup():
-    sys.path.insert(0, '..')
+    import __builtin__
+    if not '_' in __builtin__.__dict__:
+        __builtin__.__dict__['_'] = lambda s: s
+
     root = Tk()
     root.withdraw()
 

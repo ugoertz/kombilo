@@ -41,6 +41,7 @@ from ttk import *
 from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
+import tkFont
 from tkCommonDialog import Dialog
 from .tooltip.tooltip import ToolTip
 from PIL import Image as PILImage
@@ -385,7 +386,7 @@ class GameListGUI(GameList, VScrolledList):
         self.taglook = {}
 
         # set up listbox
-        VScrolledList.__init__(self, parent, 500, 0, self.get_data, get_data_ic=self.get_data_ic)
+        VScrolledList.__init__(self, parent, 500, 0, self.get_data, get_data_ic=self.get_data_ic, font=('Helvetica', master.options.commentFontSize.get()))
         self.listbox.config(width=52, height=6)
         self.onSelectionChange = self.printGameInfo
         for key, command in [('<Return>', self.handleDoubleClick), ('<Control-v>', self.printSignature), ]:
@@ -460,11 +461,17 @@ class GameListGUI(GameList, VScrolledList):
             Bperc = self.Bwins * 100.0 / noOfG
             Wperc = self.Wwins * 100.0 / noOfG
         self.total_in_list = noOfG
-        self.noGamesLabel.config(text=_('%d games') % noOfG)
+        self.noGamesLabel.config(
+                text=_('%d games') % noOfG,
+                font=('Helvetica', self.mster.options.statFontSize.get()))
         if noOfG:
-            self.winPercLabel.config(text=_('B: {0:1.1f}%, W: {1:1.1f}%').format(Bperc, Wperc))
+            self.winPercLabel.config(
+                    text=_('B: {0:1.1f}%, W: {1:1.1f}%').format(Bperc, Wperc),
+                    font=('Helvetica', self.mster.options.statFontSize.get()))
         else:
-            self.winPercLabel.config(text='')
+            self.winPercLabel.config(
+                    text='',
+                    font=('Helvetica', self.mster.options.statFontSize.get()))
         VScrolledList.reset(self)
 
     def printGameInfo(self, event, index=-1):
@@ -882,6 +889,10 @@ class Message(ScrolledText):
 class App(v.Viewer, KEngine):
     """ The main class of Kombilo. """
 
+    def resize_statistics_canvas(self, event):
+        self.statisticsCanv.config(width=event.width, height=event.height)
+        self.dateProfileCanv.config(width=event.width, height=event.height)
+
     def display_date_profile(self):
         """
         Display date profile of current game list.
@@ -893,23 +904,60 @@ class App(v.Viewer, KEngine):
             self.display_bar_chart(self.dateProfileCanv, 'stat', title='-')
             return
 
-        data = [{'black': y * 1.0 / (z * m) if z else 0, 'label': ['%d' % x[0], '-', '%d' % (x[1] - 1, )], 'label_top': ['%d/' % y, '%d' % z]} for x, y, z in d]
+        data = [{
+            'black': y * 1.0 / (z * m) if z else 0,
+            'label': ['%d' % x[0], '-', '%d' % (x[1] - 1, )],
+            'label_top': ['%d/' % y, '%d' % z]} for x, y, z in d]
+
         fr = self.options.date_profile_from.get()
         to = self.options.date_profile_to.get()
-        self.display_bar_chart_dates(self.dateProfileCanv, 'stat',
-                                     data=self.gamelist.dates_relative(fr=(fr - lk.DATE_PROFILE_START) * 12, to=(to + 1 - lk.DATE_PROFILE_START) * 12 - 1,
-                                                                       chunk_size=self.options.date_profile_chunk_size.get()),
-                                     fr=fr, to=to, title=_('Date profile (Each bar represents %d months)') % self.options.date_profile_chunk_size.get())
+        self.display_bar_chart_dates(
+                self.dateProfileCanv, 'stat',
+                data=self.gamelist.dates_relative(
+                    fr=(fr - lk.DATE_PROFILE_START) * 12,
+                    to=(to + 1 - lk.DATE_PROFILE_START) * 12 - 1,
+                    chunk_size=self.options.date_profile_chunk_size.get()),
+                fr=fr, to=to,
+                title=_('Date profile (Each bar represents %d months)')
+                    % self.options.date_profile_chunk_size.get())
         self.redo_date_profile = False
 
-    def display_x_indices(self, canvas, fr, to, tag, xoffset=30):
-        """indices on x-axis"""
-        smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
-        canvas.create_text(-5 + xoffset, 230, text=repr(fr), font=smallfont, anchor='nw', tags=tag)
-        canvas.create_text(395 + xoffset, 230, text=repr(to), font=smallfont, anchor='nw', tags=tag)
-        for i in range(1,5):
-            canvas.create_text(-5 + 80 * i + xoffset, 230, text=repr(fr + i * (to - fr) // 5), font=smallfont, anchor='nw', tags='stat')
-        canvas.create_rectangle(-10 + xoffset, 225, 420 + xoffset, 225, outline='', fill='black', tags='stat')
+    def display_x_indices(self, canvas, fr, to, tag, canvas_fr, canvas_to):
+        """
+        Indices on x-axis for date profile etc.
+
+        fr, to are years,
+
+        canvas_fr, canvas_to are the left and right coordinates (given as canvas
+        pixel coordinates) where the first/final year should be located
+        """
+
+        smallfont = (
+                self.options.statFont.get(),
+                self.options.statFontSizeSmall.get(),
+                self.options.statFontStyle.get())
+        xoffset = canvas_fr
+        W = canvas_to - canvas_fr
+        H = int(self.statisticsCanv.cget('height'))
+
+        for i in range(6):
+            year = fr + i * (to - fr) // 5
+            coord = canvas_fr + i * W // 5
+            canvas.create_text(
+                    coord - 10, H * 16 // 18,
+                    text=repr(year),
+                    font=smallfont, anchor='nw', tags=tag)
+            canvas.create_rectangle(
+                    coord, H * 16 // 18 - 10,
+                    coord + 1, H * 16 // 18,
+                    outline='', fill='black', tags='stat')
+
+        canvas.create_rectangle(
+                -10 + xoffset,
+                H * 16 // 18 - 5,
+                W + 20 + xoffset,
+                int(self.statisticsCanv.cget('height')) * 16 // 18 - 5,
+                outline='', fill='black', tags='stat')
 
     def display_statistics(self):
         """
@@ -930,16 +978,40 @@ class App(v.Viewer, KEngine):
             return
 
         if self.options.statistics_by_date.get():
-            font = (self.options.statFont.get(), self.options.statFontSize.get(), self.options.statFontStyle.get())
-            smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
+            font = (
+                    self.options.statFont.get(),
+                    self.options.statFontSize.get(),
+                    self.options.statFontStyle.get())
+            smallfont = (
+                    self.options.statFont.get(),
+                    self.options.statFontSizeSmall.get(),
+                    self.options.statFontStyle.get())
 
             self.statisticsCanv.delete('stat')
-            self.statisticsCanv.create_text(20, 5, text=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%').format(noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc),
-                                            font=font, anchor='nw', tags='stat')
+            self.statisticsCanv.create_text(
+                    20, 5,
+                    text=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%').format(
+                        noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc),
+                    font=font, anchor='nw', tags='stat')
+
             fr = self.options.date_profile_from.get()
             to = max(self.options.date_profile_to.get(), fr + 1)
-            xoffset=60
-            self.display_x_indices(self.statisticsCanv, fr, to, 'stat', xoffset=xoffset)
+
+            xoffset = int(self.statisticsCanv.cget('width')) // 6  # coordinate of first year
+            W = int(self.statisticsCanv.cget('width')) * 6 // 7        # coordinate of last year
+            yoffset = int(self.statisticsCanv.cget('height')) // 7
+            H = int(self.statisticsCanv.cget('height')) * 6 // 7 - yoffset
+            self.display_x_indices(
+                    self.statisticsCanv, fr, to, 'stat', xoffset, W)
+
+            def get_coord_for_date(dt):
+                if dt < fr:
+                    return xoffset
+                elif dt > to:
+                    return W
+                return (dt - fr) * (W - xoffset) // (to - fr) + xoffset
+
+
             font = (self.options.statFont.get(), self.options.statFontSize.get(), 'bold')
 
             # split continuations up according to B/W
@@ -957,11 +1029,7 @@ class App(v.Viewer, KEngine):
                     cW.B = 0
                     cW.x, cW.y, cW.label = cont.x, cont.y, cont.label
                     continuations.append(cW)
-            continuations.sort(
-                    cont_sort_criteria[
-                        {_('total'): 'total', _('earliest'): 'earliest', _('latest'): 'latest', _('average'): 'average',
-                         _('became popular'): 'became popular', _('became unpopular'): 'became unpopular', }[self.options.continuations_sort_crit.get()]
-                        ])
+            continuations.sort(cont_sort_criteria[self.untranslate_cont_sort_crit()])
 
             i = 0
             ctr = 0
@@ -973,77 +1041,113 @@ class App(v.Viewer, KEngine):
                 became_popular = cont.became_popular_B() if cont.B else cont.became_popular_W()
                 became_unpopular = cont.became_unpopular_B() if cont.B else cont.became_unpopular_W()
                 ctr += 1
-                if earliest < fr:
-                    left = 0
-                elif earliest > to:
-                    continue
-                else:
-                    left = (earliest - fr) * 400 // (to - fr)  # 400 == width of chart
 
-                left += xoffset  # start xoffset pixels from left border
-
-                if latest > to:
-                    right = 400
-                elif latest < fr:
+                if earliest > to or latest < fr:
                     continue
-                else:
-                    right = (latest - fr) * 400 // (to - fr)
-                right += xoffset
+
+                left = get_coord_for_date(earliest)
+                right = get_coord_for_date(latest)
 
                 #print earliest, latest, average_date, became_popular, became_unpopular
 
-                average_date = (average_date - fr) * 400 // (to - fr) + xoffset
-                became_popular = (became_popular - fr) * 400 // (to - fr) + xoffset
-                became_unpopular = (became_unpopular - fr) * 400 // (to - fr) + xoffset
+                average_date = get_coord_for_date(average_date)
+                became_popular = get_coord_for_date(became_popular)
+                became_unpopular = get_coord_for_date(became_unpopular)
 
-                self.statisticsCanv.create_text(left - 10, i * 15 + 40, text=cont.label, font=font, tags='stat')
-                self.statisticsCanv.create_text(left - 17 - 3 * len(repr(cont.total())), i * 15 + 41, text=repr(cont.total()), font=smallfont, tags='stat')
-                self.statisticsCanv.create_rectangle(left, i * 15 + 37, right, i * 15 + 43, fill='black' if cont.B else 'white', outline='black' if cont.B else 'white', tags='stat')
-                if xoffset <= average_date <= 400 + xoffset and right - left > 3:
-                    self.statisticsCanv.create_rectangle(average_date-1, i * 15 + 35, average_date + 1, i * 15 + 46, fill='green', outline='black', tags='stat')
-                if xoffset <= became_popular <= 400 + xoffset and right - left > 3:
-                    self.statisticsCanv.create_rectangle(became_popular-1, i * 15 + 35, became_popular + 1, i * 15 + 46, fill='yellow', outline='yellow', tags='stat')
-                if xoffset <= became_unpopular <= 400 + xoffset and right - left > 3:
-                    self.statisticsCanv.create_rectangle(became_unpopular-1, i * 15 + 35, became_unpopular + 1, i * 15 + 46, fill='red', outline='red', tags='stat')
+                self.statisticsCanv.create_text(
+                        left - 15, i * H//12 + yoffset,
+                        text=cont.label, font=font, tags='stat')
+                self.statisticsCanv.create_text(
+                        left - 25 - 5 * len(repr(cont.total())), i * H//12 + yoffset + 1,
+                        text=repr(cont.total()), font=smallfont, tags='stat')
+                self.statisticsCanv.create_rectangle(
+                        left, i * H//12 + yoffset - 3,
+                        right, i * H//12 + yoffset + 3,
+                        fill='black' if cont.B else 'white',
+                        outline='black' if cont.B else 'white', tags='stat')
+                if xoffset < average_date < W and right - left > 3:
+                    self.statisticsCanv.create_rectangle(
+                            average_date-1, i * H//12 + yoffset - 5,
+                            average_date + 1, i * H//12 + yoffset + 6,
+                            fill='green', outline='black', tags='stat')
+                if xoffset < became_popular < W and right - left > 3:
+                    self.statisticsCanv.create_rectangle(
+                            became_popular-1, i * H//12 + yoffset - 5,
+                            became_popular + 1, i * H//12 + yoffset + 6,
+                            fill='yellow', outline='yellow', tags='stat')
+                if xoffset < became_unpopular < W and right - left > 3:
+                    self.statisticsCanv.create_rectangle(
+                            became_unpopular-1, i * H//12 + yoffset - 5,
+                            became_unpopular + 1, i * H//12 + yoffset + 6,
+                            fill='red', outline='red', tags='stat')
 
                 i += 1
 
         else:
+            width = int(self.statisticsCanv.cget('width')) * 15 // 18
             maxHeight = max(x.total() for x in self.continuations[:12])
             data = []
             for cont in self.continuations[:12]:
-                data.append({'black': (cont.B - cont.tB) * 1.0 / maxHeight, self.options.Btenuki.get(): cont.tB * 1.0 / maxHeight,
-                            'white': (cont.W - cont.tW) * 1.0 / maxHeight, self.options.Wtenuki.get(): cont.tW * 1.0 / maxHeight,
-                            'label': [cont.label, '%1.1f' % (cont.wW * 100.0 / cont.W) if cont.W else '-', '%1.1f' % (cont.wB * 100.0 / cont.B) if cont.B else '-'],
-                            'label_top': ['%d' % (cont.B + cont.W)], })
+                data.append({
+                    'black': (cont.B - cont.tB) * 1.0 / maxHeight,
+                    self.options.Btenuki.get(): cont.tB * 1.0 / maxHeight,
+                    'white': (cont.W - cont.tW) * 1.0 / maxHeight,
+                    self.options.Wtenuki.get(): cont.tW * 1.0 / maxHeight,
+                    'label': [
+                        cont.label, '%1.1f' % (cont.wW * 100.0 / cont.W) if cont.W else '-',
+                        '%1.1f' % (cont.wB * 100.0 / cont.B) if cont.B else '-'],
+                    'label_top': ['%d' % (cont.B + cont.W)], })
 
-            self.display_bar_chart(self.statisticsCanv, 'stat',
-                                data=data, colors=[self.options.Btenuki.get(), 'black', 'white', self.options.Wtenuki.get()],
-                                title=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1}%').format(noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
+            self.display_bar_chart(
+                    self.statisticsCanv, 'stat',
+                    data=data,
+                    colors=[
+                        self.options.Btenuki.get(),
+                        'black',
+                        'white',
+                        self.options.Wtenuki.get()],
+                    title=_('{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1f}%').format(
+                        noMatches, self.noMatches - self.noSwitched, self.noSwitched, Bperc, Wperc))
 
     def display_bar_chart_dates(self, canvas, tag, data, title='', fr=None, to=None):
         canvas.delete(tag)
-        font = (self.options.statFont.get(), self.options.statFontSize.get(), self.options.statFontStyle.get())
-        smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
+        font = (
+                self.options.statFont.get(),
+                self.options.statFontSize.get(),
+                self.options.statFontStyle.get())
+        smallfont = (
+                self.options.statFont.get(),
+                self.options.statFontSizeSmall.get(),
+                self.options.statFontStyle.get())
 
-        W, H = 400, 190  # width, height of statisticsCanv
         canvas.create_text(20, 5, text=title, font=font, anchor='nw', tags=tag)
         if not data:
             return
 
-        self.display_x_indices(canvas, fr, to, 'stat')
+        W = int(self.statisticsCanv.cget('width')) * 6 // 7 # x-coord of right-most bar
+        xoffset = W // 8                             # x-coord of left-most bar
+        H = int(self.statisticsCanv.cget('height')) * 6//7  # y-coord of lower edge of bars
+        yoffset = int(self.statisticsCanv.cget('height')) // 6
+
+        self.display_x_indices(canvas, fr, to, 'stat', xoffset, W)
 
         # indices on y-axis
         mx = max(data)
-        canvas.create_text(2, 25, text='%1.1f %%' % (mx * 100), font=smallfont, anchor='nw', tags=tag)
-        canvas.create_text(4, 120, text='%1.1f %%' % (mx * 50), font=smallfont, anchor='nw', tags=tag)
-        canvas.create_text(5, 215, text='0 %', font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(
+                2, yoffset - 10, text='%1.1f %%' % (mx * 100), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(
+                4, (H+yoffset)//2 - 10,
+                text='%1.1f %%' % (mx * 50), font=smallfont, anchor='nw', tags=tag)
+        canvas.create_text(
+                5, H - 10, text='0 %', font=smallfont, anchor='nw', tags=tag)
 
         for x, y  in enumerate(data):
-            xx = 40 + int(x * W / len(data))
-            yy = (H - int(y * H / mx) if mx else 0) + 30
-            if yy < H + 30:
-                canvas.create_rectangle(xx - 2, H + 30, xx + 2, yy, fill='black', tags=(tag, ))
+            xx = xoffset + int(x * (W-xoffset) / len(data))
+            yy = (H - int(y * (H-yoffset) / mx)) if mx else 0
+            if yy < H:
+                canvas.create_rectangle(
+                        xx, H,
+                        xx + 4, yy, fill='black', tags=(tag, ))
 
     def display_bar_chart(self, canvas, tag, colors=[], data=[], title=''):
         """
@@ -1062,28 +1166,43 @@ class App(v.Viewer, KEngine):
         """
 
         canvas.delete(tag)
-        font = (self.options.statFont.get(), self.options.statFontSize.get(), self.options.statFontStyle.get())
-        smallfont = (self.options.statFont.get(), self.options.statFontSizeSmall.get(), self.options.statFontStyle.get())
+        font = (
+                self.options.statFont.get(),
+                self.options.statFontSize.get(),
+                self.options.statFontStyle.get())
+        smallfont = (
+                self.options.statFont.get(),
+                self.options.statFontSizeSmall.get(),
+                self.options.statFontStyle.get())
 
-        W, H = 400, 250  # width, height of statisticsCanv
-        bar_width = W // 14
-        A, B = 12, 8
+        W = int(self.statisticsCanv.cget('width')) * 6 // 7
+        H = int(self.statisticsCanv.cget('height'))
+        bar_width = W // 12
+        text_height = H // 18
 
         canvas.create_text(5, 5, text=title, font=font, anchor='nw', tags=tag)
 
         for i, column in enumerate(data):
-            ht = 30
+            ht = 3 * text_height
             for l in column.get('label', []):
                 canvas.create_text((i + 1) * bar_width, H - ht, text=l, font=smallfont, tags=tag)
-                ht -= 10
+                ht -= text_height
+
             ht = 0
             for c in colors:
                 if column[c]:
-                    v = int(column[c] * (H - 110))
-                    canvas.create_rectangle((i + 1) * bar_width - A, H - 50 - ht - v, (i + 1) * bar_width + B, H - 50 - ht, fill=c, outline='', tags=tag)
+                    v = int(column[c] * (H - 8*text_height))
+                    canvas.create_rectangle(
+                            (i + 1) * bar_width - bar_width // 2 + 4,
+                            H - 4*text_height - ht - v,
+                            (i + 2) * bar_width - bar_width // 2 - 4,
+                            H - 4*text_height - ht, fill=c, outline='', tags=tag)
                     ht += v
             for j, l in enumerate(column.get('label_top', [])):
-                canvas.create_text((i + 1) * bar_width, H - 60 - ht - 10 * (len(column['label_top']) - j), font=smallfont, text=l, tags=tag)
+                canvas.create_text(
+                        (i + 1) * bar_width,
+                        H - 5*text_height - ht - 10 * (len(column['label_top']) - j),
+                        font=smallfont, text=l, tags=tag)
 
     def clearGI(self):
         self.pbVar.set('')
@@ -1283,7 +1402,7 @@ class App(v.Viewer, KEngine):
 
         window.protocol('WM_DELETE_WINDOW', window.destroy)
 
-        bo = v.Board(window, 19, (5, 18), 0, None, 0, None, self.boardImg, None, None)
+        bo = v.Board(window, 19, (5, 18), 0, None, 0, None, self.boardImg, self.blackStone, self.whiteStone)
         bo.state('normal', lambda pos, self=self, window=window,
                  e1=e1, e2=e2, e3=e3, e4=e4, e5=e5, e6=e6, m20=m20, m40=m40, m60=m60, m31=m31,
                  m51=m51, m71=m71: self.sigSearchGetCoord(pos, window, e1, e2, e3, e4, e5, e6, m20, m40, m60, m31, m51, m71))
@@ -1932,7 +2051,7 @@ class App(v.Viewer, KEngine):
             index = arguments[-1] if not arguments[-1] is None else END
             db = self.gamelist.DBlist[int(index) if index != END else -1]
             db_date = getDateOfFile(os.path.join(db['name'][0], db['name'][1] + '.da'))
-            self.db_list.insert(index, dbpath + ' (%s, %d games)' % (db_date, db['data'].size()))
+            self.db_list.insert(index, dbpath + ' (%s, %d %s)' % (db_date, db['data'].size(), _('games')))
             self.db_list.list.see(index)
             self.prevSearches.clear()
 
@@ -2024,7 +2143,8 @@ class App(v.Viewer, KEngine):
                 db['disabled'] = 0
                 db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1] + '.db'))
                 self.db_list.delete(i)
-                self.db_list.insert(i, db['sgfpath'] + ' (%s, %d games)' % (db_date, db['data'].size()))
+                self.db_list.insert(i, db['sgfpath'] + ' (%s, %d %s)' % (db_date, db['data'].size(), _('games')))
+
                 self.db_list.list.select_set(i)
                 self.db_list.list.see(i)
             else:
@@ -2032,7 +2152,7 @@ class App(v.Viewer, KEngine):
                 db_size = db['data'].size()
                 db['data'] = None
                 self.db_list.delete(i)
-                self.db_list.insert(i, 'DISABLED - ' + db['sgfpath'] + ' (%s, %d games)' % (db_date, db_size))
+                self.db_list.insert(i, _('DISABLED - ') + db['sgfpath'] + ' (%s, %d %s)' % (db_date, db['data'].size(), _('games')))
                 self.db_list.list.select_set(i)
                 self.db_list.list.see(i)
         self.gamelist.reset()
@@ -2148,7 +2268,7 @@ class App(v.Viewer, KEngine):
             if db['disabled']:
                 self.db_list.insert(END, _('DISABLED') + ' - ' + db['sgfpath'] + ' (' + db_date + ')')
             else:
-                self.db_list.insert(END, db['sgfpath'] + ' (%s, %d games)' % (db_date, db['data'].size_all()))
+                self.db_list.insert(END, db['sgfpath'] + ' (%s, %d %s)' % (db_date, db['data'].size_all(), _('games')))
 
         for i, (text, command, ) in enumerate([(_('Add DB'), self.addDB), (_('Toggle normal/disabled'), self.toggleDisabled),
                                                (_('Remove DB'), self.removeDB), (_('Reprocess DB'), self.reprocessDB)]):
@@ -2294,7 +2414,7 @@ class App(v.Viewer, KEngine):
             c['taglook'] = self.gamelist.taglook
             c.filename = os.path.join(self.optionspath, 'kombilo.cfg')
             c.write()
-        except:
+        except ImportError:
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
 
         for db in self.gamelist.DBlist:
@@ -2566,9 +2686,7 @@ class App(v.Viewer, KEngine):
         self.searchOptions = self.get_search_options()
 
         self.patternSearch(CSP, self.searchOptions, self.contLabels, self.fixedLabels, self.progBar,
-                           {_('total'): 'total', _('earliest'): 'earliest', _('latest'): 'latest', _('average'): 'average',
-                            _('became popular'): 'became popular', _('became unpopular'): 'became unpopular', }[self.options.continuations_sort_crit.get()])
-                           # translate back to the English values used in kombiloNG
+                           self.untranslate_cont_sort_crit())
 
         if self.showContinuation.get():
             self.showCont()
@@ -2623,9 +2741,11 @@ class App(v.Viewer, KEngine):
 
         sort_options_l = Label(options_window, anchor='e', text=_('Sort continuations by'))
         sort_options_l.grid(row=row_ctr, column=0)
-        sort_option_cb = Combobox(options_window, justify='left', textvariable=self.options.continuations_sort_crit,
-                                  values=(_('total'), _('earliest'), _('latest'), _('average'), _('became popular'), _('became unpopular'), ),
-                                  state='readonly')
+        sort_option_cb = Combobox(
+                options_window, justify='left',
+                textvariable=self.options.continuations_sort_crit,
+                values=(_('total'), _('earliest'), _('latest'), _('average'), _('became popular'), _('became unpopular'), ),
+                state='readonly')
         sort_option_cb.grid(row=row_ctr, column=1)
         row_ctr += 1
 
@@ -2910,13 +3030,38 @@ class App(v.Viewer, KEngine):
 
     # -------------------------------------------------
 
+    def untranslate_cont_sort_crit(self):
+        """
+        "Untranslate" continuations_sort_crit to English - we need to store the
+        translation to chosen language in the variable in order to use it as the
+        variable for the Tkinter widget. In the options file and for passing it
+        to libkombilo we need the English translation, however.
+        """
+
+        return {_(s): s for s in [
+            'total', 'earliest', 'latest', 'average',
+            'became popular', 'became unpopular', ]}[self.options.continuations_sort_crit.get()]
+
+
     def saveOptions(self, d):
         """ Save options to dictionary d. """
         self.options.windowGeomK.set(self.master.geometry())
         self.options.dataWindowGeometryK.set(self.dataWindow.get_geometry())
+
         self.mainframe.update_idletasks()
         l = [str(self.mainframe.sash_coord(i)[0]) for i in range(2)]
         self.options.sashPosK.set(join(l, '|%'))
+
+        self.frameS.update_idletasks()
+        l = [str(self.frameS.sash_coord(i)[1]) for i in range(2)]
+        self.options.sashPosKS.set(join(l, '|%'))
+
+        try:
+            self.options.continuations_sort_crit.set(self.untranslate_cont_sort_crit())
+        except KeyError:
+            # Can happen if language has been changed; for simplicity we just reset to "total" then.
+            self.options.continuations_sort_crit.set('total')
+
         self.options.saveToDisk(d)
 
     def loadOptions(self, d):
@@ -2926,7 +3071,7 @@ class App(v.Viewer, KEngine):
         self.options.date_profile_to.set(datetime.datetime.today().year)
 
     def evalOptions(self):
-        self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(), self.options.commentfontStyle.get()))
+        self.dataWindow.comments.configure(text_font=(self.options.commentFont.get(), self.options.commentFontSize.get(), self.options.commentFontStyle.get()))
         if self.options.showCoordinates.get():
             self.board.coordinates = 1
             self.board.resize()
@@ -2936,14 +3081,21 @@ class App(v.Viewer, KEngine):
             self.dataWindow.set_geometry(self.options.dataWindowGeometryK.get())
 
     def evalOptionsK(self):
-        try:
-            self.mainframe.update_idletasks()
-            l = self.options.sashPosK.get().split('|%')
-            for i in [1, 0]:
-                self.mainframe.sash_place(i, int(l[i]), 1)
-                self.mainframe.update_idletasks()
-        except:
-            pass
+        # restore sizes of panes in PanedWindows
+        for win, var, orientation in [
+                (self.mainframe, self.options.sashPosK, 'horizontal'),
+                (self.frameS, self.options.sashPosKS, 'vertical'), ]:
+            try:
+                win.update_idletasks()
+                l = var.get().split('|%')
+                for i in range(len(l)-1, -1, -1):
+                    if orientation == 'horizontal':
+                        win.sash_place(i, int(l[i]), 1)
+                    elif orientation == 'vertical':
+                        win.sash_place(i, 1, int(l[i]))
+                    win.update_idletasks()
+            except:
+                pass
 
     def init_key_bindings(self):
         v.Viewer.init_key_bindings(self)
@@ -2997,13 +3149,26 @@ class App(v.Viewer, KEngine):
         # self.searchWindow.protocol('WM_DELETE_WINDOW', lambda: 0)
         # self.searchWindow.title('Kombilo: game list')
 
-        self.frameS = Frame(self.searchWindow)   # suffix S means 'in search/results window'
+        self.topFrameS = Frame(self.searchWindow)
+        self.topFrameS.pack(side=TOP, fill=X, expand=NO)
+
+        self.frameS = PanedWindow(self.searchWindow, orient='vertical')   # suffix S means 'in search/results window'
         self.frameS.pack(fill=BOTH, expand=YES)
 
-        self.topFrameS = Frame(self.frameS)
         self.listFrameS = Frame(self.frameS)
-        self.toolbarFrameS = Frame(self.frameS)
-        self.notebookFrameS = Frame(self.frameS, height=400)
+        self.frameS.add(self.listFrameS, minsize=100, sticky="NSEW")
+        self.gameinfoS = Pmw.ScrolledText(self.frameS, usehullsize=1, hull_height=160, text_wrap=WORD,
+                                          text_font=(self.options.gameinfoFont.get(), self.options.gameinfoFontSize.get()))
+        self.gameinfoS.configure(text_state=DISABLED)
+        self.gameinfoS.tag_config('blue', foreground='blue')
+        self.frameS.add(self.gameinfoS, minsize=100, sticky="NSEW")
+
+        self.nbFrameS = Frame(self.frameS)   # will contain toolbar and notebook
+        self.frameS.add(self.nbFrameS, minsize=50, sticky="NSEW")
+        self.toolbarFrameS = Frame(self.nbFrameS)
+        self.notebookFrameS = Frame(self.nbFrameS)
+        notebookstyle = Style()
+        notebookstyle.configure('.', font=('Helvetica', self.options.statFontSize.get()))
         self.notebook = Notebook(self.notebookFrameS)
 
         self.searchStat = Frame(self.notebook)
@@ -3039,13 +3204,15 @@ class App(v.Viewer, KEngine):
         winPercLabel = Label(self.topFrameS, text=' ', width=18, height=1)
         winPercLabel.grid(row=0, column=1)
 
-        self.gameinfoS = Pmw.ScrolledText(self.frameS, usehullsize=1, hull_height=80, text_wrap=WORD,
-                                          text_font=(self.options.gameinfoFont.get(), self.options.gameinfoFontSize.get()))
-        self.gameinfoS.configure(text_state=DISABLED)
-        self.gameinfoS.tag_config('blue', foreground='blue')
-
         self.gamelist = GameListGUI(self.listFrameS, self, noGamesLabel, winPercLabel, self.gameinfoS)
         self.gamelist.pack(expand=YES, fill=BOTH, side=TOP)
+
+        self.progBar = Progressbar(self.nbFrameS)
+        self.progBar.start(50)
+
+        self.toolbarFrameS.pack(side=TOP, fill=X, expand=NO)
+        self.progBar.pack(side=BOTTOM, fill=X, expand=NO)
+        self.notebookFrameS.pack(side=TOP, fill=BOTH, expand=YES)
 
         # search history
 
@@ -3103,20 +3270,22 @@ class App(v.Viewer, KEngine):
 
         # -------------------------
 
-        self.statisticsCanv = Canvas(self.searchStat, width=400, height=250, highlightthickness=0)
+        self.statisticsCanv = Canvas(self.searchStat, highlightthickness=0)
+        self.statisticsCanv.bind('<Configure>', self.resize_statistics_canvas)
         self.statisticsCanv.pack(side=BOTTOM, expand=YES, fill=BOTH)
 
-        self.dateProfileCanv = Canvas(self.dateProfileFS, width=400, height=250, highlightthickness=0)
+        self.dateProfileCanv = Canvas(self.dateProfileFS, highlightthickness=0)
+        self.dateProfileCanv.bind('<Configure>', self.resize_statistics_canvas)
         self.dateProfileCanv.pack(side=BOTTOM, expand=YES, fill=BOTH)
 
         sep2 = Separator(self.toolbarFrameS, orient='vertical')
         sep2.pack(padx=5, fill=Y, side=LEFT)
-        self.colorButtonS = Checkbutton(self.toolbarFrameS, text=_('Fixed Color'), highlightthickness=0, variable=self.fixedColorVar)
+        self.colorButtonS = Checkbutton(self.toolbarFrameS, text=_('Fixed Color'), highlightthickness=0, variable=self.fixedColorVar, font=('Helvetica', self.options.statFontSize.get()))
         self.colorButtonS.pack(side=LEFT)
 
         sep1 = Separator(self.toolbarFrameS, orient='vertical')
         sep1.pack(padx=5, fill=Y, side=LEFT)
-        l = Label(self.toolbarFrameS, text=_('Next:'))
+        l = Label(self.toolbarFrameS, text=_('Next:'), font=('Helvetica', self.options.statFontSize.get()))
         l.pack(side=LEFT)
 
         self.nextMoveVar = IntVar()  # 0 = either player, 1 = black, 2 = white
@@ -3128,15 +3297,15 @@ class App(v.Viewer, KEngine):
         self.nextMove3S.pack(side=LEFT)
 
         self.fixedAnchorVar = IntVar()
-        self.anchorButtonS = Checkbutton(self.patternSearchOptions, text=_('Fixed Anchor'), highlightthickness=0, variable=self.fixedAnchorVar)
+        self.anchorButtonS = Checkbutton(self.patternSearchOptions, text=_('Fixed Anchor'), highlightthickness=0, variable=self.fixedAnchorVar, font=('Helvetica', self.options.statFontSize.get()))
         self.anchorButtonS.grid(row=0, column=0, columnspan=2, sticky=W)
 
         self.searchInVariations = BooleanVar()
         self.searchInVariations.set(True)
-        self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text=_('Search in variations'), highlightthickness=0, variable=self.searchInVariations)
+        self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text=_('Search in variations'), highlightthickness=0, variable=self.searchInVariations, font=('Helvetica', self.options.statFontSize.get()))
         self.searchInVariationsButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
-        self.mvLimLabel = Label(self.patternSearchOptions, text=_('Move limit'))
+        self.mvLimLabel = Label(self.patternSearchOptions, text=_('Move limit'), font=('Helvetica', self.options.statFontSize.get()))
         self.mvLimLabel.grid(row=2, column=0, sticky=W)
         self.moveLimit = IntVar()
         self.moveLimit.set(250)
@@ -3148,12 +3317,12 @@ class App(v.Viewer, KEngine):
 
         self.algo_hash_full_search = IntVar()
         self.algo_hash_full_search.set(1)
-        self.algo_hash_full = Checkbutton(self.patternSearchOptions, text=_('Use hashing for full board positions'), highlightthickness=0, variable=self.algo_hash_full_search, pady=5)
+        self.algo_hash_full = Checkbutton(self.patternSearchOptions, text=_('Use hashing for full board positions'), highlightthickness=0, variable=self.algo_hash_full_search, pady=5, font=('Helvetica', self.options.statFontSize.get()))
         self.algo_hash_full.grid(row=4, column=0, columnspan=2, sticky=W)
 
         self.algo_hash_corner_search = IntVar()
         self.algo_hash_corner_search.set(1)
-        self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.algo_hash_corner_search, pady=5)
+        self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.algo_hash_corner_search, pady=5, font=('Helvetica', self.options.statFontSize.get()))
         self.algo_hash_corner.grid(row=5, column=0, columnspan=2, sticky=W)
 
         sep2 = Separator(self.patternSearchOptions, orient='horizontal')
@@ -3163,26 +3332,26 @@ class App(v.Viewer, KEngine):
 
         self.patternSearchOptions_dp = Frame(self.patternSearchOptions)
         self.patternSearchOptions_dp.grid(row=7, columnspan=6, sticky=NSEW)
-        self.dp_label = Label(self.patternSearchOptions_dp, text=_('Date profile options'))
+        self.dp_label = Label(self.patternSearchOptions_dp, text=_('Date profile options'), font=('Helvetica', self.options.statFontSize.get()))
         self.dp_label.grid(row=7, column=0, columnspan=4)
-        self.dp_from_lb = Label(self.patternSearchOptions_dp, text=_('From'))
+        self.dp_from_lb = Label(self.patternSearchOptions_dp, text=_('From'), font=('Helvetica', self.options.statFontSize.get()))
         self.dp_from = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_from)
         self.dp_from_lb.grid(row=8, column=0, padx=3)
         self.dp_from.grid(row=8, column=1, padx=3)
-        self.dp_to_lb = Label(self.patternSearchOptions_dp, text=_('To'))
+        self.dp_to_lb = Label(self.patternSearchOptions_dp, text=_('To'), font=('Helvetica', self.options.statFontSize.get()))
         self.dp_to = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_to)
         self.dp_to_lb.grid(row=8, column=2, padx=3)
         self.dp_to.grid(row=8, column=3, padx=3)
-        self.dp_chunk_size_lb = Label(self.patternSearchOptions_dp, text=_('Months/bar'))
+        self.dp_chunk_size_lb = Label(self.patternSearchOptions_dp, text=_('Months/bar'), font=('Helvetica', self.options.statFontSize.get()))
         self.dp_chunk_size = Entry(self.patternSearchOptions_dp, width=4, textvariable=self.options.date_profile_chunk_size)
         self.dp_chunk_size_lb.grid(row=8, column=4, padx=3)
         self.dp_chunk_size.grid(row=8, column=5, padx=3)
         self.patternSearchOptions_dp1 = Frame(self.patternSearchOptions)
         self.patternSearchOptions_dp1.grid(row=8, columnspan=8, sticky=NSEW)
-        self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'))
+        self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'), font=('Helvetica', self.options.statFontSize.get()))
         self.dp_sort_crit_lb.grid(row=0, column=0)
         self.dp_sort_crit = Combobox(self.patternSearchOptions_dp1, values=(_('total'), _('earliest'), _('latest'), _('average'), _('became popular'), _('became unpopular'), ), textvariable=self.options.continuations_sort_crit,
-                                     state='readonly', width=15)
+                                     state='readonly', width=25, font=('Helvetica', self.options.statFontSize.get()))
         self.dp_sort_crit.grid(row=0, column=1, padx=3)
 
         # validation for date profile options, and triggering of date profile update when options are changed
@@ -3199,16 +3368,6 @@ class App(v.Viewer, KEngine):
         self.options.date_profile_chunk_size.trace('w', lambda dummy1, dummy2, dummy3, var=self.options.date_profile_chunk_size, default=6: validate(var, default))
 
         # ------------------------------------------------------------------------------
-
-        self.progBar = Progressbar(self.frameS)
-        self.progBar.start(50)
-
-        self.topFrameS.pack(side=TOP, fill=X, expand=NO)
-        self.listFrameS.pack(side=TOP, fill=BOTH, expand=YES)
-        self.gameinfoS.pack(side=TOP, fill=X, expand=NO)
-        self.toolbarFrameS.pack(side=TOP, fill=X, expand=NO)
-        self.notebookFrameS.pack(side=TOP, fill=X, expand=NO)
-        self.progBar.pack(side=TOP, fill=X, expand=NO)
 
         # game info search frame
 
@@ -3312,7 +3471,7 @@ class App(v.Viewer, KEngine):
                                  (self.tagsearchButton, 'system-search.gif'), (self.tagaddButton, 'add.gif'), (self.tagdelButton, 'list-remove.gif'),
                                  (self.tagallButton, 'edit-select-all.gif'), (self.untagallButton, 'edit-clear.gif'), (self.tagsetButton, 'bookmark-new.gif'),
                                 ]:
-            v.load_icon(button, filename, self.tkImages)
+            v.load_icon(button, filename, self.tkImages, self.options.scaling.get())
 
         self.custom_menus.path = self.optionspath
         self.custom_menus.buildMenus()
@@ -3353,6 +3512,7 @@ def run():
 
     root = Tk()
     root.withdraw()
+    root.option_add("*Font", "TkDefaultFont")
 
     try:
         if os.path.exists(os.path.join(v.get_configfile_directory(), 'kombilo.app')):

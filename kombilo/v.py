@@ -37,6 +37,7 @@ from ttk import *
 from tkMessageBox import *
 from ScrolledText import ScrolledText
 import tkFileDialog
+import tkFont
 
 from .tooltip.tooltip import ToolTip
 from PIL import Image as PILImage
@@ -61,10 +62,10 @@ def get_configfile_directory():
     else:
         return os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.', ''))
 
-def load_icon(button, filename, imagelist):
+def load_icon(button, filename, imagelist, buttonsize):
     try:
-        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s' % filename)))
-        button.config(image=im)
+        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s' % filename)).resize((buttonsize, buttonsize), PILImage.NEAREST))
+        button.config(image=im, width=buttonsize, height=buttonsize)
         imagelist.append(im)
     except AttributeError:
         pass
@@ -308,9 +309,12 @@ class SGFtreeCanvas(Frame):
         Frame.__init__(self, parent)
         self.options = options
 
+        self.UNIT = args.pop('unit', 40)
+
         defaults = {'height': 100, 'width': 150, 'relief': SUNKEN}
         if args:
             defaults.update(args)
+
 
         self.canvas = Canvas(self, background='lightyellow')
         apply(self.canvas.config, (), defaults)
@@ -323,8 +327,8 @@ class SGFtreeCanvas(Frame):
         self.sbar_hor.config(command=self.xview, orient='horizontal')
         self.canvas.config(xscrollcommand=self.sbar_hor.set, yscrollcommand=self.sbar_vert.set)
 
-        self.movenoCanvas = Canvas(self, width=150, height=15, background='white')
-        self.movenoCanvas.config(scrollregion=(0, 0, 1000, 15))
+        self.movenoCanvas = Canvas(self, width=150, height=18, background='white')
+        self.movenoCanvas.config(scrollregion=(0, 0, 1000, 18))
         # self.movenoCanvas.config(xscrollcommand = self.sbar_hor.set)
 
         self.updateMovenoCanvas()
@@ -348,7 +352,7 @@ class SGFtreeCanvas(Frame):
 
         self.movenoCanvas.delete(ALL)
         for i in range(90):
-            self.movenoCanvas.create_text(int(SGFtreeCanvas.UNIT * .75) + i * 5 * SGFtreeCanvas.UNIT, 7, text=repr(5 * i),
+            self.movenoCanvas.create_text(int(self.UNIT * .75) + i * 5 *self.UNIT, 7, text=repr(5 * i),
                                           font=(self.options.movenoFont.get(), self.options.movenoFontSize.get()))
 
     def xview(self, a1, a2=None, a3=None):
@@ -378,8 +382,8 @@ class SGFtreeCanvas(Frame):
         y0 = int(vert[0] * self.canvSize[1])
         y1 = int(vert[1] * self.canvSize[1])
 
-        u = max(0, (y0 - 300) // SGFtreeCanvas.UNIT)
-        l = (y1 + 500) // SGFtreeCanvas.UNIT
+        u = max(0, (y0 - 300) //self.UNIT)
+        l = (y1 + 500) //self.UNIT
 
         # print 'yview', u,l
 
@@ -462,45 +466,43 @@ class SGFtreeCanvas(Frame):
         except:
             color = 'yellow'
 
-        self.canvas.create_oval(SGFtreeCanvas.UNIT * posx + SGFtreeCanvas.UNIT // 2,
-                                SGFtreeCanvas.UNIT * posy + SGFtreeCanvas.UNIT // 2,
-                                SGFtreeCanvas.UNIT * posx + SGFtreeCanvas.UNIT,
-                                SGFtreeCanvas.UNIT * posy + SGFtreeCanvas.UNIT, fill=color)
+        self.canvas.create_oval(self.UNIT * posx +self.UNIT // 2,
+                                self.UNIT * posy +self.UNIT // 2,
+                                self.UNIT * posx +self.UNIT,
+                                self.UNIT * posy +self.UNIT, fill=color)
 
         try:
             if 'C' in n or 'TR' in n or 'SQ' in n or 'CR' in n or 'LB' in n or 'MA' in n:
-                self.canvas.create_oval(SGFtreeCanvas.UNIT * posx + SGFtreeCanvas.UNIT * 2 // 3,
-                                        SGFtreeCanvas.UNIT * posy + SGFtreeCanvas.UNIT * 2 // 3,
-                                        SGFtreeCanvas.UNIT * posx + SGFtreeCanvas.UNIT * 5 // 6,
-                                        SGFtreeCanvas.UNIT * posy + SGFtreeCanvas.UNIT * 5 // 6, fill='blue')
+                self.canvas.create_oval(self.UNIT * posx +self.UNIT * 2 // 3,
+                                        self.UNIT * posy +self.UNIT * 2 // 3,
+                                        self.UNIT * posx +self.UNIT * 5 // 6,
+                                        self.UNIT * posy +self.UNIT * 5 // 6, fill='blue')
         except:
             pass
 
     def link(self, posx, posy, delta):
 
-        s4 = SGFtreeCanvas.UNIT // 4
-        s34 = 3 * SGFtreeCanvas.UNIT // 4
+        s4 = self.UNIT // 4
+        s34 = 3 * self.UNIT // 4
 
         if delta == 0:
-            self.canvas.create_line(SGFtreeCanvas.UNIT * posx - s4,
-                                    SGFtreeCanvas.UNIT * posy + s34,
-                                    SGFtreeCanvas.UNIT * posx + s34,
-                                    SGFtreeCanvas.UNIT * posy + s34,
+            self.canvas.create_line(self.UNIT * posx - s4,
+                                    self.UNIT * posy + s34,
+                                    self.UNIT * posx + s34,
+                                    self.UNIT * posy + s34,
                                     fill='blue', tags='lines', width=2)
         else:
-            self.canvas.create_line(SGFtreeCanvas.UNIT * posx - s4,
-                                    SGFtreeCanvas.UNIT * (posy - 1) + s34,
-                                    SGFtreeCanvas.UNIT * posx + s34,
-                                    SGFtreeCanvas.UNIT * posy + s34,
+            self.canvas.create_line(self.UNIT * posx - s4,
+                                    self.UNIT * (posy - 1) + s34,
+                                    self.UNIT * posx + s34,
+                                    self.UNIT * posy + s34,
                                     fill='blue', tags='lines', width=2)
             if delta > 1:
-                self.canvas.create_line(SGFtreeCanvas.UNIT * posx - s4,
-                                        SGFtreeCanvas.UNIT * (posy - delta) + s34,
-                                        SGFtreeCanvas.UNIT * posx - s4,
-                                        SGFtreeCanvas.UNIT * (posy - 1) + s34,
+                self.canvas.create_line(self.UNIT * posx - s4,
+                                        self.UNIT * (posy - delta) + s34,
+                                        self.UNIT * posx - s4,
+                                        self.UNIT * (posy - 1) + s34,
                                         fill='blue', tags='lines', width=2)
-
-SGFtreeCanvas.UNIT = 32
 
 # ---------------------------------------------------------------------------------------
 
@@ -512,13 +514,13 @@ class DataWindow:
 
         window = window
 
-        win = PanedWindow(window, orient='vertical', )
+        win = PanedWindow(window, orient='vertical')
         self.win = win
         win.pack(expand=YES, fill=BOTH)
 
         self.initPanes()
 
-        self.SGFtreeC = SGFtreeCanvas(self.gametreeF, self.mster.options)
+        self.SGFtreeC = SGFtreeCanvas(self.gametreeF, self.mster.options, unit=master.options.scaling.get() * 3 // 2)
         self.SGFtreeC.pack(side=LEFT, expand=YES, fill=BOTH)
         self.guessModeCanvas = Canvas(self.gametreeF, width=160, height=100, background='white')
 
@@ -537,8 +539,8 @@ class DataWindow:
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
-        for button, filename in [(self.filelistB1, 'document-new.gif'), (self.filelistB2, 'document-open.gif'), (self.filelistB3, 'user-trash.gif'), (self.filelistB4, 'edit-cut.gif')]:
-            load_icon(button, filename, self.tkImages)
+        for button, filename in [(self.filelistB1, 'document-new.png'), (self.filelistB2, 'document-open.png'), (self.filelistB3, 'user-trash.png'), (self.filelistB4, 'edit-cut.png')]:
+            load_icon(button, filename, self.tkImages, self.mster.options.scaling.get())
 
         self.filelist.onSelectionChange = self.mster.changeCurrentFile
         self.filelist.list.bind('<1>', self.mster.changeCurrentFile)
@@ -553,8 +555,8 @@ class DataWindow:
         self.gamelistB2 = Button(self.gamelistF, text=_('DEL'), command=self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
-        for button, filename in [(self.gamelistB1, 'document-new.gif'), (self.gamelistB2, 'user-trash.gif')]:
-            load_icon(button, filename, self.tkImages)
+        for button, filename in [(self.gamelistB1, 'document-new.png'), (self.gamelistB2, 'user-trash.png')]:
+            load_icon(button, filename, self.tkImages, self.mster.options.scaling.get())
 
         self.gamelist.onSelectionChange = self.mster.changeCurrentGame
         self.gamelist.list.bind('<1>', self.gamelistClick)
@@ -838,7 +840,7 @@ class EnhancedCursor(Cursor):
         self.SGFtreeCanv.canvas.delete('all')
         self.SGFtreeCanv.drawn = []
 
-        width = SGFtreeCanvas.UNIT * (self.width + 1) + 30
+        width = self.SGFtreeCanv.UNIT * (self.width + 1) + 30
 
         if self.SGFtreeCanv.rootnode.down:
             h = self.SGFtreeCanv.rootnode.down.posyD
@@ -850,11 +852,11 @@ class EnhancedCursor(Cursor):
                 h += n.posyD
             h = self.height - h
 
-        height = SGFtreeCanvas.UNIT * (h + 1) + 30
+        height = self.SGFtreeCanv.UNIT * (h + 1) + 30
 
         self.SGFtreeCanv.canvSize = width, height
         self.SGFtreeCanv.canvas.config(scrollregion=(0, 0, width, height))
-        self.SGFtreeCanv.movenoCanvas.config(scrollregion=(0, 0, width, 15))
+        self.SGFtreeCanv.movenoCanvas.config(scrollregion=(0, 0, width, 18))
         self.SGFtreeCanv.updateMovenoCanvas()
 
         if self.SGFtreeCanv.lastbind is not None:
@@ -897,8 +899,8 @@ class EnhancedCursor(Cursor):
             # store coordinates of click in x,y
             x1 = self.SGFtreeCanv.canvas.canvasx(event.x)
             y1 = self.SGFtreeCanv.canvas.canvasy(event.y)
-            x = (x1 - SGFtreeCanvas.UNIT // 2) // SGFtreeCanvas.UNIT
-            y = (y1 - SGFtreeCanvas.UNIT // 2) // SGFtreeCanvas.UNIT
+            x = (x1 - self.SGFtreeCanv.UNIT // 2) // self.SGFtreeCanv.UNIT
+            y = (y1 - self.SGFtreeCanv.UNIT // 2) // self.SGFtreeCanv.UNIT
 
             # where are we now?
             p1 = self.currentNode().pathToNode()
@@ -1006,14 +1008,15 @@ class EnhancedCursor(Cursor):
         x, y = self.posx, self.posy
 
         self.SGFtreeCanv.canvas.delete('curr')
-        self.SGFtreeCanv.canvas.create_oval(x * SGFtreeCanvas.UNIT + SGFtreeCanvas.UNIT // 2,
-                                            y * SGFtreeCanvas.UNIT + SGFtreeCanvas.UNIT // 2,
-                                            (x + 1) * SGFtreeCanvas.UNIT,
-                                            (y + 1) * SGFtreeCanvas.UNIT, fill='', outline='green',
-                                            width=4, tags='curr')
+        u = self.SGFtreeCanv.UNIT
+        self.SGFtreeCanv.canvas.create_oval(x * u + u // 2,
+                                            y * u + u // 2,
+                                            (x + 1) * u,
+                                            (y + 1) * u, fill='', outline='green',
+                                            width=5, tags='curr')
 
-        x = (x + .5) * SGFtreeCanvas.UNIT
-        y = y * SGFtreeCanvas.UNIT
+        x = (x + .5) * u
+        y = y * u
 
         # print 'seecurrent', x, y
 
@@ -1034,7 +1037,7 @@ class EnhancedCursor(Cursor):
         elif x + 40 > hor[1] * cv0:
             self.SGFtreeCanv.xview('moveto', (x + 50 - x1) * 1.0 / cv0)
 
-        if y1 < SGFtreeCanvas.UNIT * 2:
+        if y1 < self.SGFtreeCanv.UNIT * 2:
             self.SGFtreeCanv.yview('moveto', y * 1.0 / cv1)
         else:
             if y - 15 < vert[0] * cv1:
@@ -1619,10 +1622,10 @@ class Viewer:
             comment_text = self.cursor.transcode('C', c).splitlines()
             if comment_text:
                 if comment_text[0] == '@@monospace':
-                    self.dataWindow.comments.configure(text_font=('Courier', self.options.commentfontSize.get()))
+                    self.dataWindow.comments.configure(text_font=('Courier', self.options.commentFontSize.get()))
                 else:
-                    self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(),
-                                                                  self.options.commentfontStyle.get()))
+                    self.dataWindow.comments.configure(text_font=(self.options.commentFont.get(), self.options.commentFontSize.get(),
+                                                                  self.options.commentFontStyle.get()))
 
                 self.comments.insert('1.0', '\n'.join(comment_text))
 
@@ -2575,8 +2578,6 @@ class Viewer:
 
         # try to load icons for navigation buttons and grid the buttons
 
-        buttonsize = 20 if sys.platform[:3] == 'win' else 22
-
         self.tkImages = []
         for i, (button, filename, options) in enumerate([
                                  (self.BWbutton, 'bw.gif', {}),
@@ -2604,8 +2605,7 @@ class Viewer:
                                  (ca2, None, {'padx': 10}),
                                  (self.guessModeButton, 'stock_help.gif', {}), ]):
             if filename:
-                load_icon(button, filename, self.tkImages)
-                button.config(width=buttonsize, height=buttonsize)
+                load_icon(button, filename, self.tkImages, buttonsize=self.options.scaling.get())
             button.grid(row=0, column=i, **options)
 
         self.currentFile = ''
@@ -2613,12 +2613,12 @@ class Viewer:
         self.boardFrame.focus()
 
         self.moveno = StringVar()
-        self.movenoLabel = Label(labelFrame, height=1, width=5, relief=SUNKEN, justify=RIGHT, textvariable=self.moveno)
+        self.movenoLabel = Label(labelFrame, height=1, width=5, relief=SUNKEN, justify=RIGHT, textvariable=self.moveno, font=('Helvetica', self.options.statFontSize.get()))
         self.gameName = StringVar()
-        self.gameNameLabel = Label(labelFrame, height=1, width=20, relief=SUNKEN, justify=LEFT, textvariable=self.gameName)
+        self.gameNameLabel = Label(labelFrame, height=1, width=20, relief=SUNKEN, justify=LEFT, textvariable=self.gameName, font=('Helvetica', self.options.statFontSize.get()))
 
         self.capVar = StringVar()
-        self.capLabel = Label(labelFrame, height=1, width=15, relief=SUNKEN, justify=LEFT, textvariable=self.capVar)
+        self.capLabel = Label(labelFrame, height=1, width=15, relief=SUNKEN, justify=LEFT, textvariable=self.capVar, font=('Helvetica', self.options.statFontSize.get()))
 
         # pack everything
 
@@ -2666,8 +2666,8 @@ class Viewer:
         Do things that depend on reading the options file.
         """
 
-        self.dataWindow.comments.configure(text_font=(self.options.commentfont.get(), self.options.commentfontSize.get(),
-                                                      self.options.commentfontStyle.get()))
+        self.dataWindow.comments.configure(text_font=(self.options.commentFont.get(), self.options.commentFontSize.get(),
+                                                      self.options.commentFontStyle.get()))
         if self.options.showCoordinates.get():
             self.board.coordinates = 1
             self.board.resize()
@@ -2756,6 +2756,32 @@ class Viewer:
 
         if self.options.language.get():
             self.switch_language(self.options.language.get())
+
+        if self.options.scaling.get() == -1:
+            # Application is opened for the first time, so we adjust button size
+            # (stored in self.options.scaling) and some font sizes in case the
+            # screen resolution is (probably) very high.
+            varlist = [
+                    (self.options.scaling, 22, 32),
+                    (self.options.statFontSize, 8, 10),
+                    (self.options.statFontSizeSmall, 8, 10),
+                    (self.options.commentFontSize, 11, 12),
+                    (self.options.labelFontSize, 5, 7),
+                    (self.options.exportFontSize, 10, 12),
+                    (self.options.guessmodeFontSize, 16, 18),
+                    (self.options.movenoFontSize, 8, 10),
+                    (self.options.gameinfoFontSize, 10, 12),
+                    ]
+
+            if master.winfo_screenwidth() > 2200:
+                for variable, dummy, size in varlist:
+                    variable.set(size)
+            else:
+                for variable, size, dummy in varlist:
+                    variable.set(size)
+
+        defaultfont = tkFont.nametofont('TkDefaultFont')
+        defaultfont.configure(size=self.options.statFontSize.get())
 
         # The main window
 
@@ -2856,6 +2882,7 @@ def run():
 
     root = Tk()
     root.withdraw()
+    root.option_add("*Font", "TkDefaultFont")
 
     try:
         if os.path.exists(os.path.join(get_configfile_directory(), 'kombilo.app')):
