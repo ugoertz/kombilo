@@ -2035,7 +2035,7 @@ class App(v.Viewer, KEngine):
         self.saveProcMess.config(state=NORMAL)
 
     def callAddDB(self, dbp, datap, index=None):
-        tagAsPro = {_('Never'): 0, _('All games'): 1, _('All games with p-rank players'): 2, }[self.options.tagAsPro.get()]
+        tagAsPro = {'Never': 0, 'All games': 1, 'All games with p-rank players': 2, }[self.untranslate_tagAsPro()]
         algos = 0
         if self.options.algo_hash_full.get():
             algos |= lk.ALGO_HASH_FULL
@@ -2793,9 +2793,7 @@ class App(v.Viewer, KEngine):
 
         options_dict = {s: getattr(variables, s).get() for s, t, v in entry_list}
         options_dict.update({'reset_game_list': reset_game_list_var.get(),
-                             'sort_criterion': {
-                                 _('total'): 'total', _('earliest'): 'earliest', _('latest'): 'latest', _('average'): 'average',
-                                 _('became popular'): 'became popular', _('became unpopular'): 'became unpopular', }[self.options.continuations_sort_crit.get()],
+                             'sort_criterion': self.untranslate_cont_sort_crit(),
                              'boardsize': CSP.boardsize,
                              'sizex': CSP.sizeX, 'sizey': CSP.sizeY,
                              'anchors': (CSP.left, CSP.right, CSP.top, CSP.bottom),
@@ -3038,10 +3036,19 @@ class App(v.Viewer, KEngine):
         to libkombilo we need the English translation, however.
         """
 
-        return {_(s): s for s in [
-            'total', 'earliest', 'latest', 'average',
-            'became popular', 'became unpopular', ]}[self.options.continuations_sort_crit.get()]
+        try:
+            return {_(s): s for s in [
+                'total', 'earliest', 'latest', 'average',
+                'became popular', 'became unpopular', ]}[self.options.continuations_sort_crit.get()]
+        except KeyError:
+            return self.options.continuations_sort_crit.get()
 
+    def untranslate_tagAsPro(self):
+        try:
+            return {_(s): s for s in [
+                'Never', 'All games', 'All games with p-rank players', ]}[self.options.tagAsPro.get()]
+        except KeyError:
+            return self.options.tagAsPro.get()
 
     def saveOptions(self, d):
         """ Save options to dictionary d. """
@@ -3058,6 +3065,7 @@ class App(v.Viewer, KEngine):
 
         try:
             self.options.continuations_sort_crit.set(self.untranslate_cont_sort_crit())
+            self.options.tagAsPro.set(self.untranslate_tagAsPro())
         except KeyError:
             # Can happen if language has been changed; for simplicity we just reset to "total" then.
             self.options.continuations_sort_crit.set('total')
@@ -3096,6 +3104,15 @@ class App(v.Viewer, KEngine):
                     win.update_idletasks()
             except:
                 pass
+
+    def switch_language(self, lang, show_warning=False):
+        self.options.continuations_sort_crit.set(self.untranslate_cont_sort_crit())
+        self.options.tagAsPro.set(self.untranslate_tagAsPro())
+
+        v.Viewer.switch_language(self, lang, show_warning)
+
+        for var in [self.options.continuations_sort_crit, self.options.tagAsPro, ]:
+            var.set(_(var.get()))
 
     def init_key_bindings(self):
         v.Viewer.init_key_bindings(self)
