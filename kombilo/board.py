@@ -171,8 +171,8 @@ class Board(abstractBoard, Canvas):
                 self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
                 self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
 
-        self.bStone = PILImageTk.PhotoImage(self.blackStone.resize((c1 + 1, c1 + 1), PILImage.NEAREST))
-        self.wStone = PILImageTk.PhotoImage(self.whiteStone.resize((c1 + 1, c1 + 1), PILImage.NEAREST))
+        self.bStone = PILImageTk.PhotoImage(self.blackStone.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
+        self.wStone = PILImageTk.PhotoImage(self.whiteStone.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
 
         self.update_idletasks()
         self.resizable = sres

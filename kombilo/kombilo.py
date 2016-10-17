@@ -2450,7 +2450,7 @@ class App(v.Viewer, KEngine):
         window.title(_('About Kombilo ...'))
 
         if self.logo:
-            canv = Canvas(window, width=75, height=23)
+            canv = Canvas(window, width=300, height=94)
             canv.pack()
             canv.create_image(0, 0, image=self.logo, anchor=NW)
 
@@ -3306,11 +3306,11 @@ class App(v.Viewer, KEngine):
         l.pack(side=LEFT)
 
         self.nextMoveVar = IntVar()  # 0 = either player, 1 = black, 2 = white
-        self.nextMove1S = Radiobutton(self.toolbarFrameS, text=_('B/W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=0)
+        self.nextMove1S = Radiobutton(self.toolbarFrameS, text=_('B/W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=0, bg='#999999')
         self.nextMove1S.pack(side=LEFT)
-        self.nextMove2S = Radiobutton(self.toolbarFrameS, text=_('B'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=1)
+        self.nextMove2S = Radiobutton(self.toolbarFrameS, text=_('B'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=1, bg='#999999')
         self.nextMove2S.pack(side=LEFT)
-        self.nextMove3S = Radiobutton(self.toolbarFrameS, text=_('W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=2)
+        self.nextMove3S = Radiobutton(self.toolbarFrameS, text=_('W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=2, bg='#999999')
         self.nextMove3S.pack(side=LEFT)
 
         self.fixedAnchorVar = IntVar()
@@ -3480,14 +3480,28 @@ class App(v.Viewer, KEngine):
         self.inittags()
 
         # icons for the buttons
-        for button, filename in [(self.showContButtonS, 'abc-u.gif'), (self.backButtonS, 'edit-undo.gif'), (self.resetButtonS, 'go-home.gif'), (self.resetstartButtonS, 'go-home-start.gif'),
-                                 (self.searchButtonS, 'system-search.gif'),
-                                 (self.oneClickButtonS, 'mouse.gif'), (self.statByDateButtonS, 'date.gif'),
-                                 (self.nextMove1S, 'bw.gif'), (self.nextMove2S, 'b.gif'), (self.nextMove3S, 'w.gif'),
-                                 (self.GIstart, 'system-search.gif'), (self.GIclear, 'document-new.gif'), (self.GI_bwd, 'go-previous.gif'), (self.GI_fwd, 'go-next.gif'),
-                                 (self.tagsearchButton, 'system-search.gif'), (self.tagaddButton, 'add.gif'), (self.tagdelButton, 'list-remove.gif'),
-                                 (self.tagallButton, 'edit-select-all.gif'), (self.untagallButton, 'edit-clear.gif'), (self.tagsetButton, 'bookmark-new.gif'),
-                                ]:
+        for button, filename in [
+                (self.showContButtonS, 'abc-u'),
+                (self.backButtonS, 'actions-edit-undo'),
+                (self.resetButtonS, 'actions-go-home'),
+                (self.resetstartButtonS, 'go-home-start'),
+                (self.searchButtonS, 'actions-system-search'),
+                (self.oneClickButtonS, 'devices-input-mouse'),
+                (self.statByDateButtonS, 'apps-office-calendar'),
+                (self.nextMove1S, 'bw'),
+                (self.nextMove2S, 'b'),
+                (self.nextMove3S, 'w'),
+                (self.GIstart, 'actions-system-search'),
+                (self.GIclear, 'actions-document-new'),
+                (self.GI_bwd, 'actions-go-previous'),
+                (self.GI_fwd, 'actions-go-next'),
+                (self.tagsearchButton, 'actions-system-search'),
+                (self.tagaddButton, 'actions-list-add'),
+                (self.tagdelButton, 'actions-list-remove'),
+                (self.tagallButton, 'actions-edit-select-all'),
+                (self.untagallButton, 'actions-edit-clear'),
+                (self.tagsetButton, 'actions-bookmark-new'),
+                ]:
             v.load_icon(button, filename, self.tkImages, self.options.scaling.get())
 
         self.custom_menus.path = self.optionspath
@@ -3495,7 +3509,7 @@ class App(v.Viewer, KEngine):
 
         # load logo
         try:
-            self.logo = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/logok.gif')))
+            self.logo = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/kombilo_logo.png')))
         except TclError:
             self.logo = None
 

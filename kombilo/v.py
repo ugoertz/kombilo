@@ -64,7 +64,7 @@ def get_configfile_directory():
 
 def load_icon(button, filename, imagelist, buttonsize):
     try:
-        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s' % filename)).resize((buttonsize, buttonsize), PILImage.NEAREST))
+        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename)).resize((buttonsize, buttonsize), PILImage.LANCZOS))
         button.config(image=im, width=buttonsize, height=buttonsize)
         imagelist.append(im)
     except AttributeError:
@@ -539,7 +539,11 @@ class DataWindow:
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
-        for button, filename in [(self.filelistB1, 'document-new.png'), (self.filelistB2, 'document-open.png'), (self.filelistB3, 'user-trash.png'), (self.filelistB4, 'edit-cut.png')]:
+        for button, filename in [
+                (self.filelistB1, 'actions-document-new'),
+                (self.filelistB2, 'actions-document-open'),
+                (self.filelistB3, 'places-user-trash'),
+                (self.filelistB4, 'actions-edit-cut')]:
             load_icon(button, filename, self.tkImages, self.mster.options.scaling.get())
 
         self.filelist.onSelectionChange = self.mster.changeCurrentFile
@@ -555,7 +559,9 @@ class DataWindow:
         self.gamelistB2 = Button(self.gamelistF, text=_('DEL'), command=self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
-        for button, filename in [(self.gamelistB1, 'document-new.png'), (self.gamelistB2, 'user-trash.png')]:
+        for button, filename in [
+                (self.gamelistB1, 'actions-document-new'),
+                (self.gamelistB2, 'places-user-trash')]:
             load_icon(button, filename, self.tkImages, self.mster.options.scaling.get())
 
         self.gamelist.onSelectionChange = self.mster.changeCurrentGame
@@ -2530,13 +2536,13 @@ class Viewer:
         self.modeVar.set('blackwhite')
         self.board.currentColor = 'black'
 
-        self.BWbutton = Radiobutton(navFrame, text='BW', indicatoron=0,
+        self.BWbutton = Radiobutton(navFrame, text='BW', indicatoron=0, bg='#999999',
                                     variable=self.modeVar, value='blackwhite', command=self.modeChange)
-        self.WBbutton = Radiobutton(navFrame, text='WB', indicatoron=0,
+        self.WBbutton = Radiobutton(navFrame, text='WB', indicatoron=0, bg='#999999',
                                     variable=self.modeVar, value='whiteblack', command=self.modeChange)
-        self.Bbutton = Radiobutton(navFrame, text='B', indicatoron=0,
+        self.Bbutton = Radiobutton(navFrame, text='B', indicatoron=0, bg='#999999',
                                    variable=self.modeVar, value='black', command=self.modeChange)
-        self.Wbutton = Radiobutton(navFrame, text='W', indicatoron=0,
+        self.Wbutton = Radiobutton(navFrame, text='W', indicatoron=0, bg='#999999',
                                    variable=self.modeVar, value='white', command=self.modeChange)
 
         self.nextButton = Button(navFrame, text='->', command=self.next)
@@ -2580,30 +2586,30 @@ class Viewer:
 
         self.tkImages = []
         for i, (button, filename, options) in enumerate([
-                                 (self.BWbutton, 'bw.gif', {}),
-                                 (self.WBbutton, 'wb.gif', {}),
-                                 (self.Bbutton, 'b.gif', {}),
-                                 (self.Wbutton, 'w.gif', {}),
-                                 (self.prevButton, 'media-playback-back-K.gif', {}),
-                                 (self.nextButton, 'media-playback-start-K.gif', {}),
-                                 (self.prev10Button, 'media-seek-backward.gif', {}),
-                                 (self.next10Button, 'media-seek-forward.gif', {}),
-                                 (self.startButton, 'media-skip-backward.gif', {}),
-                                 (self.endButton, 'media-skip-forward.gif', {}),
-                                 (self.passButton, 'media-playback-pause-K.gif', {}),
-                                 (self.gameinfoButton, 'edit-find.gif', {}),
+                                 (self.BWbutton, 'bw', {}),
+                                 (self.WBbutton, 'wb', {}),
+                                 (self.Bbutton, 'b', {}),
+                                 (self.Wbutton, 'w', {}),
+                                 (self.prevButton, 'actions-media-playback-back', {}),
+                                 (self.nextButton, 'actions-media-playback-start', {}),
+                                 (self.prev10Button, 'actions-media-seek-backward', {}),
+                                 (self.next10Button, 'actions-media-seek-forward', {}),
+                                 (self.startButton, 'actions-media-skip-backward', {}),
+                                 (self.endButton, 'actions-media-skip-forward', {}),
+                                 (self.passButton, 'actions-media-playback-pause', {}),
+                                 (self.gameinfoButton, 'actions-edit-find', {}),
                                  (ca0, None, {'padx': 10}),
                                  (lab, None, {}),
-                                 (self.removeStoneButton, 'dialog-error.gif', {}),
-                                 (self.triangleButton, 'tr.gif', {}),
-                                 (self.squareButton, 'sq.gif', {}),
-                                 (self.letterUButton, 'abc-u.gif', {}),
-                                 (self.letterLButton, 'abc-l.gif', {}),
-                                 (self.numberButton, '123.gif', {}),
+                                 (self.removeStoneButton, 'status-dialog-error', {}),
+                                 (self.triangleButton, 'tr', {}),
+                                 (self.squareButton, 'sq', {}),
+                                 (self.letterUButton, 'abc-u', {}),
+                                 (self.letterLButton, 'abc-l', {}),
+                                 (self.numberButton, '123', {}),
                                  (ca1, None, {'padx': 10}),
-                                 (self.delButton, 'process-stop.gif', {}),
+                                 (self.delButton, 'actions-process-stop', {}),
                                  (ca2, None, {'padx': 10}),
-                                 (self.guessModeButton, 'stock_help.gif', {}), ]):
+                                 (self.guessModeButton, 'apps-help-browser', {}), ]):
             if filename:
                 load_icon(button, filename, self.tkImages, buttonsize=self.options.scaling.get())
             button.grid(row=0, column=i, **options)
@@ -2810,13 +2816,13 @@ class Viewer:
         # The board
 
         try:
-            self.boardImg = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/board.gif')))
+            self.boardImg = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/board.png')))
         except (TclError, IOError, AttributeError):
             self.boardImg = None
 
         try:
-            self.blackStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/black.gif')).convert('RGBA')
-            self.whiteStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/white.gif')).convert('RGBA')
+            self.blackStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/black.png')).convert('RGBA')
+            self.whiteStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/white.png')).convert('RGBA')
         except (TclError, IOError, AttributeError):
             self.blackStone = None
             self.whiteStone = None

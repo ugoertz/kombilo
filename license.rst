@@ -37,15 +37,9 @@ http://www.opensource.org/licenses/mit-license .)
 Icons
 -----
 
-Many of the icons are taken from the Tango icon collection, by Jones Lee.
-See http://art.gnome.org/themes/icon/1150
-They are published under the CreativCommons Attribution-Share alike License (CC
-BY-SA 2.0), see http://creativecommons.org/licenses/by-sa/2.0/
-
-I slightly modified some of the Tango icons (media-playback-back-K.png,
-media-playback-pause-K.png, media-playback-start-K.png) and publish these
-derived works under the CC BY-SA 2.0 license.
-
+Many of the icons are taken from the Tango icon library.
+See http://tango.freedesktop.org/Tango_Icon_Library
+The icons are released into the public domain.
 
 The other icons (w.gif, b.gif, wb.gif, bw.gif, 123.png, abc-l.png,
 abc-u.png, tr.gif, sq.gif) are dual-licensed under the CC BY-SA 3.0 license
