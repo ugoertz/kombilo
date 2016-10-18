@@ -28,7 +28,7 @@
 from Tkinter import *
 from PIL import Image as PILImage
 from PIL import ImageTk as PILImageTk
-from random import randint
+from random import randint, choice
 import math
 import sys
 import libkombilo as lk
@@ -63,6 +63,11 @@ class Board(abstractBoard, Canvas):
                  focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True,
                  square_board=True):
         # FIXME should refactor code: use_PIL not used anymore
+        """
+        blackImg and whiteImg are lists of PILImage instances (as returned by PILImage.open(...)
+        Upon placing a stone on the board, a random item of the respective list
+        is chosen. (Typically the blackImg list will have only one item.
+        """
 
         self.square_board = square_board
         self.focus = focus
@@ -105,14 +110,12 @@ class Board(abstractBoard, Canvas):
         self.use3Dstones = IntVar()
         self.use3Dstones.set(1)
 
-        if boardImg:
+        if boardImg and blackImg and whiteImg:
             self.img = boardImg
+            self.blackStones = blackImg
+            self.whiteStones = whiteImg
         else:
-            self.img = None
-
-        if blackImg and whiteImg:
-            self.blackStone = blackImg
-            self.whiteStone = whiteImg
+            raise ValueError('Image files for board/stones not found.')
 
         self.drawBoard()
 
@@ -128,11 +131,10 @@ class Board(abstractBoard, Canvas):
         size = 2 * c0 + (self.boardsize - 1) * c1
         self.config(height=size, width=size)
 
-        if self.img:
-            self.delete('board')
-            for i in range(size // 200 + 2):
-                for j in range(size // 200 + 2):
-                    self.create_image(200 * i, 200 * j, image=self.img, tags='board')
+        self.delete('board')
+        for i in range(size // 200 + 2):
+            for j in range(size // 200 + 4):   # add a lot of "board space" for search history boards
+                self.create_image(200 * i, 200 * j, image=self.img, tags='board')
 
         if self.square_board:
             # place a gray rectangle over the board background picture
@@ -171,8 +173,12 @@ class Board(abstractBoard, Canvas):
                 self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
                 self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
 
-        self.bStone = PILImageTk.PhotoImage(self.blackStone.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
-        self.wStone = PILImageTk.PhotoImage(self.whiteStone.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
+        self.bStones = [
+                PILImageTk.PhotoImage(bs.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
+                for bs in self.blackStones]
+        self.wStones = [
+                PILImageTk.PhotoImage(ws.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
+                for ws in self.whiteStones]
 
         self.update_idletasks()
         self.resizable = sres
@@ -452,9 +458,15 @@ class Board(abstractBoard, Canvas):
             self.stones[pos] = self.create_oval(*p, fill=color, tags='non-bg')
         else:
             if color == 'black':
-                self.stones[pos] = self.create_image(((p[0] + p[2]) // 2, (p[1] + p[3]) // 2), image=self.bStone, tags='non-bg')
+                self.stones[pos] = self.create_image(
+                        ((p[0] + p[2]) // 2, (p[1] + p[3]) // 2),
+                        image=choice(self.bStones),
+                        tags='non-bg')
             elif color == 'white':
-                self.stones[pos] = self.create_image(((p[0] + p[2]) // 2, (p[1] + p[3]) // 2), image=self.wStone, tags='non-bg')
+                self.stones[pos] = self.create_image(
+                        ((p[0] + p[2]) // 2, (p[1] + p[3]) // 2),
+                        image=choice(self.wStones),
+                        tags='non-bg')
 
     def undo(self, no=1, changeCurrentColor=1):
         """ Undo the last no moves.

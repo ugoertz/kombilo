@@ -2820,14 +2820,20 @@ class Viewer:
         except (TclError, IOError, AttributeError):
             self.boardImg = None
 
-        try:
-            self.blackStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/black.png')).convert('RGBA')
-            self.whiteStone = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/white.png')).convert('RGBA')
-        except (TclError, IOError, AttributeError):
-            self.blackStone = None
-            self.whiteStone = None
+        self.blackStones = [
+                PILImage.open(
+                    pkg_resources.resource_stream(
+                        __name__,
+                        'icons/black.png')).convert('RGBA'),
+                    ]
+        self.whiteStones = [
+                PILImage.open(
+                    pkg_resources.resource_stream(
+                        __name__, 'icons/white%d.png' % i)).convert('RGBA')
+                    for i in range(16)
+                    ]
 
-        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, None, 1, None, self.boardImg, self.blackStone, self.whiteStone, True)
+        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, None, 1, None, self.boardImg, self.blackStones, self.whiteStones, True)
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
 

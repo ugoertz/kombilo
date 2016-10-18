@@ -657,7 +657,8 @@ class PrevSearchesStack(object):
 
         b = SearchHistoryBoard(
                 self.prevSF.interior(), self.mster.board.boardsize, (12, 6), 0,
-                self.labelSize, 1, None, self.mster.boardImg, self.mster.blackStone, self.mster.whiteStone,
+                self.labelSize, 1, None, self.mster.boardImg,
+                self.mster.blackStones, self.mster.whiteStones,
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
                 offset=min(10 * self.current.level(), 100))  # small board
@@ -1402,7 +1403,7 @@ class App(v.Viewer, KEngine):
 
         window.protocol('WM_DELETE_WINDOW', window.destroy)
 
-        bo = v.Board(window, 19, (5, 18), 0, None, 0, None, self.boardImg, self.blackStone, self.whiteStone)
+        bo = v.Board(window, 19, (5, 18), 0, None, 0, None, self.boardImg, self.blackStones, self.whiteStones)
         bo.state('normal', lambda pos, self=self, window=window,
                  e1=e1, e2=e2, e3=e3, e4=e4, e5=e5, e6=e6, m20=m20, m40=m40, m60=m60, m31=m31,
                  m51=m51, m71=m71: self.sigSearchGetCoord(pos, window, e1, e2, e3, e4, e5, e6, m20, m40, m60, m31, m51, m71))
@@ -1542,7 +1543,7 @@ class App(v.Viewer, KEngine):
             gl = db['data']
             self.lookUpContinuations(gl)
 
-        self.set_labels(self.options.continuations_sort_crit.get())
+        self.set_labels(self.untranslate_cont_sort_crit())
         if self.showContinuation.get():
             self.showCont()
         self.board.changed.set(0)
@@ -3244,7 +3245,7 @@ class App(v.Viewer, KEngine):
 
         self.prevSF = ScrolledFrame(self.prevSearchF, usehullsize=1, hull_width=300, hull_height=235, hscrollmode='static', vscrollmode='none', vertflex='elastic')
 
-        self.prevSF.pack(expand=YES, fill=X)
+        self.prevSF.pack(expand=YES, fill=BOTH)
         self.prevSearches = PrevSearchesStack(self.options.maxLengthSearchesStack, self.board.changed, self.prevSF, self)
         self.board.callOnChange = self.prevSearches.select_clear
 
