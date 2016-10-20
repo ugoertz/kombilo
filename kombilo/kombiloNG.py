@@ -1197,6 +1197,21 @@ class KEngine(object):
                 if exportMode == 'wiki':
                     t.append('!')
 
+                # give some date profile information
+                column_widths = [len(s) for s in [_('Label'), '   #  ', _('First played'), _('Last played')]]
+                head_str = '%%%ds |   #    | %%%ds | %%%ds |\n'  % (max(5, len(_('Label'))), max(7, len(_('First played'))), max(7, len(_('Last played'))))
+                head_str = head_str % (_('Label'), _('First played'), _('Last played'))
+                body_str = '%%%ds (%%s) | %%6d | %%%ds | %%%ds |\n'  % (max(5, len(_('Label'))) - 4, max(7, len(_('First played'))), max(7, len(_('Last played'))))
+                comment_text = ''
+                for cont in self.continuations[:N]:
+                    comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
+                if comment_text:
+                    comment_text = head_str + comment_text
+                t.append(comment_text)
+                t.append('\n')
+                if exportMode == 'wiki':
+                    t.append('!')
+
                 t.append(_('Hits per database\n'))
                 for db in self.gamelist.DBlist:
                     if db['disabled']:
