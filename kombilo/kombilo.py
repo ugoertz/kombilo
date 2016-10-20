@@ -54,6 +54,13 @@ from .sgf import Node, Cursor
 from . import libkombilo as lk
 from .board import *
 import kombilo.v as v
+
+import __builtin__
+# make sure _ is defined as built-in, so that kombiloNG and custommenus do not
+# define a dummy _ of their own
+if '_' not in __builtin__.__dict__:
+    __builtin__.__dict__['_'] = lambda s: s
+
 from .kombiloNG import *
 from .custommenus import CustomMenus
 
@@ -1800,9 +1807,9 @@ class App(v.Viewer, KEngine):
 
             if n:
                 if nextMove == 'B':
-                    remarks.append('Black = 1\n')
+                    remarks.append(_('Black = 1\n'))
                 elif nextMove == 'W':
-                    remarks.append('White = 1\n')
+                    remarks.append(_('White = 1\n'))
         else:
             for i in range(19):
                 l[i].insert(0, '$$ | ')
@@ -3537,11 +3544,6 @@ class App(v.Viewer, KEngine):
 # ---------------------------------------------------------------------------------------
 
 def run():
-
-    import __builtin__
-    if not '_' in __builtin__.__dict__:
-        __builtin__.__dict__['_'] = lambda s: s
-
     root = Tk()
     root.withdraw()
     root.option_add("*Font", "TkDefaultFont")
