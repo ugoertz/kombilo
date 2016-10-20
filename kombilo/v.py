@@ -1624,14 +1624,16 @@ class Viewer:
         """ Display the labels in the current node."""
 
         self.comments.delete('1.0', END)
+        self.dataWindow.comments.configure(
+                text_font=(
+                    self.options.commentFont.get(),
+                    self.options.commentFontSize.get(),
+                    self.options.commentFontStyle.get()))
         if 'C' in c:
             comment_text = self.cursor.transcode('C', c).splitlines()
             if comment_text:
                 if comment_text[0] == '@@monospace':
                     self.dataWindow.comments.configure(text_font=('Courier', self.options.commentFontSize.get()))
-                else:
-                    self.dataWindow.comments.configure(text_font=(self.options.commentFont.get(), self.options.commentFontSize.get(),
-                                                                  self.options.commentFontStyle.get()))
 
                 self.comments.insert('1.0', '\n'.join(comment_text))
 
