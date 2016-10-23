@@ -48,6 +48,7 @@ from string import split, replace, join, strip
 from math import sqrt
 from random import randint
 
+from .option_editor import OptionEditor
 from . import libkombilo as lk
 from .board import *
 from .sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
@@ -94,7 +95,10 @@ class BunchTkVar:
 
     def saveToDisk(self, d):
         for x in self.__dict__:
-            d[x] = self.__dict__[x].get()
+            if isinstance(self.__dict__[x], BooleanVar):
+                d[x] = 'True' if self.__dict__[x].get() else 'False'
+            else:
+                d[x] = self.__dict__[x].get()
 
     def loadFromDisk(self, d):
         for x in d:
@@ -1369,7 +1373,7 @@ class Viewer:
         self.dataWindow.guessRightWrong[0] += 1
         self.displayGuessPercentage()
         if self.cursor.atEnd:
-            self.dataWindow.guessModeCanvas.create_text(50, 50, text='END', font=(self.options.guessmodeFont.get(), self.options.guessmodeFontSize.get()), tags='labels')
+            self.dataWindow.guessModeCanvas.create_text(50, 50, text='END', font=(self.options.labelFont.get(), self.options.guessmodeFontSize.get()), tags='labels')
 
     def guessFailure(self, right, pos):
         self.dataWindow.guessModeCanvas.delete('labels')
@@ -1377,7 +1381,7 @@ class Viewer:
         if self.cursor.atEnd:
             self.dataWindow.guessModeCanvas.create_rectangle(20, 20, 80, 80, fill='green', tags='labels', outline='green')
             self.displayGuessPercentage()
-            self.dataWindow.guessModeCanvas.create_text(50, 50, text='END', font=(self.options.guessmodeFont.get(), self.options.guessmodeFontSize.get()), tags='labels')
+            self.dataWindow.guessModeCanvas.create_text(50, 50, text='END', font=(self.options.labelFont.get(), self.options.guessmodeFontSize.get()), tags='labels')
             return
 
         if not right or not pos:
@@ -2207,19 +2211,11 @@ class Viewer:
                     break
 
         try:
-            defaultfile = pkg_resources.resource_stream(__name__, 'default.cfg')
-            c = ConfigObj(infile=defaultfile, encoding='utf8', default_encoding='utf8')
-            defaultfile.close()
-
-            if os.path.exists(os.path.join(self.optionspath, 'kombilo.cfg')):
-                configfile = open(os.path.join(self.optionspath, 'kombilo.cfg'))
-                c.merge(ConfigObj(infile=configfile, encoding='utf8', default_encoding='utf8'))
-                configfile.close()
-
+            c = self.config
             c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
-            c.filename = os.path.join(self.optionspath, 'kombilo.cfg')
+            c.filename = os.path.join(get_configfile_directory(), 'kombilo.cfg')
             c.write()
         except IOError:
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg.'))
@@ -2237,6 +2233,23 @@ class Viewer:
     def loadOptions(self, d):
         """ Load options from dictionary d. """
         self.options.loadFromDisk(d)
+
+    def get_config_obj(self):
+        defaultfile = pkg_resources.resource_stream(__name__, 'default.cfg')
+        c = ConfigObj(infile=defaultfile, encoding='utf8', default_encoding='utf8')
+        defaultfile.close()
+
+        config_path = os.path.join(get_configfile_directory(), 'kombilo.cfg')
+        if os.path.exists(config_path):
+            configfile = open(config_path)
+            c.merge(ConfigObj(infile=configfile, encoding='utf8', default_encoding='utf8'))
+            configfile.close()
+        return c
+
+    def edit_options(self):
+        self.saveOptions(self.config['options'])
+        oe = OptionEditor(self.config)
+        self.loadOptions(self.config['options'])
 
     def helpDocumentation(self):
         try:
@@ -2503,8 +2516,6 @@ class Viewer:
         self.optionsmenu = Menu(menu)
         menu.add_cascade(get_addmenu_options(label=_('_Options'), menu=self.optionsmenu))
 
-        self.optionsmenu.add_checkbutton(get_addmenu_options(label=_('_Fuzzy stone placement'), variable=self.options.fuzzy, command=self.board.fuzzyStones))
-        self.optionsmenu.add_checkbutton(label=_('Shaded stone mouse pointer'), variable=self.options.shadedStoneVar)
         self.optionsmenu.add_checkbutton(get_addmenu_options(label=_('Show _next move'), variable=self.options.showNextMoveVar, command=self.showNextMove))
         self.optionsmenu.add_checkbutton(get_addmenu_options(label=_('Show _last move'), variable=self.options.showCurrMoveVar, command=self.showNextMove))
         self.optionsmenu.add_checkbutton(label=_('Show coordinates'), variable=self.options.showCoordinates, command=self.toggleCoordinates)
@@ -2520,6 +2531,8 @@ class Viewer:
         for code, lang in languages:
             lang_menu.add_radiobutton(label=lang, variable=self.options.language, value=code, command=lambda: self.switch_language(self.options.language.get(), show_warning=True))
         self.optionsmenu.add_cascade(get_addmenu_options(label=_('_Language'), menu=lang_menu))
+
+        self.optionsmenu.add_command(get_addmenu_options(label=_('_Edit advanced options'), command=self.edit_options))
 
         # -------------- HELP -------------------
         self.helpmenu = Menu(menu, name=_('help'))
@@ -2711,32 +2724,12 @@ class Viewer:
 
         self.options = BunchTkVar()
         self.sgfpath = os.curdir
-        self.optionspath = None
 
         try:
-            with pkg_resources.resource_stream(__name__, 'default.cfg') as f:
-                self.config = ConfigObj(infile=f, encoding='utf8', default_encoding='utf8')
-
-            configfile = os.path.join(get_configfile_directory(), 'kombilo.cfg')
-            if os.path.exists(configfile):
-                with open(configfile) as f:
-                    self.optionspath = os.path.dirname(configfile)
-                    self.config.merge(ConfigObj(infile=f, encoding='utf8', default_encoding='utf8'))
-
+            self.config = self.get_config_obj()
             if self.config['main']['version'].strip() == 'kombilo%s' % KOMBILO_VERSION:
                 # otherwise this is an old .cfg file which should be ignored
 
-                if 'configdir' in self.config['main']:  # there is an individual cfg file for this user
-                    self.optionspath = os.path.join(self.config['main']['configdir'].replace('~', os.getenv('HOME')), '.kombilo')
-                    if not os.path.exists(self.optionspath):
-                        os.mkdir(self.optionspath)
-                    try:
-                        f1 = open(os.path.join(self.optionspath, 'kombilo.cfg'))
-                        ss = ConfigObj(infile=f1, encoding='utf8', default_encoding='utf8')
-                        f1.close()
-                        self.config.merge(ss)
-                    except IOError:
-                        pass
                 if 'sgfpath' in self.config['main']:
                     self.sgfpath = self.config['main']['sgfpath']
                 self.loadOptions(self.config['options'])
@@ -2744,18 +2737,16 @@ class Viewer:
             showwarning(_('Error'), _('Neither kombilo.cfg nor default.cfg were found.'))
             sys.exit()
 
-        if not self.optionspath:
-            # no kombilo.cfg found, so we will set self.optionspath now, to be used in quit method when we write kombilo.cfg
-            self.optionspath = get_configfile_directory()
+        if not os.path.exists(get_configfile_directory()):
             try:
-                os.makedirs(self.optionspath)
-            except:
-                if not os.path.exists(self.optionspath):
-                    showwarning(_('Error'), _('Unable to create directory %s.') % self.optionspath)
-                    sys.exit()
+                os.makedirs(get_configfile_directory())
+            except IOError:
+                showwarning(
+                        _('Error'),
+                        _('Unable to create directory %s.') % get_configfile_directory())
+                sys.exit()
 
-        # use optionspath for logging errors
-        sys.stderr = open(os.path.join(self.optionspath, 'kombilo.err'), 'a')
+        sys.stderr = open(os.path.join(get_configfile_directory(), 'kombilo.err'), 'a')
 
         self.guessMode = IntVar()
 

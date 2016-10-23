@@ -1968,35 +1968,6 @@ class App(v.Viewer, KEngine):
         else:  # open internal viewer
             self.openViewer_internal(filename, gameNumber, moveno)
 
-    def altViewer(self):
-        """ Ask for alternative SGF viewer. """
-
-        window = Toplevel()
-        window.title(_('Alternative SGF viewer'))
-
-        f = Frame(window)
-        f.pack()
-
-        l1 = Label(f, text=_('Enter the command to launch the SGF viewer'))
-        e1 = Entry(f, width=40, textvariable=self.options.altViewerVar1)
-        l2 = Label(f, text=_('Enter the command line options, with %f for the filename'))
-        e2 = Entry(f, width=40, textvariable=self.options.altViewerVar2)
-
-        b = Button(f, text=_('OK'), command=window.destroy)
-
-        window.protocol('WM_DELETE_WINDOW', lambda: None)
-
-        l1.pack(side=TOP, anchor=W)
-        e1.pack(side=TOP)
-        l2.pack(side=TOP, anchor=W)
-        e2.pack(side=TOP)
-        b.pack(side=RIGHT)
-
-        window.update_idletasks()
-        window.focus()
-        window.grab_set()
-        window.wait_window()
-
     # ---- administration of DBlist ----------------------------------------------------
 
     def addDB(self):
@@ -2403,14 +2374,7 @@ class App(v.Viewer, KEngine):
                     break
 
         try:
-            defaultfile = pkg_resources.resource_stream(__name__, 'default.cfg')
-            c = ConfigObj(infile=defaultfile, encoding='utf8', default_encoding='utf8')
-            defaultfile.close()
-            if os.path.exists(os.path.join(self.optionspath, 'kombilo.cfg')):
-                configfile = open(os.path.join(self.optionspath, 'kombilo.cfg'))
-                c.merge(ConfigObj(infile=configfile, encoding='utf8', default_encoding='utf8'))
-                configfile.close()
-
+            c = self.get_config_obj()
             c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
             c['main']['sgfpath'] = self.sgfpath
             c['main']['datapath'] = self.datapath
@@ -2420,7 +2384,7 @@ class App(v.Viewer, KEngine):
                 c['databases']['d%d%s' % (counter, 'disabled' if db['disabled'] else '')] = [db['sgfpath'], db['name'][0], db['name'][1]]
             c['tags'] = self.gamelist.customTags
             c['taglook'] = self.gamelist.taglook
-            c.filename = os.path.join(self.optionspath, 'kombilo.cfg')
+            c.filename = os.path.join(v.get_configfile_directory(), 'kombilo.cfg')
             c.write()
         except ImportError:
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
@@ -2573,15 +2537,6 @@ class App(v.Viewer, KEngine):
 
         # self.options.invertSelection = self.board.invertSelection
         # self.optionsmenu.add_checkbutton(label=_('Invert selection'), variable = self.options.invertSelection)
-        advOptMenu = Menu(self.optionsmenu)
-        self.optionsmenu.add_cascade(v.get_addmenu_options(label=_('_Advanced'), menu=advOptMenu))
-        advOptMenu.add_checkbutton(label=_('Open games in external viewer'), variable=self.options.externalViewer)
-        advOptMenu.add_command(v.get_addmenu_options(label=_('_Alternative SGF viewer'), command=self.altViewer))
-        advOptMenu.add_checkbutton(label=_('Use upper case labels'), variable=self.options.uppercaseLabels)
-        advOptMenu.add_checkbutton(label=_('Use strict duplicate check'), variable = self.options.strictDuplCheck)
-        if sys.platform.startswith('win'):
-            advOptMenu.add_checkbutton(label=_('Maximize window'), variable=self.options.maximize_window)
-            advOptMenu.add_checkbutton(label=_('Maximize external viewer'), variable=self.options.maximize_viewer)
 
         self.custom_menus = CustomMenus(self)
         self.optionsmenu.insert_command(1, label=_('Custom Menus'), command=self.custom_menus.change)
@@ -3512,7 +3467,7 @@ class App(v.Viewer, KEngine):
                 ]:
             v.load_icon(button, filename, self.tkImages, self.options.scaling.get())
 
-        self.custom_menus.path = self.optionspath
+        self.custom_menus.path = v.get_configfile_directory()
         self.custom_menus.buildMenus()
 
         # load logo
