@@ -2371,12 +2371,12 @@ class App(v.Viewer, KEngine):
         except ImportError:
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
 
+        self.master.quit()
+
         for db in self.gamelist.DBlist:
             if db['disabled']:
                 continue
             db['data'].delete_all_snapshots()
-
-        self.master.quit()
 
     def configButtons(self, state):
         """ Disable buttons and board during search, reset them afterwards. """
