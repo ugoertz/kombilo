@@ -57,7 +57,7 @@ class OptionEditor(object):
         special_values = ['# -----', '# section', '# label', '# editable', '# values', ]
 
         sf = ScrolledFrame(
-                self.window, hscrollmode='none',
+                self.window,
                 usehullsize=1, hull_height=500)
         sf.pack(side='top', anchor='w', expand=True, fill='both')
         f = sf.interior()

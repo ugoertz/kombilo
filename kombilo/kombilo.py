@@ -393,7 +393,12 @@ class GameListGUI(GameList, VScrolledList):
         self.taglook = {}
 
         # set up listbox
-        VScrolledList.__init__(self, parent, 500, 0, self.get_data, get_data_ic=self.get_data_ic, font=('Helvetica', master.options.commentFontSize.get()))
+        VScrolledList.__init__(
+                self,
+                parent, 500, 0,
+                self.get_data,
+                get_data_ic=self.get_data_ic,
+                font=master.standardFont)
         self.listbox.config(width=52, height=6)
         self.onSelectionChange = self.printGameInfo
         for key, command in [('<Return>', self.handleDoubleClick), ('<Control-v>', self.printSignature), ]:
@@ -470,15 +475,15 @@ class GameListGUI(GameList, VScrolledList):
         self.total_in_list = noOfG
         self.noGamesLabel.config(
                 text=_('%d games') % noOfG,
-                font=('Helvetica', self.mster.options.statFontSize.get()))
+                font=self.mster.smallFont)
         if noOfG:
             self.winPercLabel.config(
                     text=_('B: {0:1.1f}%, W: {1:1.1f}%').format(Bperc, Wperc),
-                    font=('Helvetica', self.mster.options.statFontSize.get()))
+                    font=self.mster.smallFont)
         else:
             self.winPercLabel.config(
                     text='',
-                    font=('Helvetica', self.mster.options.statFontSize.get()))
+                    font=self.mster.smallFont)
         VScrolledList.reset(self)
 
     def printGameInfo(self, event, index=-1):
@@ -664,7 +669,7 @@ class PrevSearchesStack(object):
 
         b = SearchHistoryBoard(
                 self.prevSF.interior(), self.mster.board.boardsize, (12, 6), 0,
-                self.labelSize, 1, None, self.mster.boardImg,
+                self.mster.labelFont, 1, None, self.mster.boardImg,
                 self.mster.blackStones, self.mster.whiteStones,
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
@@ -940,10 +945,7 @@ class App(v.Viewer, KEngine):
         pixel coordinates) where the first/final year should be located
         """
 
-        smallfont = (
-                self.options.statFont.get(),
-                self.options.statFontSizeSmall.get(),
-                self.options.statFontStyle.get())
+        smallfont = self.smallFont
         xoffset = canvas_fr
         W = canvas_to - canvas_fr
         H = int(self.statisticsCanv.cget('height'))
@@ -986,14 +988,8 @@ class App(v.Viewer, KEngine):
             return
 
         if self.options.statistics_by_date.get():
-            font = (
-                    self.options.statFont.get(),
-                    self.options.statFontSize.get(),
-                    self.options.statFontStyle.get())
-            smallfont = (
-                    self.options.statFont.get(),
-                    self.options.statFontSizeSmall.get(),
-                    self.options.statFontStyle.get())
+            font = self.smallFont
+            smallfont = self.smallFont
 
             self.statisticsCanv.delete('stat')
             self.statisticsCanv.create_text(
@@ -1018,9 +1014,6 @@ class App(v.Viewer, KEngine):
                 elif dt > to:
                     return W
                 return (dt - fr) * (W - xoffset) // (to - fr) + xoffset
-
-
-            font = (self.options.statFont.get(), self.options.statFontSize.get(), 'bold')
 
             # split continuations up according to B/W
             continuations = []
@@ -1119,14 +1112,8 @@ class App(v.Viewer, KEngine):
 
     def display_bar_chart_dates(self, canvas, tag, data, title='', fr=None, to=None):
         canvas.delete(tag)
-        font = (
-                self.options.statFont.get(),
-                self.options.statFontSize.get(),
-                self.options.statFontStyle.get())
-        smallfont = (
-                self.options.statFont.get(),
-                self.options.statFontSizeSmall.get(),
-                self.options.statFontStyle.get())
+        font = self.smallFont
+        smallfont = self.smallFont
 
         canvas.create_text(20, 5, text=title, font=font, anchor='nw', tags=tag)
         if not data:
@@ -1174,14 +1161,8 @@ class App(v.Viewer, KEngine):
         """
 
         canvas.delete(tag)
-        font = (
-                self.options.statFont.get(),
-                self.options.statFontSize.get(),
-                self.options.statFontStyle.get())
-        smallfont = (
-                self.options.statFont.get(),
-                self.options.statFontSizeSmall.get(),
-                self.options.statFontStyle.get())
+        font = self.smallFont
+        smallfont = self.smallFont
 
         W = int(self.statisticsCanv.cget('width')) * 6 // 7
         H = int(self.statisticsCanv.cget('height'))
@@ -1362,7 +1343,7 @@ class App(v.Viewer, KEngine):
                                                     self.gamelist.DBlist[DBindex]['data'][index][GL_PW],
                                                     self.gamelist.DBlist[DBindex]['data'][index][GL_PB]))
             text.append('-----------------------------------------------\n')
-        v.TextEditor(''.join(text), self.sgfpath, (self.options.exportFont, self.options.exportFontSize, self.options.exportFontStyle))
+        v.TextEditor(''.join(text), self.sgfpath, self.monospaceFont)
 
 
     def sigSearch(self):
@@ -1410,7 +1391,7 @@ class App(v.Viewer, KEngine):
 
         window.protocol('WM_DELETE_WINDOW', window.destroy)
 
-        bo = v.Board(window, 19, (5, 18), 0, None, 0, None, self.boardImg, self.blackStones, self.whiteStones)
+        bo = v.Board(window, 19, (5, 18), 0, self.labelFont, 0, None, self.boardImg, self.blackStones, self.whiteStones)
         bo.state('normal', lambda pos, self=self, window=window,
                  e1=e1, e2=e2, e3=e3, e4=e4, e5=e5, e6=e6, m20=m20, m40=m40, m60=m60, m31=m31,
                  m51=m51, m71=m71: self.sigSearchGetCoord(pos, window, e1, e2, e3, e4, e5, e6, m20, m40, m60, m31, m51, m71))
@@ -1825,7 +1806,7 @@ class App(v.Viewer, KEngine):
         t.append('\n')
         t.extend(remarks)
 
-        ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, (self.options.exportFont, self.options.exportFontSize, self.options.exportFontStyle))
+        ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, self.monospaceFont)
 
     def exportText(self):
         """Export some information on the previous search in a small text editor,
@@ -1860,7 +1841,7 @@ class App(v.Viewer, KEngine):
 
         t = self.patternSearchDetails(exportMode.get(), showAllCont.get())
 
-        ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, (self.options.exportFont, self.options.exportFontSize, self.options.exportFontStyle))
+        ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, self.monospaceFont)
 
     def printPattern(self, event=None):
         if self.currentSearchPattern:
@@ -2255,7 +2236,8 @@ class App(v.Viewer, KEngine):
         self.editDB_OK = Button(f2, text=_('OK'), command=self.finalizeEditDB)
         self.editDB_OK.grid(row=0, column=4, sticky=NSEW)
 
-        Label(f3, text=_('Processing options'), justify=LEFT, font=('Helvetica', 10, 'bold')).grid(row=0, column=0, sticky=W)
+        Label(f3, text=_('Processing options'), justify=LEFT, font=self.boldFont
+                ).grid(row=0, column=0, sticky=W)
 
         recursionButton = Checkbutton(f3, text=_('Recursively add subdirectories'), highlightthickness=0, variable=self.options.recProcess, pady=5)
         recursionButton.grid(row=1, column=0, columnspan=2, sticky=W)
@@ -2293,7 +2275,7 @@ class App(v.Viewer, KEngine):
         processVariations = Checkbutton(f3, text=_('Process variations'), highlightthickness=0, variable=self.options.processVariations, pady=5)
         processVariations.grid(row=5, column=0, sticky=W, columnspan=2)
 
-        profTagLabel = Label(f3, anchor='e', text=_('Tag as professional:'), font=('Helvetica', 10), pady=8)
+        profTagLabel = Label(f3, anchor='e', text=_('Tag as professional:'), pady=8)
         profTagLabel.grid(row=6, column=0, sticky=W, )
         profTag = Combobox(f3, justify='left', textvariable=self.options.tagAsPro,
                                values=[_('Never'), _('All games'), _('All games with p-rank players'), ], state='readonly')
@@ -3042,7 +3024,7 @@ class App(v.Viewer, KEngine):
         self.options.date_profile_to.set(datetime.datetime.today().year)
 
     def evalOptions(self):
-        self.dataWindow.comments.configure(text_font=(self.options.commentFont.get(), self.options.commentFontSize.get(), self.options.commentFontStyle.get()))
+        self.dataWindow.comments.configure(text_font=self.standardFont)
         if self.options.showCoordinates.get():
             self.board.coordinates = 1
             self.board.resize()
@@ -3138,7 +3120,7 @@ class App(v.Viewer, KEngine):
         self.listFrameS = Frame(self.frameS)
         self.frameS.add(self.listFrameS, minsize=100, sticky="NSEW")
         self.gameinfoS = Pmw.ScrolledText(self.frameS, usehullsize=1, hull_height=160, text_wrap=WORD,
-                                          text_font=(self.options.commentFont.get(), self.options.commentFontSize.get()))
+                                          text_font=self.standardFont)
         self.gameinfoS.configure(text_state=DISABLED)
         self.gameinfoS.tag_config('blue', foreground='blue')
         self.frameS.add(self.gameinfoS, minsize=100, sticky="NSEW")
@@ -3147,8 +3129,6 @@ class App(v.Viewer, KEngine):
         self.frameS.add(self.nbFrameS, minsize=50, sticky="NSEW")
         self.toolbarFrameS = Frame(self.nbFrameS)
         self.notebookFrameS = Frame(self.nbFrameS)
-        notebookstyle = Style()
-        notebookstyle.configure('.', font=('Helvetica', self.options.statFontSize.get()))
         self.notebook = Notebook(self.notebookFrameS)
 
         self.searchStat = Frame(self.notebook)
@@ -3260,12 +3240,16 @@ class App(v.Viewer, KEngine):
 
         sep2 = Separator(self.toolbarFrameS, orient='vertical')
         sep2.pack(padx=5, fill=Y, side=LEFT)
-        self.colorButtonS = Checkbutton(self.toolbarFrameS, text=_('Fixed Color'), highlightthickness=0, variable=self.fixedColorVar, font=('Helvetica', self.options.statFontSize.get()))
+        self.colorButtonS = Checkbutton(
+                self.toolbarFrameS,
+                text=_('Fixed Color'),
+                highlightthickness=0,
+                variable=self.fixedColorVar)
         self.colorButtonS.pack(side=LEFT)
 
         sep1 = Separator(self.toolbarFrameS, orient='vertical')
         sep1.pack(padx=5, fill=Y, side=LEFT)
-        l = Label(self.toolbarFrameS, text=_('Next:'), font=('Helvetica', self.options.statFontSize.get()))
+        l = Label(self.toolbarFrameS, text=_('Next:'))
         l.pack(side=LEFT)
 
         self.nextMoveVar = IntVar()  # 0 = either player, 1 = black, 2 = white
@@ -3277,15 +3261,15 @@ class App(v.Viewer, KEngine):
         self.nextMove3S.pack(side=LEFT)
 
         self.fixedAnchorVar = IntVar()
-        self.anchorButtonS = Checkbutton(self.patternSearchOptions, text=_('Fixed Anchor'), highlightthickness=0, variable=self.fixedAnchorVar, font=('Helvetica', self.options.statFontSize.get()))
+        self.anchorButtonS = Checkbutton(self.patternSearchOptions, text=_('Fixed Anchor'), highlightthickness=0, variable=self.fixedAnchorVar)
         self.anchorButtonS.grid(row=0, column=0, columnspan=2, sticky=W)
 
         self.searchInVariations = BooleanVar()
         self.searchInVariations.set(True)
-        self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text=_('Search in variations'), highlightthickness=0, variable=self.searchInVariations, font=('Helvetica', self.options.statFontSize.get()))
+        self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text=_('Search in variations'), highlightthickness=0, variable=self.searchInVariations)
         self.searchInVariationsButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
-        self.mvLimLabel = Label(self.patternSearchOptions, text=_('Move limit'), font=('Helvetica', self.options.statFontSize.get()))
+        self.mvLimLabel = Label(self.patternSearchOptions, text=_('Move limit'))
         self.mvLimLabel.grid(row=2, column=0, sticky=W)
         self.moveLimit = IntVar()
         self.moveLimit.set(250)
@@ -3297,12 +3281,12 @@ class App(v.Viewer, KEngine):
 
         self.algo_hash_full_search = IntVar()
         self.algo_hash_full_search.set(1)
-        self.algo_hash_full = Checkbutton(self.patternSearchOptions, text=_('Use hashing for full board positions'), highlightthickness=0, variable=self.algo_hash_full_search, pady=5, font=('Helvetica', self.options.statFontSize.get()))
+        self.algo_hash_full = Checkbutton(self.patternSearchOptions, text=_('Use hashing for full board positions'), highlightthickness=0, variable=self.algo_hash_full_search, pady=5)
         self.algo_hash_full.grid(row=4, column=0, columnspan=2, sticky=W)
 
         self.algo_hash_corner_search = IntVar()
         self.algo_hash_corner_search.set(1)
-        self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.algo_hash_corner_search, pady=5, font=('Helvetica', self.options.statFontSize.get()))
+        self.algo_hash_corner = Checkbutton(self.patternSearchOptions, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.algo_hash_corner_search, pady=5)
         self.algo_hash_corner.grid(row=5, column=0, columnspan=2, sticky=W)
 
         sep2 = Separator(self.patternSearchOptions, orient='horizontal')
@@ -3312,26 +3296,26 @@ class App(v.Viewer, KEngine):
 
         self.patternSearchOptions_dp = Frame(self.patternSearchOptions)
         self.patternSearchOptions_dp.grid(row=7, columnspan=6, sticky=NSEW)
-        self.dp_label = Label(self.patternSearchOptions_dp, text=_('Date profile options'), font=('Helvetica', self.options.statFontSize.get()))
+        self.dp_label = Label(self.patternSearchOptions_dp, text=_('Date profile options'))
         self.dp_label.grid(row=7, column=0, columnspan=4)
-        self.dp_from_lb = Label(self.patternSearchOptions_dp, text=_('From'), font=('Helvetica', self.options.statFontSize.get()))
+        self.dp_from_lb = Label(self.patternSearchOptions_dp, text=_('From'))
         self.dp_from = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_from)
         self.dp_from_lb.grid(row=8, column=0, padx=3)
         self.dp_from.grid(row=8, column=1, padx=3)
-        self.dp_to_lb = Label(self.patternSearchOptions_dp, text=_('To'), font=('Helvetica', self.options.statFontSize.get()))
+        self.dp_to_lb = Label(self.patternSearchOptions_dp, text=_('To'))
         self.dp_to = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_to)
         self.dp_to_lb.grid(row=8, column=2, padx=3)
         self.dp_to.grid(row=8, column=3, padx=3)
-        self.dp_chunk_size_lb = Label(self.patternSearchOptions_dp, text=_('Months/bar'), font=('Helvetica', self.options.statFontSize.get()))
+        self.dp_chunk_size_lb = Label(self.patternSearchOptions_dp, text=_('Months/bar'))
         self.dp_chunk_size = Entry(self.patternSearchOptions_dp, width=4, textvariable=self.options.date_profile_chunk_size)
         self.dp_chunk_size_lb.grid(row=8, column=4, padx=3)
         self.dp_chunk_size.grid(row=8, column=5, padx=3)
         self.patternSearchOptions_dp1 = Frame(self.patternSearchOptions)
         self.patternSearchOptions_dp1.grid(row=8, columnspan=8, sticky=NSEW)
-        self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'), font=('Helvetica', self.options.statFontSize.get()))
+        self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'))
         self.dp_sort_crit_lb.grid(row=0, column=0)
         self.dp_sort_crit = Combobox(self.patternSearchOptions_dp1, values=(_('total'), _('earliest'), _('latest'), _('average'), _('became popular'), _('became unpopular'), ), textvariable=self.options.continuations_sort_crit,
-                                     state='readonly', width=25, font=('Helvetica', self.options.statFontSize.get()))
+                                     state='readonly', width=25)
         self.dp_sort_crit.grid(row=0, column=1, padx=3)
 
         # validation for date profile options, and triggering of date profile update when options are changed

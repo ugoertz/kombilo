@@ -124,16 +124,13 @@ class TextEditor:
     def __init__(self, t='', defpath='', font=None):
 
         if font is None:
-            font = (StringVar(), IntVar(), StringVar())
-            font[0].set('Courier')
-            font[1].set(10)
-            font[2].set('')
+            font = ('Courier', 10, '')
 
         self.window = Toplevel()
 
         self.window.protocol('WM_DELETE_WINDOW', self.quit)
 
-        self.text = ScrolledText(self.window, width=70, height=30, font=(font[0].get(), font[1].get(), font[2].get()))
+        self.text = ScrolledText(self.window, width=70, height=30, font=font)
         self.text.pack(side=BOTTOM, fill=BOTH, expand=YES)
         self.text.insert(END, t)
 
@@ -356,8 +353,9 @@ class SGFtreeCanvas(Frame):
 
         self.movenoCanvas.delete(ALL)
         for i in range(90):
-            self.movenoCanvas.create_text(int(self.UNIT * .75) + i * 5 *self.UNIT, 7, text=repr(5 * i),
-                                          font=(self.options.statFont.get(), self.options.statFontSize.get()))
+            self.movenoCanvas.create_text(
+                    int(self.UNIT * .75) + i * 5 *self.UNIT, 7, text=repr(5 * i),
+                    font=(self.options.smallFont.get(), self.options.smallFontSize.get()))
 
     def xview(self, a1, a2=None, a3=None):
         if a1 == MOVETO:
@@ -577,7 +575,7 @@ class DataWindow:
         self.gamelist.dragLast = -1
 
         self.gameinfo = Pmw.ScrolledText(self.gameinfoF, text_wrap=WORD)
-        self.gameinfo.configure(text_state='disabled', text_font=(self.mster.options.commentFont.get(), self.mster.options.commentFontSize.get()))
+        self.gameinfo.configure(text_state='disabled', text_font=self.mster.standardFont)
         self.gameinfo.pack(fill=BOTH, expand=YES)
         self.SNM = 0
         self.guessRightWrong = [0, 0]
@@ -1373,7 +1371,10 @@ class Viewer:
         self.dataWindow.guessRightWrong[0] += 1
         self.displayGuessPercentage()
         if self.cursor.atEnd:
-            self.dataWindow.guessModeCanvas.create_text(50, 50, text='END', font=(self.options.labelFont.get(), self.options.guessmodeFontSize.get()), tags='labels')
+            self.dataWindow.guessModeCanvas.create_text(
+                    50, 50, text='END',
+                    font=(self.options.labelFont.get(), self.options.labelFontSize.get() + 10),
+                    tags='labels')
 
     def guessFailure(self, right, pos):
         self.dataWindow.guessModeCanvas.delete('labels')
@@ -1381,7 +1382,10 @@ class Viewer:
         if self.cursor.atEnd:
             self.dataWindow.guessModeCanvas.create_rectangle(20, 20, 80, 80, fill='green', tags='labels', outline='green')
             self.displayGuessPercentage()
-            self.dataWindow.guessModeCanvas.create_text(50, 50, text='END', font=(self.options.labelFont.get(), self.options.guessmodeFontSize.get()), tags='labels')
+            self.dataWindow.guessModeCanvas.create_text(
+                    50, 50, text='END',
+                    font=(self.options.labelFont.get(), self.options.labelFontSize.get() + 10),
+                    tags='labels')
             return
 
         if not right or not pos:
@@ -1628,16 +1632,12 @@ class Viewer:
         """ Display the labels in the current node."""
 
         self.comments.delete('1.0', END)
-        self.dataWindow.comments.configure(
-                text_font=(
-                    self.options.commentFont.get(),
-                    self.options.commentFontSize.get(),
-                    self.options.commentFontStyle.get()))
+        self.dataWindow.comments.configure(text_font=self.standardFont)
         if 'C' in c:
             comment_text = self.cursor.transcode('C', c).splitlines()
             if comment_text:
                 if comment_text[0] == '@@monospace':
-                    self.dataWindow.comments.configure(text_font=('Courier', self.options.commentFontSize.get()))
+                    self.dataWindow.comments.configure(text_font=self.monospaceFont)
 
                 self.comments.insert('1.0', '\n'.join(comment_text))
 
@@ -2192,10 +2192,7 @@ class Viewer:
         self.leaveNode()
         try:
             t = self.cursor.exportGame()
-            try:
-                TextEditor(t, self.sgfpath, (self.options.exportFont0, self.options.exportFont1, self.options.exportFont2))
-            except:
-                TextEditor(t, self.sgfpath, )
+            TextEditor(t, self.sgfpath, self.monospaceFont)
         except lk.SGFError:
             showwarning(_('Error'), _('SGF Error'))
 
@@ -2250,6 +2247,8 @@ class Viewer:
         self.saveOptions(self.config['options'])
         oe = OptionEditor(self.config)
         self.loadOptions(self.config['options'])
+        self.initFonts()
+        self.board.resize()
 
     def helpDocumentation(self):
         try:
@@ -2475,6 +2474,30 @@ class Viewer:
             self.board.coordinates = 0
             self.board.resize()
 
+    def initFonts(self):
+        self.monospaceFont = tkFont.Font(
+                family=self.options.monospaceFont.get(),
+                size=self.options.monospaceFontSize.get(),
+                weight=self.options.monospaceFontWeight.get())
+        self.standardFont = tkFont.Font(
+                family=self.options.standardFont.get(),
+                size=self.options.standardFontSize.get(),
+                weight=self.options.standardFontWeight.get())
+        self.labelFont = tkFont.Font(
+                family=self.options.labelFont.get(),
+                size=self.options.labelFontSize.get(),
+                weight=self.options.labelFontWeight.get())
+        self.smallFont = tkFont.Font(
+                family=self.options.smallFont.get(),
+                size=self.options.smallFontSize.get(),
+                weight=self.options.smallFontWeight.get())
+        self.boldFont = tkFont.Font(
+                family=self.options.standardFont.get(),
+                size=self.options.standardFontSize.get(),
+                weight='bold')
+        defaultfont = tkFont.nametofont('TkDefaultFont')
+        defaultfont.configure(size=self.options.standardFontSize.get())
+
 
     def initMenus(self):
 
@@ -2634,12 +2657,12 @@ class Viewer:
         self.boardFrame.focus()
 
         self.moveno = StringVar()
-        self.movenoLabel = Label(labelFrame, height=1, width=5, relief=SUNKEN, justify=RIGHT, textvariable=self.moveno, font=('Helvetica', self.options.statFontSize.get()))
+        self.movenoLabel = Label(labelFrame, height=1, width=5, relief=SUNKEN, justify=RIGHT, textvariable=self.moveno, font=self.smallFont)
         self.gameName = StringVar()
-        self.gameNameLabel = Label(labelFrame, height=1, width=20, relief=SUNKEN, justify=LEFT, textvariable=self.gameName, font=('Helvetica', self.options.statFontSize.get()))
+        self.gameNameLabel = Label(labelFrame, height=1, width=20, relief=SUNKEN, justify=LEFT, textvariable=self.gameName, font=self.smallFont)
 
         self.capVar = StringVar()
-        self.capLabel = Label(labelFrame, height=1, width=15, relief=SUNKEN, justify=LEFT, textvariable=self.capVar, font=('Helvetica', self.options.statFontSize.get()))
+        self.capLabel = Label(labelFrame, height=1, width=15, relief=SUNKEN, justify=LEFT, textvariable=self.capVar, font=self.smallFont)
 
         # pack everything
 
@@ -2687,8 +2710,7 @@ class Viewer:
         Do things that depend on reading the options file.
         """
 
-        self.dataWindow.comments.configure(text_font=(self.options.commentFont.get(), self.options.commentFontSize.get(),
-                                                      self.options.commentFontStyle.get()))
+        self.dataWindow.comments.configure(text_font=self.standardFont)
         if self.options.showCoordinates.get():
             self.board.coordinates = 1
             self.board.resize()
@@ -2762,12 +2784,10 @@ class Viewer:
             # screen resolution is (probably) very high.
             varlist = [
                     (self.options.scaling, 22, 32),
-                    (self.options.statFontSize, 8, 10),
-                    (self.options.statFontSizeSmall, 8, 10),
-                    (self.options.commentFontSize, 11, 12),
+                    (self.options.standardFontSize, 9, 10),
+                    (self.options.smallFontSize, 8, 9),
                     (self.options.labelFontSize, 5, 7),
-                    (self.options.exportFontSize, 10, 12),
-                    (self.options.guessmodeFontSize, 16, 18),
+                    (self.options.monospaceFontSize, 10, 12),
                     ]
 
             if master.winfo_screenwidth() > 2200:
@@ -2776,9 +2796,6 @@ class Viewer:
             else:
                 for variable, size, dummy in varlist:
                     variable.set(size)
-
-        defaultfont = tkFont.nametofont('TkDefaultFont')
-        defaultfont.configure(size=self.options.statFontSize.get())
 
         # The main window
 
@@ -2806,6 +2823,8 @@ class Viewer:
         self.boardFrame.pack(side=TOP, expand=YES, fill=BOTH, padx=5)
         labelFrame.pack(side=TOP)
 
+        self.initFonts()
+
         # The board
 
         try:
@@ -2826,13 +2845,14 @@ class Viewer:
                     for i in range(16)
                     ]
 
-        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, None, 1, None, self.boardImg, self.blackStones, self.whiteStones, True)
+        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, self.labelFont, 1, None, self.boardImg, self.blackStones, self.whiteStones, True)
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
 
         self.board.pack(expand=YES, fill=BOTH)
         # self.board.pack_propagate(0)
         self.board.update_idletasks()
+
 
         # the data window
 
@@ -2841,9 +2861,9 @@ class Viewer:
         self.comments = self.dataWindow.comments
         self.cursor = EnhancedCursor('(;GM[1]FF[4]SZ[19]AP[Kombilo])', self.comments, self.dataWindow.SGFtreeC, self)
         self.dataWindow.updateGameInfo(self.cursor)
+        self.evalOptions()
         self.dataWindow.window.update_idletasks()
 
-        self.evalOptions()
         self.initButtons(navFrame, labelFrame)
         self.init_key_bindings()
         self.initMenus()

@@ -26,6 +26,7 @@
 
 
 from Tkinter import *
+import tkFont
 from PIL import Image as PILImage
 from PIL import ImageTk as PILImageTk
 from random import randint, choice
@@ -59,14 +60,14 @@ class Board(abstractBoard, Canvas):
         Here, color is either "black" or "white" (this is different from the underlying class abstractBoard, where "B" and "W" are used!)
     """
 
-    def __init__(self, master, boardsize=19, canvasSize=(30, 25), fuzzy=1, labelFontsize=None,
+    def __init__(self, master, boardsize=19, canvasSize=(30, 25), fuzzy=1, labelFont=None,
                  focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True,
                  square_board=True):
         # FIXME should refactor code: use_PIL not used anymore
         """
         blackImg and whiteImg are lists of PILImage instances (as returned by PILImage.open(...)
         Upon placing a stone on the board, a random item of the respective list
-        is chosen. (Typically the blackImg list will have only one item.
+        is chosen. (Typically the blackImg list will have only one item.)
         """
 
         self.square_board = square_board
@@ -88,11 +89,13 @@ class Board(abstractBoard, Canvas):
         self.fuzzy = IntVar()   # if self.fuzzy is true, the stones are not placed precisely
         self.fuzzy.set(fuzzy)   # on the intersections, but randomly a pixel off
 
-        if labelFontsize:
-            self.labelFontsize = labelFontsize
+        if labelFont is None:
+            self.labelFontBold = tkFont.Font(family='Helvetica', size=5, weight='bold')
+            self.labelFont = tkFont.Font(family='Helvetica', size=5)
         else:
-            self.labelFontsize = IntVar()
-            self.labelFontsize.set(5)
+            self.labelFontBold = labelFont
+            self.labelFont = tkFont.Font(family=labelFont['family'], size=labelFont['size'])
+        self.labelFontSizeOrig = self.labelFont['size']
 
         self.shadedStoneVar = IntVar()   # if this is true, there is a 'mouse pointer' showing
         self.shadedStonePos = (-1, -1)   # where the next stone would be played, given the current
@@ -130,6 +133,8 @@ class Board(abstractBoard, Canvas):
         c0, c1 = self.canvasSize
         size = 2 * c0 + (self.boardsize - 1) * c1
         self.config(height=size, width=size)
+        self.labelFont.configure(size=self.labelFontSizeOrig + c1//7 - 3)
+        self.labelFontBold.configure(size=self.labelFontSizeOrig + c1//7)
 
         self.delete('board')
         for i in range(size // 200 + 2):
@@ -168,10 +173,10 @@ class Board(abstractBoard, Canvas):
             for i in range(self.boardsize):
                 a = 'ABCDEFGHJKLMNOPQRST'[i]
                 self.create_text(c0 + c1 * i, c1 * self.boardsize + 3 * c0 // 4 + 4, text=a,
-                                 font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
-                self.create_text(c0 + c1 * i, c0 // 4 + 1, text=a, font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
-                self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
-                self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=('Helvetica', 5 + c1 // 7, ''), tags='non-bg')
+                                 font=self.labelFont, tags='non-bg')
+                self.create_text(c0 + c1 * i, c0 // 4 + 1, text=a, font=self.labelFont, tags='non-bg')
+                self.create_text(c0 // 4 + 1, c0 + c1 * i, text=repr(self.boardsize - i), font=self.labelFont, tags='non-bg')
+                self.create_text(c1 * self.boardsize + 3 * c0 // 4 + 4, c0 + c1 * i, text=repr(self.boardsize - i), font=self.labelFont, tags='non-bg')
 
         self.bStones = [
                 PILImageTk.PhotoImage(bs.resize((c1 + 1, c1 + 1), PILImage.LANCZOS))
@@ -422,8 +427,7 @@ class Board(abstractBoard, Canvas):
         if typ == 'LB':
             labelIDs.append(self.create_oval(x1 + 3, x2 + 3, y1 - 3, y2 - 3, fill=fcolor2, outline='', tags=('labelbg', 'non-bg')))
             labelIDs.append(self.create_text((x1 + y1) // 2, (x2 + y2) // 2, text=text, fill=fcolor,
-                                             font=('Helvetica', self.labelFontsize.get() + self.canvasSize[1] // 5, 'bold'),
-                                             tags=('label', 'non-bg')))
+                                             font=self.labelFontBold, tags=('label', 'non-bg')))
         elif typ == 'SQ':
             w = self.canvasSize[1] / 3
             labelIDs.append(self.create_rectangle(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=('label', 'non-bg')))
@@ -439,7 +443,7 @@ class Board(abstractBoard, Canvas):
             labelIDs.append(self.create_oval(x1 + 2, x2 + 2, y1 - 2, y2 - 2, fill=fcolor2, outline='',
                              tags=('label', 'non-bg')))
             labelIDs.append(self.create_text(x1 + 12, x2 + 12, text='X', fill=fcolor,
-                                             font=('Helvetica', self.labelFontsize.get() + 1 + self.canvasSize[1] // 5, 'bold'),
+                                             font=self.labelFontBold,
                                              tags=('label', 'non-bg')))
 
         self.labels[pos] = (typ, text, labelIDs, color)
