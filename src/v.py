@@ -553,7 +553,7 @@ class DataWindow:
         self.SNM = 0
         self.guessRightWrong = [0,0]
 
-        self.comments = Pmw.ScrolledText(self.commentsF)
+        self.comments = Pmw.ScrolledText(self.commentsF, text_wrap='word')
         self.comments.pack(expand=YES, fill=BOTH)
         self.window = window
 
