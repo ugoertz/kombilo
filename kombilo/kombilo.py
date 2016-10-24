@@ -1594,7 +1594,14 @@ class App(v.Viewer, KEngine):
         if not self.currentSearchPattern:
             return
         if self.showContinuation.get():
-            self.board.delLabels()  # FIXME is this what we want to do?
+            # need to test for this here since showCont is invoked as command
+            # from menu upon changing this option
+
+            # There might be labels on the board, but we just leave them: Either
+            # there are "overwritten" by one of the continuations below, or they
+            # do not correspond to a continuation and hence should stay. (The
+            # pattern search takes care of not using labels which are
+            # already on the board.)
 
             for c in self.continuations:
                 if not c.B:
@@ -1604,7 +1611,6 @@ class App(v.Viewer, KEngine):
                 else:
                     color = self.options.labelColor.get()
                 self.board.placeLabel((c.x + self.sel[0][0], c.y + self.sel[0][1]), '+LB', c.label, color)
-
         else:
             self.board.delLabels()
             if self.cursor:
@@ -2625,7 +2631,6 @@ class App(v.Viewer, KEngine):
         self.progBar.start(50)
 
         boardData = self.board.snapshot()
-        self.board.delLabels()
 
         CSP = self.get_pattern_from_board()
         self.searchOptions = self.get_search_options()
