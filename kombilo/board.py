@@ -440,11 +440,10 @@ class Board(abstractBoard, Canvas):
                                                 width=2, fill='', outline=fcolor,
                                                 tags=('label', 'non-bg')))
         elif typ == 'MA':
-            labelIDs.append(self.create_oval(x1 + 2, x2 + 2, y1 - 2, y2 - 2, fill=fcolor2, outline='',
-                             tags=('label', 'non-bg')))
-            labelIDs.append(self.create_text(x1 + 12, x2 + 12, text='X', fill=fcolor,
-                                             font=self.labelFontBold,
-                                             tags=('label', 'non-bg')))
+            labelIDs.append(self.create_oval(x1 + 3, x2 + 3, y1 - 3, y2 - 3, fill=fcolor2, outline='',
+                             tags=('labelbg', 'non-bg')))
+            labelIDs.append(self.create_text((x1 + y1) // 2, (x2 + y2) // 2, text='X', fill=fcolor,
+                                             font=self.labelFontBold, tags=('label', 'non-bg')))
 
         self.labels[pos] = (typ, text, labelIDs, color)
 
