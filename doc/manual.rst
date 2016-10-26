@@ -1625,13 +1625,6 @@ position have to be set up in the same node of the SGF file. Unfortunately,
 in a few handicap games of the Go Teaching Ladder, this is not the case;
 you will have to edit these files manually if you want to use them with Kombilo.
 
-Empty nodes are skipped. When the usual 'black play' - 'white play' -
-'black play' ... order is broken, Kombilo will stop processing the game in
-question at that point.  This is another problem with games of the Go
-Teaching Ladder: in some of them, after a variation forked off a
-black/white move is not shown with the usual B/W tag, but with a AB/AW tag
-(which should be used to set up stones like handicap stones). Kombilo will
-process these games only until the first variation.
 
 SGF collections: Kombilo's SGF editor can handle SGF files with several
 games in them, and so can the search engine. Nevertheless it is not a good
