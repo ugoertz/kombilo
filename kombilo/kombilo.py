@@ -1536,6 +1536,7 @@ class App(v.Viewer, KEngine):
     def completeReset(self):
         self.reset()
         self.board.newPosition()
+        self.prevSearches.clear()
         self.changeCurrentFile(None, 0)
         for i in range(len(self.filelist)):
             self.delFile()
