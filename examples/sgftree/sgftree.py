@@ -29,7 +29,8 @@ This script takes an initial position, searches for it in the given database,
 and then searches for all continuations, then for all continuations in the
 newly found results etc. In this way, a tree of positions is computed, and in
 the end everything is written into an SGF file, with some information about the
-search results at each step.
+search results at each step. (Note that this functionality is also available
+from within Kombilo.)
 
 Before starting the script, you need to write a configuration file. In the
 ``[databases]`` section, information about the databases to be used should be

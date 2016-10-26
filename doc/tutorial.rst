@@ -19,10 +19,13 @@ When you start Kombilo, the **main window** will open, with a go board in
 the middle, some widgets which belong to the SGF editor on the left, and
 the game list on the right.
 
-.. image:: images/mainwindow_new.jpg
+.. image:: images/mainwindow_new.png
 
-You can change the sizes of the columns by dragging the *sashes* between
-them, and similarly for the horizontal panes in the left hand column.
+You can change the sizes of the columns by dragging the *sashes* (marked in red
+in the screenshot below) between them, and similarly for the horizontal panes in
+the left hand column.
+
+.. image:: images/sashes.png
 
 The first thing you have to do now is to add SGF files to the database
 list; choose the *Edit DB list* command in the Database menu.
@@ -37,7 +40,7 @@ than 70.000 at the time of writing, and is highly recommended.
 See also the section about :ref:`requirements-on-SGF-files`
 in order to understand which kind of SGF files the program can handle. 
 
-.. image:: images/editdblist.jpg
+.. image:: images/editdblist.png
   :align: right
 
 Check (and change, if necessary) the options - mainly whether all
@@ -92,7 +95,7 @@ all games will be found which feature the given pattern in the relevant
 region, no matter what else is on the board.  Of course, mirroring and
 rotating the board is automatically taken into account.
 
-.. image:: images/expl_color.jpg
+.. image:: images/expl_color.png
   :align: left
 
 Switch between placing black and white stones alternatingly, or stones of
@@ -157,7 +160,7 @@ is given. For the ten most frequent continuations, you get
   not given, but of course (neglecting jigos etc.) it will be 100% - black
   winning percentage.
 
-.. image:: images/statistics.jpg
+.. image:: images/statistics.png
 
 
 The labels are ordered by the number of occurrences of the corresponding
@@ -185,7 +188,7 @@ Pattern search options
 There are several buttons to customize the search in the game list
 window: 
 
-.. image:: images/searchoptions.jpg
+.. image:: images/searchoptions.png
 
 Usually the pattern obtained by reversing the colors is 
 searched for too, but you can disable that with the 'fixed color'
@@ -216,7 +219,7 @@ either color.
 
 For example, the following pattern finds all kos (that are not on the edge):
 
-.. image:: images/search_patt_ko.jpg
+.. image:: images/search_patt_ko.png
 
 
 Game Info search
@@ -226,7 +229,7 @@ If you are looking for games by a particular player, from a particular
 event or from a certain time period, you can use the 
 game info search.
 
-.. image:: images/isearch.jpg
+.. image:: images/isearch.png
 
 The games have to match all the requirements (Black Player, Event, ...)
 simultaneously. The corresponding string has to occur at the beginning of
@@ -325,7 +328,7 @@ above the go board.
 
 Game tree
 ^^^^^^^^^
-.. image:: images/gametree.jpg
+.. image:: images/gametree.png
 
 Here the tree structure of the current game is shown. Nodes with a
 black/white move are shown black resp. white; others are red. Nodes with a
@@ -362,7 +365,7 @@ search, the date profile, tags and for messages.
 Right above the notebook, there is a toolbar with several buttons and
 switches.
 
-.. image:: images/backreset.jpg
+.. image:: images/backreset.png
 
 The 'search' button starts a pattern search. The 'home/start' button resets the
 game list and clears the board. The 'home' button resets the game list, so that
@@ -406,7 +409,7 @@ the game list the date of which starts with what you entered.
 Date profile of the database
 ----------------------------
 
-.. image:: images/dateprofile.jpg
+.. image:: images/dateprofile.png
 
 The *Date profile* tab shows you how the games which are currently in the
 game list are distributed over time. The height of each bar shows the
@@ -416,13 +419,13 @@ select the *date profile* tab. If one bar is twice as high as another one,
 then this means that in the first time period the pattern was played twice
 as much as in the second one. The height of the bars does not contain
 information about the absolute number of games in the current game list.
-However, these numbers are printed above the bars (number of games in
-current list/number of games in whole database).
 
-Computing the date profile is pretty slow (much slower than a pattern
-search), so you should keep this tab open only as long as you are really
-interested in the results.
+You can also get date profile information on the different continuations in
+a pattern search: Open the statistics tab and enable the date profile view by
+clicking the calendar icon (the right-most icon in the icon set right above the
+statistics notepad):
 
+.. image:: images/dateprofile_search.png
 
 Tags
 ----
@@ -430,7 +433,7 @@ Tags
 You can tag games in order to find them more easily and to carry through
 more complicated searches.
 
-.. image:: images/tags.jpg
+.. image:: images/tags.png
 
 The *Tags* tab lists all existing tags. The following ones are built into
 Kombilo and are set (semi-)automatically:
@@ -491,7 +494,7 @@ enter its abbreviation and click the button showing a minus sign.
 Setting/removing tags on games
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: images/tag_buttons.jpg
+.. image:: images/tag_buttons.png
   :align: right
 
 
@@ -592,4 +595,27 @@ How can I reset the correct/wrong counter in the "guess next move" mode?
 Currently, you can only reset the counter by quitting and reentering the
 "guess next move" mode.
 
+
+Known issues
+============
+
+Menu bar not shown
+------------------
+
+When the Kombilo window is maximized, sometimes the menu bar is not shown (on
+Ubuntu Linux). After un-maximizing, the menu is shown, and it is preserved when
+the window is maximized again.
+
+Quitting Kombilo is slow
+------------------------
+
+Shutting down the program is quite slow, and it is not really clear (to me) what
+causes this.
+
+
+SGF tree memory usage
+---------------------
+
+Computing an SGF tree (with hundreds of pattern searches) results in high memory
+usage (possibly several gigabytes).
 

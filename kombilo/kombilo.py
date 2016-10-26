@@ -1066,21 +1066,13 @@ class App(v.Viewer, KEngine):
                         right, i * H//12 + yoffset + 3,
                         fill='black' if cont.B else 'white',
                         outline='black' if cont.B else 'white', tags='stat')
-                if xoffset < average_date < W and right - left > 3:
-                    self.statisticsCanv.create_rectangle(
-                            average_date-1, i * H//12 + yoffset - 5,
-                            average_date + 1, i * H//12 + yoffset + 6,
-                            fill='green', outline='black', tags='stat')
-                if xoffset < became_popular < W and right - left > 3:
-                    self.statisticsCanv.create_rectangle(
-                            became_popular-1, i * H//12 + yoffset - 5,
-                            became_popular + 1, i * H//12 + yoffset + 6,
-                            fill='yellow', outline='yellow', tags='stat')
-                if xoffset < became_unpopular < W and right - left > 3:
-                    self.statisticsCanv.create_rectangle(
-                            became_unpopular-1, i * H//12 + yoffset - 5,
-                            became_unpopular + 1, i * H//12 + yoffset + 6,
-                            fill='red', outline='red', tags='stat')
+
+                for dt, clr in [(average_date, 'green'), (became_popular, 'yellow'), (became_unpopular, 'red'), ]:
+                    if xoffset < dt < W and right - left > 5:
+                        self.statisticsCanv.create_rectangle(
+                                dt - 3, i * H//12 + yoffset - 6,
+                                dt + 3, i * H//12 + yoffset + 7,
+                                fill=clr, outline=clr, tags='stat')
 
                 i += 1
 

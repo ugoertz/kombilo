@@ -24,17 +24,24 @@ History/Change log
 ==================
 
 
-0.8
----
+0.8 (October 2016)
+------------------
 
 Major changes:
 
 * :ref:`SGF tree function <sgf-tree>` in Kombilo: continue searching recursively
   for all continuations arising from some search pattern.
+* Add framework to translate the application to other languages (plus German
+  translation)
+* Install Kombilo as a Python package via pip (so far, as a *source
+  distribution* only, i.e., a C++ compiler is still required)
+* Reintroduce :ref:`custom-menus` as in Kombilo 0.5.
 * Improve date profile: more fine-grained information, several options
   configurable by user.
-* Reintroduce :ref:`custom-menus` as in Kombilo 0.5.
 * Organize pattern search history as a tree.
+
+The source code is now hosted in a `GitHub repository
+<https://github.com/ugoertz/kombilo/>`_.
 
 
 

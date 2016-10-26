@@ -653,13 +653,13 @@ class KEngine(object):
     **Further notes.**
 
     After a pattern search, the continuations are assembled into the list
-    ``self.continuations``, whose entries are lists [ total number of hits,
-    x-coordinate in currentSearchPattern, y-coordinate in currentSearchPattern,
-    number of black continuations, number of black wins after black play here,
-    number of black losses after black play here, number of black plays here
-    after tenuki, number of white continuations, number of black wins after
-    white play here, number of black losses after white play here, number of
-    white plays here after tenuki, label used on the board at this point ]
+    ``self.continuations``, whose entries are instances of lk.Continuation,
+    storing total number of hits, position in currentSearchPattern, number of
+    black continuations, number of black wins after black play here, number of
+    black losses after black play here, number of black plays here after tenuki,
+    number of white continuations, number of black wins after white play here,
+    number of black losses after white play here, number of white plays here
+    after tenuki, label used on the board at this point.
     '''
 
     def __init__(self):

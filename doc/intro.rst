@@ -8,7 +8,7 @@ move patterns in a collection of SGF files (like searching for all games
 where a particular opening or a particular joseki is played). You can also
 search for other properties of the game (like players, events, date, ...).
 
-.. image:: images/mainwindow.jpg
+.. image:: images/mainwindow.png
 
 Features
 ========
@@ -56,8 +56,8 @@ Features
 
 * Kombilo is free, and is open source. Your :ref:`contributions
   <contributing>` are welcome. Feel free to freely distribute it, and feel
-  free to clone or fork the `project on BitBucket
-  <https://bitbucket.org/ugoertz/kombilo/overview>`_. I will be glad to
+  free to clone or fork the `project on GitHub
+  <https://github.com/ugoertz/kombilo/>`_. I will be glad to
   consider patches you send me for inclusion into the Kombilo code.
 
 * Kombilo has been developed with tools that are available on all major
@@ -67,7 +67,7 @@ Features
   and/or Mac OS X; your help will be much appreciated.
 
 * If you think some feature is missing, or if you found a bug, please open
-  a ticket on BitBucket, or send me an email.
+  a ticket on GitHub, or send me an email.
 
 
 

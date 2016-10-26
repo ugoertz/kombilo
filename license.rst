@@ -49,8 +49,8 @@ abc-u.png, tr.gif, sq.gif) are dual-licensed under the CC BY-SA 3.0 license
 Board, stone images
 -------------------
 
-The images of the go board and the back and white stone were contributed by
-Patrice Fontaine.
+The image of the go board was contributed by Patrice Fontaine. The images of the
+stones were created by POVRay.
 
 
 Logo
@@ -76,15 +76,16 @@ Acknowledgments
 
 Over the years, many people directly or indirectly supported the development of
 Kombilo by offering code, general feedback, suggestions or bug reports, in
-particular: Gilles Arcas, Daniel Balsom, Arend Bayer, Ruben Berenguel, Simon
-Cozens, Sergey Datskovskiy, Fabrice de Volder, Jon Diamond, John Fairbairn,
-Patrice Fontaine, Christian Gawron, Sorin Gherman, Daniel Gilder, Steffen
-Glueckselig, Igor Goliney, Rene Grothmann, Alberto Hernando, Anders Kierulf,
-Tobias Klaus, Mace Lee, Marc A. Lehmann, Andre Prasetya, Alberto F. Rezza,
-Hendrik Reinke, Uwe Richter, Douglas Ridgway, Jan van Rongen, Bernhard Runge,
-Thomas Schmid, Thomas Schmid-Lindner, Bernd Schmidt, David Sigaty, Falko
-Spiller, Neil Stevens, Fred Strauss, Dan Stromberg, Jean-Pierre Vesinet,
-Christian Wenzel. 
+particular: Gilles Arcas, Daniel Balsom, Arend Bayer, Ruben Berenguel, Claude
+Brisson, Peter Brouwer, Simon Cozens, Sergey Datskovskiy, Fabrice de Volder, Jon
+Diamond, John Fairbairn, Patrice Fontaine, Christian Gawron, Sorin Gherman,
+Daniel Gilder, Steffen Glueckselig, Igor Goliney, Rene Grothmann, Alberto
+Hernando, Luke Humphreys, Anders Kierulf, Tobias Klaus, Mace Lee, Marc A.
+Lehmann, Caersith Persoana, Andre Prasetya, Alberto F. Rezza, Hendrik Reinke,
+Uwe Richter, Douglas Ridgway, Jan van Rongen, Bernhard Runge, Thomas Schmid,
+Thomas Schmid-Lindner, Bernd Schmidt, David Sigaty, Falko Spiller, Neil Stevens,
+Fred Strauss, Dan Stromberg, Bram Vandenbom, Jean-Pierre Vesinet, Christian
+Wenzel.
 
 
 

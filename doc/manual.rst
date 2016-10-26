@@ -142,17 +142,35 @@ git repository::
 
   git clone https://github.com/ugoertz/kombilo.git
 
-Make sure (before ...) that you have gitinstalled, and also install
+Make sure (before ...) that you have git installed, and also install
 SWIG::
 
-  sudo apt-get gitswig
+  sudo apt-get git swig
 
 Before you can compile the libkombilo extension, you need to run swig::
 
-  cd kombilo/lk
-  swig -c++ -python libkombilo.i 
-  python setup.py build_ext
-  cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
+  cd kombilo/kombilo/libkombilo
+  swig -c++ -python libkombilo.i
+  mv libkombilo.py ..
+  cd ../..
+
+Compile the translation files::
+
+  cd ../lang/en/LC_MESSAGES
+  msgfmt -o kombilo.mo kombilo.po
+  cd ../../de/LC_MESSAGES
+  msgfmt -o kombilo.mo kombilo.po
+  cd ../../../..
+
+You are now again in the directory containing the file ``setup.py``.
+Now you can install Kombilo as a Python package from the development directory
+(so changes you make in the source code will be reflected immediately). You
+probably want to do this inside a *virtualenv* environment::
+
+  pip install -e .
+
+You can then invoke Kombilo with ``kombilo`` and the SGF viewer with ``v``.
+
 
 
 Build the documentation
@@ -203,6 +221,28 @@ documentation in ``lk/doc/build/``.
 .. index::
   pair: Installation; Windows
 .. _install-windows:
+
+
+Updating the translation files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To update the template file with all messages that should be translated (the
+*pot file*), do::
+
+  xgettext -L Python -d kombilo -s *.py ../lang/en/LC_MESSAGES/kombilo.po
+
+(This does not fetch the text from ``default.cfg`` that should be translated, so
+if things changed there, they have to be added manually.)
+
+Then, for all (non-English) languages, do::
+
+  msgmerge -N ../lang/LANGUAGE/LC_MESSAGES/kombilo.po kombilo.po > new.po
+  mv new.po ../lang/LANGUAGE/LC_MESSAGES/kombilo.po
+
+You can then translate strings using a tool like ``poedit``. Finally, you have
+to compile the ``po`` files to ``mo`` files, for instance using ``poedit`` or
+the standard command line tool ``msgfmt``.
+
 
 Windows
 -------
@@ -314,13 +354,6 @@ then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
 the libkombilo extension via ``python setup.py build_ext`` as described in the
 :ref:`install-linux` section.
 
-On the other hand, sometimes the Python Imaging Library PIL seems to cause
-problems (installing it via Homebrew seems to be the best way). In fact, it is
-used only for the nicer stone pictures, so it is not too bad to not use it, and
-I made this the default for Macs. Change the :ref:`corresponding option
-<use-pil>` if you do want to use it. (Thanks to R. Berenguel for his help with
-figuring this out.)
-
 If you have Python 2.6, you need to install the ``pyttk`` package to run
 Kombilo. In Python 2.7, which is the preferred Python version for Kombilo, this
 package is already included in Python.
@@ -335,7 +368,7 @@ Before you can start working with Kombilo, you need to add your SGF files.
 For Kombilo, a database is just a directory with SGF files in it.
 Select ``Edit DB list`` in the ``Database`` menu. A new window will open.
 
-.. image:: images/editdblist.jpg
+.. image:: images/editdblist.png
 
 Add databases
 ^^^^^^^^^^^^^
@@ -375,7 +408,8 @@ In the lower text area, Kombilo will output messages about the processed games.
   are named. Being a duplicate is tested with the method chosen in the options.
   In every case, the Dyer signature (position of moves 20, 31, 40, 51, 60, 71)
   is compared. With strict duplicate checking, in addition the final position is
-  compared. See :ref:`Find duplicates <find-duplicates>`.
+  compared. Games in *disabled* databases will not be considered for duplicate
+  checks. Also see :ref:`Find duplicates <find-duplicates>`.
 * **SGF Error**: If there was an SGF error, Kombilo issues a warning. It tries
   to do its best to recover, and will insert as much of the game as it
   understands into the database anyway.
@@ -525,6 +559,12 @@ algorithms
   patterns and/or for corner patterns. (If you want to use them, you have
   to choose them when creating the database from your SGF files.)
 
+date profile options
+  You can also adjust some options concerning the date profiles (for the
+  continuations in pattern searches, and the date profile of the whole
+  database): the range that should be displayed, how fine-grained the date
+  profile for the whole database should be, and the sort criterion for the
+  continuations.
 
 .. index::
   pair: Pattern search; Wildcards
@@ -629,6 +669,11 @@ Reset game list
   will include games where the relevant position arises with a different order
   of moves. With the default setting, only games where the position arises by
   the same order of moves as given by the SGF file are counted.
+
+
+**Memory usage:** Computation of an SGF tree might require hundreds of pattern
+searches, and (depending on the size of the database, and the parameters chosen)
+will need a lot of memory (possibly several gigabytes).
 
 .. _game-info-search:
 
@@ -800,6 +845,16 @@ after the pattern was completed. The dark gray/light gray parts indicate
 the number of times that black/white played in the pattern region after a
 tenuki.
 
+You can switch to *date profile statistics* by clicking the calendar icon (the
+right-most icon above the statistics tabs). This will display, for the most
+popular continuations, detailed information about the first/last hit (within the
+period of time chosen in the *Options*), and, if there were noticeably changes
+in popularity, the point in time when the move became popular (yellow marker),
+the average date (green marker), the point where it became less popular (red
+marker). Of course, this kind of information is pretty subjective; in other
+words, it is not so clear whether the formulas used for computing the marker
+positions yield relevant results. (Feedback appreciated!)
+
 
 Date profile
 ------------
@@ -809,13 +864,7 @@ comparison to all games in the database, by date. The height of the bars
 indicate the proportion of games in current list versus games in complete
 database. *The height of the bars does not contain absolute information*,
 i.e. even if there are only very few games in the current list, the highest
-bar will have full height. Absolute information is printed above the bars
-(number of games in current list in this time period/number of games in
-complete database in this time period).
-
-Computing the date profile is pretty slow (much slower than a pattern
-search), so you should keep this tab open only as long as you are really
-interested in the results.
+bar will have full height.
 
 Tags
 ----
@@ -859,7 +908,7 @@ enter its abbreviation and click the button showing a minus sign.
 Setting/removing tags on games
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: images/tag_buttons.jpg
+.. image:: images/tag_buttons.png
   :align: right
 
 
@@ -1097,10 +1146,11 @@ Mouse bindings
 Configuring Kombilo
 ===================
 
-The most common options can be changed in the *Options* menu. Furthermore,
-you can configure Kombilo by :ref:`editing the file kombilo.cfg
-<kombilocfg>` (when Kombilo is not running). Finally, the appearance can be
-modified by creating/changing the file ``kombilo.app`` accordingly.
+The most common options can be changed in the *Options* menu. (Choose *Edit
+advanced options* for some more obscure things like font sizes etc.) In special
+cases, you could :ref:`edit the file kombilo.cfg <kombilocfg>` directly (when
+Kombilo is not running). Finally, the appearance can be modified by
+creating/changing the file ``kombilo.app`` accordingly.
 
 Window layout
 -------------
@@ -1133,14 +1183,14 @@ When an entry is selected, you can
 
 * Add pattern information by pressing the corresponding button. The pattern (and
   search-relevant region, and the search options) will then be associated with
-  this menu entry). 
+  this menu entry.
 
 * Add game info information by clicking the corresponding button. The current
   entries in the game info search window will then be associated with the
-  current menu entry. 
+  current menu entry.
 
 * Add a HTML file by entering the file name in the corresponding field, or by
-  browsing for a file. 
+  browsing for a file.
 
 
 .. index::
@@ -1156,11 +1206,6 @@ Place the stones on the main board slightly off the exact point, in a
 random direction, to make the position look more natural. (Well, some
 people might think that it is just ugly, so you can switch it off here).
 
-
-**Shaded stone mouse pointer**
-(Don't) Show the current position of the mouse pointer on 
-the board and the color of the next stone to be played
-by a shaded stone.
 
 
 **Show next move**
@@ -1242,8 +1287,48 @@ name, say, or to omit it). These two options allow you to control this.
 Changing either of these options will reset the game list.
 
 
-Advanced
-^^^^^^^^
+
+.. index::
+  single: Options; kombilo.cfg
+.. _kombilocfg:
+
+Advanced Options
+----------------
+
+Almost all configurable options can be changed in the options menu, either
+directly or in the *Edit advanced options* window.  (Some further internals such
+as the location of the database files could be accessed by editing the file
+``kombilo.cfg`` directly. This file is a plain text file which you can edit
+yourself. *You should not edit this file while Kombilo is running.* It is
+created when Kombilo is started for the first time.)
+
+.. note:: Location of the ``kombilo.cfg`` file
+
+  Depending on your platform, the kombilo.cfg file will be stored in the
+  following place:
+
+  *Linux/Mac OS*: ``~/.kombilo/08/``, where ``~`` is your home directory; on
+  Linux, this is typically ``/home/yourusername/``.
+
+  *Windows*: In the folder ``kombilo\08\`` inside the *APPDATA* folder;
+  typically *APPDATA* is something like
+  ``\Users\yourusername\AppData\Roaming\``.
+
+Lines starting with a ``#`` are comments. Most options are explained by
+comments in this file.
+
+In addition to the options, you can also define how tagged games should be
+displayed (background/foreground color) in the game list, and which
+references to commentaries in the literature should be displayed in the
+game list.
+
+Description of most of the options:
+
+**Shaded stone mouse pointer**
+(Don't) Show the current position of the mouse pointer on 
+the board and the color of the next stone to be played
+by a shaded stone.
+
 
 .. _open-game-in-external-viewer:
 
@@ -1282,44 +1367,6 @@ If you choose to open games in Kombilo's external viewer, you can use the
 'Maximize external viewer' option to have the viewer's windows maximized.
 
 
-.. index::
-  single: Options; kombilo.cfg
-.. _kombilocfg:
-
-The kombilo.cfg configuration file
-----------------------------------
-
-All configurable options can be changed by editing the file ``kombilo.cfg``
-in the kombilo folder. This file is a plain text file which you can edit
-yourself. *You should not edit this file while Kombilo is running.* It is
-created when Kombilo is started for the first time.
-
-.. note:: Location of the ``kombilo.cfg`` file
-
-  Depending on your platform, the kombilo.cfg file will be stored in the
-  following place:
-
-  *Linux/Mac OS*: ``~/.kombilo/08/``, where ``~`` is your home directory; on
-  Linux, this is typically ``/home/yourusername/``.
-
-  *Windows*: In the folder ``kombilo\08\`` inside the *APPDATA* folder;
-  typically *APPDATA* is something like
-  ``\Users\yourusername\AppData\Roaming\``.
-
-  If you want to use several instances of the same Kombilo version at the same
-  time, you can also place the kombilo.cfg file inside the main Kombilo
-  directory. If there is a kombilo.cfg present there, it will be preferred. Note
-  that in this case you need write permissions for this folder.
-
-Lines starting with a ``#`` are comments. Most options are explained by
-comments in this file.
-
-In addition to the options, you can also define how tagged games should be
-displayed (background/foreground color) in the game list, and which
-references to commentaries in the literature should be displayed in the
-game list.
-
-
 .. _search-history-as-tab:
 
 **search_history_as_tab** (new in 0.7.1)
@@ -1328,17 +1375,6 @@ right hand column. If the option is 0, then the search history will be
 displayed as the bottom pane of the left hand column. The default
 for this option is 1.
 
-
-.. _use-pil:
-
-**use_PIL** (new in 0.7.1)
-Set this to 0 in order to disable the use of the Python Imaging Library
-(PIL). If 1, then PIL will be used. If ``use_PIL = auto``, then PIL will
-not be used on Mac OS, but will be used on other systems. This is the
-default setting, because PIL causes problems on Mac OS X. The only
-consequence is that without PIL, you will not get the "3D" stones, but just
-black/white circles as stones. (So if you prefer the flat stones, you could
-just set this option to 0.)
 
 
 **Uppercase labels**
@@ -1358,11 +1394,11 @@ they can mark the search-relevant region with Alt + (left) mouse button
 instead of the right mouse button.
 Set it to ::
 
-  onlyOneMouseButton = <M2-Button-1>;<M2-B1-Motion>
+  <M2-Button-1>;<M2-B1-Motion>
 
 
 **Number of previous searches remembered**
-As we have seen, with the 'back' button you can jump back to the previous
+As explained above, with the 'back' button you can jump back to the previous
 search. This option controls the number of previous searches that are remembered.
 The default is 30, and if your machine has only a small amount of memory,
 you probably should not set it much higher, or Kombilo might run out of
@@ -1371,29 +1407,14 @@ be convenient to set it to a higher number, or even to 0, which means 'no
 limit': all searches are remembered, as long as there is enough memory.
 
 
-Per-user configuration file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If in the *main* section, the ``kombilo.cfg`` file contains a configdir
-entry, like ::
-
-  configdir = ~
-
-then this will be taken as a directory, and the ``kombilo.cfg`` file will
-be read from the ``.kombilo`` subdirectory of the configdir. In the
-configdir string, the tilde ``~`` will be replaced with the user's home
-directory (Linux). In this case, settings in the individual config file
-will overwrite those in the global file.
-
-
 kombilo.app
 -----------
 
-You can change some 'global properties' like background color, type
-and size of the font used in the game list and in the text windows
-etc. by creating a file 'kombilo.app' in the main Kombilo
-directory. This is a plain text file; if you change it, please
-make sure to save the new version as plain text (ASCII), too.
+You can change some 'global properties' like background color, type and size of
+the font used in the game list and in the text windows etc. by creating a file
+'kombilo.app' in the same directory as ``kombilo.cfg``.  This is a plain text
+file; if you change it, please make sure to save the new version as plain text
+(ASCII), too.
 
 Here is an example which shows the format of the file::
 
@@ -1422,7 +1443,8 @@ Miscellaneous
 -------------
 
 The files containing the board image and the black and white stones are
-``icons/board.jpg``, ``icons/black.gif`` and ``icons/white.gif``.
+``icons/board.png``, ``icons/black.png`` and ``icons/whiteN.png``, where ``N``
+is a number between 0 and 15.
 
 
 .. index::
@@ -1449,8 +1471,8 @@ the contributions of its users in the past, and all your feedback and
 contributions are very much appreciated.
 
 Development is concentrated on the `Kombilo project page
-<https://www.bitbucket.org/ugoertz/kombilo/>`_ on `BitBucket
-<https://www.bitbucket.org>`_.
+<https://www.github.com/ugoertz/kombilo/>`_ on `GitHub
+<https://www.github.com>`_.
 
 
 Tell me how you like Kombilo
@@ -1467,7 +1489,7 @@ Ask questions, report bugs
 
 If you have any problems, feel free to ask! Either by email at
 ``ug@geometry.de``, or via the `issue tracker
-<https://bitbucket.org/ugoertz/kombilo/issues?status=new&status=open>`_.
+<https://github.com/ugoertz/kombilo/issues>`_.
 
 
 Ideas
@@ -1537,7 +1559,7 @@ The references are stored in the file ``references`` in the ``data`` folder
 inside the main Kombilo directory. This is just a text file which you could
 edit yourself. The format should be self-explanatory. You can also download
 the `current version
-<https://bitbucket.org/ugoertz/kombilo/raw/tip/src/data/references>`_ of
+<https://raw.githubusercontent.com/ugoertz/kombilo/master/kombilo/data/references>`_ of
 this file from the Kombilo source code repository and save it as the
 ``references`` file.
 

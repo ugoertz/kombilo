@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../examples'))
 sys.path.insert(0, os.path.abspath('../examples/sgftree'))
 sys.path.insert(0, os.path.abspath('../examples/profiler'))
 sys.path.insert(0, os.path.abspath('../examples/test_patternsearch'))
-sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('../kombilo'))
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Kombilo'
-copyright = u'2011-16, Ulrich Goertz'
+copyright = u'2011-, Ulrich Goertz'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -220,7 +220,7 @@ man_pages = [
 
 # --- doxylink ------------------------------------------------------------------
 
-doxylink = { 'libkombilo': (os.path.abspath('../../lk/doc/libkombilo.tag'), os.path.abspath('../../lk/doc/build/html/')) }
+doxylink = { 'libkombilo': (os.path.abspath('../kombilo/libkombilo/doc/libkombilo.tag'), os.path.abspath('../kombilo/libkombilo/doc/build/html/')) }
 
 # -------------------------------------------------------------------------------
 
