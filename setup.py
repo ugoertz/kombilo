@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages, Extension
 
-sgfext = Extension('_libkombilo',
+sgfext = Extension('kombilo._libkombilo',
                    sources = [
                        'kombilo/libkombilo/sgfparser.cpp',
                        'kombilo/libkombilo/abstractboard.cpp',
@@ -22,6 +22,7 @@ setup(
         author = 'Ulrich Goertz',
         author_email = 'ug@geometry.de',
         url = 'http://u-go.net/kombilo/',
+        license = 'MIT License',
         classifiers=[
             'Programming Language :: Python :: 2.7',
             ],
@@ -34,6 +35,7 @@ setup(
         package_data = {'kombilo': [
             'default.cfg',
             'data/*',
+            'license.rst',
             'icons/*.*',
             'tests/sgfs/*.sgf', 'tests/db/.keep',
             'libkombilo/*.h',
