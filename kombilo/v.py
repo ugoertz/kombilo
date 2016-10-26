@@ -1024,7 +1024,7 @@ class EnhancedCursor(Cursor):
                                             width=5, tags='curr')
 
         x = (x + .5) * u
-        y = y * u
+        y = (y + .5) * u
 
         # print 'seecurrent', x, y
 
@@ -1048,10 +1048,12 @@ class EnhancedCursor(Cursor):
         if y1 < self.SGFtreeCanv.UNIT * 2:
             self.SGFtreeCanv.yview('moveto', y * 1.0 / cv1)
         else:
-            if y - 15 < vert[0] * cv1:
-                self.SGFtreeCanv.yview('moveto', (y - 25) * 1.0 / cv1)
-            elif y + 15 > vert[1] * cv1:
-                self.SGFtreeCanv.yview('moveto', (y + 25 - y1) * 1.0 / cv1)
+            if y - 40 < vert[0] * cv1:
+                self.SGFtreeCanv.yview('moveto', (y - 50) * 1.0 / cv1)
+            elif y + 40 > vert[1] * cv1:
+                self.SGFtreeCanv.yview('moveto', (y + 50 - y1) * 1.0 / cv1)
+
+        self.SGFtreeCanv.canvas.tag_raise('curr')
 
         # print 'x: %1.3f, [%1.3f, %1.3f], y: %1.3f, [%1.3f, %1.3f]' % (x*1.0/self.cv0, hor[0], hor[1], \
         #                                                               y*1.0/self.cv1, vert[0], vert[1])
