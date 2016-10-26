@@ -1685,20 +1685,18 @@ class Viewer:
 
     def jumpToNode(self, moveno):
         try:
-            if moveno and moveno[0]:
-                while not ('B' in self.cursor.currentNode() or 'W' in self.cursor.currentNode()):
-                    self.next(markCurrent=False)
             ctr = 0
             while ctr < len(moveno):
                 mn = moveno[ctr]
+                if mn == 0:
+                    break
                 i = 1
-                while i < mn - 1:
+                while i < mn:
                     if self.cursor.atEnd:
                         break
-                    if 'B' in self.cursor.currentNode() or 'W' in self.cursor.currentNode():
-                        i += 1
+                    i += 1
                     self.next(0, 0)
-                if i < mn and not self.cursor.atEnd:
+                if not self.cursor.atEnd:
                     if ctr < len(moveno) - 1:
                         self.next(n=moveno[ctr + 1], markCurrent=False)
                         ctr += 2
