@@ -1549,6 +1549,7 @@ void Algo_hash_full::newgame_process(int game_id) {
 
 void Algo_hash_full::process_lfc(int x, int y, char color) {
   // process those items where we are still looking for a continuation (lfc)
+  // printf("process_lfc %d %d\n", x, y);
   for(vector<pair<hashtype, ExtendedMoveNumber> >::iterator it = lfc->begin(); it != lfc->end(); it++) {
     MoveNC* continuation = (color == '-') ? 0 : new MoveNC(x,y,color);
     hash_vector.insert(pair<hashtype, HashhitF>(it->first, HashhitF(gid, 0, it->second, continuation)));
@@ -1623,9 +1624,11 @@ void Algo_hash_full::endOfVariation_process() {
 void Algo_hash_full::endgame_process(bool commit) {
   if (commit) {
     for(vector<pair<hashtype, ExtendedMoveNumber> >::iterator it = lfc->begin(); it != lfc->end(); it++) { // entries where continuation is missing
+      // printf("cm %llu\n", it->first);
       data_p.insert(pair<hashtype, HashhitF>(it->first, HashhitF(gid, 0, it->second, (MoveNC*)0)));
     }
     for(boost::unordered_multimap<hashtype, HashhitF>::iterator it = hash_vector.begin(); it != hash_vector.end(); it++) {  // entries where continuation is available
+      // printf("c ok %llu\n", it->first);
       data_p.insert(pair<hashtype, HashhitF>(it->first, it->second));
     }
   }
@@ -1709,7 +1712,7 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
   // TODO we could reduce search time by "symmetrizing" hashCodes?!
   for(int N=0; N<plS; N++) {
     hashtype hashCode = compute_hashkey(patternList.data[N]);
-    // printf("hashcode %d\n", hashCode);
+    // printf("hashcode %llu\n", hashCode);
     if (hashCode == NOT_HASHABLE) return -1; // failure
     vector<pair<hashtype, int> >::iterator it = lower_bound(data.begin(), data.end(), pair<hashtype, int>(hashCode, 0), comp_phi);
     if (it != data.end() && it->first == hashCode) get_HHF(it->second, results, N);
@@ -1719,16 +1722,17 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
   else hash_result = 0;
   if (gl.start_sorted() == 0) {
     sort(results->begin(), results->end(), cmp_HashhitF);
-    // printf("res-size %d\n", results->size());
+    // printf("res-size %llu\n", results->size());
     vector<HashhitF* >::iterator resultIT = results->begin();
-    while (resultIT != results->end()) {
-      int index = (*resultIT)->gameid;
 
-      if (hash_result) { // produce complete results here, do not check with Algo_movelist
+    if (hash_result) { // produce complete results here, do not check with Algo_movelist
+      while (resultIT != results->end()) {
+        int index = (*resultIT)->gameid;
         gl.setCurrentFromIndex(index);
         int numOfSwitched = 0;
         vector<Hit* >* hits = new vector<Hit* >;
         while ((*resultIT)->gameid == index) {
+          // collect all hits for this game
           if ((*resultIT)->emn->total_move_num() <= options.moveLimit) {
             char *label;
             if ((*resultIT)->cont->x != NO_CONT) { // continuation
@@ -1737,6 +1741,7 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
                                                       false, // tenuki impossible with full board pattern
                                                       gl.getCurrentWinner(), gl.getCurrentDate());
               if (label) {
+                // printf("pb\n");
                 hits->push_back(new Hit((*resultIT)->emn, label));
                 (*resultIT)->emn = 0;
                 numOfSwitched += label[2];
@@ -1747,6 +1752,7 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
               label[1] = 0;
               label[2] = patternList.data[(*resultIT)->orientation].colorSwitch;
               numOfSwitched += label[2];
+              // printf("pb\n");
               hits->push_back(new Hit((*resultIT)->emn, label));
               (*resultIT)->emn = 0;
             }
@@ -1767,14 +1773,24 @@ int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions
           }
           gl.makeCurrentHit(hits);
         } else delete hits;
-      } else { // produce Candidate list, check using another algorithm
+      }
+    } else { // produce Candidate list, check using another algorithm
+      while (resultIT != results->end()) {
+        int index = (*resultIT)->gameid;
+
         // printf("hash search index %d\n", index);
         vector<Candidate* >* candidates = new vector<Candidate* >;
+        // store candidate for the first hit for this game
+        if ((*resultIT)->emn->total_move_num() <= options.moveLimit) {
+          // printf("algo hash full cand 0 0 %d\n", (*resultIT)->orientation);
+          candidates->push_back(new Candidate(0,0,(*resultIT)->orientation));
+        }
+
+        // ignore all other hits: for full board positions, other hits can only
+        // differ by the continuation (due to the presence of variations
+        // starting at the node where the pattern was found), and Algo_movelist
+        // will take care of finding the different continuations
         while ((*resultIT)->gameid == index) {
-          if ((*resultIT)->emn->total_move_num() <= options.moveLimit) {
-            // printf("algo hash full cand 0 0 %d\n", (*resultIT)->orientation);
-            candidates->push_back(new Candidate(0,0,(*resultIT)->orientation));
-          }
           resultIT++;
           if (resultIT == results->end()) break;
         }

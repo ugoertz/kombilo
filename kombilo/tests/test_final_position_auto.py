@@ -98,6 +98,7 @@ def test_pattern_search_auto():
     K.loadDBs()
 
     search(K)
+    search(K, 20)
     search(K, 50)
 
 
