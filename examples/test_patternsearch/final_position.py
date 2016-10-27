@@ -107,8 +107,7 @@ if __name__ == '__main__':
 
     print 'searching for final position'
     search(K)
-
-    print 'searching for position at move 50'
+    search(K, 20)
     search(K, 50)
 
 
