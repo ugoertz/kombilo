@@ -2114,8 +2114,8 @@ class App(v.Viewer, KEngine):
                 self.db_list.insert(i, _('DISABLED - ') + db['sgfpath'] + ' (%s, %d %s)' % (db_date, db_size, _('games')))
                 self.db_list.list.select_set(i)
                 self.db_list.list.see(i)
-        self.gamelist.reset()
-        self.prevSearches.clear()
+
+        self.reset()
         self.currentSearchPattern = None
 
     def saveMessagesEditDBlist(self):
