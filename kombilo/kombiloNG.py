@@ -1308,6 +1308,8 @@ class KEngine(object):
                         raise IOError
                     db['data'] = lkGameList(os.path.join(db['name'][0], db['name'][1] + '.db'))
                 except:
+                    if progBar:
+                        progBar.stop()
                     if showwarning:
                         showwarning(_('I/O Error'), _('Could not open database {0}/{1}.').format(*db['name']))
                     del self.gamelist.DBlist[DBlistIndex]
