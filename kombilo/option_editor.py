@@ -44,7 +44,7 @@ class OptionEditor(object):
 
         f0 = Frame(self.window)
         f0.pack(side='top', anchor='w', expand=False, fill='x')
-        t = 'Note that most changes become effective only after restarting the program.'
+        t = _('Note that most changes become effective only after restarting the program.')
         text = Text(f0, height=len(t)//80+1, width=80, wrap='word')
         text.insert(1.0, _(t))
         text.config(state='disabled')
@@ -77,13 +77,14 @@ class OptionEditor(object):
                 ctr += 1
 
                 label = self.retrieve('# label:', comments) or prop
+                label = label.strip()
                 values = self.retrieve('# values:', comments)
                 if values:
                     values = values.split(', ')
                 else:
                     values = []
                 help_text = ' '.join(x[1:].strip() for x in comments if not any(
-                    x.startswith(v) for v in special_values))
+                    x.startswith(v) for v in special_values)).strip()
 
                 if 'BOOLEAN' in values:
                     self.variables[prop] = BooleanVar()

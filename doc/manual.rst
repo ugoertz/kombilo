@@ -229,15 +229,15 @@ Updating the translation files
 To update the template file with all messages that should be translated (the
 *pot file*), do::
 
-  xgettext -L Python -d kombilo -s *.py ../lang/en/LC_MESSAGES/kombilo.po
+  xgettext -d kombilo -s *.py lang/en/LC_MESSAGES/kombilo.po
 
 (This does not fetch the text from ``default.cfg`` that should be translated, so
 if things changed there, they have to be added manually.)
 
 Then, for all (non-English) languages, do::
 
-  msgmerge -N ../lang/LANGUAGE/LC_MESSAGES/kombilo.po kombilo.po > new.po
-  mv new.po ../lang/LANGUAGE/LC_MESSAGES/kombilo.po
+  msgmerge -N lang/LANGUAGE/LC_MESSAGES/kombilo.po kombilo.po > new.po
+  mv new.po lang/LANGUAGE/LC_MESSAGES/kombilo.po
 
 You can then translate strings using a tool like ``poedit``. Finally, you have
 to compile the ``po`` files to ``mo`` files, for instance using ``poedit`` or
