@@ -1650,6 +1650,17 @@ though, that the header will be lost when you change the game info
 of that game: whenever Kombilo writes an SGF file, it will only write
 the game (resp. the game collection) itself.
 
+Kombilo creates a separate database for each folder of SGF files (not including
+the files in subfolders - each subfolder will get its own database). This causes
+problems if you have your files in very many folders (hundreds, or more),
+because at certain points Kombilo will try to open all database files at the
+same time (e.g., when checking for duplicates). It is better, also for the
+search performance, to put your games into relatively few folders. It should be
+no problem to have tens of thousands of games in one folder digested by Kombilo.
+(As a workaround upon encountering this problem, you could also increase the
+allowed number of open files; on linux systems, the ``ulimit`` command allows to
+do this.)
+
 .. index::
   Game records; Where to find
 
