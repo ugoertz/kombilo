@@ -2,14 +2,14 @@ from setuptools import setup, find_packages, Extension
 
 sgfext = Extension('kombilo._libkombilo',
                    sources = [
+                       'kombilo/libkombilo/sqlite3.c',
                        'kombilo/libkombilo/sgfparser.cpp',
                        'kombilo/libkombilo/abstractboard.cpp',
                        'kombilo/libkombilo/search.cpp',
                        'kombilo/libkombilo/algos.cpp',
                        'kombilo/libkombilo/pattern.cpp',
                        'kombilo/libkombilo/libkombilo_wrap.cxx'],
-                   libraries=['sqlite3'],
-                   library_dirs=['C:\\Python27-x64\\DLLs', 'C:\\Libraries\\boost_1_62_0', ],
+                   library_dirs=['C:\\Libraries\\boost_1_62_0', ],
                    extra_compile_args = ['-I.', '-IC:\\Libraries\\boost_1_62_0', '-openmp'],
                    # extra_link_args = [ '-lgomp', ],
                   )
