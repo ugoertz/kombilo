@@ -2793,14 +2793,14 @@ class App(v.Viewer, KEngine):
     # ------------  TAGGING ----------------------------------------------
 
     def inittags(self):
-        self.taglist = v.ScrolledList(self.tagFrameS, selectmode=EXTENDED, width=30)
-        self.taglist.pack(expand=True, fill=BOTH)
+        self.taglist = v.ScrolledList(self.tagFrameS, selectmode=EXTENDED, width=30, height=5)
+        self.taglist.pack(side=TOP, expand=True, fill=BOTH)
         self.updatetaglist()
 
         # self.taglist.list.bind('<<ListboxSelect>>', self.updatetags)
 
         self.tagFrame2 = Frame(self.tagFrameS)
-        self.tagFrame2.pack(expand=True, fill=X)
+        self.tagFrame2.pack(side=TOP, expand=False, fill=X)
         self.tagSearchVar = StringVar()
         self.tagentry = Entry(self.tagFrame2, textvariable=self.tagSearchVar)
         self.tagentry.pack(side=LEFT, fill=X, expand=True)
@@ -3138,7 +3138,6 @@ class App(v.Viewer, KEngine):
         self.giSFS = Frame(self.notebook)
         self.notebook.add(self.giSFS, text=_('Game info'))
         self.gameinfoSearchFS = Frame(self.giSFS)
-        self.dummyGISFS = Frame(self.giSFS)
         self.tagFS = Frame(self.notebook)
         self.notebook.add(self.tagFS, text=_('Tags'))
         self.tagFrameS = Frame(self.tagFS)
@@ -3150,8 +3149,7 @@ class App(v.Viewer, KEngine):
         self.logFrameS.pack(expand=YES, fill=BOTH)
         self.logger.pack(expand=YES, fill=BOTH)
 
-        self.gameinfoSearchFS.pack(side=LEFT, expand=True, fill=X)
-        self.dummyGISFS.pack(expand=YES, fill=BOTH)
+        self.gameinfoSearchFS.pack(side=TOP, expand=False, fill='both')
 
         self.notebook.pack(fill=BOTH, expand=YES, pady=0)
         self.notebook.bind('<<NotebookTabChanged>>', self.notebookTabChanged)
@@ -3406,10 +3404,10 @@ class App(v.Viewer, KEngine):
         self.GIclear.pack(side=RIGHT)
 
         f4 = Separator(self.gameinfoSearchFS, orient='horizontal')
-        f4.pack(expand=True, fill=BOTH)
+        f4.pack(side=TOP, expand=False, fill=BOTH, pady=20)
 
         f5 = Frame(self.gameinfoSearchFS)
-        f5.pack(side=LEFT, expand=YES, fill=X)
+        f5.pack(side=TOP, expand=False, fill=X)
 
         l1 = Label(f5, text=_('Go to:'), anchor=W)
         l1.pack(side=LEFT)
