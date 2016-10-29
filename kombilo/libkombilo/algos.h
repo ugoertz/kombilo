@@ -108,7 +108,7 @@
 #include <stack>
 #include <fstream>
 #include "sqlite3.h"
-#include <boost/cstdint.hpp>
+#include "pstdint.h"
 #include <boost/unordered_map.hpp>
 
 #include "abstractboard.h"

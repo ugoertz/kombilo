@@ -26,7 +26,7 @@
 #include "pattern.h"
 #include "algos.h"
 #include "search.h"
-#include <boost/cstdint.hpp>
+#include "pstdint.h"
 #include <boost/unordered_map.hpp>
 #include <stdio.h>
 #include <string>
