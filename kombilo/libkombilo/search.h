@@ -37,7 +37,7 @@
 #include <utility>
 #include <stack>
 #include <fstream>
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include "boost/cstdint.hpp"
 #include "boost/unordered_map.hpp"
 
