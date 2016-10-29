@@ -34,7 +34,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <inttypes.h>
 
 // FIXME check for security pbms (buffer overflow) in all places where a char[] of fixed length is used! (also in other files)
 
