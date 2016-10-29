@@ -56,7 +56,7 @@ install:
   # target Python version and architecture
   - "%CMD_IN_ENV% pip install -r requirements.txt"
   - ps: "ls \"C:/Libraries\""
-  - ps: "ls \"C:/Libraries/boost_1_62_0\""
+  - ps: "ls \"C:/Libraries/boost_1_62_0/boost\""
 
 build_script:
   # Build the compiled extension
