@@ -819,7 +819,7 @@ class KEngine(object):
         if intervals is None:
             intervals = [ (0, 1900), (1900, 1950), (1950, 1975), (1975, 1985),
                     (1985, 1992), (1992, 1997), (1997, 2002), (2002, 2006),
-                    (2006, 2009), (2009, 2013),  ]
+                    (2006, 2009), (2009, 2013), (2013, 2017),  ]
 
         return [ (i, self.gameinfoSearchNC("date >= '%d-00-00' and date < '%d-00-00'" % i)) for i in intervals ]
 
