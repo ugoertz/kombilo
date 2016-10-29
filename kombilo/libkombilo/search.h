@@ -37,8 +37,8 @@
 #include <utility>
 #include <stack>
 #include <fstream>
-#include <stdint.h>
 #include <sqlite3.h>
+#include "boost/cstdint.hpp"
 #include "boost/unordered_map.hpp"
 
 #include "abstractboard.h"

@@ -26,6 +26,7 @@
 #include "pattern.h"
 #include "algos.h"
 #include "search.h"
+#include "boost/cstdint.hpp"
 #include "boost/unordered_map.hpp"
 #include <stdio.h>
 #include <string>
@@ -33,7 +34,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdint.h>
 #include <inttypes.h>
 
 // FIXME check for security pbms (buffer overflow) in all places where a char[] of fixed length is used! (also in other files)
