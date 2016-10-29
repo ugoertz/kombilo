@@ -1714,6 +1714,8 @@ class Viewer:
                     s = ';AE[' + pos + ']'
                     self.cursor.add(s)
                     c = self.cursor.currentNode()
+                    self.board.delMarks()
+                    self.board.delLabels()
                     self.moveno.set(str(int(self.moveno.get())+1))
                     self.displayNode(c)
 
