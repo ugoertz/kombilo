@@ -2,10 +2,10 @@ import os.path
 # import urllib2
 from fabric.api import local, lcd, prefix, env
 
-VERSION = '0.7.5'
+VERSION = '0.7.6'
 GIT_BRANCH = 'v0.7'
 DEVEL_BASE = '/home/ug/devel'
-DEVEL_DIR = 'kombilo'
+DEVEL_DIR = 'kombilo-py-dev'
 BASE_DIR = os.path.join(DEVEL_BASE, DEVEL_DIR)
 VIRTUALENV = '/bin/bash /home/ug/.virtualenvs/k07/bin/activate'
 
