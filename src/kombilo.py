@@ -1299,8 +1299,6 @@ class App(v.Viewer, KEngine):
         
         if not self.currentSearchPattern: return
         if self.showContinuation.get():
-            self.board.delLabels() # FIXME is this what we want to do?
-
             for c in self.continuations:
                 if not c[3]: color = 'white'
                 elif not c[7]: color = 'black'
@@ -2292,7 +2290,6 @@ class App(v.Viewer, KEngine):
         self.progBar.start(50)
 
         boardData = self.board.snapshot()
-        self.board.delLabels()
 
         # --- get pattern from current board position
         dp = ''
