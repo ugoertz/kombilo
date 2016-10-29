@@ -37,72 +37,32 @@ details on the different steps.
 
 ::
 
-  # Install the packages that Kombilo depends on (and wget for the next step):
-  sudo apt-get install python-tk python-imaging python-pil.imagetk python-pmw
-  sudo apt-get install python-configobj g++  libsqlite3-dev wget
-  sudo apt-get install python-dev libboost-filesystem-dev libboost-system-dev 
+  # Install the packages that Kombilo depends on:
+  sudo apt install python-pip python-tk libsqlite3-dev libboost-dev
 
-  # cd to the folder where you want to install kombilo
-  # download the Kombilo archive
-  wget https://github.com/ugoertz/kombilo/releases/download/v0.8/kombilo-0.8.tar.gz
-
-  # unpack the archive
-  tar xfz kombilo-0.8.tar.gz
-
-  # compile the C++ extension
-  cd kombilo-0.8/lk
-  python setup.py build_ext
-  cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
+  # install kombilo (you could also do that inside a virtualenv environment; if
+  # you do not know what that is, you can ignore this)
+  pip install kombilo
 
   # start the program
-  cd ../src/
-  ./kombilo.py
+  kombilo
 
 
 Now continue with the :ref:`getting-started` section of the tutorial.
-After installing, you start the program by executing the ``kombilo.py``
-script in the ``kombilo/src`` directory.
 
+Windows/Mac OS X
+----------------
 
-Basic dependencies
-^^^^^^^^^^^^^^^^^^
+In principle, installing packages using pip also works on Windows and Mac OS X.
+Currently Kombilo is distributed only in the format of a source distribution, so
+you would need to make sure that in addition to Python (with Tkinter) and pip
+you have a C++ compiler and the SQlite and Boost libraries required for
+compiling Kombilo.  Then, ``pip install kombilo`` should work on Windows and Mac
+OS X. Success (or failure) reports are welcome.
 
-The best Python version to run Kombilo on is **Python 2.7**. You might be able
-to get it to work with 2.6, but this will need some more work (at least you need
-to install pyttk separately). It is currently not compatible with Python 3.
+Another option would be to run a linux system on top of your existing operating
+system, using virtualization such as Virtualbox.
 
-Unless you are a Python specialist, the easiest way to install the packages
-required for Kombilo is to install the following packages using the package
-manager of your choice (``synaptic``, ``aptitude``, ``apt-get`` etc.)::
-
-  python
-  python-tk
-  python-imaging
-  python-imaging-tk
-  python-pmw  
-  python-configobj
-
-
-If you *are* a Python specialist and want to retain finer control (and
-place Kombilo in a virtualenv environment, say), it is enough to install
-the ``python`` and ``python-tk`` packages, and then to use ``pip`` to
-install the Python packages specified in the ``requirements.txt`` file.
-
-
-Downloading Kombilo
-^^^^^^^^^^^^^^^^^^^
-
-tar.gz files
-............
-
-Download the ``kombilo-0.8.tar.gz`` archive from the `Kombilo downloads
-<https://github.com/ugoertz/kombilo/releases>`_ site.
-
-Unpack the archive somewhere by ::
-
-  tar xfz kombilo-0.8.tar.gz
-
-This will extract all the files into the kombilo-0.8 subdirectory.
 
 
 Git repository
@@ -111,25 +71,6 @@ Git repository
 You can also clone the Kombilo git repository. See :ref:`development`
 below for some details.
 
-
-
-Libkombilo
-^^^^^^^^^^
-
-To compile the extension for the pattern search, make sure that the
-following packages are installed::
-
-  g++
-  python-dev
-  libboost-filesystem-dev
-  libboost-system-dev
-  libsqlite3-dev
-
-Then, to compile the package, do the following::
-
-  cd ~/go/lk
-  python setup.py build_ext
-  cp build/lib.*/_libkombilo.so ~/go/kombilo/
 
 
 .. _development:
