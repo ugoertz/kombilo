@@ -9,9 +9,9 @@ sgfext = Extension('kombilo._libkombilo',
                        'kombilo/libkombilo/pattern.cpp',
                        'kombilo/libkombilo/libkombilo_wrap.cxx'],
                    libraries=['stdc++', 'sqlite3'],
-                   library_dirs=['/usr/lib', ],
-                   extra_compile_args = ['-O3', '-I.', '-fopenmp'], # can use this w/ g++ to max optimization
-                   extra_link_args = [ '-lgomp', ],
+                   library_dirs=['C:\Libraries', 'C:\Libraries\boost_1_62_0', ],
+                   extra_compile_args = ['-I.', '-openmp'],
+                   # extra_link_args = [ '-lgomp', ],
                   )
 
 
