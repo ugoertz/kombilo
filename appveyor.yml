@@ -9,12 +9,12 @@ environment:
 
   matrix:
 
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.x" # currently 2.7.9
-      PYTHON_ARCH: "32"
+    # - PYTHON: "C:\\Python27"
+    #   PYTHON_VERSION: "2.7.x"
+    #   PYTHON_ARCH: "32"
 
     - PYTHON: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x" # currently 2.7.9
+      PYTHON_VERSION: "2.7.x"
       PYTHON_ARCH: "64"
 
 install:
@@ -55,8 +55,8 @@ install:
   # pip will build them from source using the MSVC compiler matching the
   # target Python version and architecture
   - "%CMD_IN_ENV% pip install -r requirements.txt"
-  - ps: "ls \"C:/Libraries\""
-  - ps: "ls \"C:/Libraries/boost_1_62_0/boost\""
+  - ps: "ls \"C:/Python27-x64\""
+  - ps: "ls \"C:/Python27-x64/DLLs\""
 
 build_script:
   # Build the compiled extension
