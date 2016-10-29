@@ -44,13 +44,13 @@ details on the different steps.
 
   # cd to the folder where you want to install kombilo
   # download the Kombilo archive
-  wget https://github.com/ugoertz/kombilo/releases/download/v0.7.5/kombilo-0.7.5.tar.gz
+  wget https://github.com/ugoertz/kombilo/releases/download/v0.7.6/kombilo-0.7.6.tar.gz
 
   # unpack the archive
-  tar xfz kombilo-0.7.5.tar.gz
+  tar xfz kombilo-0.7.6.tar.gz
 
   # compile the C++ extension
-  cd kombilo-0.7.5/lk
+  cd kombilo-0.7.6/lk
   python setup.py build_ext
   cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/
 
@@ -95,14 +95,14 @@ Downloading Kombilo
 tar.gz files
 ............
 
-Download the :command:`kombilo-0.7.5.tar.gz` archive from the `Kombilo downloads
-<https://bitbucket.org/ugoertz/kombilo/downloads>`_ site.
+Download the :command:`kombilo-0.7.6.tar.gz` archive from the `Kombilo downloads
+<https://github.com/ugoertz/kombilo/releases>`_ site.
 
 Unpack the archive somewhere by ::
 
-  tar xfz kombilo-0.7.5.tar.gz
+  tar xfz kombilo-0.7.6.tar.gz
 
-This will extract all the files into the kombilo-0.7.5 subdirectory.
+This will extract all the files into the kombilo-0.7.6 subdirectory.
 
 
 Git repository
@@ -208,7 +208,7 @@ Installer
 ^^^^^^^^^
 
 .. warning::
-    **Currently, for version 0.7.5 there is no Windows installer.**
+    **Currently, for version 0.7.6 there is no Windows installer.**
 
 The installer installs the Kombilo package together with all libraries etc.
 which it depends on. Using it should allow you to ignore the whole Installation
@@ -1318,8 +1318,8 @@ the contributions of its users in the past, and all your feedback and
 contributions are very much appreciated.
 
 Development is concentrated on the `Kombilo project page
-<https://www.bitbucket.org/ugoertz/kombilo/>`_ on `BitBucket
-<https://www.bitbucket.org>`_.
+<https://github.com/ugoertz/kombilo/>`_ on `GitHub
+<https://github.com>`_.
 
 
 Tell me how you like Kombilo
@@ -1336,7 +1336,7 @@ Ask questions, report bugs
 
 If you have any problems, feel free to ask! Either by email at
 ``ug@geometry.de``, or via the `issue tracker
-<https://bitbucket.org/ugoertz/kombilo/issues?status=new&status=open>`_.
+<https://github.com/ugoertz/kombilo/issues>`_.
 
 
 Ideas
@@ -1406,7 +1406,7 @@ The references are stored in the file ``references`` in the ``data`` folder
 inside the main Kombilo directory. This is just a text file which you could
 edit yourself. The format should be self-explanatory. You can also download
 the `current version
-<https://bitbucket.org/ugoertz/kombilo/raw/tip/src/data/references>`_ of
+<https://raw.githubusercontent.com/ugoertz/kombilo/master/kombilo/data/references>`_ of
 this file from the Kombilo source code repository and save it as the
 ``references`` file.
 

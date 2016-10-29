@@ -26,6 +26,11 @@ History/Change log
 0.7
 ---
 
+0.7.6 (October 2016)
+^^^^^^^^^^^^^^^^^^^^
+
+Some small bug fixes
+
 0.7.5 (October 2016)
 ^^^^^^^^^^^^^^^^^^^^
 
