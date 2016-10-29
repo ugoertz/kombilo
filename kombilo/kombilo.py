@@ -1118,6 +1118,11 @@ class App(v.Viewer, KEngine):
 
         self.display_x_indices(canvas, fr, to, 'stat', xoffset, W)
 
+        canvas.create_text(
+                5, H - 10, text='0 %', font=smallfont, anchor='nw', tags=tag)
+        if sum(data) == 0:
+            return
+
         # indices on y-axis
         mx = max(data)
         canvas.create_text(
@@ -1125,8 +1130,6 @@ class App(v.Viewer, KEngine):
         canvas.create_text(
                 4, (H+yoffset)//2 - 10,
                 text='%1.1f %%' % (mx * 50), font=smallfont, anchor='nw', tags=tag)
-        canvas.create_text(
-                5, H - 10, text='0 %', font=smallfont, anchor='nw', tags=tag)
 
         for x, y  in enumerate(data):
             xx = xoffset + int(x * (W-xoffset) / len(data))
@@ -1147,12 +1150,13 @@ class App(v.Viewer, KEngine):
         data is a list, one entry per column to be displayed.
 
         Each entry of data is a dictionary which maps each color to a number
-        betwwen 0 and 1, and optionally has entries "label": list of
+        between 0 and 1, and optionally has entries "label": list of
         text_of_label for labels below bar, 'label_top': text of label above
         bar.
         """
 
         canvas.delete(tag)
+
         font = self.smallFont
         smallfont = self.smallFont
 
