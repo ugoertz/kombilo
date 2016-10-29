@@ -136,8 +136,7 @@ class BoardWC(Board):
 
     def place_wildcard(self, x, y, wc_type):
         x1, x2, y1, y2 = self.getPixelCoord((x,y),1)
-        if self.canvasSize[1]<=7: margin = 5
-        else: margin = 4
+        margin = max(0, self.canvasSize[1] - 7) // 4 + 1
         self.wildcards[(x,y)] = (self.create_oval(x1+margin, x2+margin, y1-margin, y2-margin, fill = { '*':'green', 'x':'black', 'o':'white'}[wc_type], tags=('wildcard','non-bg')), wc_type)
         self.tkraise('label')
 
