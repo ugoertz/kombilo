@@ -107,9 +107,9 @@
 #include <vector>
 #include <stack>
 #include <fstream>
-#include "boost/cstdint.hpp"
 #include "sqlite3.h"
-#include "boost/unordered_map.hpp"
+#include <boost/cstdint.hpp>
+#include <boost/unordered_map.hpp>
 
 #include "abstractboard.h"
 #include "sgfparser.h"
