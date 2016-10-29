@@ -56,10 +56,6 @@ install:
   # target Python version and architecture
   - "%CMD_IN_ENV% pip install -r requirements.txt"
 
-  - "cd c:\\Python27-x64\\DLLs; lib /def:sqlite3.def /out:sqlite3.lib"
-
-  - ps: "ls \"C:/Python27-x64/DLLs\""
-
 build_script:
   # Build the compiled extension
   - "%CMD_IN_ENV% python setup.py build"
