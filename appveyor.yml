@@ -69,7 +69,7 @@ build_script:
   # - "%CMD_IN_ENV% python setup.py bdist_msi"
 
   - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
-  - "%CMD_IN_ENV% \"C:\Program Files (x86)\Inno Setup 5\iscc.exe\" kombilo.iss"
+  - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
   - ps: "ls dist"
   - ps: "ls dist\\kombilo"
   - ps: "ls installer"
