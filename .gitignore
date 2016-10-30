@@ -1,7 +1,7 @@
 *~
 *.swp
-*.pyc
 *.so
+*.pyc
 .cache
 installer
 doc/_build/*
@@ -16,11 +16,9 @@ kombilo/libkombilo/boost
 kombilo/libkombilo/examples/sgftest
 kombilo/libkombilo/examples/tags
 kombilo/kombilo.cfg
-kombilo/libkombilo.py
 kombilo/dist
 kombilo/build
 kombilo/tests/db/*.d*
-kombilo/lang/*/LC_MESSAGES/*.mo
 kombilo.egg-info
 build
 dist
