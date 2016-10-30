@@ -60,8 +60,6 @@ install:
   - "%CMD_IN_ENV% pip install PyInstaller==3.1.1"
   # note: 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 
-
-
 build_script:
   # Build the compiled extension
   - "%CMD_IN_ENV% python setup.py build"
@@ -70,16 +68,21 @@ build_script:
   - "%CMD_IN_ENV% python setup.py bdist_msi"
 
   - "%CMD_IN_ENV% cp build\\lib.win32-2.7\\kombilo\\_libkombilo.pyd kombilo"
-  - ps: "ls c:/windows/winsxs/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39"
-  - "%CMD_IN_ENV% pyinstaller.exe -p c:\\windows\\winsxs\\x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39 kombilo.spec"
+  #- ps: "ls c:/windows/winsxs/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39"
+  - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
+
   - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcredist_x86.exe  http://dl.u-go.net/buildwin/vcredist_x86.exe"
-  # - ps: "rm c:/projects/kombilo/dist/kombilo/mf*.dll"
-  # - ps: "rm c:/projects/kombilo/dist/kombilo/ms*.dll"
+
+  # delete some dlls and manifest files created by pyinstaller:
+  # we will install the dlls by running vcredist system-wide (and hence do not
+  # want them in the kombilo folder), and do not need the manifests
+  - ps: "rm c:/projects/kombilo/dist/kombilo/mf*.dll"
+  - ps: "rm c:/projects/kombilo/dist/kombilo/ms*.dll"
+  - ps: "rm c:/projects/kombilo/dist/kombilo/Microsoft*.manifest"
+  - ps: "rm c:/projects/kombilo/dist/kombilo/kombilo.exe.manifest"
   - ps: "ls c:/projects/kombilo/dist/kombilo"
+
   - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
-  - ps: "ls dist"
-  - ps: "ls dist\\kombilo"
-  - ps: "ls installer"
 
 artifacts:
   # Archive the generated packages in the ci.appveyor.com build report.
