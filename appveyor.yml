@@ -34,7 +34,7 @@ install:
   - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
 
   - "cinst innosetup"
-  - ps: "ls \"C:/Program Files (x86)\Inno Setup 5\""
+  - ps: "ls \"C:/Program Files (x86)/Inno Setup 5\""
   # Install Python (from the official .msi of http://python.org) and pip when
   # not already installed.
   - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
