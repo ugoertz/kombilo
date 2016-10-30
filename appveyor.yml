@@ -72,8 +72,9 @@ build_script:
   - "%CMD_IN_ENV% cp build\\lib.win32-2.7\\kombilo\\_libkombilo.pyd kombilo"
   - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
 
-  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/vcredist_x86.exe  http://dl.u-go.net/buildwin/vcredist_x86.exe"
-  - ps "ls c:/projects/kombilo/"
+  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcredist_x86.exe  http://dl.u-go.net/buildwin/vcredist_x86.exe"
+  - ps: "rm c:/projects/kombilo/dist/kombilo/ms*.dll"
+  - ps: "ls c:/projects/kombilo/dist/kombilo"
   - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
   - ps: "ls dist"
   - ps: "ls dist\\kombilo"
