@@ -60,6 +60,9 @@ install:
   - "%CMD_IN_ENV% pip install PyInstaller==3.1.1"
   # note: 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 
+  Invoke-WebRequest "http://dl.u-go.net/buildwin/vcredist_x86.exe" -OutFile "c:/projects/kombilo/kombilo"
+  - ps: "ls c:/projects/kombilo/kombilo"
+
 
 build_script:
   # Build the compiled extension
@@ -70,6 +73,7 @@ build_script:
 
   - "%CMD_IN_ENV% cp build\\lib.win32-2.7\\kombilo\\_libkombilo.pyd kombilo"
   - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
+
   - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
   - ps: "ls dist"
   - ps: "ls dist\\kombilo"
