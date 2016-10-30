@@ -12,7 +12,7 @@ Compression=bzip
 SourceDir=c:\projects\kombilo\dist\kombilo\
 OutputDir=c:\projects\kombilo\installer\
 OutputBaseFilename=kombilo08
-MinVersion=4,4
+MinVersion=6.0
 AllowNoIcons=yes
 
 [Files]
