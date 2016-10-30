@@ -33,6 +33,9 @@ install:
   - ECHO "Installed SDKs:"
   - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
 
+  - "cinst innosetup"
+  - ps: "ls \"C:/Program Files\""
+
   # Install Python (from the official .msi of http://python.org) and pip when
   # not already installed.
   - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
@@ -58,7 +61,6 @@ install:
   - "%CMD_IN_ENV% pip install PyInstaller==3.1.1"
   # note: 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 
-  - "cinst innosetup"
 
 build_script:
   # Build the compiled extension
