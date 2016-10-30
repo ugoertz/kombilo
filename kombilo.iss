@@ -18,8 +18,8 @@ AllowNoIcons=yes
 [Files]
 Source: "*"; DestDir: "{app}"; Flags: recursesubdirs
 
-; [Run]
-; Filename: {app}\vcredist_x86.exe; Parameters: "/q:a /c:""VCREDI~3.EXE /q:a /c:""""msiexec /i vcredist.msi /qb!"""""""; WorkingDir: {tmp}; StatusMsg: Installing Microsoft DLLs needed for Python; Flags: waituntilterminated;
+[Run]
+Filename: {app}\vcredist_x86.exe; Parameters: "/q:a /c:""VCREDI~3.EXE /q:a /c:""""msiexec /i vcredist.msi /qb!"""""""; WorkingDir: {tmp}; StatusMsg: Installing Microsoft DLLs needed for Python; Flags: waituntilterminated;
 
 [Tasks]
 Name: desktopicon; Description: "Create a &desktop icon"
