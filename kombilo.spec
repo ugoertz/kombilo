@@ -5,7 +5,9 @@ block_cipher = None
 a = Analysis(['kombiloexe.py'],
              pathex=['C:\\Python27\\lib\\site-packages'],
              binaries=None,
-             datas=[(r'kombilo\lang\en\LC_MESSAGES\kombilo.po', r'kombilo\lang\en\LC_MESSAGES'),
+             datas=[
+                    (r'kombilo\lang\en\LC_MESSAGES\kombilo.mo', r'kombilo\lang\en\LC_MESSAGES'),
+                    (r'kombilo\lang\de\LC_MESSAGES\kombilo.mo', r'kombilo\lang\de\LC_MESSAGES'),
                     (r'kombilo\icons\*.png', r'kombilo\icons'),
                     (r'kombilo\data\references', r'kombilo\data'),
                     (r'kombilo\default.cfg', r'kombilo'),
