@@ -60,7 +60,7 @@ install:
   - "%CMD_IN_ENV% pip install PyInstaller==3.1.1"
   # note: 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 
-  - Invoke-WebRequest "http://dl.u-go.net/buildwin/vcredist_x86.exe" -OutFile "c:/projects/kombilo/kombilo"
+  - curl -fsS -o "c:/projects/kombilo/kombilo/vcredist_x86.exe" "http://dl.u-go.net/buildwin/vcredist_x86.exe"
   - ps: "ls c:/projects/kombilo/kombilo"
 
 
