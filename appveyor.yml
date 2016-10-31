@@ -1,5 +1,7 @@
 # see https://github.com/ogrisel/python-appveyor-demo
 
+skip_non_tags: true
+
 environment:
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
@@ -18,79 +20,38 @@ environment:
     #   PYTHON_ARCH: "64"
 
 install:
-  # If there is a newer build queued for the same PR, cancel this one.
-  # The AppVeyor 'rollout builds' option is supposed to serve the same
-  # purpose but it is problematic because it tends to cancel builds pushed
-  # directly to master instead of just PR builds (or the converse).
-  # credits: JuliaLang developers.
-  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
-        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
-        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
-          throw "There are newer queued builds for this pull request, failing early." }
-  - ECHO "Filesystem root:"
-  - ps: "ls \"C:/\""
-
-  - ECHO "Installed SDKs:"
-  - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
-
   - "cinst innosetup"
   - ps: "ls \"C:/Program Files (x86)/Inno Setup 5\""
-  # Install Python (from the official .msi of http://python.org) and pip when
-  # not already installed.
-  - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
-
-  # Prepend newly installed Python to the PATH of this build (this cannot be
-  # done from inside the powershell script as it would require to restart
-  # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
-  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
   # Upgrade to the latest version of pip to avoid it displaying warnings
   # about it being out of date.
   - "pip install --disable-pip-version-check --user --upgrade pip"
 
-  # Install the build dependencies of the project. If some dependencies contain
-  # compiled extensions and are not provided as pre-built wheel packages,
-  # pip will build them from source using the MSVC compiler matching the
-  # target Python version and architecture
+  # Install the build dependencies of the project.
   - "%CMD_IN_ENV% pip install -r requirements.txt"
   - "%CMD_IN_ENV% pip install PyInstaller==3.1.1"
   # note: 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 
 build_script:
-  # Build the compiled extension
   - "%CMD_IN_ENV% python setup.py build"
-  - "%CMD_IN_ENV% python setup.py bdist_wheel"
-  - "%CMD_IN_ENV% python setup.py bdist_wininst"
-  - "%CMD_IN_ENV% python setup.py bdist_msi"
+  - "%CMD_IN_ENV% python setup.py bdist_wheel"  # note: the wheel also requires the dlls, notably vvcomp90.dll, which is not easily found automatically(?)
 
   - "%CMD_IN_ENV% cp build\\lib.win32-2.7\\kombilo\\_libkombilo.pyd kombilo"
-  #- ps: "ls c:/windows/winsxs/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39"
-  - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
+  - "%CMD_IN_ENV% pyinstaller.exe --windowed kombilo.spec"
 
-  # - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcredist_x86.exe  http://dl.u-go.net/buildwin/vcredist_x86.exe"
-  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest  http://dl.u-go.net/buildwin/Microsoft.VC90.OpenMP.manifest"
-  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcomp90.dll  http://dl.u-go.net/buildwin/vcomp90.dll"
+  # pyinstaller does not find vcomp90.dll by itself :-(
+  - ps: "cp c:/windows/winsxs/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
+  - ps: "cp c:/windows/winsxs/Manifests/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest"
 
-  # delete some dlls and manifest files created by pyinstaller:
-  # we will install the dlls by running vcredist system-wide (and hence do not
-  # want them in the kombilo folder), and do not need the manifests
-  # - ps: "rm c:/projects/kombilo/dist/kombilo/mf*.dll"
-  # - ps: "rm c:/projects/kombilo/dist/kombilo/ms*.dll"
-  # - ps: "rm c:/projects/kombilo/dist/kombilo/Microsoft*.manifest"
-  # - ps: "rm c:/projects/kombilo/dist/kombilo/kombilo.exe.manifest"
   - ps: "cp c:/projects/kombilo/kombilo.ico c:/projects/kombilo/dist/kombilo"
   - ps: "ls c:/projects/kombilo/dist/kombilo"
 
   - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
 
 artifacts:
-  # Archive the generated packages in the ci.appveyor.com build report.
   - path: dist\*.*
   - path: installer\*
 
-#on_success:
-#  - TODO: upload the content of dist/*.whl to a public wheelhouse
