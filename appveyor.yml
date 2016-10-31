@@ -71,15 +71,18 @@ build_script:
   #- ps: "ls c:/windows/winsxs/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39"
   - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
 
-  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcredist_x86.exe  http://dl.u-go.net/buildwin/vcredist_x86.exe"
+  # - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcredist_x86.exe  http://dl.u-go.net/buildwin/vcredist_x86.exe"
+  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest  http://dl.u-go.net/buildwin/Microsoft.VC90.OpenMP.manifest"
+  - "%CMD_IN_ENV% curl -fsS -o c:/projects/kombilo/dist/kombilo/vcomp90.dll  http://dl.u-go.net/buildwin/vcomp90.dll"
 
   # delete some dlls and manifest files created by pyinstaller:
   # we will install the dlls by running vcredist system-wide (and hence do not
   # want them in the kombilo folder), and do not need the manifests
-  - ps: "rm c:/projects/kombilo/dist/kombilo/mf*.dll"
-  - ps: "rm c:/projects/kombilo/dist/kombilo/ms*.dll"
-  - ps: "rm c:/projects/kombilo/dist/kombilo/Microsoft*.manifest"
-  - ps: "rm c:/projects/kombilo/dist/kombilo/kombilo.exe.manifest"
+  # - ps: "rm c:/projects/kombilo/dist/kombilo/mf*.dll"
+  # - ps: "rm c:/projects/kombilo/dist/kombilo/ms*.dll"
+  # - ps: "rm c:/projects/kombilo/dist/kombilo/Microsoft*.manifest"
+  # - ps: "rm c:/projects/kombilo/dist/kombilo/kombilo.exe.manifest"
+  - ps: "cp c:/projects/kombilo/kombilo.ico c:/projects/kombilo/dist/kombilo"
   - ps: "ls c:/projects/kombilo/dist/kombilo"
 
   - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
