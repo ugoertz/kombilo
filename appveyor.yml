@@ -23,13 +23,9 @@ environment:
 
 install:
   - "cinst innosetup"
-  - ps: "ls \"C:/Program Files (x86)/Inno Setup 5\""
 
-  # Check that we have the expected version and architecture for Python
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
-
-  # Upgrade to the latest version of pip to avoid it displaying warnings
-  # about it being out of date.
   - "pip install --disable-pip-version-check --user --upgrade pip"
 
   # Install the build dependencies of the project.
