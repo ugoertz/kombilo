@@ -19,6 +19,7 @@ kombilo/kombilo.cfg
 kombilo/dist
 kombilo/build
 kombilo/tests/db/*.d*
+kombilo/lang/*/LC_MESSAGES/*.mo
 kombilo.egg-info
 build
 dist

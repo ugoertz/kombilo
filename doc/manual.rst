@@ -219,9 +219,6 @@ the standard command line tool ``msgfmt``.
 Windows
 -------
 
-.. warning::
-  **Currently, for version 0.8 there is no Windows installer.**
-
 Installer
 ^^^^^^^^^
 
@@ -235,74 +232,8 @@ Basically, the installer extracts an archive which contains the Python
 interpreter, further packages that Kombilo depends on, and the Kombilo files
 themselves to your hard disk. In this way, for one thing you do not have to
 install all these packages yourself, and furthermore Kombilo will not interfere
-with different versions of these packages that you might have in use.
-
-**Main kombilo directory:** The Kombilo files all go into the installation
-directory that you can specify during installation; typically ``c:\Program
-Files\kombilo08`` or something similar
-
-**Source code:** The Kombilo source code is included as a zip archive in the
-main Kombilo directory.
-
-**Microsoft DLLs:** Python, and hence the Kombilo installer, relies on a couple
-of DLLs (shared libraries) that are part of Microsoft's Visual C++ compiler
-package. The installer includes a self-extracting archive which may be freely
-distributed; if you do not yet have them, the DLLs will be installed on your
-system, in an appropriate folder.
-
-**Configuration/log files:** The individual configuration file ``kombilo.cfg``,
-and (if necessary) the error log file ``kombilo.err`` will be written to
-a directory inside the *APPDATA* directory (something like
-``c:\Users\yourusername\AppData\Roaming\kombilo\08\``).
-
-**Uninstall:** The installer creates an *uninstall* menu entry in the Kombilo
-menu inside your start menu (unless you disable the start menu entry
-altogether). The uninstaller will remove all files that Kombilo created inside
-the main kombilo directory, as well as the start menu entry and possibly the
-desktop icon. It cannot (and should not) remove the DLLs. Neither will it remove
-the configuration files (see above). This allows you to uninstall kombilo,
-install a new version, and continue to use your old configuration. Instead of
-using the menu entry, you can also directly invoke the exe file (its file name
-starts with ``unins``) directly.
-
-
-Installation from scratch
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If you want to build Kombilo from source yourself, here are some notes. The
-*libkombilo* extension has to be compiled with a C++ compiler. You could
-(probably, and probably easier) use Microsoft Visual C++, but I used the open
-source `MinGW <http://www.mingw.org/>`_ compiler.  To use MinGW, some
-preparations have to be made:
-
-In ``\Python27\Lib\distutils\``, create a file ``distutils.cfg`` with the
-following content::
-
-  [build]
-  compiler = mingw32
-
-Furthermore, there is a problem with the Python distutils core: it passes the
-``-mno-cygwin`` option to MinGW, but this option is not recognized. One way
-around this is to remove the ``-mno-cygwin`` from lines 322, 323, 324, 325 and
-326 of ``\Python27\Lib\distutils\cygwinccompiler``.
-
-Install `sqlite3 <http://www.sqlite.org/>`_ (and `create a libsqlite3.a file
-<http://stackoverflow.com/a/1862394>`_ for MinGW) and the `Boost
-library <http://www.boost.org/>`_ (only the header files are needed for
-libkombilo; there is no need to compile the boost library).
-
-After that, you should be able to run ``python setup.py build_ext`` in the
-``lk`` subdirectory inside your Kombilo directory.
-
-After installing Python and the packages (configobj, PIL, Pmw) that Kombilo
-depends on, you should now be able to run ``python kombilo.py``.
-
-To create a stand-alone exe file, you can use `py2exe
-<http://www.py2exe.org/>`_. To distribute the whole thing as
-a one-file-installer, I use `InnoSetup <http://www.jrsoftware.org/isinfo.php>`_.
-See also the ``deploy_win`` method in the fabric file ``fabfile.py`` in the main
-Kombilo directory.
-
+with different versions of these packages that you might have in use. For
+detaily, look at the v0.8win branch in the source code repository.
 
 .. index::
   pair: Installation; Mac OS X
