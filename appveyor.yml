@@ -4,6 +4,9 @@ skip_non_tags: true
 
 environment:
   global:
+
+    KOMBILO_VERSION: "08"
+
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
     # See: http://stackoverflow.com/a/13751649/163740
@@ -56,6 +59,8 @@ build_script:
   - ps: "ls c:/projects/kombilo/dist/kombilo"
 
   - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
+
+  - "%CMD_IN_ENV% mv installer/kombilo%KOMBILO_VERSION%.exe installer/kombilo%KOMBILO_VERSION%-%PYTHON_ARCH%.exe"
 
 artifacts:
   - path: dist\*.*
