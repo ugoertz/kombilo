@@ -104,15 +104,18 @@ class BunchTkVar:
         for x in d:
             try:
                 if d[x] in ['True', 'False']:
-                    self.__dict__[x] = BooleanVar()
-                    self.__dict__[x].set(d[x] == 'True')
+                    v = self.__dict__.get(x, BooleanVar())
+                    v.set(d[x] == 'True')
                 else:
                     int(d[x])
-                    self.__dict__[x] = IntVar()
-                    self.__dict__[x].set(int(d[x]))
+                    v = self.__dict__.get(x, IntVar())
+                    v.set(int(d[x]))
             except:
-                self.__dict__[x] = StringVar()
-                self.__dict__[x].set(d[x])
+                v = self.__dict__.get(x, StringVar())
+                v.set(d[x])
+
+            if not x in self.__dict__:
+                self.__dict__[x] = v
 
 # ---------------------------------------------------------------------------------------
 
