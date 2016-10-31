@@ -1,18 +1,30 @@
+import sys
 from setuptools import setup, find_packages, Extension
 
-sgfext = Extension('kombilo._libkombilo',
-                   sources = [
-                       'kombilo/libkombilo/sqlite3.c',
-                       'kombilo/libkombilo/sgfparser.cpp',
-                       'kombilo/libkombilo/abstractboard.cpp',
-                       'kombilo/libkombilo/search.cpp',
-                       'kombilo/libkombilo/algos.cpp',
-                       'kombilo/libkombilo/pattern.cpp',
-                       'kombilo/libkombilo/libkombilo_wrap.cxx'],
-                   library_dirs=['C:\\Libraries\\boost_1_62_0', ],
-                   extra_compile_args = ['-I.', '-IC:\\Libraries\\boost_1_62_0', '-openmp'],
-                   # extra_link_args = [ '-lgomp', ],
-                  )
+
+sources = [
+        'kombilo/libkombilo/sgfparser.cpp',
+        'kombilo/libkombilo/abstractboard.cpp',
+        'kombilo/libkombilo/search.cpp',
+        'kombilo/libkombilo/algos.cpp',
+        'kombilo/libkombilo/pattern.cpp',
+        'kombilo/libkombilo/libkombilo_wrap.cxx']
+
+kwargs = {}
+
+if sys.platform[:3] == 'win':
+    sources.append('kombilo/libkombilo/sqlite3.c')
+    kwargs['library_dirs'] = ['C:\\Libraries\\boost_1_62_0', ]
+    kwargs['extra_compile_args'] = ['-I.', '-IC:\\Libraries\\boost_1_62_0', '-openmp']
+else:
+    kwargs['libraries'] = ['stdc++', 'sqlite3']
+    kwargs['library_dirs'] = ['/usr/lib', ]
+    kwargs['extra_compile_args'] = ['-O3', '-I.', '-fopenmp']  # can use this w/ g++ to max optimization
+    kwargs['extra_link_args'] = [ '-lgomp', ]
+
+kwargs['sources'] = sources
+
+sgfext = Extension('kombilo._libkombilo', **kwargs)
 
 
 setup(
