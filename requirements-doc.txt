@@ -1,0 +1,7 @@
+Jinja2
+MarkupSafe
+Pygments
+Sphinx
+argparse
+docutils
+pyparsing

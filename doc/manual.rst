@@ -127,7 +127,7 @@ Kombilo documentation
 .....................
 
 Install `Sphinx <http://sphinx.pocoo.org/>`_ and other required packages (``pip install
--r requirements.txt`` in a ``virtualenv`` would be the preferred way), or globally by ::
+-r requirements-doc.txt`` in a ``virtualenv`` would be the preferred way), or globally by ::
 
   sudo apt-get install python-sphinx
 
