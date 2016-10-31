@@ -102,6 +102,10 @@ class BunchTkVar:
 
     def loadFromDisk(self, d):
         for x in d:
+            # print x
+            #  if x in self.__dict__:
+            #      print ' old value:', self.__dict__[x].get()
+            #      print ' new value:',
             try:
                 if d[x] in ['True', 'False']:
                     v = self.__dict__.get(x, BooleanVar())
@@ -113,8 +117,10 @@ class BunchTkVar:
             except:
                 v = self.__dict__.get(x, StringVar())
                 v.set(d[x])
+            # print v.get()
 
             if not x in self.__dict__:
+                # print 'new'
                 self.__dict__[x] = v
 
 # ---------------------------------------------------------------------------------------
@@ -2250,7 +2256,7 @@ class Viewer:
         self.saveOptions(self.config['options'])
         oe = OptionEditor(self.config)
         self.loadOptions(self.config['options'])
-        self.initFonts()
+        self.updateFonts()
         self.board.resize()
 
     def helpDocumentation(self):
@@ -2478,29 +2484,36 @@ class Viewer:
             self.board.resize()
 
     def initFonts(self):
-        self.monospaceFont = tkFont.Font(
+        self.monospaceFont = tkFont.Font()
+        self.standardFont = tkFont.Font()
+        self.labelFont = tkFont.Font()
+        self.smallFont = tkFont.Font()
+        self.boldFont = tkFont.Font()
+        self.updateFonts()
+
+    def updateFonts(self):
+        self.monospaceFont.configure(
                 family=self.options.monospaceFont.get(),
                 size=self.options.monospaceFontSize.get(),
                 weight=self.options.monospaceFontWeight.get())
-        self.standardFont = tkFont.Font(
+        self.standardFont.configure(
                 family=self.options.standardFont.get(),
                 size=self.options.standardFontSize.get(),
                 weight=self.options.standardFontWeight.get())
-        self.labelFont = tkFont.Font(
+        self.labelFont.configure(
                 family=self.options.labelFont.get(),
                 size=self.options.labelFontSize.get(),
                 weight=self.options.labelFontWeight.get())
-        self.smallFont = tkFont.Font(
+        self.smallFont.configure(
                 family=self.options.smallFont.get(),
                 size=self.options.smallFontSize.get(),
                 weight=self.options.smallFontWeight.get())
-        self.boldFont = tkFont.Font(
+        self.boldFont.configure(
                 family=self.options.standardFont.get(),
                 size=self.options.standardFontSize.get(),
                 weight='bold')
         defaultfont = tkFont.nametofont('TkDefaultFont')
         defaultfont.configure(size=self.options.standardFontSize.get())
-
 
     def initMenus(self):
 
@@ -2800,6 +2813,8 @@ class Viewer:
                 for variable, size, dummy in varlist:
                     variable.set(size)
 
+        self.initFonts()
+
         # The main window
 
         if BoardClass == Board:  # not invoked by Kombilo
@@ -2825,8 +2840,6 @@ class Viewer:
 
         self.boardFrame.pack(side=TOP, expand=YES, fill=BOTH, padx=5)
         labelFrame.pack(side=TOP)
-
-        self.initFonts()
 
         # The board
 
