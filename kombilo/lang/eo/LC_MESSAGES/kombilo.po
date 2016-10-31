@@ -714,7 +714,7 @@ msgstr ""
 #: kombilo.py:1304 kombilo.py:1307 kombilo.py:1206 kombilo.py:1209
 #, fuzzy, python-format
 msgid "Game info search, query \"%s\""
-msgstr "Partiinforma serĉo, imformpeto \"%s\", %1.1f sekundoj\n"
+msgstr "Partiinforma serĉo, informpeto \"%s\""
 
 #: kombilo.py:346 kombilo.py:340
 msgid "Game list"

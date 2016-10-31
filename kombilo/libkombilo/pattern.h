@@ -29,9 +29,9 @@
 #include <vector>
 #include <stack>
 #include <fstream>
-#include <stdint.h>
-#include <sqlite3.h>
-#include "boost/unordered_map.hpp"
+#include "sqlite3.h"
+#include "pstdint.h"
+#include <boost/unordered_map.hpp>
 
 #include "abstractboard.h"
 #include "sgfparser.h"

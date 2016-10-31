@@ -12,18 +12,14 @@ Installation
   pair: Installation; Linux
 
 .. _install-linux:
+.. _quick-start:
 
 Linux
 -----
 
 The following instructions cover the installation of Kombilo under Ubuntu
-Linux (current version, i.e. 11.10). If you use another flavor of Linux and
-are somewhat familiar with it, you will easily adapt them.
-
-.. _quick-start:
-
-Quick start: installation on a Ubuntu system
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Linux. If you use another flavor of Linux and are somewhat familiar with it, you
+will easily adapt them.
 
 With the following commands you can install Kombilo on a Ubuntu system.
 Lines starting with a ``#`` are comments - no need to type them. These
@@ -48,20 +44,55 @@ details on the different steps.
   kombilo
 
 
-Now continue with the :ref:`getting-started` section of the tutorial.
+Now continue with the :ref:`getting-started` section of the tutorial. To
+uninstall, do ``pip uninstall kombilo``. (To also remove the database files
+created by Kombilo, you should remove the databases from within Kombilo before
+uninstalling.)
 
-Windows/Mac OS X
-----------------
+Mac OS X
+--------
 
-In principle, installing packages using pip also works on Windows and Mac OS X.
-Currently Kombilo is distributed only in the format of a source distribution, so
-you would need to make sure that in addition to Python (with Tkinter) and pip
-you have a C++ compiler and the SQlite and Boost libraries required for
-compiling Kombilo.  Then, ``pip install kombilo`` should work on Windows and Mac
-OS X. Success (or failure) reports are welcome.
+In principle, installing packages using pip also works on Mac OS X.  Currently
+Kombilo is distributed only in the format of a source distribution, so you would
+need to make sure that in addition to Python (with Tkinter) and pip you have
+a C++ compiler and the SQlite and Boost libraries required for compiling
+Kombilo.  Then, ``pip install kombilo`` should work on.  Success (or failure)
+reports are welcome. (Also see the comments on installing the previous version
+0.7 on a Mac, :ref:`install-macosx`.)
+
+Also see these `notes on Tcl/Tk on macs <https://www.python.org/download/mac/tcltk/>`_.
 
 Another option would be to run a linux system on top of your existing operating
 system, using virtualization such as Virtualbox.
+
+Windows
+-------
+
+There is an installer provided for Kombilo which should *just work* and which is
+recommended.
+
+*Uninstall*: The installer automatically installs a program to uninstall
+Kombilo.  To also remove the database files created by Kombilo, you should
+remove the databases from within Kombilo before uninstalling.
+
+*Upgrading from version 0.7*: There is no automatic upgrading. Just install
+Kombilo 0.8, and deinstall Kombilo 0.7. The two versions can also coexist, so
+you could leave the old version until you are convinced that the new version
+works. You will have to newly process your databases for 0.8.
+
+If you want to make changes to the program, you will need to build the program
+yourself. For this, you will need Python 2.7 and a C++ compiler (Microsoft
+Visual Studio C++ 2008; or MinGW32 seem to be the best choices). You will also
+need to install the boost libraries and SQLite3.  Then ``pip install kombilo``
+should do the job.
+
+Alternatively, clone the git repository and proceed from there. See the
+``v0.8win`` branch for the build setup that is used to create the Windows
+installer, in particular the file ``appveyor.yml``.
+
+If you want to change only the Python part, you could also start from the git
+repository and add the libkomilo.pyd file (and the microsoft .dll files) from
+a Kombilo instance created by the installer.
 
 
 
@@ -127,7 +158,7 @@ Kombilo documentation
 .....................
 
 Install `Sphinx <http://sphinx.pocoo.org/>`_ and other required packages (``pip install
--r requirements.txt`` in a ``virtualenv`` would be the preferred way), or globally by ::
+-r requirements-doc.txt`` in a ``virtualenv`` would be the preferred way), or globally by ::
 
   sudo apt-get install python-sphinx
 
@@ -188,9 +219,6 @@ the standard command line tool ``msgfmt``.
 Windows
 -------
 
-.. warning::
-  **Currently, for version 0.8 there is no Windows installer.**
-
 Installer
 ^^^^^^^^^
 
@@ -204,74 +232,8 @@ Basically, the installer extracts an archive which contains the Python
 interpreter, further packages that Kombilo depends on, and the Kombilo files
 themselves to your hard disk. In this way, for one thing you do not have to
 install all these packages yourself, and furthermore Kombilo will not interfere
-with different versions of these packages that you might have in use.
-
-**Main kombilo directory:** The Kombilo files all go into the installation
-directory that you can specify during installation; typically ``c:\Program
-Files\kombilo08`` or something similar
-
-**Source code:** The Kombilo source code is included as a zip archive in the
-main Kombilo directory.
-
-**Microsoft DLLs:** Python, and hence the Kombilo installer, relies on a couple
-of DLLs (shared libraries) that are part of Microsoft's Visual C++ compiler
-package. The installer includes a self-extracting archive which may be freely
-distributed; if you do not yet have them, the DLLs will be installed on your
-system, in an appropriate folder.
-
-**Configuration/log files:** The individual configuration file ``kombilo.cfg``,
-and (if necessary) the error log file ``kombilo.err`` will be written to
-a directory inside the *APPDATA* directory (something like
-``c:\Users\yourusername\AppData\Roaming\kombilo\08\``).
-
-**Uninstall:** The installer creates an *uninstall* menu entry in the Kombilo
-menu inside your start menu (unless you disable the start menu entry
-altogether). The uninstaller will remove all files that Kombilo created inside
-the main kombilo directory, as well as the start menu entry and possibly the
-desktop icon. It cannot (and should not) remove the DLLs. Neither will it remove
-the configuration files (see above). This allows you to uninstall kombilo,
-install a new version, and continue to use your old configuration. Instead of
-using the menu entry, you can also directly invoke the exe file (its file name
-starts with ``unins``) directly.
-
-
-Installation from scratch
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If you want to build Kombilo from source yourself, here are some notes. The
-*libkombilo* extension has to be compiled with a C++ compiler. You could
-(probably, and probably easier) use Microsoft Visual C++, but I used the open
-source `MinGW <http://www.mingw.org/>`_ compiler.  To use MinGW, some
-preparations have to be made:
-
-In ``\Python27\Lib\distutils\``, create a file ``distutils.cfg`` with the
-following content::
-
-  [build]
-  compiler = mingw32
-
-Furthermore, there is a problem with the Python distutils core: it passes the
-``-mno-cygwin`` option to MinGW, but this option is not recognized. One way
-around this is to remove the ``-mno-cygwin`` from lines 322, 323, 324, 325 and
-326 of ``\Python27\Lib\distutils\cygwinccompiler``.
-
-Install `sqlite3 <http://www.sqlite.org/>`_ (and `create a libsqlite3.a file
-<http://stackoverflow.com/a/1862394>`_ for MinGW) and the `Boost
-library <http://www.boost.org/>`_ (only the header files are needed for
-libkombilo; there is no need to compile the boost library).
-
-After that, you should be able to run ``python setup.py build_ext`` in the
-``lk`` subdirectory inside your Kombilo directory.
-
-After installing Python and the packages (configobj, PIL, Pmw) that Kombilo
-depends on, you should now be able to run ``python kombilo.py``.
-
-To create a stand-alone exe file, you can use `py2exe
-<http://www.py2exe.org/>`_. To distribute the whole thing as
-a one-file-installer, I use `InnoSetup <http://www.jrsoftware.org/isinfo.php>`_.
-See also the ``deploy_win`` method in the fabric file ``fabfile.py`` in the main
-Kombilo directory.
-
+with different versions of these packages that you might have in use. For
+detaily, look at the v0.8win branch in the source code repository.
 
 .. index::
   pair: Installation; Mac OS X
@@ -279,6 +241,10 @@ Kombilo directory.
 
 Mac OS X
 --------
+
+*The comments below originally are copied from the manual for version 0.7. In
+principle they probably still apply, but I cannot check since I do not have
+a Mac.*
 
 Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
 the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
@@ -1457,16 +1423,6 @@ Documentation
 I try to maintain a reasonably complete documentation, but there surely are
 gaps and probably some inaccuracies. Please notify me, if you think that
 something is not explained well.
-
-
-Windows/Mac OS X
-----------------
-
-I would love to add better support for Windows and/or Mac OS X users,
-however I do not have access to computers running either of these operating
-systems, right now. If you make progress on this, please tell me. I am also
-willing to discuss problems based on my experience with the previous
-Kombilo version for which I made a Windows installer.
 
 
 
