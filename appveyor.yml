@@ -42,12 +42,12 @@ build_script:
   - "%CMD_IN_ENV% python setup.py build"
   - "%CMD_IN_ENV% python setup.py bdist_wheel"  # note: the wheel also requires the dlls, notably vvcomp90.dll, which is not easily found automatically(?)
 
-  - "%CMD_IN_ENV% cp build\\lib.win32-2.7\\kombilo\\_libkombilo.pyd kombilo"
+  - "%CMD_IN_ENV% cp build\\lib.*\\kombilo\\_libkombilo.pyd kombilo"
   - "%CMD_IN_ENV% pyinstaller.exe --windowed kombilo.spec"
 
   # pyinstaller does not find vcomp90.dll by itself :-(
-  - ps: "cp c:/windows/winsxs/%VCOMP90_PATH%/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
-  - ps: "cp c:/windows/winsxs/Manifests/%VCOMP90_PATH%.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest"
+  - "cp c:/windows/winsxs/%VCOMP90_PATH%/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
+  - "cp c:/windows/winsxs/Manifests/%VCOMP90_PATH%.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest"
 
 
   - ps: "cp c:/projects/kombilo/kombilo.ico c:/projects/kombilo/dist/kombilo"
