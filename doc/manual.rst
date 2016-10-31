@@ -12,18 +12,14 @@ Installation
   pair: Installation; Linux
 
 .. _install-linux:
+.. _quick-start:
 
 Linux
 -----
 
 The following instructions cover the installation of Kombilo under Ubuntu
-Linux (current version, i.e. 11.10). If you use another flavor of Linux and
-are somewhat familiar with it, you will easily adapt them.
-
-.. _quick-start:
-
-Quick start: installation on a Ubuntu system
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Linux. If you use another flavor of Linux and are somewhat familiar with it, you
+will easily adapt them.
 
 With the following commands you can install Kombilo on a Ubuntu system.
 Lines starting with a ``#`` are comments - no need to type them. These
@@ -48,20 +44,55 @@ details on the different steps.
   kombilo
 
 
-Now continue with the :ref:`getting-started` section of the tutorial.
+Now continue with the :ref:`getting-started` section of the tutorial. To
+uninstall, do ``pip uninstall kombilo``. (To also remove the database files
+created by Kombilo, you should remove the databases from within Kombilo before
+uninstalling.)
 
-Windows/Mac OS X
-----------------
+Mac OS X
+--------
 
-In principle, installing packages using pip also works on Windows and Mac OS X.
-Currently Kombilo is distributed only in the format of a source distribution, so
-you would need to make sure that in addition to Python (with Tkinter) and pip
-you have a C++ compiler and the SQlite and Boost libraries required for
-compiling Kombilo.  Then, ``pip install kombilo`` should work on Windows and Mac
-OS X. Success (or failure) reports are welcome.
+In principle, installing packages using pip also works on Mac OS X.  Currently
+Kombilo is distributed only in the format of a source distribution, so you would
+need to make sure that in addition to Python (with Tkinter) and pip you have
+a C++ compiler and the SQlite and Boost libraries required for compiling
+Kombilo.  Then, ``pip install kombilo`` should work on.  Success (or failure)
+reports are welcome. (Also see the comments on installing the previous version
+0.7 on a Mac, :ref:`install-macosx`.)
+
+Also see these `notes on Tcl/Tk on macs <https://www.python.org/download/mac/tcltk/>`_.
 
 Another option would be to run a linux system on top of your existing operating
 system, using virtualization such as Virtualbox.
+
+Windows
+-------
+
+There is an installer provided for Kombilo which should *just work* and which is
+recommended.
+
+*Uninstall*: The installer automatically installs a program to uninstall
+Kombilo.  To also remove the database files created by Kombilo, you should
+remove the databases from within Kombilo before uninstalling.
+
+*Upgrading from version 0.7*: There is no automatic upgrading. Just install
+Kombilo 0.8, and deinstall Kombilo 0.7. The two versions can also coexist, so
+you could leave the old version until you are convinced that the new version
+works. You will have to newly process your databases for 0.8.
+
+If you want to make changes to the program, you will need to build the program
+yourself. For this, you will need Python 2.7 and a C++ compiler (Microsoft
+Visual Studio C++ 2008; or MinGW32 seem to be the best choices). You will also
+need to install the boost libraries and SQLite3.  Then ``pip install kombilo``
+should do the job.
+
+Alternatively, clone the git repository and proceed from there. See the
+``v0.8win`` branch for the build setup that is used to create the Windows
+installer, in particular the file ``appveyor.yml``.
+
+If you want to change only the Python part, you could also start from the git
+repository and add the libkomilo.pyd file (and the microsoft .dll files) from
+a Kombilo instance created by the installer.
 
 
 
@@ -279,6 +310,10 @@ Kombilo directory.
 
 Mac OS X
 --------
+
+*The comments below originally are copied from the manual for version 0.7. In
+principle they probably still apply, but I cannot check since I do not have
+a Mac.*
 
 Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
 the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
@@ -1457,16 +1492,6 @@ Documentation
 I try to maintain a reasonably complete documentation, but there surely are
 gaps and probably some inaccuracies. Please notify me, if you think that
 something is not explained well.
-
-
-Windows/Mac OS X
-----------------
-
-I would love to add better support for Windows and/or Mac OS X users,
-however I do not have access to computers running either of these operating
-systems, right now. If you make progress on this, please tell me. I am also
-willing to discuss problems based on my experience with the previous
-Kombilo version for which I made a Windows installer.
 
 
 
