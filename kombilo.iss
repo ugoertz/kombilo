@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Kombilo
-AppVerName=Kombilo 0.8
+AppVerName=Kombilo 0.8.1
 AppCopyright=Copyright (C) 2001- Ulrich Goertz (ug@geometry.de)
 AppPublisher=Ulrich Goertz
 AppPublisherURL=http://www.u-go.net/
