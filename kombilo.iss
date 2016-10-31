@@ -16,6 +16,7 @@ OutputDir=c:\projects\kombilo\installer\
 OutputBaseFilename=kombilo08
 MinVersion=6.0
 AllowNoIcons=yes
+ArchitecturesInstallIn64BitMode=x64
 
 [Files]
 Source: "*"; DestDir: "{app}"; Flags: recursesubdirs

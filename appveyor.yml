@@ -14,10 +14,12 @@ environment:
     - PYTHON: "C:\\Python27"
       PYTHON_VERSION: "2.7.x"
       PYTHON_ARCH: "32"
+      VCOMP90_PATH: "x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39"
 
-    # - PYTHON: "C:\\Python27-x64"
-    #   PYTHON_VERSION: "2.7.x"
-    #   PYTHON_ARCH: "64"
+    - PYTHON: "C:\\Python27-x64"
+      PYTHON_VERSION: "2.7.x"
+      PYTHON_ARCH: "64"
+      VCOMP90_PATH: "amd64_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_a5325551f9d85633"
 
 install:
   - "cinst innosetup"
@@ -48,8 +50,9 @@ build_script:
   - "%CMD_IN_ENV% pyinstaller.exe --windowed kombilo.spec"
 
   # pyinstaller does not find vcomp90.dll by itself :-(
-  - ps: "cp c:/windows/winsxs/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
-  - ps: "cp c:/windows/winsxs/Manifests/x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest"
+  - ps: "cp c:/windows/winsxs/%VCOMP90_PATH%/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
+  - ps: "cp c:/windows/winsxs/Manifests/%VCOMP90_PATH%.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest"
+
 
   - ps: "cp c:/projects/kombilo/kombilo.ico c:/projects/kombilo/dist/kombilo"
   - ps: "ls c:/projects/kombilo/dist/kombilo"
