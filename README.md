@@ -39,6 +39,13 @@ Bundled Pmw files: Pmw.py, PmwBlt.py, PmwColor.py
 
 I18n files: kombilo/lang/de/LC\_MESSAGES/kombilo.mo, kombilo/lang/en/LC\_MESSAGES/kombilo.mo
 
+
+For InnoSetup
+-------------
+
+kombilo.iss
+
+
 Appveyor files
 --------------
 
