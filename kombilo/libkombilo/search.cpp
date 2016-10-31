@@ -1739,8 +1739,8 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
                   }
                 }
               }
-              delete [] propValue;
-              propValue = 0;
+          delete [] propValue;
+          propValue = 0;
         } 
       } catch (SGFError) {
         if (propValue) {
