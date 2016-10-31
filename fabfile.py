@@ -3,7 +3,7 @@ import urllib2
 import glob
 from fabric.api import run, cd, local, lcd, prefix, get, put
 
-VERSION = '0.8'
+VERSION = '0.8.1'
 GIT_BRANCH = 'v0.8'
 DEVEL_BASE = '/home/ug/devel'
 DEVEL_DIR = 'kombilo'

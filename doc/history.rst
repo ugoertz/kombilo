@@ -23,9 +23,17 @@ databases, including all tags.
 History/Change log
 ==================
 
+0.8
+---
+
+0.8.1 (October 2016)
+^^^^^^^^^^^^^^^^^^^^
+
+* Add Windows Installer
+* Minor bug fixes
 
 0.8 (October 2016)
-------------------
+^^^^^^^^^^^^^^^^^^
 
 Major changes:
 

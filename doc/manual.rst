@@ -44,10 +44,17 @@ details on the different steps.
   kombilo
 
 
-Now continue with the :ref:`getting-started` section of the tutorial. To
-uninstall, do ``pip uninstall kombilo``. (To also remove the database files
-created by Kombilo, you should remove the databases from within Kombilo before
-uninstalling.)
+Now continue with the :ref:`getting-started` section of the tutorial.
+
+*Uninstall:* To uninstall, do ``pip uninstall kombilo``. (To also remove the
+database files created by Kombilo, you should remove the databases from within
+Kombilo before uninstalling.)
+
+*Upgrading:* Upgrading from 0.8 to 0.8.1 can be done via pip (``pip install -U
+kombilo``). If you still have an old Kombilo instance (version 0.7.\*) around,
+it does not interact with Kombilo 0.8.?. You have to newly process the SGF
+databases for 0.8.
+
 
 Mac OS X
 --------
@@ -76,9 +83,9 @@ Kombilo.  To also remove the database files created by Kombilo, you should
 remove the databases from within Kombilo before uninstalling.
 
 *Upgrading from version 0.7*: There is no automatic upgrading. Just install
-Kombilo 0.8, and deinstall Kombilo 0.7. The two versions can also coexist, so
-you could leave the old version until you are convinced that the new version
-works. You will have to newly process your databases for 0.8.
+Kombilo 0.8.1, and deinstall Kombilo 0.7.\*. The two versions can also coexist,
+so you could leave the old version until you are convinced that the new version
+works. You will have to newly process your databases for 0.8.1.
 
 If you want to make changes to the program, you will need to build the program
 yourself. For this, you will need Python 2.7 and a C++ compiler (Microsoft
