@@ -36,6 +36,10 @@ install:
   # note: 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 
 build_script:
+  # in kombilo folder, license.rst exists only as a symlink, so need to copy the
+  # real file to that location to be able to use it
+  - "%CMD_IN_ENV% cp license.rst kombilo"
+
   - "%CMD_IN_ENV% python setup.py build"
   - "%CMD_IN_ENV% python setup.py bdist_wheel"  # note: the wheel also requires the dlls, notably vvcomp90.dll, which is not easily found automatically(?)
 
