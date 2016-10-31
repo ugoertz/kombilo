@@ -49,7 +49,7 @@ build_script:
   - "%CMD_IN_ENV% python setup.py bdist_wheel"  # note: the wheel also requires the dlls, notably vvcomp90.dll, which is not easily found automatically(?)
 
   - "%CMD_IN_ENV% cp build\\lib.%ARCHITECTURE%\\kombilo\\_libkombilo.pyd kombilo"
-  - "%CMD_IN_ENV% pyinstaller.exe --windowed kombilo.spec"
+  - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
 
   # pyinstaller does not find vcomp90.dll by itself :-(
   - "cp c:/windows/winsxs/%VCOMP90_PATH%/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
