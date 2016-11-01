@@ -3,147 +3,94 @@ import urllib2
 import glob
 from fabric.api import run, cd, local, lcd, prefix, get, put
 
+MAJOR_VERSION = '0.8'
 VERSION = '0.8.1'
-GIT_BRANCH = 'v0.8'
-DEVEL_BASE = '/home/ug/devel'
-DEVEL_DIR = 'kombilo'
-BASE_DIR = os.path.join(DEVEL_BASE, DEVEL_DIR)
+BASE_DIR = os.path.dirname(__file__)
 VIRTUALENV = '/bin/bash /home/ug/.virtualenvs/k08/bin/activate'
 
+DOC_BASEPATH = '/home/ug/docker/ugonet/ugonet/data/media/kombilo/'
+DOXY_BASEPATH = '/home/ug/docker/ugonet/ugonet/data/media/libkombilo/'
+PDF_PATH = DOC_BASEPATH
+
+
 def deploy_doc():
-    with lcd('%s' % BASE_DIR):
-        local('git checkout %s' % GIT_BRANCH)
-        local('git pull')
-    with lcd('%s/lk' % BASE_DIR):
-        local('swig -c++ -python libkombilo.i')
-        with prefix(VIRTUALENV):
-            local('python setup.py build_ext')
-        local('cp -n libkombilo.py build/lib.linux-*/_libkombilo.so ../src/')
+    """
+    Create and upload html documentation from the documentation files currently
+    in place. The script will run doxygen, but will assume that the SWIG created
+    files (and also the compiled _libkombilo.so?) are in place. Also, it is
+    assumed that doxygen and the packages in requirements-doc.txt are installed.
+
+    This file will overwrite the previous documentation copy on the server.
+
+    Usage: fab -H host_to_upload_to deploy_doc
+
+    Adjust VIRTUALENV, DOC_BASEPATH above, if necessary.
+    """
+
+    # run sphinx
     with prefix(VIRTUALENV):
         with lcd('%s/doc' % BASE_DIR):
-            # run('rm -rf ../../dl/kombilo/doc')
+            local('make clean')
             local('make html')
-    with lcd('%s/lk/doc' % BASE_DIR):
+        with lcd('%s/doc/_build' % BASE_DIR):
+            local('tar cfz html.tar.gz html')
+            put('html.tar.gz', DOC_BASEPATH)
+    with cd(DOC_BASEPATH):
+        run('tar xf html.tar.gz')
+        run('rm -rf doc%s' % MAJOR_VERSION.replace('.', ''))
+        run('mv html doc%s' % MAJOR_VERSION.replace('.', ''))
+        run('rm -f html.tar.gz')
+
+    # run doxygen
+    with lcd('%s/kombilo/libkombilo/doc' % BASE_DIR):
+        local('rm -rf build')
         local('doxygen')
-        #  local('rm -rf ../../../dl/libkombilo/doc')
-        #  local('cp -a build/html ../../../dl/libkombilo/doc')
+    with lcd('%s/kombilo/libkombilo/doc/build' % BASE_DIR):
+        local('tar cfz html.tar.gz html')
+        put('html.tar.gz', DOXY_BASEPATH)
+    with cd(DOXY_BASEPATH):
+        run('tar xf html.tar.gz')
+        run('rm -rf doc%s' % MAJOR_VERSION.replace('.', ''))
+        run('mv html doc%s' % MAJOR_VERSION.replace('.', ''))
+        run('rm -f html.tar.gz')
 
 
 def doc_as_pdf():
+    """
+    Create and upload pdf from the documentation files currently in place.
+
+    Usage: fab -H host_to_upload_to doc_as_pdf
+
+    Adjust VIRTUALENV, PDF_PATH above, if necessary.
+    """
+
     with prefix(VIRTUALENV):
         with lcd('%s/doc' % BASE_DIR):
             local('make clean')
             local('make latexpdf')
     with lcd('%s/doc/_build/latex/' % BASE_DIR):
-        local('mv Kombilo.pdf kombilo-%s.pdf' % VERSION)
+        put('Kombilo.pdf', '%s/kombilo-%s.pdf' % (PDF_PATH, VERSION))
 
 
-# --------------- pootle
+# --------------- deploy source distribution to PyPI -----------------------
 
-LANGUAGES = [os.path.basename(lang) for lang in  glob.glob('lang/*') if os.path.basename(lang).find('.') == -1]
-LANGUAGES.remove('en')
+# tag github release (not necessary for the deploy process, just for bookkeeping)
 
+# make sure swig generated files are in place (kombilo/libkombilo.py,
+# kombilo/libkombilo/libkombilo_wrap.cxx), otherwise generate with ``swig -c++
+# -python libkombilo.i`` (in kombilo/libkombilo)
 
-def pootle_start_maintenance():
-    run('sudo a2dissite pootlek')
-    run('sudo a2ensite pootlek-maintenance')
-    run('sudo service apache2 reload')
-
-
-def pootle_end_maintenance():
-    run('sudo a2dissite pootlek-maintenance')
-    run('sudo a2ensite pootlek')
-    run('sudo service apache2 reload')
+# create sdist package: ``python setup.py sdist``
+# (test the package: pip install kombiloXXX.tar.gz)
+# upload to PyPI: ``twine upload dist/kombilo-0.8.tar.gz``
 
 
-def download_po(ignore_errors=False):
-    with prefix('source /home/ugy/.virtualenvs/pootlekombilo/bin/activate'):
-        with cd('/home/ugy/devel/pootlekombilo/Pootle-2.1.6'):
-            run('./manage.py sync_stores --project kombilo')
+# -------- deploy Windows installer (just some notes) --------------------------
 
-    with lcd('lang'):
-        for lang in LANGUAGES:
-            with lcd('%s/LC_MESSAGES' % lang):
-                try:
-                    get('/home/ugy/devel/pootlekombilo/Pootle-2.1.6/po/kombilo/%s/kombilo.po' % lang, './kombilo.po')
-                except:
-                    if not ignore_errors:
-                        raise
-                else:
-                    local('msgfmt -o kombilo.mo kombilo.po')
-
-
-def upload_pot_new():
-    """Upload po files, also for a newly created language, so that we should ignore the "file not found" error in download_po.
-    """
-    upload_pot(ignore_errors=True)
-
-
-def upload_pot(ignore_errors=False):
-    '''Adds new strings to po files/removes unecessary ones. To do this:
-
-    * obtain the current po files from pootle
-    * create new pot file using pygettext
-    * apply msgmerge
-    * upload the merged files to pootle
-    '''
-
-    pootle_start_maintenance()
-    download_po(ignore_errors=ignore_errors)
-
-    # create new pot file:
-    with prefix('source /home/ug/.virtualenvs/k08-bb/bin/activate'):
-        with lcd('src'):
-            local('pygettext -p ../lang/ kombilo.py v.py kombiloNG.py')
-
-    with lcd('lang'):
-        # update kombilo.po file for "en"
-        local('msgmerge -U en/LC_MESSAGES/kombilo.po messages.pot')
-
-        # merge other po files and upload them to pootle
-        for lang in LANGUAGES:
-            local('msgmerge -U %s/LC_MESSAGES/kombilo.po messages.pot' % lang)
-            with lcd('%s/LC_MESSAGES' % lang):
-                local('msgfmt -o kombilo.mo kombilo.po')
-                put('kombilo.po', '/home/ugy/devel/pootlekombilo/Pootle-2.1.6/po/kombilo/%s/kombilo.po' % lang, mode=0660)
-                run('chgrp www-data /home/ugy/devel/pootlekombilo/Pootle-2.1.6/po/kombilo/%s/kombilo.po' % lang)
-
-    with prefix('source /home/ugy/.virtualenvs/pootlekombilo/bin/activate'):
-        with cd('/home/ugy/devel/pootlekombilo/Pootle-2.1.6'):
-            run('./manage.py update_stores --project kombilo')
-
-    pootle_end_maintenance()
-
-
-# --------------- kombilo main/linux
-
-def deploy_targz():
-    with lcd(DEVEL_BASE):
-        local('mkdir kombilo-%s' % VERSION)
-        local('rm -f kombilo-%s.tar.gz' % VERSION)
-        local('git clone %s kombilo-%s' % (DEVEL_DIR, VERSION))
-    with lcd('%s/kombilo-%s' % (DEVEL_BASE, VERSION)):
-        local('git checkout v0.7')
-    with lcd('%s/kombilo-%s/lk/doc' % (DEVEL_BASE, VERSION)):
-        local('doxygen')
-
-    with lcd('%s/kombilo-%s/lk' % (DEVEL_BASE, VERSION)):
-        local('swig -c++ -python libkombilo.i')
-        with prefix(VIRTUALENV):
-            local('python setup.py build_ext')
-        local('cp libkombilo.py build/lib.linux-*/_libkombilo.so ../src/')
-        local('rm -rf build')
-    with prefix(VIRTUALENV):
-        with lcd('%s/kombilo-%s/doc' % (DEVEL_BASE, VERSION)):
-            local('make html')
-    with lcd('%s/kombilo-%s' % (DEVEL_BASE, VERSION)):
-        local('rm src/_libkombilo.so')
-        local('rm -f */*.pyc')
-        local('rm -f */*/*.pyc')
-        local('rm -rf .git .gitignore')
-        local('rm -f fabfile.py')
-    with lcd('%s' % DEVEL_BASE):
-        local('tar cfz kombilo-%s.tar.gz kombilo-%s' % (VERSION, VERSION))
-        local('rm -rf kombilo-%s' % VERSION)
-
+# merge changes into v0.8win branch
+# tag the final version there: ``git tag K08winXYZ``
+# push the tag: ``git push origin K08winXYZ``
+# (this will trigger a build on Appveyor)
+# download (and test) the installer exe files from Appveyor
+# upload the installer files to u-go.net
 
