@@ -74,14 +74,17 @@ def doc_as_pdf():
 
 # --------------- deploy source distribution to PyPI -----------------------
 
-# tag github release (not necessary for the deploy process, just for bookkeeping)
-
 # make sure swig generated files are in place (kombilo/libkombilo.py,
 # kombilo/libkombilo/libkombilo_wrap.cxx), otherwise generate with ``swig -c++
 # -python libkombilo.i`` (in kombilo/libkombilo)
 
+# make sure the *.mo language files are in place (compile with
+# ``pybabel compile -D kombilo -d kombilo/lang``
+
 # create sdist package: ``python setup.py sdist``
-# (test the package: pip install kombiloXXX.tar.gz)
+# (test the package: pip install kombiloXXX.tar.gz in a fresh virtualenv)
+
+# tag github release (not necessary for the deploy process, just for bookkeeping)
 # upload to PyPI: ``twine upload dist/kombilo-0.8.tar.gz``
 
 
