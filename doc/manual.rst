@@ -55,6 +55,9 @@ kombilo``). If you still have an old Kombilo instance (version 0.7.\*) around,
 it does not interact with Kombilo 0.8.?. You have to newly process the SGF
 databases for 0.8.
 
+.. index::
+  pair: Installation; Mac OS X
+.. _install-macosx:
 
 Mac OS X
 --------
@@ -69,8 +72,35 @@ reports are welcome. (Also see the comments on installing the previous version
 
 Also see these `notes on Tcl/Tk on macs <https://www.python.org/download/mac/tcltk/>`_.
 
-Another option would be to run a linux system on top of your existing operating
-system, using virtualization such as Virtualbox.
+See also the :ref:`Only one mouse button <onlyonemousebutton>` option.
+
+Comments on old Kombilo version on Mac OS X
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*The comments below originally are copied from the manual for version 0.7. In
+principle they probably still apply, but I cannot check since I do not have
+a Mac.*
+
+Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
+the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
+circumstances there appear to be some problems, depending on the versions of the
+packages that Kombilo depends on.  Simon Cozens reported that on a Mac (with Mac
+OS X 10.6) with `Homebrew <http://mxcl.github.com/homebrew/>`_ he could run
+Kombilo after ::
+
+  sudo easy_install configobj setuptools pyttk pip
+  brew install PIL boost
+  sudo pip install pil
+
+then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
+the libkombilo extension via ``python setup.py build_ext`` as described in the
+:ref:`install-linux` section.
+
+If you have Python 2.6, you need to install the ``pyttk`` package to run
+Kombilo. In Python 2.7, which is the preferred Python version for Kombilo, this
+package is already included in Python.
+
+
 
 Windows
 -------
@@ -103,18 +133,10 @@ a Kombilo instance created by the installer.
 
 
 
-Git repository
-..............
-
-You can also clone the Kombilo git repository. See :ref:`development`
-below for some details.
-
-
-
 .. _development:
 
 Development
-^^^^^^^^^^^
+-----------
 
 If you want to work on Kombilo or Libkombilo yourself, you can clone the
 git repository::
@@ -153,7 +175,11 @@ You can then invoke Kombilo with ``kombilo`` and the SGF viewer with ``v``.
 
 
 Build the documentation
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
+
+The documentation is available on the `Kombilo website
+<http://dl.u-go.net/kombilo/doc>`_. If you want to build it from the sources,
+proceed as follows:
 
 If you installed Kombilo from a ``tar.gz`` archive, then you can skip this
 step. If you installed directly from its Git repository, and want to
@@ -162,7 +188,7 @@ menu), then you need to build the documentation yourself. If you install it
 from a tar.gz file, then you can skip this step.
 
 Kombilo documentation
-.....................
+^^^^^^^^^^^^^^^^^^^^^
 
 Install `Sphinx <http://sphinx.pocoo.org/>`_ and other required packages (``pip install
 -r requirements-doc.txt`` in a ``virtualenv`` would be the preferred way), or globally by ::
@@ -183,7 +209,7 @@ your computer).
 
 
 Libkombilo documentation
-........................
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Install `Doxygen <http://www.stack.nl/~dimitri/doxygen/>`_ by ::
 
@@ -203,7 +229,7 @@ documentation in ``lk/doc/build/``.
 
 
 Updating the translation files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------
 
 To update the template file with all messages that should be translated (the
 *pot file*), do::
@@ -222,57 +248,6 @@ You can then translate strings using a tool like ``poedit``. Finally, you have
 to compile the ``po`` files to ``mo`` files, for instance using ``poedit`` or
 the standard command line tool ``msgfmt``.
 
-
-Windows
--------
-
-Installer
-^^^^^^^^^
-
-The installer installs the Kombilo package together with all libraries etc.
-which it depends on. Using it should allow you to ignore the whole Installation
-section of this documentation.
-
-If you would like to know the details, here is some further information:
-
-Basically, the installer extracts an archive which contains the Python
-interpreter, further packages that Kombilo depends on, and the Kombilo files
-themselves to your hard disk. In this way, for one thing you do not have to
-install all these packages yourself, and furthermore Kombilo will not interfere
-with different versions of these packages that you might have in use. For
-detaily, look at the v0.8win branch in the source code repository.
-
-.. index::
-  pair: Installation; Mac OS X
-.. _install-macosx:
-
-Mac OS X
---------
-
-*The comments below originally are copied from the manual for version 0.7. In
-principle they probably still apply, but I cannot check since I do not have
-a Mac.*
-
-Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
-the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
-circumstances there appear to be some problems, depending on the versions of the
-packages that Kombilo depends on.  Simon Cozens reported that on a Mac (with Mac
-OS X 10.6) with `Homebrew <http://mxcl.github.com/homebrew/>`_ he could run
-Kombilo after ::
-
-  sudo easy_install configobj setuptools pyttk pip
-  brew install PIL boost
-  sudo pip install pil
-
-then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
-the libkombilo extension via ``python setup.py build_ext`` as described in the
-:ref:`install-linux` section.
-
-If you have Python 2.6, you need to install the ``pyttk`` package to run
-Kombilo. In Python 2.7, which is the preferred Python version for Kombilo, this
-package is already included in Python.
-
-See also the :ref:`Only one mouse button <onlyonemousebutton>` option.
 
 
 Setting up the SGF databases

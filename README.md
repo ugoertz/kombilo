@@ -6,6 +6,8 @@ which a given pattern or position occurs. You can also search for other criteria
 (like time period, players, events). This program does not come with any game
 records, but you can import games in SGF format.
 
+See http://dl.u-go.net/kombilo/doc/ for documentation.
+
 
 Notes on the win branches (v0.8win etc.)
 ========================================
