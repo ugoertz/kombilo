@@ -1,6 +1,6 @@
 # see https://github.com/ogrisel/python-appveyor-demo
 
-skip_non_tags: true
+# skip_non_tags: true
 
 environment:
   global:
@@ -19,23 +19,21 @@ environment:
       PYTHON_ARCH: "32"
       ARCHITECTURE: "win32-2.7"
       VCOMP90_PATH: "x86_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_ecdf8c290e547f39"
+      MCVSx90_PATH: "x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.8387_none_5090cb78bcba4a35"
 
-    - PYTHON: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x"
-      PYTHON_ARCH: "64"
-      ARCHITECTURE: "win-amd64-2.7"
-      VCOMP90_PATH: "amd64_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_a5325551f9d85633"
+    # - PYTHON: "C:\\Python27-x64"
+    #   PYTHON_VERSION: "2.7.x"
+    #   PYTHON_ARCH: "64"
+    #   ARCHITECTURE: "win-amd64-2.7"
+    #   VCOMP90_PATH: "amd64_microsoft.vc90.openmp_1fc8b3b9a1e18e3b_9.0.21022.8_none_a5325551f9d85633"
 
 install:
-  - "cinst innosetup"
-
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "pip install --disable-pip-version-check --user --upgrade pip"
 
   # Install the build dependencies of the project.
-  - "%CMD_IN_ENV% pip install -r requirements.txt"
-  - "%CMD_IN_ENV% pip install -r requirements-build.txt"
+  - "%CMD_IN_ENV% pip install wheel Babel"
 
 build_script:
   # in kombilo folder, license.rst exists only as a symlink, so need to copy the
@@ -45,24 +43,16 @@ build_script:
   # compile mo files
   - "%CMD_IN_ENV% pybabel compile -d kombilo/lang -D kombilo"
 
-  - "%CMD_IN_ENV% python setup.py build"
-  - "%CMD_IN_ENV% python setup.py bdist_wheel"  # note: the wheel also requires the dlls, notably vvcomp90.dll, which is not easily found automatically(?)
+  # copy dlls which we want to include in the wheel
+  - "cp c:/windows/winsxs/%MCVSx90_PATH%/mcvs*90.dll c:/projects/kombilo/dist/kombilo/"
+  - "cp c:/windows/winsxs/Manifests/%MCVSx90_PATH%.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.CRT.manifest"
 
-  - "%CMD_IN_ENV% cp build\\lib.%ARCHITECTURE%\\kombilo\\_libkombilo.pyd kombilo"
-  - "%CMD_IN_ENV% pyinstaller.exe kombilo.spec"
-
-  # pyinstaller does not find vcomp90.dll by itself :-(
   - "cp c:/windows/winsxs/%VCOMP90_PATH%/vcomp90.dll c:/projects/kombilo/dist/kombilo/"
   - "cp c:/windows/winsxs/Manifests/%VCOMP90_PATH%.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.OpenMP.manifest"
 
-  - ps: "cp c:/projects/kombilo/kombilo.ico c:/projects/kombilo/dist/kombilo"
-  - ps: "ls c:/projects/kombilo/dist/kombilo"
-
-  - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
-
-  - "%CMD_IN_ENV% mv installer/kombilo%KOMBILO_VERSION%.exe installer/kombilo%KOMBILO_VERSION%-%PYTHON_ARCH%.exe"
+  - "%CMD_IN_ENV% python setup.py build"
+  - "%CMD_IN_ENV% python setup.py bdist_wheel"
 
 artifacts:
   - path: dist\*.*
-  - path: installer\*
 

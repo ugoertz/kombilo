@@ -27,6 +27,11 @@ kwargs['sources'] = sources
 sgfext = Extension('kombilo._libkombilo', **kwargs)
 
 
+
+os_dep_package_data = []
+if sys.platform[:3] == 'win':
+    os_dep_package_data = ['*.manifest', 'msvc*.dll', 'vcomp*.dll']
+
 setup(
         name = 'kombilo',
         version = '0.8.1',
@@ -52,7 +57,7 @@ setup(
             'tests/sgfs/*.sgf', 'tests/db/.keep',
             'libkombilo/*.h',
             'lang/*/LC_MESSAGES/kombilo.?o',
-            ], },
+            ] + os_dep_package_data, },
         install_requires = [
             'configobj',
             'Pillow',
