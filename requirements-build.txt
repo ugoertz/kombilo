@@ -1,9 +1,14 @@
 wheel
 Babel
-PyInstaller==3.1.1
+# With the following versions, build of 32bit installer succeeds,
+# but 64bit version is broken.
+# With PyInstaller==3.1.1, and not downgrading setuptools, both installers work
+# on Windows 10, but the 32bit installer fails on Windows 7 (64bit on Win7 not
+# tested)
+PyInstaller==3.1.0
 # 3.2 is broken, see https://github.com/pyinstaller/pyinstaller/issues/1974
 # 3.1.1 is broken, see
 # https://github.com/pyinstaller/pyinstaller/issues/1957
 # https://github.com/pyinstaller/pyinstaller/issues/1948
-#  setuptools==19.2
+setuptools==19.2
 fabric
