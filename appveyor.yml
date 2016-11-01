@@ -44,6 +44,7 @@ build_script:
   - "%CMD_IN_ENV% pybabel compile -d kombilo/lang -D kombilo"
 
   # copy dlls which we want to include in the wheel
+  - ps: "ls c:/windows/winsxs/x86_microsoft.vc90.crt*"
   - "cp c:/windows/winsxs/%MCVSx90_PATH%/ms*90.dll c:/projects/kombilo/dist/kombilo/"
   - "cp c:/windows/winsxs/Manifests/%MCVSx90_PATH%.manifest c:/projects/kombilo/dist/kombilo/Microsoft.VC90.CRT.manifest"
 
