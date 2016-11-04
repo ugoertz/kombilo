@@ -33,7 +33,7 @@ search and prints some information about the results after each search.
 import sys, time
 sys.path.append('../src')
 
-from kombiloNG import *
+from kombilo.kombiloNG import *
 
 
 

@@ -297,10 +297,7 @@ class lkGameList(lk.GameList):
         return self.currentEntryAsString(index).split(',,,')
 
     def __getitem__(self, index):
-        return self.all[index].gameInfoStr.split(',,,')
-
-    def find_by_ID(self, ID):
-        return [i for i, item in enumerate(self.all) if item.id == ID][0]
+        return self.get_gameInfoStr(index).split(',,,')
 
 
 # compare def loadDBs()
@@ -430,7 +427,7 @@ class GameList(object):
         DBindex, game = self.getIndex(index)
         if DBindex == -1:
             return
-        ID, pos = self.DBlist[DBindex]['data'].currentList[game]
+        ID, pos = self.DBlist[DBindex]['data'].get_currentList_entry(game)
         return self.DBlist[DBindex]['data'][pos][prop]
 
     def getSGF(self, index):
@@ -460,10 +457,10 @@ class GameList(object):
         db, game = self.getIndex(i)
         if db == -1:
             return
-        ID, pos = self.DBlist[db]['data'].currentList[game]
+        ID, pos = self.DBlist[db]['data'].get_currentList_entry(game)
         d = self.DBlist[db]['data'][pos]
         # print ID, pos, d
-        res = self.DBlist[db]['data'].resultsStr(self.DBlist[db]['data'].all[pos])
+        res = self.DBlist[db]['data'].get_resultsStr(pos)
         li = []
 
         if showTags:
@@ -735,7 +732,7 @@ class KEngine(object):
             # print self.searchOptions.algos
             gl.search(self.currentSearchPattern, self.searchOptions)
 
-            done += db['data'].all.size()
+            done += db['data'].size_all()
             if progBar:
                 if self.gamelist.noOfGames():
                     progBar.configure(value=min(99, int(done * 100.0 / self.gamelist.noOfGames())))
@@ -1216,7 +1213,7 @@ class KEngine(object):
                 for db in self.gamelist.DBlist:
                     if db['disabled']:
                         continue
-                    t.append(_('{0}: {1} games (of {2})').format(db['sgfpath'], db['data'].size(), db['data'].all.size()))
+                    t.append(_('{0}: {1} games (of {2})').format(db['sgfpath'], db['data'].size(), db['data'].size_all()))
                     if exportMode == 'wiki':
                         t.append(' %%%')
                     t.append('\n')
@@ -1505,10 +1502,10 @@ class KEngine(object):
         dbindex, index = self.gamelist.getIndex(no)
         if dbindex == -1:
             return
-        ID, pos = self.gamelist.DBlist[dbindex]['data'].currentList[index]
+        ID, pos = self.gamelist.DBlist[dbindex]['data'].get_currentList_entry(index)
 
         moveno = (0, )
-        s = self.gamelist.DBlist[dbindex]['data'].resultsStr(self.gamelist.DBlist[dbindex]['data'].all[pos])
+        s = self.gamelist.DBlist[dbindex]['data'].get_resultsStr(pos)
         if s:
             i = 0
             while s[i] in digits + '-':

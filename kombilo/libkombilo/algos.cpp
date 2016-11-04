@@ -413,7 +413,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
     }
     char* finalpos = it->second;
     // printf("index %d, %p\n", index, finalpos);
-    vector<Candidate* > *matchList = new vector<Candidate* >;;
+    vector<Candidate* > *matchList = new vector<Candidate* >;
 
     for(int N=0; N<plS; N++) {
       Pattern* pattern = &patternList.data[N];
@@ -451,8 +451,7 @@ int Algo_finalpos::search(PatternList& patternList, GameList& gl, SearchOptions&
 
     if (matchList->size()) {
       GameListEntry* gle = gl.all->at(gl.oldList->at(ctr).second);
-      if (gle->candidates) delete gle->candidates;
-      gle->candidates = matchList;
+      gle->set_candidates(matchList);
 
       #pragma omp critical
       gl.currentList->push_back(gl.oldList->at(ctr));
@@ -1053,8 +1052,7 @@ int Algo_movelist::search(PatternList& patternList, GameList& gl, SearchOptions&
         }
 
         GameListEntry* gle = gl.all->at(gl.oldList->at(ctr).second);
-        if (gle->hits) delete gle->hits;
-        gle->hits = result;
+        gle->set_hits(result);
         sort(gle->hits->begin(), gle->hits->end(), Hit::cmp_pts);
         gl.currentList->push_back(gl.oldList->at(ctr));
       } else delete result;

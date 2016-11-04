@@ -122,6 +122,8 @@ class GameListEntry {
     ~GameListEntry();
 
     void hits_from_snv(SnapshotVector& snv);
+    void set_hits(vector<Hit* > * hts);
+    void set_candidates(vector<Candidate* > * cands);
 };
 
 class VarInfo {
@@ -183,6 +185,10 @@ const int INDEX_OUT_OF_RANGE = 16;
  */
 
 class GameList {
+  private:
+    std::vector<std::pair<int,int> > * currentList; // pair<int,int>: (database id, position within all )
+                                                    // (usually sorted w.r.t. second component)
+    std::vector<std::pair<int,int> > * oldList;
   public:
     char* dbname;
     std::string orderby;
@@ -194,9 +200,6 @@ class GameList {
     int boardsize;
     std::vector<algo_p> algo_ps;
     std::vector<GameListEntry* > * all;
-    std::vector<std::pair<int,int> > * currentList; // pair<int,int>: (database id, position within all )
-                                                    // (usually sorted w.r.t. second component)
-    std::vector<std::pair<int,int> > * oldList;
     int current;
     sqlite3* db;
     char* labels;
@@ -462,10 +465,15 @@ class GameList {
     void resetFormat(std::string ORDERBY="", std::string FORMAT=""); ///< Change sort criterion and format string
     int size(); ///< Number of games in currentList
     int size_all(); ///< Number of games in all
+    std::string get_resultsStr(unsigned int i);
     std::string resultsStr(GameListEntry* gle);
+    int find_by_ID(int ID);
+
 
     /// Retrieve information about games in currentList
     /**@{*/
+    std::string get_gameInfoStr(unsigned int i);
+    pair<int, int> get_currentList_entry(unsigned int i);
     std::string currentEntryAsString(int i);
     std::vector<std::string> currentEntriesAsStrings(int start=0, int end=0);
     std::string getSGF(int i) throw(DBError);

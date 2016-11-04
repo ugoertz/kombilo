@@ -420,7 +420,7 @@ class GameListGUI(GameList, VScrolledList):
         """
         try:
             db, game = self.getIndex(i)
-            ID, pos = self.DBlist[db]['data'].currentList[game]
+            ID, pos = self.DBlist[db]['data'].get_currentList_entry(game)
             taglist = self.DBlist[db]['data'].getTagsID(ID, 0)
             if taglist:
                 return self.taglook[str(taglist[0])]
