@@ -154,6 +154,119 @@ class SwigPyIterator(_object):
 SwigPyIterator_swigregister = _libkombilo.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
+class vectorc(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, vectorc, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, vectorc, name)
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _libkombilo.vectorc_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _libkombilo.vectorc___nonzero__(self)
+
+    def __bool__(self):
+        return _libkombilo.vectorc___bool__(self)
+
+    def __len__(self):
+        return _libkombilo.vectorc___len__(self)
+
+    def __getslice__(self, i, j):
+        return _libkombilo.vectorc___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _libkombilo.vectorc___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _libkombilo.vectorc___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _libkombilo.vectorc___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _libkombilo.vectorc___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _libkombilo.vectorc___setitem__(self, *args)
+
+    def pop(self):
+        return _libkombilo.vectorc_pop(self)
+
+    def append(self, x):
+        return _libkombilo.vectorc_append(self, x)
+
+    def empty(self):
+        return _libkombilo.vectorc_empty(self)
+
+    def size(self):
+        return _libkombilo.vectorc_size(self)
+
+    def swap(self, v):
+        return _libkombilo.vectorc_swap(self, v)
+
+    def begin(self):
+        return _libkombilo.vectorc_begin(self)
+
+    def end(self):
+        return _libkombilo.vectorc_end(self)
+
+    def rbegin(self):
+        return _libkombilo.vectorc_rbegin(self)
+
+    def rend(self):
+        return _libkombilo.vectorc_rend(self)
+
+    def clear(self):
+        return _libkombilo.vectorc_clear(self)
+
+    def get_allocator(self):
+        return _libkombilo.vectorc_get_allocator(self)
+
+    def pop_back(self):
+        return _libkombilo.vectorc_pop_back(self)
+
+    def erase(self, *args):
+        return _libkombilo.vectorc_erase(self, *args)
+
+    def __init__(self, *args):
+        this = _libkombilo.new_vectorc(*args)
+        try:
+            self.this.append(this)
+        except Exception:
+            self.this = this
+
+    def push_back(self, x):
+        return _libkombilo.vectorc_push_back(self, x)
+
+    def front(self):
+        return _libkombilo.vectorc_front(self)
+
+    def back(self):
+        return _libkombilo.vectorc_back(self)
+
+    def assign(self, n, x):
+        return _libkombilo.vectorc_assign(self, n, x)
+
+    def resize(self, *args):
+        return _libkombilo.vectorc_resize(self, *args)
+
+    def insert(self, *args):
+        return _libkombilo.vectorc_insert(self, *args)
+
+    def reserve(self, n):
+        return _libkombilo.vectorc_reserve(self, n)
+
+    def capacity(self):
+        return _libkombilo.vectorc_capacity(self)
+    __swig_destroy__ = _libkombilo.delete_vectorc
+    __del__ = lambda self: None
+vectorc_swigregister = _libkombilo.vectorc_swigregister
+vectorc_swigregister(vectorc)
+
 class vectors(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, vectors, name, value)
@@ -1056,68 +1169,23 @@ flipped_sig = _libkombilo.flipped_sig
 def symmetrize(sig, boardsize):
     return _libkombilo.symmetrize(sig, boardsize)
 symmetrize = _libkombilo.symmetrize
-class SnapshotVector(_object):
+class PatternError(Exception):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, SnapshotVector, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, PatternError, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, SnapshotVector, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, PatternError, name)
     __repr__ = _swig_repr
 
-    def __init__(self, *args):
-        this = _libkombilo.new_SnapshotVector(*args)
+    def __init__(self):
+        this = _libkombilo.new_PatternError()
         try:
             self.this.append(this)
         except Exception:
             self.this = this
-
-    def pb_int(self, d):
-        return _libkombilo.SnapshotVector_pb_int(self, d)
-
-    def pb_hashtype(self, d):
-        return _libkombilo.SnapshotVector_pb_hashtype(self, d)
-
-    def pb_int64(self, d):
-        return _libkombilo.SnapshotVector_pb_int64(self, d)
-
-    def pb_charp(self, c, size):
-        return _libkombilo.SnapshotVector_pb_charp(self, c, size)
-
-    def pb_char(self, c):
-        return _libkombilo.SnapshotVector_pb_char(self, c)
-
-    def pb_string(self, s):
-        return _libkombilo.SnapshotVector_pb_string(self, s)
-
-    def pb_intp(self, p, size):
-        return _libkombilo.SnapshotVector_pb_intp(self, p, size)
-
-    def retrieve_int(self):
-        return _libkombilo.SnapshotVector_retrieve_int(self)
-
-    def retrieve_hashtype(self):
-        return _libkombilo.SnapshotVector_retrieve_hashtype(self)
-
-    def retrieve_int64(self):
-        return _libkombilo.SnapshotVector_retrieve_int64(self)
-
-    def retrieve_intp(self):
-        return _libkombilo.SnapshotVector_retrieve_intp(self)
-
-    def retrieve_char(self):
-        return _libkombilo.SnapshotVector_retrieve_char(self)
-
-    def retrieve_charp(self):
-        return _libkombilo.SnapshotVector_retrieve_charp(self)
-
-    def retrieve_string(self):
-        return _libkombilo.SnapshotVector_retrieve_string(self)
-
-    def to_charp(self):
-        return _libkombilo.SnapshotVector_to_charp(self)
-    __swig_destroy__ = _libkombilo.delete_SnapshotVector
+    __swig_destroy__ = _libkombilo.delete_PatternError
     __del__ = lambda self: None
-SnapshotVector_swigregister = _libkombilo.SnapshotVector_swigregister
-SnapshotVector_swigregister(SnapshotVector)
+PatternError_swigregister = _libkombilo.PatternError_swigregister
+PatternError_swigregister(PatternError)
 NOT_HASHABLE = cvar.NOT_HASHABLE
 NO_CONT = cvar.NO_CONT
 CORNER_NW_PATTERN = cvar.CORNER_NW_PATTERN
@@ -1145,24 +1213,6 @@ algo_hash_center = cvar.algo_hash_center
 algo_hash_side = cvar.algo_hash_side
 DATE_PROFILE_START = cvar.DATE_PROFILE_START
 DATE_PROFILE_END = cvar.DATE_PROFILE_END
-
-class PatternError(Exception):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, PatternError, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, PatternError, name)
-    __repr__ = _swig_repr
-
-    def __init__(self):
-        this = _libkombilo.new_PatternError()
-        try:
-            self.this.append(this)
-        except Exception:
-            self.this = this
-    __swig_destroy__ = _libkombilo.delete_PatternError
-    __del__ = lambda self: None
-PatternError_swigregister = _libkombilo.PatternError_swigregister
-PatternError_swigregister(PatternError)
 
 class DBError(Exception):
     __swig_setmethods__ = {}
@@ -1538,72 +1588,6 @@ class PatternList(_object):
 PatternList_swigregister = _libkombilo.PatternList_swigregister
 PatternList_swigregister(PatternList)
 
-class Candidate(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Candidate, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Candidate, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["x"] = _libkombilo.Candidate_x_set
-    __swig_getmethods__["x"] = _libkombilo.Candidate_x_get
-    if _newclass:
-        x = _swig_property(_libkombilo.Candidate_x_get, _libkombilo.Candidate_x_set)
-    __swig_setmethods__["y"] = _libkombilo.Candidate_y_set
-    __swig_getmethods__["y"] = _libkombilo.Candidate_y_get
-    if _newclass:
-        y = _swig_property(_libkombilo.Candidate_y_get, _libkombilo.Candidate_y_set)
-    __swig_setmethods__["orientation"] = _libkombilo.Candidate_orientation_set
-    __swig_getmethods__["orientation"] = _libkombilo.Candidate_orientation_get
-    if _newclass:
-        orientation = _swig_property(_libkombilo.Candidate_orientation_get, _libkombilo.Candidate_orientation_set)
-
-    def __init__(self, X, Y, ORIENTATION):
-        this = _libkombilo.new_Candidate(X, Y, ORIENTATION)
-        try:
-            self.this.append(this)
-        except Exception:
-            self.this = this
-    __swig_destroy__ = _libkombilo.delete_Candidate
-    __del__ = lambda self: None
-Candidate_swigregister = _libkombilo.Candidate_swigregister
-Candidate_swigregister(Candidate)
-
-class Hit(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Hit, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Hit, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["pos"] = _libkombilo.Hit_pos_set
-    __swig_getmethods__["pos"] = _libkombilo.Hit_pos_get
-    if _newclass:
-        pos = _swig_property(_libkombilo.Hit_pos_get, _libkombilo.Hit_pos_set)
-    __swig_setmethods__["label"] = _libkombilo.Hit_label_set
-    __swig_getmethods__["label"] = _libkombilo.Hit_label_get
-    if _newclass:
-        label = _swig_property(_libkombilo.Hit_label_get, _libkombilo.Hit_label_set)
-
-    def __init__(self, *args):
-        this = _libkombilo.new_Hit(*args)
-        try:
-            self.this.append(this)
-        except Exception:
-            self.this = this
-    __swig_destroy__ = _libkombilo.delete_Hit
-    __del__ = lambda self: None
-    __swig_getmethods__["cmp_pts"] = lambda x: _libkombilo.Hit_cmp_pts
-    if _newclass:
-        cmp_pts = staticmethod(_libkombilo.Hit_cmp_pts)
-
-    def to_snv(self, snv):
-        return _libkombilo.Hit_to_snv(self, snv)
-Hit_swigregister = _libkombilo.Hit_swigregister
-Hit_swigregister(Hit)
-
-def Hit_cmp_pts(a, b):
-    return _libkombilo.Hit_cmp_pts(a, b)
-Hit_cmp_pts = _libkombilo.Hit_cmp_pts
-
 class ProcessOptions(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, ProcessOptions, name, value)
@@ -1704,51 +1688,6 @@ class SearchOptions(_object):
 SearchOptions_swigregister = _libkombilo.SearchOptions_swigregister
 SearchOptions_swigregister(SearchOptions)
 
-class GameListEntry(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, GameListEntry, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, GameListEntry, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["id"] = _libkombilo.GameListEntry_id_set
-    __swig_getmethods__["id"] = _libkombilo.GameListEntry_id_get
-    if _newclass:
-        id = _swig_property(_libkombilo.GameListEntry_id_get, _libkombilo.GameListEntry_id_set)
-    __swig_setmethods__["gameInfoStr"] = _libkombilo.GameListEntry_gameInfoStr_set
-    __swig_getmethods__["gameInfoStr"] = _libkombilo.GameListEntry_gameInfoStr_get
-    if _newclass:
-        gameInfoStr = _swig_property(_libkombilo.GameListEntry_gameInfoStr_get, _libkombilo.GameListEntry_gameInfoStr_set)
-    __swig_setmethods__["winner"] = _libkombilo.GameListEntry_winner_set
-    __swig_getmethods__["winner"] = _libkombilo.GameListEntry_winner_get
-    if _newclass:
-        winner = _swig_property(_libkombilo.GameListEntry_winner_get, _libkombilo.GameListEntry_winner_set)
-    __swig_setmethods__["date"] = _libkombilo.GameListEntry_date_set
-    __swig_getmethods__["date"] = _libkombilo.GameListEntry_date_get
-    if _newclass:
-        date = _swig_property(_libkombilo.GameListEntry_date_get, _libkombilo.GameListEntry_date_set)
-    __swig_setmethods__["hits"] = _libkombilo.GameListEntry_hits_set
-    __swig_getmethods__["hits"] = _libkombilo.GameListEntry_hits_get
-    if _newclass:
-        hits = _swig_property(_libkombilo.GameListEntry_hits_get, _libkombilo.GameListEntry_hits_set)
-    __swig_setmethods__["candidates"] = _libkombilo.GameListEntry_candidates_set
-    __swig_getmethods__["candidates"] = _libkombilo.GameListEntry_candidates_get
-    if _newclass:
-        candidates = _swig_property(_libkombilo.GameListEntry_candidates_get, _libkombilo.GameListEntry_candidates_set)
-
-    def __init__(self, ID, WINNER, GAMEINFOSTR, DATE):
-        this = _libkombilo.new_GameListEntry(ID, WINNER, GAMEINFOSTR, DATE)
-        try:
-            self.this.append(this)
-        except Exception:
-            self.this = this
-    __swig_destroy__ = _libkombilo.delete_GameListEntry
-    __del__ = lambda self: None
-
-    def hits_from_snv(self, snv):
-        return _libkombilo.GameListEntry_hits_from_snv(self, snv)
-GameListEntry_swigregister = _libkombilo.GameListEntry_swigregister
-GameListEntry_swigregister(GameListEntry)
-
 class VarInfo(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, VarInfo, name, value)
@@ -1817,18 +1756,6 @@ class GameList(_object):
     __swig_getmethods__["algo_ps"] = _libkombilo.GameList_algo_ps_get
     if _newclass:
         algo_ps = _swig_property(_libkombilo.GameList_algo_ps_get, _libkombilo.GameList_algo_ps_set)
-    __swig_setmethods__["all"] = _libkombilo.GameList_all_set
-    __swig_getmethods__["all"] = _libkombilo.GameList_all_get
-    if _newclass:
-        all = _swig_property(_libkombilo.GameList_all_get, _libkombilo.GameList_all_set)
-    __swig_setmethods__["currentList"] = _libkombilo.GameList_currentList_set
-    __swig_getmethods__["currentList"] = _libkombilo.GameList_currentList_get
-    if _newclass:
-        currentList = _swig_property(_libkombilo.GameList_currentList_get, _libkombilo.GameList_currentList_set)
-    __swig_setmethods__["oldList"] = _libkombilo.GameList_oldList_set
-    __swig_getmethods__["oldList"] = _libkombilo.GameList_oldList_get
-    if _newclass:
-        oldList = _swig_property(_libkombilo.GameList_oldList_get, _libkombilo.GameList_oldList_set)
     __swig_setmethods__["current"] = _libkombilo.GameList_current_set
     __swig_getmethods__["current"] = _libkombilo.GameList_current_get
     if _newclass:
@@ -1992,8 +1919,20 @@ class GameList(_object):
     def size_all(self):
         return _libkombilo.GameList_size_all(self)
 
+    def get_resultsStr(self, i):
+        return _libkombilo.GameList_get_resultsStr(self, i)
+
     def resultsStr(self, gle):
         return _libkombilo.GameList_resultsStr(self, gle)
+
+    def find_by_ID(self, ID):
+        return _libkombilo.GameList_find_by_ID(self, ID)
+
+    def get_gameInfoStr(self, i):
+        return _libkombilo.GameList_get_gameInfoStr(self, i)
+
+    def get_currentList_entry(self, i):
+        return _libkombilo.GameList_get_currentList_entry(self, i)
 
     def currentEntryAsString(self, i):
         return _libkombilo.GameList_currentEntryAsString(self, i)
@@ -2368,119 +2307,6 @@ class vectorGL(_object):
     __del__ = lambda self: None
 vectorGL_swigregister = _libkombilo.vectorGL_swigregister
 vectorGL_swigregister(vectorGL)
-
-class vectorgle(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, vectorgle, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, vectorgle, name)
-    __repr__ = _swig_repr
-
-    def iterator(self):
-        return _libkombilo.vectorgle_iterator(self)
-    def __iter__(self):
-        return self.iterator()
-
-    def __nonzero__(self):
-        return _libkombilo.vectorgle___nonzero__(self)
-
-    def __bool__(self):
-        return _libkombilo.vectorgle___bool__(self)
-
-    def __len__(self):
-        return _libkombilo.vectorgle___len__(self)
-
-    def __getslice__(self, i, j):
-        return _libkombilo.vectorgle___getslice__(self, i, j)
-
-    def __setslice__(self, *args):
-        return _libkombilo.vectorgle___setslice__(self, *args)
-
-    def __delslice__(self, i, j):
-        return _libkombilo.vectorgle___delslice__(self, i, j)
-
-    def __delitem__(self, *args):
-        return _libkombilo.vectorgle___delitem__(self, *args)
-
-    def __getitem__(self, *args):
-        return _libkombilo.vectorgle___getitem__(self, *args)
-
-    def __setitem__(self, *args):
-        return _libkombilo.vectorgle___setitem__(self, *args)
-
-    def pop(self):
-        return _libkombilo.vectorgle_pop(self)
-
-    def append(self, x):
-        return _libkombilo.vectorgle_append(self, x)
-
-    def empty(self):
-        return _libkombilo.vectorgle_empty(self)
-
-    def size(self):
-        return _libkombilo.vectorgle_size(self)
-
-    def swap(self, v):
-        return _libkombilo.vectorgle_swap(self, v)
-
-    def begin(self):
-        return _libkombilo.vectorgle_begin(self)
-
-    def end(self):
-        return _libkombilo.vectorgle_end(self)
-
-    def rbegin(self):
-        return _libkombilo.vectorgle_rbegin(self)
-
-    def rend(self):
-        return _libkombilo.vectorgle_rend(self)
-
-    def clear(self):
-        return _libkombilo.vectorgle_clear(self)
-
-    def get_allocator(self):
-        return _libkombilo.vectorgle_get_allocator(self)
-
-    def pop_back(self):
-        return _libkombilo.vectorgle_pop_back(self)
-
-    def erase(self, *args):
-        return _libkombilo.vectorgle_erase(self, *args)
-
-    def __init__(self, *args):
-        this = _libkombilo.new_vectorgle(*args)
-        try:
-            self.this.append(this)
-        except Exception:
-            self.this = this
-
-    def push_back(self, x):
-        return _libkombilo.vectorgle_push_back(self, x)
-
-    def front(self):
-        return _libkombilo.vectorgle_front(self)
-
-    def back(self):
-        return _libkombilo.vectorgle_back(self)
-
-    def assign(self, n, x):
-        return _libkombilo.vectorgle_assign(self, n, x)
-
-    def resize(self, *args):
-        return _libkombilo.vectorgle_resize(self, *args)
-
-    def insert(self, *args):
-        return _libkombilo.vectorgle_insert(self, *args)
-
-    def reserve(self, n):
-        return _libkombilo.vectorgle_reserve(self, n)
-
-    def capacity(self):
-        return _libkombilo.vectorgle_capacity(self)
-    __swig_destroy__ = _libkombilo.delete_vectorgle
-    __del__ = lambda self: None
-vectorgle_swigregister = _libkombilo.vectorgle_swigregister
-vectorgle_swigregister(vectorgle)
 
 # This file is compatible with both classic and new-style classes.
 
