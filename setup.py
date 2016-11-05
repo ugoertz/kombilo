@@ -52,6 +52,9 @@ setup(
             'tests/sgfs/*.sgf', 'tests/db/.keep',
             'libkombilo/*.h',
             'lang/*/LC_MESSAGES/kombilo.?o',
+            # only relevant on windows, but otherwise such files will not be
+            # present anyway:
+            '*.dll', '.manifest',
             ], },
         install_requires = [
             'configobj',
