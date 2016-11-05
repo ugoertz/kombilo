@@ -1315,8 +1315,9 @@ class KEngine(object):
                 for sig in c[k]['data']:
                     symmsig = lk.symmetrize(sig, boardsize)
                     self.gamelist.references[symmsig].append(c[k]['title'])
+            return True
         except:
-            pass
+            return False
 
     def loadDBs(self, progBar=None, showwarning=None):
         '''Load the database files for all databases that were added to the

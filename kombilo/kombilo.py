@@ -3508,8 +3508,11 @@ class App(v.Viewer, KEngine):
             self.fixedColorVar.set(1)
         self.gamelist.showFilename = self.options.showFilename.get()
         self.gamelist.showDate = self.options.showDate.get()
-        self.parseReferencesFile(datafile=pkg_resources.resource_stream(__name__, 'data/references'),
-                                 options=self.config['references'] if 'references' in self.config else None)
+        if not self.parseReferencesFile(
+                datafile=pkg_resources.resource_stream(__name__, 'data/references'),
+                options=self.config['references']
+                if 'references' in self.config else None):
+            self.logger.insert(END, _('Error parsing references file.\n'))
         self.loadDBs(self.progBar, showwarning)
 
         self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_RELEASE + _('Ready ...') + '\n')
