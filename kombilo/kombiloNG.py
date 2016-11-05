@@ -1139,10 +1139,36 @@ class KEngine(object):
             l1 = [' '.join(x).strip() for x in plist]
 
             N = 400 if showAllCont else 10
+            unused_labels = list('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjklmnopqrstuvwxyz[]')
+            lbl = {}
+
+            # Find some unused labels in case we have to replace 'O' or 'X'
+            # later, and check whether we can replace upper case labels by lower
+            # case labels, as required by wiki format
+            labels_to_lower = True
+            for cont in self.continuations[:N]:
+                if cont.label in 'abcdefghijklmnopqrstuvwxyz':
+                    labels_to_lower = False
+                unused_labels.remove(cont.label)
+            if exportMode != 'wiki':
+                labels_to_lower = False
+
             for cont in self.continuations[:N]:
                 x, y = cont.x + 1, cont.y + 1
                 if plist[y][x] in ['.', ',']:
-                    plist[y][x] = cont.label  # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
+                    if labels_to_lower:
+                        plist[y][x] = cont.label.lower()
+                        # plist[y] is the y-th *line* of the pattern, i.e. consists
+                        # of the points with coordinates (0, y), ..., (boardsize-1,
+                        # y).
+                    elif cont.label == 'O':
+                        plist[y][x] = unused_labels[0]
+                    elif cont.label == 'X':
+                        plist[y][x] = unused_labels[1]
+                    else:
+                        plist[y][x] = cont.label
+                    lbl[cont.label] = plist[y][x]  # store the new label we end up using
+
             l2 = [' '.join(x).strip() for x in plist]
 
             s1 = '$$B ' + _('Search Pattern') + '\n$$' + join(l1, '\n$$') + '\n' if exportMode == 'wiki' else join(l1, '\n')
@@ -1183,13 +1209,13 @@ class KEngine(object):
 
                 for cont in self.continuations[:N]:
                     if cont.B:  # black continuations
-                        t.append(_('B') + '%s:    %d (%d), ' % (cont.label, cont.B, cont.B - cont.tB))
+                        t.append(_('B') + '%s:    %d (%d), ' % (lbl[cont.label], cont.B, cont.B - cont.tB))
                         t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wB * 100.0 / cont.B, cont.lB * 100.0 / cont.B))
                         if exportMode == 'wiki':
                             t.append(' %%%')
                         t.append('\n')
                     if cont.W:  # white continuations
-                        t.append(_('W') + '%s:    %d (%d), ' % (cont.label, cont.W, cont.W - cont.tW))
+                        t.append(_('W') + '%s:    %d (%d), ' % (lbl[cont.label], cont.W, cont.W - cont.tW))
                         t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wW * 100.0 / cont.W, cont.lW * 100.0 / cont.W))
                         if exportMode == 'wiki':
                             t.append(' %%%')
@@ -1206,7 +1232,7 @@ class KEngine(object):
                 body_str = '%%%ds (%%s) | %%6d | %%%ds | %%%ds |\n'  % (max(5, len(_('Label'))) - 4, max(7, len(_('First played'))), max(7, len(_('Last played'))))
                 comment_text = ''
                 for cont in self.continuations[:N]:
-                    comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
+                    comment_text += body_str % (lbl[cont.label], 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
                 if comment_text:
                     comment_text = head_str + comment_text
                 t.append(comment_text)
