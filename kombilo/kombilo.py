@@ -662,7 +662,7 @@ class PrevSearchesStack(object):
         cursorSn = [self.cursor, self.cursor.currentGame, v.pathToNode(self.cursor.currentN)]
         '''
 
-        if self.mster.options.maxLengthSearchesStack.get() and self.data.size() >= self.mster.options.maxLengthSearchesStack.get():
+        if self.mster.options.maxLengthSearchesStack.get() and self.data.size() > self.mster.options.maxLengthSearchesStack.get():
             for node in self.data.traverse():
                 if 'on_hold' in node.d and not node.d['on_hold']:
                     self.delete(node)
@@ -671,7 +671,7 @@ class PrevSearchesStack(object):
         b = SearchHistoryBoard(
                 self.prevSF.interior(), self.mster.board.boardsize, (12, 6), 0,
                 self.mster.labelFont, 1, None, self.mster.boardImg,
-                self.mster.blackStones, self.mster.whiteStones,
+                [], [],
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
                 offset=min(10 * self.current.level(), 100))  # small board

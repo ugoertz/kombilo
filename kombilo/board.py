@@ -111,14 +111,15 @@ class Board(abstractBoard, Canvas):
         self.resizable = 1
 
         self.use3Dstones = IntVar()
-        self.use3Dstones.set(1)
+        self.use3Dstones.set(0)
 
-        if boardImg and blackImg and whiteImg:
+        if boardImg:
             self.img = boardImg
-            self.blackStones = blackImg
-            self.whiteStones = whiteImg
-        else:
-            raise ValueError('Image files for board/stones not found.')
+        self.blackStones = blackImg
+        self.whiteStones = whiteImg
+
+        if blackImg and whiteImg:
+            self.use3Dstones.set(1)
 
         self.drawBoard()
 
@@ -137,9 +138,10 @@ class Board(abstractBoard, Canvas):
         self.labelFontBold.configure(size=self.labelFontSizeOrig + c1//7)
 
         self.delete('board')
-        for i in range(size // 200 + 2):
-            for j in range(size // 200 + 4):   # add a lot of "board space" for search history boards
-                self.create_image(200 * i, 200 * j, image=self.img, tags='board')
+        if self.img:
+            for i in range(size // 200 + 2):
+                for j in range(size // 200 + 4):   # add a lot of "board space" for search history boards
+                    self.create_image(200 * i, 200 * j, image=self.img, tags='board')
 
         if self.square_board:
             # place a gray rectangle over the board background picture
