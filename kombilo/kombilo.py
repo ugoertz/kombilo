@@ -2021,7 +2021,8 @@ class App(v.Viewer, KEngine):
                 progBar=self.progBar,
                 showwarning=showwarning,
                 index=index,
-                all_in_one_db=not self.options.oneDBperFolder.get())
+                all_in_one_db=not self.options.oneDBperFolder.get(),
+                sgfInDB=False)
 
     def add_gl_at(self, index, gl, dbpath):
         super(App, self).add_gl_at(index, gl, dbpath)

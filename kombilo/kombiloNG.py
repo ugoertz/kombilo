@@ -1360,11 +1360,11 @@ class KEngine(object):
             self.gamelist.DBlist[index:index] = [{'name':datapath, 'sgfpath':dbpath, 'data': gl, 'disabled': 0}]
         self.gamelist.update()
 
-    def create_GameList(self, datapath, tagAsPro, processVariations, algos, messages=None, deleteDBfiles=False):
+    def create_GameList(self, datapath, tagAsPro, processVariations, algos, sgfInDB = False, messages=None, deleteDBfiles=False):
         messages = messages or dummyMessages()
         pop = lk.ProcessOptions()
         pop.rootNodeTags = 'PW,PB,RE,DT,EV'
-        pop.sgfInDB = True
+        pop.sgfInDB = sgfInDB
         pop.professional_tag = tagAsPro
         pop.processVariations = processVariations
         pop.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
@@ -1418,7 +1418,7 @@ class KEngine(object):
             acceptDupl=True, strictDuplCheck=True,
             tagAsPro=0, processVariations=True, algos=None,
             messages=None, progBar=None, showwarning=None,
-            index=None, all_in_one_db=True):
+            index=None, all_in_one_db=True, sgfInDB=True):
         '''
         Call this method to newly add a database of SGF files.
 
@@ -1448,10 +1448,11 @@ class KEngine(object):
                 acceptDupl, strictDuplCheck,
                 tagAsPro, processVariations, algos,
                 messages, progBar, showwarning,
-                datap, index)
+                datap, index,
+                sgfInDB)
 
         if all_in_one_db:
-            gl = self.create_GameList(self.get_datapath(datap, dbp), tagAsPro, processVariations, algos, messages)
+            gl = self.create_GameList(self.get_datapath(datap, dbp), tagAsPro, processVariations, algos, sgfInDB, messages)
             if gl is None:
                 return
             gl.start_processing()
@@ -1479,14 +1480,14 @@ class KEngine(object):
         """This should really be named add_one_folder: Adds all sgf files in the
         folder dbpath to gl, or to a newly created GameList."""
 
-        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index = arguments
+        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index, sgfInDB = arguments
         # print 'addOneFolder', datap, dbpath
         messages = messages or dummyMessages()
 
         datapath = self.get_datapath(datap, dbpath)
 
         try:
-            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl)
+            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl, sgfInDB=sgfInDB)
             # process returns the GameList, or None if no games were added
         except ImportError:
             if showwarning:
@@ -1502,8 +1503,16 @@ class KEngine(object):
             messages.insert('end', _('Added %s.') % dbpath + '\n')
         return success != None
 
-    def process(self, dbpath, datap, filenames='*.sgf', acceptDupl=True, strictDuplCheck=True, tagAsPro=0,
-                processVariations=True, algos=None, messages=None, progBar=None, deleteDBfiles=False, gl=None):
+    def process(
+            self,
+            dbpath, datap, filenames='*.sgf',
+            acceptDupl=True, strictDuplCheck=True,
+            tagAsPro=0,
+            processVariations=True, algos=None,
+            messages=None, progBar=None,
+            deleteDBfiles=False,
+            gl=None,
+            sgfInDB=True):
         messages = messages or dummyMessages()
         if progBar:
             progBar.configure(value=0)
@@ -1526,7 +1535,7 @@ class KEngine(object):
                 gls.push_back(db['data'])
 
         if gl is None:
-            gamelist = self.create_GameList(datap, tagAsPro, processVariations, algos, messages, deleteDBfiles)
+            gamelist = self.create_GameList(datap, tagAsPro, processVariations, algos, sgfInDB, messages, deleteDBfiles)
             if gamelist is None:
                 return
             gamelist.start_processing()
