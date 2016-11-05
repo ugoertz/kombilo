@@ -2783,7 +2783,9 @@ class App(v.Viewer, KEngine):
             current_game = 0
         else:
             if self.cursor.noChildren():
+                self.progBar.stop()
                 showwarning(_('Error'), _('The node where the SGF tree starts must have no children.'))
+                self.configButtons(NORMAL)
                 return
             cursor = self.cursor
             current_game = self.cursor.currentGame
