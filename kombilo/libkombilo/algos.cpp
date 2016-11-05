@@ -1481,7 +1481,7 @@ SnapshotVector Algo_hash_full::get_data() {
 
   // Clear data:
 
-  data.clear();
+  vector<pair<hashtype, int> >().swap(data);
 
   // Create list of all hashCodes
   map<hashtype,int> hashcodes;
@@ -1521,6 +1521,7 @@ SnapshotVector Algo_hash_full::get_data() {
     }
   }
   os_data.flush();
+  boost::unordered_multimap<hashtype, HashhitF>().swap(data_p);
   return v;
 }
 
@@ -1532,7 +1533,7 @@ Algo_hash_full::~Algo_hash_full() {
 
 void Algo_hash_full::initialize_process() {
   // printf("algo_hash_full::initialize_processing\n");
-  data_p.clear();
+  boost::unordered_multimap<hashtype, HashhitF>().swap(data_p);
 }
 
 void Algo_hash_full::newgame_process(int game_id) {
@@ -1631,7 +1632,7 @@ void Algo_hash_full::endgame_process(bool commit) {
     }
   }
 
-  hash_vector.clear();
+  boost::unordered_multimap<hashtype, HashhitF>().swap(hash_vector);
   delete lfc;
   delete moveNumber;
   delete branchpoints;
@@ -1869,7 +1870,7 @@ SnapshotVector Algo_hash::get_data() {
 
   // Clear data
 
-  data.clear();
+  vector<pair<hashtype, int> >().swap(data);
 
   // Create list of all hashCodes
   map<hashtype,int> hashcodes;
@@ -1902,6 +1903,7 @@ SnapshotVector Algo_hash::get_data() {
     }
   }
   os_data.flush();
+  boost::unordered_multimap<hashtype, pair<int, int> >().swap(data_p);
   return v;
 }
 
@@ -1913,6 +1915,7 @@ Algo_hash::~Algo_hash() {
 
 
 void Algo_hash::initialize_process() {
+  boost::unordered_multimap<hashtype, pair<int, int> >().swap(data_p);
 }
 
 void Algo_hash::newgame_process(int game_id) {
@@ -1989,7 +1992,7 @@ void Algo_hash::endgame_process(bool commit) {
   if (commit) {
     for(vector<pair<hashtype, int> >::iterator it = hash_vector.begin(); it != hash_vector.end(); it++) data_p.insert(pair<hashtype, pair<int, int> >(it->first, pair<int, int>(gid, it->second)));
   }
-  hash_vector.clear();
+  vector<pair<hashtype, int> >().swap(hash_vector);
 }
 
 void Algo_hash::finalize_process() {

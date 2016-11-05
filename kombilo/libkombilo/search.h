@@ -498,8 +498,10 @@ class GameList {
 
   private:
     void createGamesDB() throw(DBError);
+    void open_db() throw(DBError);
     void readDB() throw(DBError);
     void addAlgos(bool NEW);
+    int db_cache_size;
     int posDT; // used when parsing the DT, SZ, BR, WR, HA fields during processing
     int posSZ;
     int posBR;

@@ -523,7 +523,8 @@ class GameListGUI(GameList, VScrolledList):
         if DBindex == -1:
             return
 
-        f1 = strip(os.path.join(self.DBlist[DBindex]['sgfpath'], self.DBlist[DBindex]['data'].getCurrent(index)[GL_FILENAME]))
+        gm = self.DBlist[DBindex]['data'].getCurrent(index)
+        f1 = strip(os.path.join(gm[GL_PATH], gm[GL_FILENAME]))
 
         if find(f1, '[') != -1:
             f1, f2 = split(f1, '[')
@@ -2004,19 +2005,30 @@ class App(v.Viewer, KEngine):
             algos |= lk.ALGO_HASH_FULL
         if self.options.algo_hash_corner.get():
             algos |= lk.ALGO_HASH_CORNER
-        KEngine.addDB(self, dbp, datap, recursive=self.options.recProcess.get(), filenames=self.filenamesVar.get(),
-                      acceptDupl=self.options.acceptDupl.get(), strictDuplCheck=self.options.strictDuplCheck.get(),
-                      tagAsPro=tagAsPro, processVariations=self.options.processVariations.get(), algos=algos,
-                      messages=self.processMessages, progBar=self.progBar, showwarning=showwarning, index=index)
+        KEngine.addDB(
+                self,
+                dbp, datap,
+                recursive=self.options.recProcess.get(),
+                filenames=self.filenamesVar.get(),
+                acceptDupl=self.options.acceptDupl.get(),
+                strictDuplCheck=self.options.strictDuplCheck.get(),
+                tagAsPro=tagAsPro,
+                processVariations=self.options.processVariations.get(),
+                algos=algos,
+                messages=self.processMessages,
+                progBar=self.progBar,
+                showwarning=showwarning,
+                index=index,
+                all_in_one_db=not self.options.oneDBperFolder.get())
 
-    def addOneDB(self, arguments, dbpath):
-        if KEngine.addOneDB(self, arguments, dbpath):
-            index = arguments[-1] if not arguments[-1] is None else END
-            db = self.gamelist.DBlist[int(index) if index != END else -1]
-            db_date = getDateOfFile(os.path.join(db['name'][0], db['name'][1] + '.da'))
-            self.db_list.insert(index, dbpath + ' (%s, %d %s)' % (db_date, db['data'].size(), _('games')))
-            self.db_list.list.see(index)
-            self.prevSearches.clear()
+    def add_gl_at(self, index, gl, dbpath):
+        super(App, self).add_gl_at(index, gl, dbpath)
+        index = END if index is None else index
+        db = self.gamelist.DBlist[int(index) if index != END else -1]
+        db_date = getDateOfFile(os.path.join(db['name'][0], db['name'][1] + '.da'))
+        self.db_list.insert(index, dbpath + ' (%s, %d %s)' % (db_date, db['data'].size(), _('games')))
+        self.db_list.list.see(index)
+        self.prevSearches.clear()
 
     def removeDB(self):
         while self.db_list.list.curselection():
@@ -2244,6 +2256,9 @@ class App(v.Viewer, KEngine):
 
         recursionButton = Checkbutton(f3, text=_('Recursively add subdirectories'), highlightthickness=0, variable=self.options.recProcess, pady=5)
         recursionButton.grid(row=1, column=0, columnspan=2, sticky=W)
+
+        oneDBperFolderButton = Checkbutton(f3, text=_('Create one DB per folder'), highlightthickness=0, variable=self.options.oneDBperFolder, pady=5)
+        oneDBperFolderButton.grid(row=2, column=0, columnspan=2, sticky=W)
 
         self.filenamesVar = StringVar()
         filenamesLabel = Label(f3, anchor='w', text=_('Files:'), pady=10)

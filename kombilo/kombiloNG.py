@@ -289,7 +289,7 @@ class lkGameList(lk.GameList):
         except:
             pass
         if len(args) == 1:
-            lk.GameList.__init__(self, args[0], '', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]]', lk.ProcessOptions(), 19, 50000)
+            lk.GameList.__init__(self, args[0], '', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,[[path]],,,', lk.ProcessOptions(), 19, 500)
         else:
             lk.GameList.__init__(self, *args)
 
@@ -308,6 +308,7 @@ GL_PW = 3
 GL_RESULT = 4
 GL_SIGNATURE = 5
 GL_DATE = 6
+GL_PATH = 7
 
 
 class GameList(object):
@@ -340,10 +341,12 @@ class GameList(object):
         GameList. ``d`` must have the following format:
 
         For each key ``k``, ``d[k]`` is a list of three entries. The first
-        entry is the ``sgfpath``, i.e. the path where the SGF files of this
-        database are stored. The second entry is the path where the Kombilo
-        database files are stored, and the third entry is the name of these
-        database files, without the extension.
+        entry is the ``sgfpath``, i.e. the root folder where (and below which)
+        the SGF files of this database are stored.
+
+        The second entry is the path where the Kombilo database files are
+        stored, and the third entry is the name of these database files, without
+        the extension.
 
         The keys are assumed to be strings. If``k`` ends with 'disabled', then
         the disabled flag will be set for the corresponding database.
@@ -547,7 +550,8 @@ class GameList(object):
             if db['disabled']:
                 continue
             for i in xrange(db['data'].size()):
-                l.append(os.path.join(db['sgfpath'], getFilename(db['data'].getCurrent(i)[GL_FILENAME])))
+                gm = db['data'].getCurrent(i)
+                l.append(os.path.join(gm[GL_PATH], getFilename(gm[GL_FILENAME])))
         return l
 
     def printGameInfo(self, index):
@@ -563,7 +567,8 @@ class GameList(object):
         if DBindex == -1:
             return
 
-        f1 = strip(os.path.join(self.DBlist[DBindex]['sgfpath'], self.DBlist[DBindex]['data'].getCurrent(index)[GL_FILENAME]))
+        gm = self.DBlist[DBindex]['data'].getCurrent(index)
+        f1 = strip(os.path.join(gm[GL_PATH], gm[GL_FILENAME]))
 
         if find(f1, '[') != -1:
             f1, f2 = split(f1, '[')
@@ -1321,46 +1326,51 @@ class KEngine(object):
         return lk.find_duplicates([os.path.join(db['name'][0], db['name'][1]+'.db').encode('utf8') for db in self.gamelist.DBlist if not db['disabled']],
                                   strict, dupl_within_db)
 
-
-    def addDB(self, dbp, datap=('', '#'), recursive=True, filenames='*.sgf', acceptDupl=True, strictDuplCheck=True,
-              tagAsPro=0, processVariations=True, algos=None,
-              messages=None, progBar=None, showwarning=None, index=None):
-        '''
-        Call this method to newly add a database of SGF files.
-
-        Parameters:
-
-        * dbp: the path where the sgf files are to be found.
-        * datap:
-          the path where the database files will be stored. Leaving the default
-          value means: store database at dbp, with base filename 'kombilo'.
-          Instead, you can specify a pair (path, filename). Then
-          path/filenameN.d? will be the locations of the database files.  Every
-          Kombilo database consists of several files; they will have names with
-          ? equal to a, b, ...  N is a natural number chosen to make the file
-          name unique.
-        * recursive: specifies whether subdirectories should be included recursively
-        * messages: a 'message text window' which receives status messages
-        * progBar: a progress bar
-        * showwarning: a method which display warnings (like Tkinter showwarning)
-        '''
-
-        arguments = (filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index)
-        if recursive:
-            for dirpath, dirnames, files in os.walk(dbp):
-                self.addOneDB(arguments, dirpath)
+    def add_gl_at(self, index, gl, dbpath):
+        datapath = os.path.dirname(gl.dbname), os.path.basename(gl.dbname)[:-3]
+        if index is None:
+            self.gamelist.DBlist.append({'name': datapath, 'sgfpath': dbpath, 'data': gl, 'disabled': 0})
         else:
-            self.addOneDB(arguments, dbp)
+            self.gamelist.DBlist[index:index] = [{'name':datapath, 'sgfpath':dbpath, 'data': gl, 'disabled': 0}]
+        self.gamelist.update()
 
-    def addOneDB(self, arguments, dbpath):
-
-        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index = arguments
-        # print 'addOneDB', datap, dbpath
+    def create_GameList(self, datapath, tagAsPro, processVariations, algos, messages=None, deleteDBfiles=False):
         messages = messages or dummyMessages()
+        pop = lk.ProcessOptions()
+        pop.rootNodeTags = 'PW,PB,RE,DT,EV'
+        pop.sgfInDB = True
+        pop.professional_tag = tagAsPro
+        pop.processVariations = processVariations
+        pop.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
+        if algos:
+            pop.algos |= algos
+        if os.path.exists(os.path.join(datapath[0], datapath[1] + '.db')):
+            if deleteDBfiles:
+                messages.insert('end', _('Delete old database files.'))
+                messages.update()
+                for ext in ['db', 'da', 'db1', 'db2', ]:
+                    try:
+                        os.remove(os.path.join(datapath[0], datapath[1] + '.%s' % ext))
+                    except:
+                        messages.insert('end', _('Unable to delete database file %s.') % os.path.join(datapath[0], datapath[1] + '.%s' % ext))
+                        messages.update()
+                        return
+            else:
+                messages.insert('end', _('File exists: %s.') % os.path.join(datapath[0], datapath[1] + '.%s' % ext))
+                messages.update()
+                return
+
+        gl = lkGameList(os.path.join(datapath[0], datapath[1] + '.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,[[path]],,,', pop, 19, 500)
+        # TODO boardsize
+
+        return gl
+
+    def get_datapath(self, datap, dbpath):
+        """Ensure not to overwrite existing files: Add counter to path/file.db
+        such that new Kombilo databases can be written."""
 
         if datap == ('', '#'):
             datap = (dbpath, 'kombilo')
-
         def db_file_exists(d):
             return (os.path.isfile(os.path.join(d[0], d[1] + '.da')) or
                     os.path.isfile(os.path.join(d[0], d[1] + '.db')) or
@@ -1372,32 +1382,102 @@ class KEngine(object):
             i = 1
             while db_file_exists((datap[0], datap[1] + '%d' % i)):
                 i += 1
-            datapath = (datap[0], datap[1]+'%d' % i)
+            return (datap[0], datap[1]+'%d' % i)
         else:
-            datapath = datap
+            return datap
+
+    def addDB(
+            self, dbp, datap=('', '#'),
+            recursive=True, filenames='*.sgf',
+            acceptDupl=True, strictDuplCheck=True,
+            tagAsPro=0, processVariations=True, algos=None,
+            messages=None, progBar=None, showwarning=None,
+            index=None, all_in_one_db=True):
+        '''
+        Call this method to newly add a database of SGF files.
+
+        Parameters:
+
+        * dbp: the path where the sgf files are to be found.
+        * datap:
+          the path where the database files will be stored. Leaving the default
+          value means: store database at dbp, with base filename 'kombilo'.
+          Instead, you can specify a pair (path, filename). Then
+          path/filenameN.d[ab]? will be the locations of the database files.  Every
+          Kombilo database consists of several files; they will have names with
+          ? equal to a, b, ...  N is a natural number chosen to make the file
+          name unique.
+        * recursive: specifies whether subdirectories should be included recursively
+        * messages: a 'message text window' which receives status messages
+        * progBar: a progress bar
+        * showwarning: a method which display warnings (like Tkinter showwarning)
+        * index: where to add this in the DBlist (None means: add at end)
+        * all_in_one_db: Put all games found in this folder and all its
+          subfolders into one db (rather than creating one db per folder)
+        '''
+
+        self.currentSearchPattern = None
+        arguments = (
+                filenames,
+                acceptDupl, strictDuplCheck,
+                tagAsPro, processVariations, algos,
+                messages, progBar, showwarning,
+                datap, index)
+
+        if all_in_one_db:
+            gl = self.create_GameList(self.get_datapath(datap, dbp), tagAsPro, processVariations, algos, messages)
+            if gl is None:
+                return
+            gl.start_processing()
+        else:
+            gl = None
+
+        if recursive:
+            for dirpath, dirnames, files in os.walk(dbp):
+                self.addOneFolder(arguments, dirpath, gl=gl)
+        else:
+            self.addOneFolder(arguments, dbp, gl=gl)
+
+        if gl is not None:
+            messages.insert('end', _('Finalizing ... (this will take some time)\n'))
+            messages.update()
+            gl.finalize_processing()
+            if gl.size_all():
+                self.add_gl_at(index, gl, dbp)
+                for ref in self.gamelist.references:
+                    for gid in gl.sigsearchNC(ref):
+                        # print gid, ref, self.gamelist.references[ref],
+                        gl.setTagID(REFERENCED_TAG, gid)
+
+    def addOneFolder(self, arguments, dbpath, gl=None):
+        """This should really be named add_one_folder: Adds all sgf files in the
+        folder dbpath to gl, or to a newly created GameList."""
+
+        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index = arguments
+        # print 'addOneFolder', datap, dbpath
+        messages = messages or dummyMessages()
+
+        datapath = self.get_datapath(datap, dbpath)
 
         try:
-            gl = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar)
-        except:
+            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl)
+            # process returns the GameList, or None if no games were added
+        except ImportError:
             if showwarning:
                 showwarning(_('Error'), _('A fatal error occurred when processing %s. Are the directories for the database files writable?') % dbpath)
             return
 
-        if gl == None:
+        if success == None:
             messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
-            return
-        # open the lkGameList:
-        if index is None:
-            self.gamelist.DBlist.append({'name': datapath, 'sgfpath': dbpath, 'data': gl, 'disabled': 0})
         else:
-            self.gamelist.DBlist[index:index] = [{'name':datapath, 'sgfpath':dbpath, 'data': gl, 'disabled': 0}]
-        self.currentSearchPattern = None
-        self.gamelist.update()
-        messages.insert('end', _('Added %s.') % dbpath + '\n')
-        return gl != None
+            if gl is None:
+                # no gl was passed to us, so add the newly created one to DBlist
+                self.add_gl_at(index, success, dbpath)
+            messages.insert('end', _('Added %s.') % dbpath + '\n')
+        return success != None
 
     def process(self, dbpath, datap, filenames='*.sgf', acceptDupl=True, strictDuplCheck=True, tagAsPro=0,
-                processVariations=True, algos=None, messages=None, progBar=None, deleteDBfiles=False):
+                processVariations=True, algos=None, messages=None, progBar=None, deleteDBfiles=False, gl=None):
         messages = messages or dummyMessages()
         if progBar:
             progBar.configure(value=0)
@@ -1414,33 +1494,19 @@ class KEngine(object):
             return
         filelist.sort()
 
-        gls = lk.vectorGL()
+        gls = lk.vectorGL()  # for duplicate check
         for db in self.gamelist.DBlist:
             if not db['disabled']:  # for disabled db's, db['data'] is None
                 gls.push_back(db['data'])
 
-        pop = lk.ProcessOptions()
-        pop.rootNodeTags = 'PW,PB,RE,DT,EV'
-        pop.sgfInDB = True
-        pop.professional_tag = tagAsPro
-        pop.processVariations = processVariations
-        pop.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
-        if algos:
-            pop.algos |= algos
-        if deleteDBfiles and os.path.exists(os.path.join(datap[0], datap[1] + '.db')):
-            messages.insert('end', _('Delete old database files.'))
-            messages.update()
-            for ext in ['db', 'da', 'db1', 'db2', ]:
-                try:
-                    os.remove(os.path.join(datap[0], datap[1] + '.%s' % ext))
-                except:
-                    messages.insert('end', _('Unable to delete database file %s.') % os.path.join(datap[0], datap[1] + '.%s' % ext))
-                    messages.update()
+        if gl is None:
+            gamelist = self.create_GameList(datap, tagAsPro, processVariations, algos, messages, deleteDBfiles)
+            if gamelist is None:
+                return
+            gamelist.start_processing()
+        else:
+            gamelist = gl
 
-        gl = lkGameList(os.path.join(datap[0], datap[1] + '.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
-        # TODO boardsize
-
-        gl.start_processing()
         for counter, filename in enumerate(filelist):
             if progBar and counter % 100 == 0:
                 progBar.configure(value=counter * 100.0 / len(filelist))
@@ -1462,8 +1528,8 @@ class KEngine(object):
                 pops |= lk.CHECK_FOR_DUPLICATES_STRICT
 
             try:
-                if gl.process(sgf, path, fn, gls, '', pops):
-                    pres = gl.process_results()
+                if gamelist.process(sgf, path, fn, gls, '', pops):
+                    pres = gamelist.process_results()
                     if pres & lk.IS_DUPLICATE:
                         messages.insert('end', _('Duplicate ... %s\n') % filename)
                         messages.update()
@@ -1483,18 +1549,19 @@ class KEngine(object):
                 messages.insert('end', _('SGF error, file %s, not inserted.') % filename + '\n')
                 messages.update()
 
-        messages.insert('end', _('Finalizing ... (this will take some time)\n'))
-        messages.update()
-        gl.finalize_processing()
+        if gl is None:
+            messages.insert('end', _('Finalizing ... (this will take some time)\n'))
+            messages.update()
+            gamelist.finalize_processing()
 
-        for ref in self.gamelist.references:
-            for gid in gl.sigsearchNC(ref):
-                # print gid, ref, self.gamelist.references[ref],
-                gl.setTagID(REFERENCED_TAG, gid)
+            for ref in self.gamelist.references:
+                for gid in gamelist.sigsearchNC(ref):
+                    # print gid, ref, self.gamelist.references[ref],
+                    gamelist.setTagID(REFERENCED_TAG, gid)
         if progBar:
             progBar.stop()
 
-        return gl
+        return gamelist
 
     # ---------- misc tools
 
@@ -1516,7 +1583,9 @@ class KEngine(object):
         # print 's', s
         # print 'moveno', moveno
 
-        f1 = strip(os.path.join(self.gamelist.DBlist[dbindex]['sgfpath'], self.gamelist.DBlist[dbindex]['data'].getCurrent(index)[GL_FILENAME]))
+        gm = self.gamelist.DBlist[dbindex]['data'].getCurrent(index)
+        f1 = strip(os.path.join(gm[GL_PATH], gm[GL_FILENAME]))
+
         if find(f1, '[') != -1:
             f1, f2 = split(f1, '[')
             gameNumber = int(strip(f2)[:-1])
