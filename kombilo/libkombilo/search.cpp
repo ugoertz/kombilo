@@ -213,23 +213,32 @@ GameListEntry::GameListEntry(int ID, char WINNER, string GAMEINFOSTR, int DATE) 
 }
 
 GameListEntry::~GameListEntry() {
+  set_hits(0);
+  set_candidates(0);
+}
+
+void GameListEntry::set_hits(vector<Hit* > * hts) {
   if (hits) {
     for(vector<Hit* >::iterator it = hits->begin(); it != hits->end(); it++) delete *it;
     delete hits;
-    hits = 0;
   }
+  hits = hts;
+}
+
+void GameListEntry::set_candidates(vector<Candidate* > * cands) {
   if (candidates) {
     for(vector<Candidate* >::iterator it = candidates->begin(); it != candidates->end(); it++) delete *it;
     delete candidates;
-    candidates = 0;
   }
+  candidates = cands;
 }
+
 
 void GameListEntry::hits_from_snv(SnapshotVector& snv) {
   int h_size = snv.retrieve_int();
   if (h_size==-1) hits=0;
   else {
-    hits = new vector<Hit* >;
+    set_hits(new vector<Hit* >);
     for(int j=0; j<h_size; j++) {
       hits->push_back(new Hit(snv));
     }
@@ -289,17 +298,7 @@ int dbinfo_callback(void *s, int argc, char **argv, char **asColName) {
   return 0;
 }
 
-
-GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOptions* p_options, int BOARDSIZE, int cache) throw(DBError) {
-  boardsize = BOARDSIZE;
-  labels = 0;
-  mrs_pattern = 0;
-  searchOptions = 0;
-  dbname = new char[strlen(DBNAME)+1];
-  strcpy(dbname, DBNAME);
-  db = 0;
-
-  // try to retrieve basic options from database
+void GameList::open_db() throw(DBError) {
   int rc = sqlite3_open(dbname, &db); 
   if (rc) {
     sqlite3_close(db);
@@ -311,11 +310,25 @@ GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOpt
   rc = sqlite3_exec(db, "pragma synchronous = off;", 0, 0, 0);
   if (rc) throw DBError();
   char cache_str[100];
-  sprintf(cache_str, "pragma cache_size = %d", cache*1000);
+  sprintf(cache_str, "pragma cache_size = %d", -db_cache_size);
   rc = sqlite3_exec(db, cache_str, 0, 0, 0);
   if (rc) throw DBError();
+}
 
-  rc = sqlite3_exec(db, "create table if not exists db_info ( info text );", 0, 0, 0);
+GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOptions* p_options, int BOARDSIZE, int cache) throw(DBError) {
+  boardsize = BOARDSIZE;
+  labels = 0;
+  mrs_pattern = 0;
+  searchOptions = 0;
+  dbname = new char[strlen(DBNAME)+1];
+  strcpy(dbname, DBNAME);
+  db = 0;
+  db_cache_size = cache;
+
+  // try to retrieve basic options from database
+  open_db();
+
+  int rc = sqlite3_exec(db, "create table if not exists db_info ( info text );", 0, 0, 0);
   if (rc != SQLITE_OK) throw DBError();
   char* dbinfo = 0;
 
@@ -402,7 +415,7 @@ void GameList::resetFormat(string ORDERBY, string FORMAT) {
       if (p+2 < format2.size() && q != string::npos) {
         string col = format2.substr(p+2, q-p-2);
         // check availability
-        if (col == "id" || col == "filename" || col == "pos" || col == "duplicate" || p_op->rootNodeTags.find(col) != string::npos) {
+        if (col == "id" || col == "path" || col == "filename" || col == "pos" || col == "duplicate" || p_op->rootNodeTags.find(col) != string::npos) {
           sprintf(buf, "[[%d", numColumns++); 
           format2.replace(p,q+2-p, buf);
           format1 += ",";
@@ -656,15 +669,13 @@ vector<Candidate* > * GameList::getCurrentCandidateList() {
 
 void GameList::makeCurrentCandidate(vector<Candidate* > * candidates) {
   GameListEntry* gle = (*all)[(*oldList)[current].second];
-  if (gle->candidates) delete gle->candidates;
-  gle->candidates = candidates;
+  gle->set_candidates(candidates);
   currentList->push_back((*oldList)[current]);
 }
 
 void GameList::makeCurrentHit(vector<Hit* > * hits) {
   GameListEntry* gle = (*all)[(*oldList)[current].second];
-  if (gle->hits) delete gle->hits;
-  gle->hits = hits;
+  gle->set_hits(hits);
   sort(gle->hits->begin(), gle->hits->end(), Hit::cmp_pts);
   currentList->push_back((*oldList)[current]);
 }
@@ -692,10 +703,7 @@ void GameList::makeIndexHit(int index, vector<Hit* > * hits, vector<int>* CL) {
       CL->push_back(m);
     else {
       currentList->push_back((*oldList)[m]);
-      if (hits) {
-        if ((*all)[(*oldList)[m].second]->hits) delete (*all)[(*oldList)[m].second]->hits;
-        (*all)[(*oldList)[m].second]->hits = hits;
-      }
+      if (hits) (*all)[(*oldList)[m].second]->set_hits(hits);
     }
   }
 }
@@ -704,10 +712,7 @@ void GameList::makeIndexCandidate(int index, vector<Candidate* > * candidates) {
   int m = get_current_index(index, &current);
   if (m != -1) {
     currentList->push_back((*oldList)[m]);
-    if (candidates) {
-      if ((*all)[(*oldList)[m].second]->candidates) delete (*all)[(*oldList)[m].second]->candidates;
-      (*all)[(*oldList)[m].second]->candidates = candidates;
-    }
+    if (candidates) (*all)[(*oldList)[m].second]->set_candidates(candidates);
   }
 }
 
@@ -719,18 +724,8 @@ void GameList::reset() {
   currentList = new vector<pair<int,int> >;
   int counter = 0;
   for(vector<GameListEntry* >::iterator it = all->begin(); it != all->end(); it++) {
-    if ((*it)->hits) {
-      for(vector<Hit* >::iterator ith = (*it)->hits->begin(); ith != (*it)->hits->end(); ith++)
-        delete *ith;
-      delete (*it)->hits;
-      (*it)->hits = 0;
-    }
-    if ((*it)->candidates) {
-      for(vector<Candidate* >::iterator itc = (*it)->candidates->begin(); itc != (*it)->candidates->end(); itc++)
-        delete *itc;
-      delete (*it)->candidates;
-      (*it)->candidates = 0;
-    }
+    (*it)->set_hits(0);
+    (*it)->set_candidates(0);
     currentList->push_back(make_pair((*it)->id, counter++));
   }
   num_hits = 0;
@@ -1076,6 +1071,12 @@ int GameList::size_all() {
   return all->size();
 }
 
+string GameList::get_resultsStr(unsigned int i) {
+  if (i >= 0 && i < all->size())
+    return resultsStr((*all)[i]);
+  return "";
+}
+
 string GameList::resultsStr(GameListEntry* gle) {
   string result;
   if (!gle->hits) return result;
@@ -1099,6 +1100,13 @@ string GameList::resultsStr(GameListEntry* gle) {
   return result;
 }
 
+int GameList::find_by_ID(int ID) {
+  for(unsigned int i=0; i < all->size(); i++) {
+    if ((*all)[i]->id == ID) return i;
+  }
+  return -1;
+}
+
 void GameList::setLabel(char x, char y, char label) {
   if (!labels || !mrs_pattern || x < 0 || x >= mrs_pattern->sizeX || y < 0 || y >= mrs_pattern->sizeY) return;
   labels[x+y*mrs_pattern->sizeX] = label;
@@ -1114,6 +1122,19 @@ Continuation GameList::lookupContinuation(char x, char y) {
   return *continuations[x+y*mrs_pattern->sizeX];
 }
 
+string GameList::get_gameInfoStr(unsigned int i) {
+  if (i >= 0 && i < all->size())
+    return (*all)[i]->gameInfoStr;
+  return "";
+}
+
+pair<int, int> GameList::get_currentList_entry(unsigned int i) {
+  if (i >= 0 && i < currentList->size())
+    return (*currentList)[i];
+  return pair<int, int>(0,0);
+}
+
+
 vector<string> GameList::currentEntriesAsStrings(int start, int end) {
   if (end==0) end = currentList->size();
   vector<string> result;
@@ -1125,6 +1146,8 @@ vector<string> GameList::currentEntriesAsStrings(int start, int end) {
 }
 
 string GameList::currentEntryAsString(int i) {
+  // should really be called get_current_gameInfoStr (or something similar), cf.
+  // get_gameInfoStr
   if (i < 0 || i >= (int)currentList->size()) {
     return "";
   } else return (*all)[(*currentList)[i].second]->gameInfoStr + resultsStr((*all)[(*currentList)[i].second]);
@@ -1369,6 +1392,11 @@ void GameList::start_processing(int PROCESSVARIATIONS) throw(DBError) {
   delete_all_snapshots();
   createGamesDB();
   current = 0;
+  for(vector<algo_p>::iterator it = algo_ps.begin(); it != algo_ps.end(); it++) {
+    if (*it) {
+      (*it)->initialize_process();
+    }
+  }
   const char* sql = "begin transaction;";
   int rc = sqlite3_exec(db, sql, 0, 0, 0);
   if (rc) { throw DBError(); }
@@ -1384,12 +1412,8 @@ void GameList::finalize_processing() throw(DBError) {
     throw DBError();
   }
 
-  if (rc != SQLITE_OK) throw DBError();
-  // sqlite3_close(db);
-  // db = 0;
-
   // write algorithm data to file
-  
+
   string a_dbname(dbname);
   a_dbname[a_dbname.size()-1] = 'a';
   ofstream os(a_dbname.c_str(), ios::binary);
@@ -1405,6 +1429,7 @@ void GameList::finalize_processing() throw(DBError) {
   os.close();
 
   readDB();
+
   delete SGFtags;
 }
 
@@ -1417,6 +1442,7 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
   try {
     c = new Cursor(sgf, 1); // parse sgf sloppily
   } catch (SGFError) {
+    // there is a memory leak here ... ignored for now
     return 0;
   }
 
@@ -1601,9 +1627,9 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
             i++;
           if (i >= lSGFstring) break;
 
+          // find next property id
           char ID[30];
           int IDindex = 0;
-
           while (i < lSGFstring && s[i] != '[' && IDindex < 30) {
             if (65 <= s[i] && s[i] <= 90)
               ID[IDindex++] = s[i];
@@ -1612,12 +1638,12 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
             }
             i++;
           }
-
           i++;
 
           if (i >= lSGFstring || IDindex >= 30 || !IDindex) {
             throw SGFError();
           }
+
           ID[IDindex] = 0; // found next property ID
           bool IDrelevant= (!strcmp(ID,"B") || !strcmp(ID,"W") || !strcmp(ID,"AB") || !strcmp(ID,"AW") || !strcmp(ID,"AE"));
           propValue = new char[100000];
@@ -1977,18 +2003,8 @@ void GameList::restore(int handle, bool del) throw(DBError) {
   if (currentList) delete currentList;
   currentList = new vector<pair<int,int> >;
   for(vector<GameListEntry* >::iterator it = all->begin(); it != all->end(); it++) {
-    if ((*it)->hits) {
-      for(vector<Hit* >::iterator ith = (*it)->hits->begin(); ith != (*it)->hits->end(); ith++)
-        delete *ith;
-      delete (*it)->hits;
-      (*it)->hits = 0;
-    }
-    if ((*it)->candidates) {
-      for(vector<Candidate* >::iterator itc = (*it)->candidates->begin(); itc != (*it)->candidates->end(); itc++)
-        delete *itc;
-      delete (*it)->candidates;
-      (*it)->candidates = 0;
-    }
+    (*it)->set_hits(0);
+    (*it)->set_candidates(0);
   }
 
   for(int i=0; i<(DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_current.push_back(0);
