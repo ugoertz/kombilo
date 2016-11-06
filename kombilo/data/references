@@ -524,6 +524,22 @@ data = abdgikeodjoo, bdhjidjimcle, bhihocifnebn, bhjfopednmnf, ccehklcggkgj, ceb
 title = Masterpieces of Handicap Go 2
 data = bgcgbdgjijek, bhqrimbpjorh, cgiqcqficlhh, cihbfigeeicf, ciqqmdcroomg, delhjkdlldhn, dfedcfhdgglg, dfnlhmhqrpij, dggpnrennqrp, dgqikcgbmmob, djkcninckfeh, eeehqjeneikq, efeijhfdkdnk, efhqgncbcqqm, ejkcemfpfhod, fgpcnbbqaorf, ghhpalglchcr, gibiqmglnmpo
 # }}}
+# Go Game Guru --- {{{
+[Relentless]
+title = Relentless: Lee Sedol vs Gu Li (Go Game Guru)
+data = dgearbcdmeih, bcmdkpoljnng, eioergegoggb, bfqqgoeqdqie, djpfnbrpmcnh, cebilmjbmofk, cgcllebderdj, cgnbphkqhieb, bgknoqgneiqr, bggffecljdip, dhhicaebhjkd, dgfeqdffkhdl, dfmoiledmllk, cfeaggibhdso, bcdkcnpbgcak, cfhorhkolcfm, bjmejoqcnpgm, ceoenkeirfoh, ccenkqckaqpq, chgjcpbmggeo, ccadgadghfhk, bhibodjipbhp, cfdohghlckfj, cdomgfqqfgin, bepbhjncdbpf, egnerehhmgoi, efifccqhlbrj, cghnknfjhmld, dinghechkegb, cfepbrblipen, bdegfhjdjonf, eenpmfffkhqe, efinkqegjojl, ddefbnbieqdm, bgfdnjcboqsf, cccjcjpbciom, cchobmipcpfs, deehhghfiech, cfhqdopnrchq, egbmihflglch, dfncoimnidkk, chgbclbaejpl, behhbcghmekf, chicqgfilnnd, cgpgikkdljbj, bcmfiepgpbnr, cfdhsppnofef, fqngjomjnqfm
+# }}}
+# Kiseido Modern Master Games --- {{{
+[MMG1]
+title = The Dawn of Tournament Go (R. van Zeijst, R. Bozulich)
+data = fhkmcloggcmf, fgohlhlmkkpb, eglqoeepjfmf, dgcnrqdcqmpb, egohihglldmk, cfcqrrelqhfb, cgncgmohpolj, demonmppmcgb, cceqghgcemip, cdldrpkckepm, cjlconcilodb
+[MMG2]
+title = The 2014 Ten-Game Match between Gu Li and Lee Sedol, Part One (R. van Zeijst)
+data = dgearbcdmeih, bcmdkpoljnng, eioergegoggb, bfqqgoeqdqie, djpfnbrpmcnh
+[MMG3]
+title = The 2014 Ten-Game Match between Gu Li and Lee Sedol, Part Two (R. van Zeijst)
+data = cebilmjbmofk, cgcllebderdj, cgnbphkqhieb, cgpgikkdljbj, bcmfiepgpbnr
+# }}}
 # GoGoD --- {{{
 [CBASE]
 title = GoGoD CD (CBase)
