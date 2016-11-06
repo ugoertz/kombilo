@@ -2027,7 +2027,8 @@ class App(v.Viewer, KEngine):
                 showwarning=showwarning,
                 index=index,
                 all_in_one_db=not self.options.oneDBperFolder.get(),
-                sgfInDB=False)
+                sgfInDB=False,
+                logDuplicates=self.options.logDuplicates.get())
 
     def add_gl_at(self, index, gl, dbpath):
         super(App, self).add_gl_at(index, gl, dbpath)
@@ -2293,10 +2294,17 @@ class App(v.Viewer, KEngine):
         # encoding1Menu.grid(row=1, column=5, sticky=W)
 
         duplButton = Checkbutton(f3, text=_('Accept duplicates'), highlightthickness=0, variable=self.options.acceptDupl, pady=5)
-        duplButton.grid(row=3, column=0, sticky=W, columnspan=2)
+        duplButton.grid(row=3, column=0, sticky=W)
 
         strictDuplCheckButton = Checkbutton(f3, text=_('Strict duplicate check'), highlightthickness=0, variable=self.options.strictDuplCheck, pady=5)
-        strictDuplCheckButton.grid(row=3, column=2, sticky=W, columnspan=2)
+        strictDuplCheckButton.grid(row=3, column=1, sticky=W)
+
+        logDuplCheckButton = Checkbutton(
+                f3, text=_('Detailed log'),
+                highlightthickness=0,
+                variable=self.options.logDuplicates,
+                pady=5)
+        logDuplCheckButton.grid(row=3, column=2, sticky=W)
 
         processVariations = Checkbutton(f3, text=_('Process variations'), highlightthickness=0, variable=self.options.processVariations, pady=5)
         processVariations.grid(row=5, column=0, sticky=W, columnspan=2)

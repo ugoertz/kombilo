@@ -1448,7 +1448,8 @@ class KEngine(object):
             acceptDupl=True, strictDuplCheck=True,
             tagAsPro=0, processVariations=True, algos=None,
             messages=None, progBar=None, showwarning=None,
-            index=None, all_in_one_db=True, sgfInDB=True):
+            index=None, all_in_one_db=True, sgfInDB=True,
+            logDuplicates=True):
         '''
         Call this method to newly add a database of SGF files.
 
@@ -1479,7 +1480,8 @@ class KEngine(object):
                 tagAsPro, processVariations, algos,
                 messages, progBar, showwarning,
                 datap, index,
-                sgfInDB)
+                sgfInDB,
+                logDuplicates)
 
         if all_in_one_db:
             gl = self.create_GameList(self.get_datapath(datap, dbp), tagAsPro, processVariations, algos, sgfInDB, messages)
@@ -1510,14 +1512,14 @@ class KEngine(object):
         """This should really be named add_one_folder: Adds all sgf files in the
         folder dbpath to gl, or to a newly created GameList."""
 
-        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index, sgfInDB = arguments
+        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index, sgfInDB, logDuplicates = arguments
         # print 'addOneFolder', datap, dbpath
         messages = messages or dummyMessages()
 
         datapath = self.get_datapath(datap, dbpath)
 
         try:
-            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl, sgfInDB=sgfInDB)
+            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl, sgfInDB=sgfInDB, logDuplicates=logDuplicates)
             # process returns the GameList, or None if no games were added
         except ImportError:
             if showwarning:
@@ -1525,12 +1527,16 @@ class KEngine(object):
             return
 
         if success == None:
-            messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
+            if logDuplicates:
+                messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
+                messages.update()
         else:
             if gl is None:
                 # no gl was passed to us, so add the newly created one to DBlist
                 self.add_gl_at(index, success, dbpath)
-            messages.insert('end', _('Added %s.') % dbpath + '\n')
+            if logDuplicates:
+                messages.insert('end', _('Added %s.') % dbpath + '\n')
+                messages.update()
         return success != None
 
     def process(
@@ -1542,13 +1548,15 @@ class KEngine(object):
             messages=None, progBar=None,
             deleteDBfiles=False,
             gl=None,
-            sgfInDB=True):
+            sgfInDB=True,
+            logDuplicates=True):
         messages = messages or dummyMessages()
         if progBar:
             progBar.configure(value=0)
             progBar.update()
-        messages.insert('end', _('Processing %s.') % dbpath + '\n')
-        messages.update()
+        if logDuplicates:
+            messages.insert('end', _('Processing %s.') % dbpath + '\n')
+            messages.update()
         if filenames == '*.sgf':
             filelist = glob.glob(os.path.join(dbpath, '*.sgf'))
         elif filenames == '*.sgf, *.mgt':
@@ -1595,16 +1603,25 @@ class KEngine(object):
             try:
                 if gamelist.process(sgf, path, fn, gls, '', pops):
                     pres = gamelist.process_results()
-                    if pres & lk.IS_DUPLICATE:
+                    # if not logDuplicates, do not log "not inserted", unless
+                    # there is also another reason for this
+                    log_not_inserted = logDuplicates
+                    if logDuplicates and pres & lk.IS_DUPLICATE:
                         messages.insert('end', _('Duplicate ... %s\n') % filename)
                         messages.update()
                     if pres & lk.SGF_ERROR:
+                        # We do usually insert games even if there are SGF
+                        # errors somewhere, so be careful with setting
+                        # log_not_inserted:
+                        if not (pres & lk.IS_DUPLICATE):
+                            log_not_inserted = True
                         messages.insert('end', _('SGF error, file {0}, {1}\n').format(filename, pres))
                         messages.update()
                     if pres & lk.UNACCEPTABLE_BOARDSIZE:
+                        log_not_inserted = True
                         messages.insert('end', _('Unacceptable board size error, file {0}, {1}\n').format(filename, pres))
                         messages.update()
-                    if pres & lk.NOT_INSERTED_INTO_DB:
+                    if log_not_inserted and pres & lk.NOT_INSERTED_INTO_DB:
                         messages.insert('end', _('not inserted\n'))
                         messages.update()
                 else:
@@ -1615,8 +1632,9 @@ class KEngine(object):
                 messages.update()
 
         if gl is None:
-            messages.insert('end', _('Finalizing ... (this will take some time)\n'))
-            messages.update()
+            if logDuplicates:
+                messages.insert('end', _('Finalizing ... (this will take some time)\n'))
+                messages.update()
             gamelist.finalize_processing()
 
             for ref in self.gamelist.references:
