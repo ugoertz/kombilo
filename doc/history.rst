@@ -27,7 +27,7 @@ History/Change log
 ---
 
 0.8.2 (November 2016)
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
 
 * Reduce memory usage at several points: pattern searches, search history, processing
 * Improve user interface (thanks to D. Sigaty for several suggestions)
