@@ -588,25 +588,54 @@ class GameList(object):
         except:
             return
 
-        t = node['PW'][0] if 'PW' in node else ' ?'
-        t += (' ' + node['WR'][0]) if 'WR' in node else ''
+        # use try/except for accessing properties because even if key in node
+        # succeeds, retrieving it might lead to encoding errors
+        try:
+            t = node['PW'][0]
+        except:
+            t = '?'
+        try:
+            t += ' ' + node['WR'][0]
+        except:
+            pass
         t += ' - '
 
-        t += node['PB'][0] if 'PB' in node else ' ?'
-        t += (' ' + node['BR'][0]) if 'BR' in node else ''
+        try:
+            t += node['PB'][0]
+        except:
+            t += '?'
+        try:
+            t += ' ' + node['BR'][0]
+        except:
+            pass
 
-        if 'RE' in node:
-            t = t + ', ' + translateRE(node['RE'][0])
-        if 'KM' in node:
-            t = t + ' (' + _('Komi') + ' ' + node['KM'][0] + ')'
-        if 'HA' in node:
-            t = t + ' (' + _('Hcp') + ' ' + node['HA'][0] + ')'
+        try:
+            t += ', ' + translateRE(node['RE'][0])
+        except:
+            pass
+        try:
+            t += ' (' + _('Komi') + ' ' + node['KM'][0] + ')'
+        except:
+            pass
+        try:
+            t += ' (' + _('Hcp') + ' ' + node['HA'][0] + ')'
+        except:
+            pass
 
         t += '\n'
-        t += ', '.join([node[prop][0] for prop in ['EV', 'RO', 'DT'] if prop in node]) + '\n'
 
-        if 'GC' in node:
+        for prop in ['EV', 'RO', 'DT']:
+            try:
+                t += node[prop][0] + ', '
+            except:
+                pass
+        if t.endswith(', '):
+            t = t[:-2] + '\n'
+
+        try:
             t += node['GC'][0].replace('\n\r', ' ').replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ')
+        except:
+            pass
 
         signature = self.DBlist[DBindex]['data'].getSignature(index)
         t2 = (_('Commentary in ') + ', '.join(self.references[signature])) if signature in self.references else ''
@@ -1139,10 +1168,36 @@ class KEngine(object):
             l1 = [' '.join(x).strip() for x in plist]
 
             N = 400 if showAllCont else 10
+            unused_labels = list('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjklmnopqrstuvwxyz[]')
+            lbl = {}
+
+            # Find some unused labels in case we have to replace 'O' or 'X'
+            # later, and check whether we can replace upper case labels by lower
+            # case labels, as required by wiki format
+            labels_to_lower = True
+            for cont in self.continuations[:N]:
+                if cont.label in 'abcdefghijklmnopqrstuvwxyz':
+                    labels_to_lower = False
+                unused_labels.remove(cont.label)
+            if exportMode != 'wiki':
+                labels_to_lower = False
+
             for cont in self.continuations[:N]:
                 x, y = cont.x + 1, cont.y + 1
                 if plist[y][x] in ['.', ',']:
-                    plist[y][x] = cont.label  # plist[y] is the y-th *line* of the pattern, i.e. consists of the points with coordinates (0, y), ..., (boardsize-1, y).
+                    if labels_to_lower:
+                        plist[y][x] = cont.label.lower()
+                        # plist[y] is the y-th *line* of the pattern, i.e. consists
+                        # of the points with coordinates (0, y), ..., (boardsize-1,
+                        # y).
+                    elif cont.label == 'O':
+                        plist[y][x] = unused_labels[0]
+                    elif cont.label == 'X':
+                        plist[y][x] = unused_labels[1]
+                    else:
+                        plist[y][x] = cont.label
+                    lbl[cont.label] = plist[y][x]  # store the new label we end up using
+
             l2 = [' '.join(x).strip() for x in plist]
 
             s1 = '$$B ' + _('Search Pattern') + '\n$$' + join(l1, '\n$$') + '\n' if exportMode == 'wiki' else join(l1, '\n')
@@ -1183,13 +1238,13 @@ class KEngine(object):
 
                 for cont in self.continuations[:N]:
                     if cont.B:  # black continuations
-                        t.append(_('B') + '%s:    %d (%d), ' % (cont.label, cont.B, cont.B - cont.tB))
+                        t.append(_('B') + '%s:    %d (%d), ' % (lbl[cont.label], cont.B, cont.B - cont.tB))
                         t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wB * 100.0 / cont.B, cont.lB * 100.0 / cont.B))
                         if exportMode == 'wiki':
                             t.append(' %%%')
                         t.append('\n')
                     if cont.W:  # white continuations
-                        t.append(_('W') + '%s:    %d (%d), ' % (cont.label, cont.W, cont.W - cont.tW))
+                        t.append(_('W') + '%s:    %d (%d), ' % (lbl[cont.label], cont.W, cont.W - cont.tW))
                         t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wW * 100.0 / cont.W, cont.lW * 100.0 / cont.W))
                         if exportMode == 'wiki':
                             t.append(' %%%')
@@ -1206,7 +1261,7 @@ class KEngine(object):
                 body_str = '%%%ds (%%s) | %%6d | %%%ds | %%%ds |\n'  % (max(5, len(_('Label'))) - 4, max(7, len(_('First played'))), max(7, len(_('Last played'))))
                 comment_text = ''
                 for cont in self.continuations[:N]:
-                    comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
+                    comment_text += body_str % (lbl[cont.label], 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
                 if comment_text:
                     comment_text = head_str + comment_text
                 t.append(comment_text)
@@ -1289,8 +1344,9 @@ class KEngine(object):
                 for sig in c[k]['data']:
                     symmsig = lk.symmetrize(sig, boardsize)
                     self.gamelist.references[symmsig].append(c[k]['title'])
+            return True
         except:
-            pass
+            return False
 
     def loadDBs(self, progBar=None, showwarning=None):
         '''Load the database files for all databases that were added to the
@@ -1334,11 +1390,11 @@ class KEngine(object):
             self.gamelist.DBlist[index:index] = [{'name':datapath, 'sgfpath':dbpath, 'data': gl, 'disabled': 0}]
         self.gamelist.update()
 
-    def create_GameList(self, datapath, tagAsPro, processVariations, algos, messages=None, deleteDBfiles=False):
+    def create_GameList(self, datapath, tagAsPro, processVariations, algos, sgfInDB = False, messages=None, deleteDBfiles=False):
         messages = messages or dummyMessages()
         pop = lk.ProcessOptions()
         pop.rootNodeTags = 'PW,PB,RE,DT,EV'
-        pop.sgfInDB = True
+        pop.sgfInDB = sgfInDB
         pop.professional_tag = tagAsPro
         pop.processVariations = processVariations
         pop.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
@@ -1392,7 +1448,8 @@ class KEngine(object):
             acceptDupl=True, strictDuplCheck=True,
             tagAsPro=0, processVariations=True, algos=None,
             messages=None, progBar=None, showwarning=None,
-            index=None, all_in_one_db=True):
+            index=None, all_in_one_db=True, sgfInDB=True,
+            logDuplicates=True):
         '''
         Call this method to newly add a database of SGF files.
 
@@ -1422,10 +1479,12 @@ class KEngine(object):
                 acceptDupl, strictDuplCheck,
                 tagAsPro, processVariations, algos,
                 messages, progBar, showwarning,
-                datap, index)
+                datap, index,
+                sgfInDB,
+                logDuplicates)
 
         if all_in_one_db:
-            gl = self.create_GameList(self.get_datapath(datap, dbp), tagAsPro, processVariations, algos, messages)
+            gl = self.create_GameList(self.get_datapath(datap, dbp), tagAsPro, processVariations, algos, sgfInDB, messages)
             if gl is None:
                 return
             gl.start_processing()
@@ -1453,14 +1512,14 @@ class KEngine(object):
         """This should really be named add_one_folder: Adds all sgf files in the
         folder dbpath to gl, or to a newly created GameList."""
 
-        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index = arguments
+        filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, showwarning, datap, index, sgfInDB, logDuplicates = arguments
         # print 'addOneFolder', datap, dbpath
         messages = messages or dummyMessages()
 
         datapath = self.get_datapath(datap, dbpath)
 
         try:
-            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl)
+            success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl, sgfInDB=sgfInDB, logDuplicates=logDuplicates)
             # process returns the GameList, or None if no games were added
         except ImportError:
             if showwarning:
@@ -1468,22 +1527,36 @@ class KEngine(object):
             return
 
         if success == None:
-            messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
+            if logDuplicates:
+                messages.insert('end', _('Directory %s contains no sgf files.\n') % dbpath)
+                messages.update()
         else:
             if gl is None:
                 # no gl was passed to us, so add the newly created one to DBlist
                 self.add_gl_at(index, success, dbpath)
-            messages.insert('end', _('Added %s.') % dbpath + '\n')
+            if logDuplicates:
+                messages.insert('end', _('Added %s.') % dbpath + '\n')
+                messages.update()
         return success != None
 
-    def process(self, dbpath, datap, filenames='*.sgf', acceptDupl=True, strictDuplCheck=True, tagAsPro=0,
-                processVariations=True, algos=None, messages=None, progBar=None, deleteDBfiles=False, gl=None):
+    def process(
+            self,
+            dbpath, datap, filenames='*.sgf',
+            acceptDupl=True, strictDuplCheck=True,
+            tagAsPro=0,
+            processVariations=True, algos=None,
+            messages=None, progBar=None,
+            deleteDBfiles=False,
+            gl=None,
+            sgfInDB=True,
+            logDuplicates=True):
         messages = messages or dummyMessages()
         if progBar:
             progBar.configure(value=0)
             progBar.update()
-        messages.insert('end', _('Processing %s.') % dbpath + '\n')
-        messages.update()
+        if logDuplicates:
+            messages.insert('end', _('Processing %s.') % dbpath + '\n')
+            messages.update()
         if filenames == '*.sgf':
             filelist = glob.glob(os.path.join(dbpath, '*.sgf'))
         elif filenames == '*.sgf, *.mgt':
@@ -1500,7 +1573,7 @@ class KEngine(object):
                 gls.push_back(db['data'])
 
         if gl is None:
-            gamelist = self.create_GameList(datap, tagAsPro, processVariations, algos, messages, deleteDBfiles)
+            gamelist = self.create_GameList(datap, tagAsPro, processVariations, algos, sgfInDB, messages, deleteDBfiles)
             if gamelist is None:
                 return
             gamelist.start_processing()
@@ -1530,16 +1603,25 @@ class KEngine(object):
             try:
                 if gamelist.process(sgf, path, fn, gls, '', pops):
                     pres = gamelist.process_results()
-                    if pres & lk.IS_DUPLICATE:
+                    # if not logDuplicates, do not log "not inserted", unless
+                    # there is also another reason for this
+                    log_not_inserted = logDuplicates
+                    if logDuplicates and pres & lk.IS_DUPLICATE:
                         messages.insert('end', _('Duplicate ... %s\n') % filename)
                         messages.update()
                     if pres & lk.SGF_ERROR:
+                        # We do usually insert games even if there are SGF
+                        # errors somewhere, so be careful with setting
+                        # log_not_inserted:
+                        if not (pres & lk.IS_DUPLICATE):
+                            log_not_inserted = True
                         messages.insert('end', _('SGF error, file {0}, {1}\n').format(filename, pres))
                         messages.update()
                     if pres & lk.UNACCEPTABLE_BOARDSIZE:
+                        log_not_inserted = True
                         messages.insert('end', _('Unacceptable board size error, file {0}, {1}\n').format(filename, pres))
                         messages.update()
-                    if pres & lk.NOT_INSERTED_INTO_DB:
+                    if log_not_inserted and pres & lk.NOT_INSERTED_INTO_DB:
                         messages.insert('end', _('not inserted\n'))
                         messages.update()
                 else:
@@ -1550,8 +1632,9 @@ class KEngine(object):
                 messages.update()
 
         if gl is None:
-            messages.insert('end', _('Finalizing ... (this will take some time)\n'))
-            messages.update()
+            if logDuplicates:
+                messages.insert('end', _('Finalizing ... (this will take some time)\n'))
+                messages.update()
             gamelist.finalize_processing()
 
             for ref in self.gamelist.references:

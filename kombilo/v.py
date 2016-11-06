@@ -848,10 +848,14 @@ class EnhancedCursor(Cursor):
 
     def transcode(self, prop, node=None):
         d = Node(node) if node else self.currentNode()
-        if not prop in d or not d[prop]:
+        if not prop in d:
             return ''
-        s = d[prop][0]
-        return s
+        try:
+            # be careful here because of encoding issues
+            s = d[prop][0]
+            return s
+        except:
+            return ''
 
     def updateTree(self, update=1):
         self.SGFtreeCanv.canvas.delete('all')
@@ -2414,10 +2418,15 @@ class Viewer:
         self.gameinfoVars = {}
         for key in keylist:
             self.gameinfoVars[key] = StringVar()
-            if not (key in self.gameinfoDict and self.gameinfoDict[key]):
-                self.gameinfoVars[key].set('')
+            if key in self.gameinfoDict:
+                try:
+                    self.gameinfoVars[key].set(self.gameinfoDict[key][0])
+                except KeyError:
+                    # even if "key in self.gameinfoDict", might have a KeyError
+                    # here because of encoding issues
+                    self.gameinfoVars[key].set('')
             else:
-                self.gameinfoVars[key].set(self.gameinfoDict[key][0])
+                self.gameinfoVars[key].set('')
 
         self.gameinfoVars['others'] = StringVar()
         oth = ''

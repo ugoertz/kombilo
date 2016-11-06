@@ -12,10 +12,15 @@ sources = [
 
 kwargs = {}
 
-if sys.platform[:3] == 'win':
+if sys.platform.startswith('win'):
     sources.append('kombilo/libkombilo/sqlite3.c')
     kwargs['library_dirs'] = ['C:\\Libraries\\boost_1_62_0', ]
     kwargs['extra_compile_args'] = ['-I.', '-IC:\\Libraries\\boost_1_62_0', '-openmp']
+elif sys.platform.startswith('darwin'):
+    kwargs['libraries'] = ['stdc++', 'sqlite3']
+    kwargs['library_dirs'] = ['/usr/lib', ]
+    kwargs['extra_compile_args'] = ['-I.', '-I/usr/local/include', '-I/opt/local/include']  # can use this w/ g++ to max optimization
+    kwargs['extra_link_args'] = [ ]
 else:
     kwargs['libraries'] = ['stdc++', 'sqlite3']
     kwargs['library_dirs'] = ['/usr/lib', ]

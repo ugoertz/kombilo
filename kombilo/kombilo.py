@@ -343,7 +343,7 @@ class ESR_TextEditor(v.TextEditor):
 
     def includeGameList(self):
         separator = ' %%%\n' if self.style == 'wiki' else '\n'  # wiki/plain style
-        self.text.insert(END, '\n\n!' + _('Game list') + '\n\n' + separator.join(self.mster.gamelist.get_all()))
+        self.text.insert(END, '\n\n!' + _('Game list') + '\n\n' + separator.join(self.mster.gamelist.get_all()).decode('utf8'))
 
 
 # -------------------------------------------------------------------------------------
@@ -662,7 +662,7 @@ class PrevSearchesStack(object):
         cursorSn = [self.cursor, self.cursor.currentGame, v.pathToNode(self.cursor.currentN)]
         '''
 
-        if self.mster.options.maxLengthSearchesStack.get() and self.data.size() >= self.mster.options.maxLengthSearchesStack.get():
+        if self.mster.options.maxLengthSearchesStack.get() and self.data.size() > self.mster.options.maxLengthSearchesStack.get():
             for node in self.data.traverse():
                 if 'on_hold' in node.d and not node.d['on_hold']:
                     self.delete(node)
@@ -671,7 +671,7 @@ class PrevSearchesStack(object):
         b = SearchHistoryBoard(
                 self.prevSF.interior(), self.mster.board.boardsize, (12, 6), 0,
                 self.mster.labelFont, 1, None, self.mster.boardImg,
-                self.mster.blackStones, self.mster.whiteStones,
+                [], [],
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
                 offset=min(10 * self.current.level(), 100))  # small board
@@ -1060,7 +1060,7 @@ class App(v.Viewer, KEngine):
                         left - 15, i * H//12 + yoffset,
                         text=cont.label, font=font, tags='stat')
                 self.statisticsCanv.create_text(
-                        left - 25 - 5 * len(repr(cont.total())), i * H//12 + yoffset + 1,
+                        left - 40 - 5 * len(repr(cont.total())), i * H//12 + yoffset + 1,
                         text=repr(cont.total()), font=smallfont, tags='stat')
                 self.statisticsCanv.create_rectangle(
                         left, i * H//12 + yoffset - 3,
@@ -1164,7 +1164,7 @@ class App(v.Viewer, KEngine):
         W = int(self.statisticsCanv.cget('width')) * 6 // 7
         H = int(self.statisticsCanv.cget('height'))
         bar_width = W // 12
-        text_height = H // 18
+        text_height = max(H // 18, 25)
 
         canvas.create_text(5, 5, text=title, font=font, anchor='nw', tags=tag)
 
@@ -1175,20 +1175,22 @@ class App(v.Viewer, KEngine):
                 ht -= text_height
 
             ht = 0
-            for c in colors:
-                if column[c]:
-                    v = int(column[c] * (H - 8*text_height))
-                    canvas.create_rectangle(
-                            (i + 1) * bar_width - bar_width // 2 + 4,
-                            H - 4*text_height - ht - v,
-                            (i + 2) * bar_width - bar_width // 2 - 4,
-                            H - 4*text_height - ht, fill=c, outline='', tags=tag)
-                    ht += v
-            for j, l in enumerate(column.get('label_top', [])):
-                canvas.create_text(
-                        (i + 1) * bar_width,
-                        H - 5*text_height - ht - 10 * (len(column['label_top']) - j),
-                        font=smallfont, text=l, tags=tag)
+            if H >= 8 * text_height:
+                for c in colors:
+                    if column[c]:
+                        v = int(column[c] * (H - 8*text_height))
+                        canvas.create_rectangle(
+                                (i + 1) * bar_width - bar_width // 2 + 4,
+                                H - 4*text_height - ht - v,
+                                (i + 2) * bar_width - bar_width // 2 - 4,
+                                H - 4*text_height - ht, fill=c, outline='', tags=tag)
+                        ht += v
+            if H >= 5 * text_height:
+                for j, l in enumerate(column.get('label_top', [])):
+                    canvas.create_text(
+                            (i + 1) * bar_width,
+                            H - 5*text_height - ht - 10 * (len(column['label_top']) - j),
+                            font=smallfont, text=l, tags=tag)
 
     def clearGI(self):
         self.pbVar.set('')
@@ -1351,6 +1353,11 @@ class App(v.Viewer, KEngine):
 
         window = Toplevel(takefocus=0)
         window.title(_('Signature Search'))
+        window.grid_rowconfigure(0, weight=1)
+        window.grid_rowconfigure(1, weight=0)
+        window.grid_rowconfigure(2, weight=0)
+        window.grid_rowconfigure(3, weight=0)
+        window.grid_columnconfigure(6, weight=1)
 
         m20 = StringVar()
         m40 = StringVar()
@@ -1388,12 +1395,12 @@ class App(v.Viewer, KEngine):
 
         window.protocol('WM_DELETE_WINDOW', window.destroy)
 
-        bo = v.Board(window, 19, (5, 18), 0, self.labelFont, 0, None, self.boardImg, self.blackStones, self.whiteStones)
+        bo = v.Board(window, 19, (5, 18), 0, self.labelFont, 0, None, self.boardImg, [], [])
         bo.state('normal', lambda pos, self=self, window=window,
                  e1=e1, e2=e2, e3=e3, e4=e4, e5=e5, e6=e6, m20=m20, m40=m40, m60=m60, m31=m31,
                  m51=m51, m71=m71: self.sigSearchGetCoord(pos, window, e1, e2, e3, e4, e5, e6, m20, m40, m60, m31, m51, m71))
         bo.shadedStoneVar.set(1)
-        bo.grid(row=0, column=0, columnspan=6)
+        bo.grid(row=0, column=0, columnspan=7, sticky=NSEW)
         bq.grid(row=3, column=4, columnspan=2)
         bs.grid(row=3, column=2, columnspan=2)
 
@@ -1552,7 +1559,7 @@ class App(v.Viewer, KEngine):
         self.history_GIsearch = []
         self.history_GIS_index = -1
 
-        self.moveLimit.set(250)
+        self.moveLimit.set(1000)
         if not self.options.smartFixedColor.get():
             self.fixedColorVar.set(0)
         self.fixedAnchorVar.set(0)
@@ -1696,6 +1703,7 @@ class App(v.Viewer, KEngine):
 
         numberOfMoves = IntVar()
         exportMode = StringVar()
+        exportMode.set('wiki')
 
         dialog = Toplevel()
         dialog.title(_('Export position'))
@@ -1817,6 +1825,7 @@ class App(v.Viewer, KEngine):
         where it can be edited and saved to a file. """
 
         exportMode = StringVar()
+        exportMode.set('wiki')
 
         dialog = Toplevel()
         dialog.title(_('Export position'))
@@ -2019,7 +2028,9 @@ class App(v.Viewer, KEngine):
                 progBar=self.progBar,
                 showwarning=showwarning,
                 index=index,
-                all_in_one_db=not self.options.oneDBperFolder.get())
+                all_in_one_db=not self.options.oneDBperFolder.get(),
+                sgfInDB=False,
+                logDuplicates=self.options.logDuplicates.get())
 
     def add_gl_at(self, index, gl, dbpath):
         super(App, self).add_gl_at(index, gl, dbpath)
@@ -2127,7 +2138,7 @@ class App(v.Viewer, KEngine):
                 db_size = db['data'].size()
                 db['data'] = None
                 self.db_list.delete(i)
-                self.db_list.insert(i, _('DISABLED - ') + db['sgfpath'] + ' (%s, %d %s)' % (db_date, db_size, _('games')))
+                self.db_list.insert(i, _('DISABLED') + ' - ' + db['sgfpath'] + ' (%s, %d %s)' % (db_date, db_size, _('games')))
                 self.db_list.list.select_set(i)
                 self.db_list.list.see(i)
 
@@ -2285,10 +2296,17 @@ class App(v.Viewer, KEngine):
         # encoding1Menu.grid(row=1, column=5, sticky=W)
 
         duplButton = Checkbutton(f3, text=_('Accept duplicates'), highlightthickness=0, variable=self.options.acceptDupl, pady=5)
-        duplButton.grid(row=3, column=0, sticky=W, columnspan=2)
+        duplButton.grid(row=3, column=0, sticky=W)
 
         strictDuplCheckButton = Checkbutton(f3, text=_('Strict duplicate check'), highlightthickness=0, variable=self.options.strictDuplCheck, pady=5)
-        strictDuplCheckButton.grid(row=3, column=2, sticky=W, columnspan=2)
+        strictDuplCheckButton.grid(row=3, column=1, sticky=W)
+
+        logDuplCheckButton = Checkbutton(
+                f3, text=_('Detailed log'),
+                highlightthickness=0,
+                variable=self.options.logDuplicates,
+                pady=5)
+        logDuplCheckButton.grid(row=3, column=2, sticky=W)
 
         processVariations = Checkbutton(f3, text=_('Process variations'), highlightthickness=0, variable=self.options.processVariations, pady=5)
         processVariations.grid(row=5, column=0, sticky=W, columnspan=2)
@@ -2550,7 +2568,7 @@ class App(v.Viewer, KEngine):
                              (self.colorButtonS, _("(Don't) allow color swap in search pattern")),
                              (self.anchorButtonS, _("(Don't) translate search pattern")), (self.nextMove1S, _('Black or white plays next (or no continuation)')),
                              (self.nextMove2S, _('Black plays next')), (self.nextMove3S, _('White plays next')),
-                             (self.scaleS, _('Pattern has to occur before move n (250=no limit)')), (self.searchButtonS, _('Start pattern search')),
+                             (self.scaleS, _('Pattern has to occur at or before this move')), (self.searchButtonS, _('Start pattern search')),
                              (self.GIstart, _('Start game info search')), (self.GIclear, _('Clear all entries')),
                              (self.GI_bwd, _('Restore entries of previous game info search')), (self.GI_fwd, _('Restore entries of next game info search')),
                              (self.tagsearchButton, _('Search for tagged games.\nE.g.: H and not S')), (self.tagsetButton, _('Set tags of selected game.')),
@@ -2622,7 +2640,12 @@ class App(v.Viewer, KEngine):
           else Pattern(d, ptype=patternType, boardsize=self.board.boardsize, sizeX=sizeX, sizeY=sizeY, contLabels=fixedLabs, contlist=contlist, topleft=self.sel[0])
 
     def get_search_options(self):
-        so = lk.SearchOptions(self.fixedColorVar.get(), self.nextMoveVar.get(), self.moveLimit.get() if self.moveLimit.get() < 250 else 1000)
+        try:
+            ml = int(self.moveLimit.get())
+        except:
+            self.moveLimit.set(1000)
+            ml = 1000
+        so = lk.SearchOptions(self.fixedColorVar.get(), self.nextMoveVar.get(), ml)
         so.searchInVariations = self.searchInVariations.get()
         so.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST
         if self.algo_hash_full_search.get():
@@ -2663,11 +2686,16 @@ class App(v.Viewer, KEngine):
         self.logger.insert(END, _('Pattern search') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
 
         # append the result of this search to self.prevSearches
+        try:
+            ml = int(self.moveLimit.get())
+        except:
+            self.moveLimit.set(1000)
+            ml = 1000
         self.prevSearches.append(boardData=boardData,
                                  snapshot_ids=[(i, db['data'].snapshot()) for i, db in enumerate(self.gamelist.DBlist) if not db['disabled']],
                                  modeVar=self.modeVar.get(),  # in gl.snapshot?
                                  cursorSn=[self.cursor, self.cursor.currentGame, self.cursor.currentNode().pathToNode()],
-                                 variables=[self.modeVar.get(), self.fixedColorVar.get(), self.fixedAnchorVar.get(), self.moveLimit.get(), self.nextMoveVar.get(), ],
+                                 variables=[self.modeVar.get(), self.fixedColorVar.get(), self.fixedAnchorVar.get(), ml, self.nextMoveVar.get(), ],
                                 )
         self.redo_date_profile = True
         self.notebookTabChanged()
@@ -2783,7 +2811,9 @@ class App(v.Viewer, KEngine):
             current_game = 0
         else:
             if self.cursor.noChildren():
+                self.progBar.stop()
                 showwarning(_('Error'), _('The node where the SGF tree starts must have no children.'))
+                self.configButtons(NORMAL)
                 return
             cursor = self.cursor
             current_game = self.cursor.currentGame
@@ -3284,12 +3314,14 @@ class App(v.Viewer, KEngine):
         self.searchInVariationsButton = Checkbutton(self.patternSearchOptions, text=_('Search in variations'), highlightthickness=0, variable=self.searchInVariations)
         self.searchInVariationsButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
-        self.mvLimLabel = Label(self.patternSearchOptions, text=_('Move limit'))
-        self.mvLimLabel.grid(row=2, column=0, sticky=W)
+        self.scaleSF = Frame(self.patternSearchOptions)
+        self.mvLimLabel = Label(self.scaleSF, text=_('Move limit'))
+        self.mvLimLabel.pack(side=LEFT)
         self.moveLimit = IntVar()
-        self.moveLimit.set(250)
-        self.scaleS = Scale(self.patternSearchOptions, highlightthickness=0, length=160, variable=self.moveLimit, from_=1, to=250, tickinterval=149, showvalue=YES, orient='horizontal')
-        self.scaleS.grid(row=2, column=1)
+        self.moveLimit.set(1000)
+        self.scaleS = Entry(self.scaleSF, width=6, textvariable=self.moveLimit)
+        self.scaleS.pack(side=LEFT, padx=10)
+        self.scaleSF.grid(row=2, column=0, sticky=W)
 
         sep1 = Separator(self.patternSearchOptions, orient='horizontal')
         sep1.grid(row=3, column=0, columnspan=2, sticky=NSEW)
@@ -3321,10 +3353,13 @@ class App(v.Viewer, KEngine):
         self.dp_to = Entry(self.patternSearchOptions_dp, width=6, textvariable=self.options.date_profile_to)
         self.dp_to_lb.grid(row=8, column=2, padx=3)
         self.dp_to.grid(row=8, column=3, padx=3)
-        self.dp_chunk_size_lb = Label(self.patternSearchOptions_dp, text=_('Months/bar'))
-        self.dp_chunk_size = Entry(self.patternSearchOptions_dp, width=4, textvariable=self.options.date_profile_chunk_size)
-        self.dp_chunk_size_lb.grid(row=8, column=4, padx=3)
-        self.dp_chunk_size.grid(row=8, column=5, padx=3)
+
+        self.dp_chunk_f = Frame(self.patternSearchOptions_dp)
+        self.dp_chunk_size_lb = Label(self.dp_chunk_f, text=_('Months/bar'))
+        self.dp_chunk_size = Entry(self.dp_chunk_f, width=4, textvariable=self.options.date_profile_chunk_size)
+        self.dp_chunk_size_lb.pack(side=LEFT)
+        self.dp_chunk_size.pack(side=LEFT)
+        self.dp_chunk_f.grid(row=8, column=4, padx=60, sticky='E')
         self.patternSearchOptions_dp1 = Frame(self.patternSearchOptions)
         self.patternSearchOptions_dp1.grid(row=8, columnspan=8, sticky=NSEW)
         self.dp_sort_crit_lb = Label(self.patternSearchOptions_dp1, text=_('Sort continuations by'))
@@ -3488,8 +3523,11 @@ class App(v.Viewer, KEngine):
             self.fixedColorVar.set(1)
         self.gamelist.showFilename = self.options.showFilename.get()
         self.gamelist.showDate = self.options.showDate.get()
-        self.parseReferencesFile(datafile=pkg_resources.resource_stream(__name__, 'data/references'),
-                                 options=self.config['references'] if 'references' in self.config else None)
+        if not self.parseReferencesFile(
+                datafile=pkg_resources.resource_stream(__name__, 'data/references'),
+                options=self.config['references']
+                if 'references' in self.config else None):
+            self.logger.insert(END, _('Error parsing references file.\n'))
         self.loadDBs(self.progBar, showwarning)
 
         self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_RELEASE + _('Ready ...') + '\n')

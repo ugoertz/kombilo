@@ -30,12 +30,11 @@ the left hand column.
 The first thing you have to do now is to add SGF files to the database
 list; choose the *Edit DB list* command in the Database menu.
 
-A *database* corresponds to a directory of SGF
-files; it contains all the SGF files in that directory. Kombilo does not
-come with any games. You can either download a game collection
-(:ref:`find-game-records`) from the internet, or buy a commercial
-one. The `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ comes with more
-than 70.000 at the time of writing, and is highly recommended.
+A *database* is a collection of SGF files; the default is to create one database
+per folder of SGF files. Kombilo does not come with any games. You can either
+download a game collection (:ref:`find-game-records`) from the internet, or buy
+a commercial one. The `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ comes
+with more than 70.000 at the time of writing, and is highly recommended.
 
 See also the section about :ref:`requirements-on-SGF-files`
 in order to understand which kind of SGF files the program can handle. 
@@ -47,7 +46,11 @@ Check (and change, if necessary) the options - mainly whether all
 subdirectories should also be added, and then use the ``Add DB`` button to
 select a directory of SGF files. You can add several directories one after
 the other. From a performance point of view, it is best not to have too
-many databases, but rather to group your SGF files into few databases.
+many databases, but rather to group your SGF files into few databases. Having
+a database of 50000 games should not be a problem. For much larger databases,
+you need sufficient memory on your machine. Processing a database of 100000
+might require up to 1.5 gigabytes of RAM for Kombilo. If you uncheck the hash
+algorithms, the memory usage (and search performance ...) go down considerably.
 
 When you add a directory for the first time, the SGF files will be
 'translated' into a format that makes the search more efficient.  This
@@ -56,7 +59,6 @@ take a couple of minutes even on a very fast machine.  But this has only to
 be done once. The data will be written to several .db files in the same
 directory. (Note: this processing is much faster now than it was in Kombilo
 0.5 and earlier versions.)
-
 
 The sgf files remain in the directory, and Kombilo will not change them
 (unless you change the game info or edit the games yourself, of course).
@@ -76,7 +78,11 @@ using the ``OK`` button.
   character encodings and hence cannot be fed into Kombilo right away. This
   issue will hopefully be resolved soon. See :ref:`encodings`.
 
+.. warning:: Collections in very many folders
 
+  If you have a collection in vy many (like hundreds or more) of folders with
+  relatively few games each, you should switch off the *Create one DB per
+  folder* option.
 
 Searching for patterns
 ======================
