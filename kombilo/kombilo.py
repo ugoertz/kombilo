@@ -1060,7 +1060,7 @@ class App(v.Viewer, KEngine):
                         left - 15, i * H//12 + yoffset,
                         text=cont.label, font=font, tags='stat')
                 self.statisticsCanv.create_text(
-                        left - 25 - 5 * len(repr(cont.total())), i * H//12 + yoffset + 1,
+                        left - 40 - 5 * len(repr(cont.total())), i * H//12 + yoffset + 1,
                         text=repr(cont.total()), font=smallfont, tags='stat')
                 self.statisticsCanv.create_rectangle(
                         left, i * H//12 + yoffset - 3,
@@ -1164,7 +1164,7 @@ class App(v.Viewer, KEngine):
         W = int(self.statisticsCanv.cget('width')) * 6 // 7
         H = int(self.statisticsCanv.cget('height'))
         bar_width = W // 12
-        text_height = H // 18
+        text_height = max(H // 18, 25)
 
         canvas.create_text(5, 5, text=title, font=font, anchor='nw', tags=tag)
 
@@ -1175,20 +1175,22 @@ class App(v.Viewer, KEngine):
                 ht -= text_height
 
             ht = 0
-            for c in colors:
-                if column[c]:
-                    v = int(column[c] * (H - 8*text_height))
-                    canvas.create_rectangle(
-                            (i + 1) * bar_width - bar_width // 2 + 4,
-                            H - 4*text_height - ht - v,
-                            (i + 2) * bar_width - bar_width // 2 - 4,
-                            H - 4*text_height - ht, fill=c, outline='', tags=tag)
-                    ht += v
-            for j, l in enumerate(column.get('label_top', [])):
-                canvas.create_text(
-                        (i + 1) * bar_width,
-                        H - 5*text_height - ht - 10 * (len(column['label_top']) - j),
-                        font=smallfont, text=l, tags=tag)
+            if H >= 8 * text_height:
+                for c in colors:
+                    if column[c]:
+                        v = int(column[c] * (H - 8*text_height))
+                        canvas.create_rectangle(
+                                (i + 1) * bar_width - bar_width // 2 + 4,
+                                H - 4*text_height - ht - v,
+                                (i + 2) * bar_width - bar_width // 2 - 4,
+                                H - 4*text_height - ht, fill=c, outline='', tags=tag)
+                        ht += v
+            if H >= 5 * text_height:
+                for j, l in enumerate(column.get('label_top', [])):
+                    canvas.create_text(
+                            (i + 1) * bar_width,
+                            H - 5*text_height - ht - 10 * (len(column['label_top']) - j),
+                            font=smallfont, text=l, tags=tag)
 
     def clearGI(self):
         self.pbVar.set('')
