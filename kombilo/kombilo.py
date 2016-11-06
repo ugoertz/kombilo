@@ -1351,6 +1351,11 @@ class App(v.Viewer, KEngine):
 
         window = Toplevel(takefocus=0)
         window.title(_('Signature Search'))
+        window.grid_rowconfigure(0, weight=1)
+        window.grid_rowconfigure(1, weight=0)
+        window.grid_rowconfigure(2, weight=0)
+        window.grid_rowconfigure(3, weight=0)
+        window.grid_columnconfigure(6, weight=1)
 
         m20 = StringVar()
         m40 = StringVar()
@@ -1388,12 +1393,12 @@ class App(v.Viewer, KEngine):
 
         window.protocol('WM_DELETE_WINDOW', window.destroy)
 
-        bo = v.Board(window, 19, (5, 18), 0, self.labelFont, 0, None, self.boardImg, self.blackStones, self.whiteStones)
+        bo = v.Board(window, 19, (5, 18), 0, self.labelFont, 0, None, self.boardImg, [], [])
         bo.state('normal', lambda pos, self=self, window=window,
                  e1=e1, e2=e2, e3=e3, e4=e4, e5=e5, e6=e6, m20=m20, m40=m40, m60=m60, m31=m31,
                  m51=m51, m71=m71: self.sigSearchGetCoord(pos, window, e1, e2, e3, e4, e5, e6, m20, m40, m60, m31, m51, m71))
         bo.shadedStoneVar.set(1)
-        bo.grid(row=0, column=0, columnspan=6)
+        bo.grid(row=0, column=0, columnspan=7, sticky=NSEW)
         bq.grid(row=3, column=4, columnspan=2)
         bs.grid(row=3, column=2, columnspan=2)
 
