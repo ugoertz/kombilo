@@ -588,25 +588,54 @@ class GameList(object):
         except:
             return
 
-        t = node['PW'][0] if 'PW' in node else ' ?'
-        t += (' ' + node['WR'][0]) if 'WR' in node else ''
+        # use try/except for accessing properties because even if key in node
+        # succeeds, retrieving it might lead to encoding errors
+        try:
+            t = node['PW'][0]
+        except:
+            t = '?'
+        try:
+            t += ' ' + node['WR'][0]
+        except:
+            pass
         t += ' - '
 
-        t += node['PB'][0] if 'PB' in node else ' ?'
-        t += (' ' + node['BR'][0]) if 'BR' in node else ''
+        try:
+            t += node['PB'][0]
+        except:
+            t += '?'
+        try:
+            t += ' ' + node['BR'][0]
+        except:
+            pass
 
-        if 'RE' in node:
-            t = t + ', ' + translateRE(node['RE'][0])
-        if 'KM' in node:
-            t = t + ' (' + _('Komi') + ' ' + node['KM'][0] + ')'
-        if 'HA' in node:
-            t = t + ' (' + _('Hcp') + ' ' + node['HA'][0] + ')'
+        try:
+            t += ', ' + translateRE(node['RE'][0])
+        except:
+            pass
+        try:
+            t += ' (' + _('Komi') + ' ' + node['KM'][0] + ')'
+        except:
+            pass
+        try:
+            t += ' (' + _('Hcp') + ' ' + node['HA'][0] + ')'
+        except:
+            pass
 
         t += '\n'
-        t += ', '.join([node[prop][0] for prop in ['EV', 'RO', 'DT'] if prop in node]) + '\n'
 
-        if 'GC' in node:
+        for prop in ['EV', 'RO', 'DT']:
+            try:
+                t += node[prop][0] + ', '
+            except:
+                pass
+        if t.endswith(', '):
+            t = t[:-2] + '\n'
+
+        try:
             t += node['GC'][0].replace('\n\r', ' ').replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ')
+        except:
+            pass
 
         signature = self.DBlist[DBindex]['data'].getSignature(index)
         t2 = (_('Commentary in ') + ', '.join(self.references[signature])) if signature in self.references else ''

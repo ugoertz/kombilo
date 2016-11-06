@@ -1494,10 +1494,12 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
     bool year_found = false;
     int p = 0;
     while (!year_found && p < (int)dt.size()) {
+      // go through dt until we find first occurrence of a 4 digit string
+      // starting with 0, 1, or 2
       p = dt.find_first_of("0123456789", p);
       if (p == (int)string::npos || p+4 > (int)dt.size() ) break;
       else {
-        year_found = (('0' <= dt[p] && dt[p] <= '9') && ('0' <= dt[p+1] && dt[p+1] <= '9') && ('0' <= dt[p+2] && dt[p+2] <= '9') && ('0' <= dt[p+3] && dt[p+3] <= '9'));
+        year_found = (('0' <= dt[p] && dt[p] <= '2') && ('0' <= dt[p+1] && dt[p+1] <= '9') && ('0' <= dt[p+2] && dt[p+2] <= '9') && ('0' <= dt[p+3] && dt[p+3] <= '9'));
         if (year_found && (int)dt.find_first_of("0123456789", p+4) != p+4) { // success: found 4 digits in a row
           date += dt.substr(p,4);
           date += '-';
@@ -1513,37 +1515,60 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
     else {
       bool month_found = false;
       p = 0;
-      while (!month_found && p < (int)dt.size()) {
+      if (p < (int)dt.size()) {
         p = dt.find_first_of("0123456789", p);
-        if (p == (int)string::npos || p+2 > (int)dt.size() ) break;
-        else {
-          month_found = ('0' <= dt[p] && dt[p] <= '9' && '0' <= dt[p+1] && dt[p+1] <= '9');
-          if (month_found && (int)dt.find_first_of("0123456789", p+2) != p+2) {
-            date += dt.substr(p,2);
+        if (p != (int)string::npos && (int)dt.size() >= p+1) {
+          if (((int)dt.size() == p+1 || (int)dt.find_first_of("0123456789", p+1) != p+1) 
+              && '0' < dt[p]) {
+            // found single-digit month (not allowed according to ISO date
+            // format, strictly speaking, but used in practice)
+            month_found = true;
+            date += '0';
+            date += dt.substr(p,1);
             date += '-';
-            dt.erase(p,2);
-          } else {
-            while ('0' <= dt[p] && dt[p] <= '9') p++;
-            month_found = false;
-            continue;
+            dt.erase(p,1);
+          } else if ((int)dt.size() > p+1) {
+            // check for two-digit month
+            month_found = ('0' <= dt[p] && dt[p] <= '9' && '0' <= dt[p+1] && dt[p+1] <= '9');
+            if (month_found) {
+              // check validity: only two digits, and value between 1 and 12
+              int mth = 10 * (dt[p]-'0') + dt[p+1]-'0';
+              month_found = (1 <= mth && mth <= 12) && (int)dt.find_first_of("0123456789", p+2) != p+2;
+            }
+            if (month_found) {
+              date += dt.substr(p,2);
+              date += '-';
+              dt.erase(p,2);
+            } else {
+              month_found = false;
+            }
           }
         }
       }
-      if (!month_found) date += "00-00";
-      else {
+      if (!month_found) {
+        date += "00-00";
+      } else {
         bool day_found = false;
         p = 0;
-        while (!day_found && p < (int)dt.size()) {
+        if (p < (int)dt.size()) {
           p = dt.find_first_of("0123456789", p);
-          if (p == (int)string::npos || p+2 > (int)dt.size() ) break;
-          else {
-            day_found = ('0' <= dt[p] && dt[p] <= '9' && '0' <= dt[p+1] && dt[p+1] <= '9');
-            if (day_found && (int)dt.find_first_of("0123456789", p+2) != p+2) {
-              date += dt.substr(p,2);
-            } else {
-              while ('0' <= dt[p] && dt[p] <= '9') p++;
-              day_found = false;
-              continue;
+          if (p != (int)string::npos && (int)dt.size() >= p+1) {
+            if (((int)dt.size() == p+1 || (int)dt.find_first_of("0123456789", p+1) != p+1) 
+                && '0' < dt[p]) {
+              // found single-digit day
+              day_found = true;
+              date += '0';
+              date += dt.substr(p,1);
+            } else if ((int)dt.size() > p+1) {
+              // check for two-digit day
+              day_found = ('0' <= dt[p] && dt[p] <= '9' && '0' <= dt[p+1] && dt[p+1] <= '9');
+
+              if (day_found) {
+                // check validity: only two digits, and value between 1 and 12
+                int day = 10 * (dt[p]-'0') + dt[p+1]-'0';
+                day_found = (1 <= day && day <= 31) && (int)dt.find_first_of("0123456789", p+2) != p+2;
+              }
+              if (day_found) date += dt.substr(p,2); else day_found = false;
             }
           }
         }
