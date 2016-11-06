@@ -26,6 +26,16 @@ History/Change log
 0.8
 ---
 
+0.8.2 (November 2016)
+^^^^^^^^^^^^^^^^^^^^
+
+* Reduce memory usage at several points: pattern searches, search history, processing
+* Improve user interface (thanks to D. Sigaty for several suggestions)
+* Improve handling of collections distributed among many folders
+* Add references to commentaries (Go World now complete; several books added)
+* Several minor bug fixes
+
+
 0.8.1 (October 2016)
 ^^^^^^^^^^^^^^^^^^^^
 

@@ -50,10 +50,10 @@ Now continue with the :ref:`getting-started` section of the tutorial.
 database files created by Kombilo, you should remove the databases from within
 Kombilo before uninstalling.)
 
-*Upgrading:* Upgrading from 0.8 to 0.8.1 can be done via pip (``pip install -U
-kombilo``). If you still have an old Kombilo instance (version 0.7.\*) around,
-it does not interact with Kombilo 0.8.?. You have to newly process the SGF
-databases for 0.8.
+*Upgrading:* Upgrading from one 0.8.\* version to another can be done via pip
+(``pip install -U kombilo``). If you still have an old Kombilo instance (version
+0.7.\*) around, it does not interact with Kombilo 0.8.\*. You have to newly
+process the SGF databases when upgrading from 0.7.\* to 0.8.\*.
 
 .. index::
   pair: Installation; Mac OS X
@@ -106,16 +106,28 @@ Windows
 -------
 
 There is an installer provided for Kombilo which should *just work* and which is
-recommended.
+the easiest option. Alternatively (and that would be the cleaner way, even if
+a little more cumbersome) you can also install Python 2.7 from `python.org
+<http://www.python.org/>`_ and then install Kombilo as a Python package via
+`c:\python27\scripts\pip.exe install kombilo`.
 
 *Uninstall*: The installer automatically installs a program to uninstall
 Kombilo.  To also remove the database files created by Kombilo, you should
 remove the databases from within Kombilo before uninstalling.
 
-*Upgrading from version 0.7*: There is no automatic upgrading. Just install
-Kombilo 0.8.1, and deinstall Kombilo 0.7.\*. The two versions can also coexist,
-so you could leave the old version until you are convinced that the new version
-works. You will have to newly process your databases for 0.8.1.
+*Upgrading from version 0.7*: There is no automatic upgrading. Just deinstall
+the old Kombilo version and install the new one.  Versions 0.7.\* and 0.8.\* can
+also coexist, so you could leave the old version until you are convinced that
+the new version works. You will have to newly process your databases for 0.8.\*
+when coming from 0.7.\*. Befor deinstalling 0.7.\* you should remove the
+databases (in the *Edit DB list* window) because the database files will not be
+removed by the uninstaller.
+
+*Upgrading from one 0.8.\* version to another one*: There is no automatic
+upgrading. It is probably safest (but should not be required) to deinstall the
+old version, and then install the new one. Your configuration file and the
+databases you hav inserted will be kept. There is no need to reprocess the
+databases.
 
 If you want to make changes to the program, you will need to build the program
 yourself. For this, you will need Python 2.7 and a C++ compiler (Microsoft
@@ -269,7 +281,14 @@ database for pattern search. You can also select whether all games (or
 none) of the database should be considered as pro games, or whether this
 should be decided by the rank specified in the files.
 
-If you prefer, you can specifiy a folder where the Kombilo files should be
+The default behavior of Kombilo is to create one database per folder (so
+descending recursively into some folder many databases might be created).
+Whether this is suitable or not depends on the number of folders, and the number
+of files in each folder. Unless you have special needs (and a computer with very
+little or very much RAM), it is recommended to aim at databases of between 10000
+and 50000 games.
+
+If you prefer, you can specify a folder where the Kombilo files should be
 stored. If you do not name a folder here, the files will be stored in the
 folder containing your SGF files.
 
@@ -281,7 +300,7 @@ selected the corresponding option before processing the games.)
 The hashing algorithms speed up searches for full board and corner
 positions respectively, on the other hand the procesing takes slightly
 longer, more disk space is consumed, and Kombilo uses more memory when
-running.
+running, and especially when processing new games.
 
 
 .. index::
@@ -306,6 +325,9 @@ In the lower text area, Kombilo will output messages about the processed games.
 * **not inserted**: For games which are not inserted into the database, this
   message is appended to the error message. Otherwise, the game is inserted.
 
+You can switch off the messages about duplicates and names of the processed
+folders by disabling the *Detailed log* option.
+
 
 File sizes
 ..........
@@ -322,8 +344,8 @@ on the amount of memory in your computer.  I recommend a size of at least
 1,000 - 2,000 SGF files per database; that should be fine on almost every
 system.  If you have a lot of memory, you can experiment with larger
 databases to increase performance. For databases with ten thousands of
-games, the "finalizing" will take quite some time (a few minutes for the
-70,000 GoGoD games on my laptop), so please be patient.
+games, the "finalizing" will take quite some time (a minute or two for the
+85,000 GoGoD games on my laptop), so please be patient.
 
 Kombilo will create several database files: ``kombilo.db``, ``kombilo.da``,
 and if you use the hashing algorithms, also ``kombilo.db1`` and
@@ -440,8 +462,7 @@ Search in variations
   considered.
 
 move limit
-  Find only occurrences before the given move number. The maximum value 250
-  means: find all occurrences.
+  Find only occurrences before the given move number.
 
 algorithms
   Choose whether Kombilo should use hashing algorithms for full board
@@ -1529,16 +1550,12 @@ though, that the header will be lost when you change the game info
 of that game: whenever Kombilo writes an SGF file, it will only write
 the game (resp. the game collection) itself.
 
-Kombilo creates a separate database for each folder of SGF files (not including
-the files in subfolders - each subfolder will get its own database). This causes
-problems if you have your files in very many folders (hundreds, or more),
-because at certain points Kombilo will try to open all database files at the
-same time (e.g., when checking for duplicates). It is better, also for the
-search performance, to put your games into relatively few folders. It should be
-no problem to have tens of thousands of games in one folder digested by Kombilo.
-(As a workaround upon encountering this problem, you could also increase the
-allowed number of open files; on linux systems, the ``ulimit`` command allows to
-do this.)
+Kombilo by default creates a separate database for each folder of SGF files (not
+including the files in subfolders - each subfolder will get its own database).
+This causes problems if you have your files in very many folders (hundreds, or
+more), because at certain points Kombilo will try to open all database files at
+the same time (e.g., when checking for duplicates). In that case, please uncheck
+the *Create one DB per folder* option.
 
 .. index::
   Game records; Where to find
