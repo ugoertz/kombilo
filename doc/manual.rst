@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 ==============
 Kombilo manual
 ==============
@@ -22,13 +24,10 @@ Linux. If you use another flavor of Linux and are somewhat familiar with it, you
 will easily adapt them.
 
 With the following commands you can install Kombilo on a Ubuntu system.
-Lines starting with a ``#`` are comments - no need to type them. These
-instructions will create a subdirectory ``kombilo`` inside the current
-directory.
+Lines starting with a ``#`` are comments - no need to type them.
 
-There are three main steps to the installation: installing Python and the
-Python packages, downloading the Kombilo files and extracting them, and
-compiling the extension for the fast pattern search. See below for more
+There are two main steps to the installation: installing Python and the Python
+packages, and then installing Kombilo as a Python package.  See below for more
 details on the different steps.
 
 ::
@@ -36,13 +35,20 @@ details on the different steps.
   # Install the packages that Kombilo depends on:
   sudo apt install python-pip python-tk libsqlite3-dev libboost-dev
 
-  # install kombilo (you could also do that inside a virtualenv environment; if
+  # Install kombilo (you could also do that inside a virtualenv environment; if
   # you do not know what that is, you can ignore this)
   pip install kombilo
+
+This will install kombilo (the executable will sit in ``~/.local/bin`` which
+should be in your ``PATH`` environment variable, so that you can just
+
+::
 
   # start the program
   kombilo
 
+If it is not found, try invoking Kombilo by ``.local/bin/kombilo`` (in your home
+directory).
 
 Now continue with the :ref:`getting-started` section of the tutorial.
 
@@ -66,40 +72,113 @@ In principle, installing packages using pip also works on Mac OS X.  Currently
 Kombilo is distributed only in the format of a source distribution, so you would
 need to make sure that in addition to Python (with Tkinter) and pip you have
 a C++ compiler and the SQlite and Boost libraries required for compiling
-Kombilo.  Then, ``pip install kombilo`` should work on.  Success (or failure)
-reports are welcome. (Also see the comments on installing the previous version
-0.7 on a Mac, :ref:`install-macosx`.)
+Kombilo.  Then, you can ``pip install kombilo``.
+
+Step-by-step instructions: Install on a Mac using MacPorts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+From a `post by user pleiade76
+<http://lifein19x19.com/forum/viewtopic.php?f=9&t=13741#p212778>`__ to the
+LifeIn19x19 forum:
+
+::
+
+    # The steps in some details (using MacPorts):
+
+    # Install the following packages:
+
+    sudo port install boost             # —> Collection of portable C++ source libraries
+    sudo port install python27          # —> An interpreted, object-oriented programming language
+    sudo port install sqlite3           # —> an embedded SQL database engine
+    sudo port install py27-tkinter      # —> Python bindings to the Tk widget set
+    sudo port install py27-pip          # —> A tool for installing and managing Python packages
+    sudo port select --set pip pip27
+
+    # Build kombilo with pip:
+    pip install kombilo
+
+    # the binary kombilo is located in:
+    # /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/
+
+
+Step-by-step instructions: Install on a Mac using homebrew
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+From a `post by Marcel Grünauer
+<hhttp://lifein19x19.com/forum/viewtopic.php?f=9&t=13741#p21277://lifein19x19.com/forum/viewtopic.php?f=9&t=13741#p212778>`__ to the LifeIn19x19 forum.
+
+Update homebrew and the packages already installed:
+
+::
+
+    $ brew update
+    $ brew outdated -q | brew upgrade
+
+Install packages required for the build:
+
+::
+
+    $ brew install boost sqlite3
+    $ brew install homebrew/dupes/tcl-tk
+
+
+In case you already had homebrew's python 2.7 installed:
+
+::
+
+    $ brew uninstall python
+
+Then
+
+::
+
+    $ brew install python --with-tcl-tk
+
+
+You can test the Tk installation with:
+
+::
+
+    $ python
+    >>> import Tkinter
+    >>> Tkinter._test()
+
+
+I had Pillow already installed for macOS's own python in
+/Library/Python/2.7/site-packages/ and so had to remove that first with ``sudo
+pip uninstall Pillow``. The problem was that this was linked against macOS's Tcl
+and Tk frameworks, whereas homebrew's python was linked against homebrew's Tcl.
+This caused the message "Class TKApplication is implemented in both
+/usr/local/opt/tcl-tk/lib/libtk8.6.dylib and
+/System/Library/Frameworks/Tk.framework/Versions/8.5/Tk" and a "Segmentation
+fault: 11".
+
+Now you can
+
+::
+
+    $ pip install Pillow
+    $ pip install kombilo
+    $ kombilo
+
+However, in this setting there still are some issues: The icons are not
+displayed correctly, and no substitute for right-clicking (in order to mark the
+search-relevant region) has been found so far.
+
+
+Further remarks
+^^^^^^^^^^^^^^^
+
+As pleiade76 points out, another option is using the Windows installer inside wine.
 
 Also see these `notes on Tcl/Tk on macs <https://www.python.org/download/mac/tcltk/>`_.
 
 See also the :ref:`Only one mouse button <onlyonemousebutton>` option.
 
-Comments on old Kombilo version on Mac OS X
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*The comments below originally are copied from the manual for version 0.7. In
-principle they probably still apply, but I cannot check since I do not have
-a Mac.*
-
-Kombilo runs on Macs, and since Mac OS X is a Unix variant, most of the notes in
-the :ref:`install-linux` section apply to Mac OS X, as well. However, under some
-circumstances there appear to be some problems, depending on the versions of the
-packages that Kombilo depends on.  Simon Cozens reported that on a Mac (with Mac
-OS X 10.6) with `Homebrew <http://mxcl.github.com/homebrew/>`_ he could run
-Kombilo after ::
-
-  sudo easy_install configobj setuptools pyttk pip
-  brew install PIL boost
-  sudo pip install pil
-
-then installing `Pmw <http://pmw.sourceforge.net/>`_ from source and building
-the libkombilo extension via ``python setup.py build_ext`` as described in the
-:ref:`install-linux` section.
-
-If you have Python 2.6, you need to install the ``pyttk`` package to run
-Kombilo. In Python 2.7, which is the preferred Python version for Kombilo, this
-package is already included in Python.
-
+.. index::
+  pair: Installation; Windows
+.. _install-windows:
 
 
 Windows
@@ -109,7 +188,7 @@ There is an installer provided for Kombilo which should *just work* and which is
 the easiest option. Alternatively (and that would be the cleaner way, even if
 a little more cumbersome) you can also install Python 2.7 from `python.org
 <http://www.python.org/>`_ and then install Kombilo as a Python package via
-`c:\python27\scripts\pip.exe install kombilo`.
+``c:\python27\scripts\pip.exe install kombilo``.
 
 *Uninstall*: The installer automatically installs a program to uninstall
 Kombilo.  To also remove the database files created by Kombilo, you should
@@ -235,10 +314,6 @@ Besides a lot of warnings, this will generate HTML and LaTeX files of the
 documentation in ``lk/doc/build/``.
 
 
-.. index::
-  pair: Installation; Windows
-.. _install-windows:
-
 
 Updating the translation files
 ------------------------------
@@ -260,6 +335,8 @@ You can then translate strings using a tool like ``poedit``. Finally, you have
 to compile the ``po`` files to ``mo`` files, for instance using ``poedit`` or
 the standard command line tool ``msgfmt``.
 
+
+.. _settingupdatabases:
 
 
 Setting up the SGF databases
@@ -329,24 +406,6 @@ You can switch off the messages about duplicates and names of the processed
 folders by disabling the *Detailed log* option.
 
 
-File sizes
-..........
-
-| **No Hashing**: roughly 170 MB for about 70,000 games (GoGoD winter 2011)
-| **Hashing for full board positions**: roughly 270 MB
-| **Hashing for full board and corner positions**: roughly 365 MB
-
-After adjusting the options, if necessary, select ``Add DB`` in order to
-add some SGF files.
-
-The optimal size (i.e. number of SGF files) of the databases depends mostly
-on the amount of memory in your computer.  I recommend a size of at least
-1,000 - 2,000 SGF files per database; that should be fine on almost every
-system.  If you have a lot of memory, you can experiment with larger
-databases to increase performance. For databases with ten thousands of
-games, the "finalizing" will take quite some time (a minute or two for the
-85,000 GoGoD games on my laptop), so please be patient.
-
 Kombilo will create several database files: ``kombilo.db``, ``kombilo.da``,
 and if you use the hashing algorithms, also ``kombilo.db1`` and
 ``kombilo.db2``.
@@ -382,9 +441,9 @@ If you made any changes to the SGF files in one of the database directories
 so that the pattern search really uses the information corresponding to the
 current version of the SGF files.
 
-Since version 0.7.1, reprocessing keeps all the tags on your database. This
-is usually the desired behavior. If you prefer to have all tags deleted,
-instead of reprocessing, remove the databases and then add them again.
+Reprocessing keeps all the tags on your database. This is usually the desired
+behavior. If you prefer to have all tags deleted, instead of reprocessing,
+remove the databases and then add them again.
 
 
 Save messages
@@ -462,7 +521,7 @@ Search in variations
   considered.
 
 move limit
-  Find only occurrences before the given move number.
+  Find only occurrences before or at the given move number.
 
 algorithms
   Choose whether Kombilo should use hashing algorithms for full board
@@ -580,10 +639,8 @@ Reset game list
   of moves. With the default setting, only games where the position arises by
   the same order of moves as given by the SGF file are counted.
 
-
-**Memory usage:** Computation of an SGF tree might require hundreds of pattern
-searches, and (depending on the size of the database, and the parameters chosen)
-will need a lot of memory (possibly several gigabytes).
+The node of the SGF file where you start the search must not have any children
+before the search.
 
 .. _game-info-search:
 
@@ -697,7 +754,7 @@ some of them (in most cases, two or three of the moves will
 be enough to characterize a game uniquely).
 
 You can print the signature of a game to the log tab by selecting it in the
-game list and pressing *s*.
+game list and pressing *Ctrl-v*.
 
 
 .. _export-search-results:
@@ -711,7 +768,7 @@ will open a new window with a very simple text editor.  It will contain the
 search pattern, the search pattern with the continuations, some statistical
 information on the search, and the number of hits in each database.
 
-You can edit the information and in the end save the text to a 
+You can edit the information and in the end save the text to a
 file. I would be interested in hearing your opinion if other
 or additional information should be given, or if the information
 should be presented in another format.
@@ -854,10 +911,6 @@ some additional hash code, so the imported tags will be set precisely on
 the games *with the same moves* as the games that carried the tags when
 exporting.
 
-In version 0.7, you can/should use this to transfer your tags when updating
-your database by reprocess. Since version 0.7.1, reprocess does this for
-you automatically.
-
 
 GoTo field
 ----------
@@ -971,7 +1024,7 @@ Miscellaneous remarks
 ---------------------
 
 With the **rotate/flip SGF file** menu items (in the Edit menu), you can
-rotate and flip the game; th SGF file is changed so as to describe the game
+rotate and flip the game; the SGF file is changed so as to describe the game
 with the new orientation. This is useful if you want to change a game
 record to obey the usual convention that the first move is in the upper
 right corner.
@@ -1066,10 +1119,10 @@ Window layout
 -------------
 
 You can change the width of the three columns of the main window, as well
-as the height of the entried in the left hand column by dragging the
-"sashed" between them to the left/right (or up/down, resp.). Move your
-mouse pointer slowly over the region between the columns; it should change
-its look when you are over the sash.
+as the height of the entried in the left and right hand columns by dragging the
+"sashed" between them to the left/right (or up/down, resp.). Move your mouse
+pointer slowly over the region between the columns; it should change its look
+when you are over the sash.
 
 See also the :ref:`maximize window <maximize-window>` option.
 
@@ -1162,7 +1215,7 @@ Themes
 
 Kombilo offers you to change its look according to one of a number of themes.
 Which themes are available depends on your operating system. Just try them out.
-The effects will be visible immediately.
+The effects will be visible immediately (but the difference might not be all that large). The choice of themes depends on the operating system.
 
 .. index:: Language, Choose language
 
@@ -1206,31 +1259,8 @@ Advanced Options
 ----------------
 
 Almost all configurable options can be changed in the options menu, either
-directly or in the *Edit advanced options* window.  (Some further internals such
-as the location of the database files could be accessed by editing the file
-``kombilo.cfg`` directly. This file is a plain text file which you can edit
-yourself. *You should not edit this file while Kombilo is running.* It is
-created when Kombilo is started for the first time.)
+directly or in the *Edit advanced options* window.
 
-.. note:: Location of the ``kombilo.cfg`` file
-
-  Depending on your platform, the kombilo.cfg file will be stored in the
-  following place:
-
-  *Linux/Mac OS*: ``~/.kombilo/08/``, where ``~`` is your home directory; on
-  Linux, this is typically ``/home/yourusername/``.
-
-  *Windows*: In the folder ``kombilo\08\`` inside the *APPDATA* folder;
-  typically *APPDATA* is something like
-  ``\Users\yourusername\AppData\Roaming\``.
-
-Lines starting with a ``#`` are comments. Most options are explained by
-comments in this file.
-
-In addition to the options, you can also define how tagged games should be
-displayed (background/foreground color) in the game list, and which
-references to commentaries in the literature should be displayed in the
-game list.
 
 Description of most of the options:
 
@@ -1317,6 +1347,31 @@ be convenient to set it to a higher number, or even to 0, which means 'no
 limit': all searches are remembered, as long as there is enough memory.
 
 
+Some further internals such as the location of the database files could be
+accessed by editing the file ``kombilo.cfg`` directly. This file is a plain
+text file which you can edit yourself. *You should not edit this file while
+Kombilo is running.* It is created when Kombilo is started for the first time.
+
+.. note:: Location of the ``kombilo.cfg`` file
+
+  Depending on your platform, the kombilo.cfg file will be stored in the
+  following place:
+
+  *Linux/Mac OS*: ``~/.kombilo/08/``, where ``~`` is your home directory; on
+  Linux, this is typically ``/home/yourusername/``.
+
+  *Windows*: In the folder ``kombilo\08\`` inside the *APPDATA* folder;
+  typically *APPDATA* is something like
+  ``\Users\yourusername\AppData\Roaming\``.
+
+Lines starting with a ``#`` are comments. Most options are explained by
+comments in this file.
+
+In addition to the options, you can also define how tagged games should be
+displayed (background/foreground color) in the game list, and which
+references to commentaries in the literature should be displayed in the
+game list.
+
 kombilo.app
 -----------
 
@@ -1341,12 +1396,6 @@ Here is an example which shows the format of the file::
   *Canvas.background:     grey88
   *Label.background:      grey88
 
-.. note::
-
-  **Changed in version 0.7.1:** Before Version 0.7.1, the kombilo.app file was
-  present by default. Before you create it, check whether you can obtain a look
-  which is to your taste by :ref:`choosing a *theme* <themes>` in the options
-  menu.
 
 
 Miscellaneous
@@ -1452,8 +1501,7 @@ it is not part of the game info proper, but was added by Kombilo.)
 .. image:: images/references.jpg
 
 Currently, the list contains around 2000 references; in particular all
-issues of Go World, and most English books with game commentaries that I
-know of.
+issues of Go World, and many English books with game commentaries.
 
 The references are stored in the file ``references`` in the ``data`` folder
 inside the main Kombilo directory. This is just a text file which you could
@@ -1468,7 +1516,7 @@ define exclude or include rules in the file ``kombilo.cfg``.
 
 Of course, additions to the list of references are very welcome. 
 I think it would make sense to add references to other journals, like the
-American Go Journal, the British Go Journal, the Deutsche Go-Zeitung, 
+American Go Journal, the British Go Journal, the Deutsche Go-Zeitung,
 the Revue Francaise de Go, etc.
 
 .. index:: Command line arguments
@@ -1508,8 +1556,8 @@ Requirements on SGF files
 -------------------------
 
 
-There are a few requirements on the SGF files that are used in the 
-databases. They will be satisfied by ordinary game records, but 
+There are a few requirements on the SGF files that are used in the
+databases. They will be satisfied by ordinary game records, but
 might not be satisfied by "strange" SGF files.
 
 First of all, the filename of an SGF file always has to end in '.sgf'.
@@ -1535,17 +1583,12 @@ searches or to display the game info), the whole collection has to be read
 from disk, and has to be parsed.
 
 
-The viewer does accept most SGF features, I think. In particular it handles 
-variations (the navigation has to be done by clicking on the concerning
-points on the board), and adding/removal of stones during the game. It 
-displays labels, but it does not properly display text labels with more 
-than one letter/digit.
+The viewer does accept most SGF features. It displays labels, but it does not
+properly display text labels with more than one letter/digit.  It ignores some
+of the new SGF tags like "good for black", "bad for white", ... .
 
-It ignores some of the new SGF tags like "good for black", "bad for white", 
-... .
-
-Kombilo ignores everything before the first '(;'. In particular, it will 
-accept files with am email header and an SGF file after that. Be aware,
+Kombilo ignores everything before the first '(;'. In particular, it will
+accept files with an email header and an SGF file after that. Be aware,
 though, that the header will be lost when you change the game info
 of that game: whenever Kombilo writes an SGF file, it will only write
 the game (resp. the game collection) itself.
@@ -1568,8 +1611,8 @@ Where to find game records
 Here are some sources of game records:
 
 * `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ has more than
-  70,000 games.
-* `Go4go <http://www.go4go.net/v2/>`_ has more than 28,000 games.
+  85,000 games.
+* `Go4go <http://www.go4go.net/v2/>`_ has more than 40,000 games.
 * `Games of strong players on KGS <http://www.u-go.net/gamerecords/>`_
 * `List of links to SGF collections on u-go.net <http://u-go.net/links/gamerecords/>`_
 * `List of links to SGF collections on Sensei's library

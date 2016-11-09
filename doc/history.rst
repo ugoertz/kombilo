@@ -1,9 +1,8 @@
+:tocdepth: 2
+
 =================
 History/Upgrading
 =================
-
-
-
 
 
 Upgrading

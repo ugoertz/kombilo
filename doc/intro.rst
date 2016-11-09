@@ -44,11 +44,10 @@ Features
   next in the search pattern, by allowing or disabling search for the
   pattern with black/white exchanged, by requiring that the pattern should
   occur before some specified point in the game (before move 50, say), by
-  searching for move sequences, etc. By default, this version of Kombilo
-  also searches in variations.
-  The pattern search has been "parallelized" and hence can use several
-  processor cores. Depending on your hardware, this results in a
-  significant speed-up in comparison to older Kombilo versions.
+  searching for move sequences, etc. By default, Kombilo also searches in
+  variations.  The pattern search has been "parallelized" and hence can use
+  several processor cores. Depending on your hardware, this results in
+  a significant speed-up in comparison to older Kombilo versions.
 
 * In addition to the graphical user interface, there is an interface for
   using the underlying functionality of Kombilo within Python scripts, or
@@ -61,13 +60,13 @@ Features
   consider patches you send me for inclusion into the Kombilo code.
 
 * Kombilo has been developed with tools that are available on all major
-  operating systems (at least Linux, Windows, Mac OS X), *but the current
-  version has only been tested on (Ubuntu) Linux*. Probably some twists
-  will be required in order to get everything running smoothly on Windows
-  and/or Mac OS X; your help will be much appreciated.
+  operating systems (at least Linux, Windows, Mac OS X). It is developed (and
+  tested) only on Linux. There is a Windows installer, and it is known to work
+  on Mac OS. Feedback about glitches on Windows and Mac OS are particularly
+  welcome.
 
-* If you think some feature is missing, or if you found a bug, please open
-  a ticket on GitHub, or send me an email.
+* If you think some feature is missing, or if you found a bug, please send me an
+  email (or open an issue on GitHub).
 
 
 
