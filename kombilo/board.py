@@ -62,7 +62,7 @@ class Board(abstractBoard, Canvas):
 
     def __init__(self, master, boardsize=19, canvasSize=(30, 25), fuzzy=1, labelFont=None,
                  focus=1, callOnChange=None, boardImg=None, blackImg=None, whiteImg=None, use_PIL=True,
-                 square_board=True):
+                 square_board=True, onlyOneMouseButton=False):
         # FIXME should refactor code: use_PIL not used anymore
         """
         blackImg and whiteImg are lists of PILImage instances (as returned by PILImage.open(...)
@@ -106,6 +106,10 @@ class Board(abstractBoard, Canvas):
         self.stones = {}            # references to the ovals placed on the canvas, used for removing stones
         self.marks = {}             # references to the (colored) marks on the canvas
         self.labels = {}
+
+        self.do_on_b1 = self.onMove
+        self.do_on_b1m = None
+        self.do_on_b1r = None
 
         self.boundConf = self.bind("<Configure>", self.resize)
         self.resizable = 1
@@ -283,17 +287,35 @@ class Board(abstractBoard, Canvas):
 
         if s == "normal":
             self.callOnMove = f
-            self.bound1 = self.bind("<Button-1>", self.onMove)
+            if self.do_on_b1:
+                self.bound1 = self.bind('<Button-1>', self.do_on_b1)
+            else:
+                self.bound1 = None
+            if self.do_on_b1r:
+                self.bound1r = self.bind('<ButtonRelease-1>', self.do_on_b1r)
+            else:
+                self.bound1r = None
+            if self.do_on_b1m:
+                self.bound1m = self.bind('<B1-Motion>', self.do_on_b1m)
+            else:
+                self.bound1m = None
             self.boundm = self.bind("<Motion>", self.shadedStone)
             self.boundl = self.bind("<Leave>", self.delShadedStone)
         elif s == "disabled":
             self.delShadedStone()
-            try:
-                self.unbind("<Button-1>", self.bound1)
-                self.unbind("<Motion>", self.boundm)
-                self.unbind("<Leave>", self.boundl)
-            except TclError:
-                pass                     # if board was already disabled, unbind will fail
+            for evt, var in [
+                    ('<Button-1>', self.bound1),
+                    ('<ButtonRelease-1>', self.bound1r),
+                    ('<B1-Motion>', self.bound1m),
+                    ('<Motion>', self.boundm),
+                    ('<Leave>', self.boundl),
+                    ]:
+                try:
+                    if var is not None:
+                        self.unbind(evt, var)
+                except TclError:
+                    # if board was already disabled, unbind will fail
+                    pass
 
     def onMove(self, event):
         # compute board coordinates from the pixel coordinates of the mouse click

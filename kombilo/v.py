@@ -102,7 +102,7 @@ class BunchTkVar:
 
     def loadFromDisk(self, d):
         for x in d:
-            # print x
+            #  print x
             #  if x in self.__dict__:
             #      print ' old value:', self.__dict__[x].get()
             #      print ' new value:',
@@ -2870,7 +2870,16 @@ class Viewer:
                     for i in range(16)
                     ]
 
-        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, self.labelFont, 1, None, self.boardImg, self.blackStones, self.whiteStones, True)
+        self.board = BoardClass(
+                self.boardFrame, 19, (30, 25),
+                fuzzy=1,
+                labelFont=self.labelFont,
+                focus=1,
+                callOnChange=None,
+                boardImg=self.boardImg,
+                blackImg=self.blackStones, whiteImg=self.whiteStones,
+                use_PIL=True,
+                onlyOneMouseButton=self.options.only_one_mouse_button.get())
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
 

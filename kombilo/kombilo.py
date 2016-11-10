@@ -98,7 +98,8 @@ class BoardWC(Board):
         describes the current board position. It can then be restored with restore."""
 
     def __init__(self, *args, **kwargs):
-        oOMB = kwargs.pop('onlyOneMouseButton', 0)
+        self.onlyOneMouseButton = kwargs.pop('onlyOneMouseButton', 0)
+        bind_mouse_buttons = kwargs.pop('bind_mouse_buttons', True)
 
         Board.__init__(self, *args, **kwargs)
 
@@ -109,34 +110,20 @@ class BoardWC(Board):
         self.fixedColor = IntVar()
         self.smartFixedColor = IntVar()
 
-        self.onlyOneMouseButton = 'init'
-        self.rebind_mouse_buttons(oOMB)
+        if bind_mouse_buttons:
+            if self.onlyOneMouseButton:
+                self.do_on_b1 = self.selStart
+                self.do_on_b1r = self.selStop
+                self.do_on_b1m = self.selDrag
+            else:
+                self.bound3 = self.bind('<Button-3>', self.selStart)
+                self.bound3r = self.bind('<ButtonRelease-3>', self.selStop)
+                self.bound3m = self.bind('<B3-Motion>', self.selDrag)
+        self.startpos = None
 
         self.bounds1 = self.bind('<Shift-1>', self.wildcard)
 
         self.invertSelection = IntVar()
-
-    def unbind_third_mouse_button(self):
-        """Unbinds the 'third' mouse button events (click, motion)."""
-        if self.onlyOneMouseButton:
-            click, motion = self.onlyOneMouseButton.split(';')
-            self.unbind(click, self.bound3m)
-            self.unbind(motion, self.bound3)
-        else:
-            self.unbind('<B3-Motion>', self.bound3m)
-            self.unbind('<3>', self.bound3)
-
-    def rebind_mouse_buttons(self, onlyOneMouseButton):
-        if self.onlyOneMouseButton != 'init':  # do not do this during the first run (since self.bound3m, self.bound3 do not exist yet)
-            self.unbind_third_mouse_button()
-        self.onlyOneMouseButton = onlyOneMouseButton
-        if onlyOneMouseButton:
-            click, motion = onlyOneMouseButton.split(';')
-            self.bound3 = self.bind(click, self.selStart)   # '<M2-Button-1>'
-            self.bound3m = self.bind(motion, self.selDrag)  # '<M2-B1-Motion>'
-        else:
-            self.bound3 = self.bind('<Button-3>', self.selStart)
-            self.bound3m = self.bind('<B3-Motion>', self.selDrag)
 
     def resize(self, event=None):
         """ Resize the board. Take care of wildcards and selection here. """
@@ -199,23 +186,55 @@ class BoardWC(Board):
     # ---- selection of search-relevant section -----------------------------------
 
     def selStart(self, event):
-        """ React to right-click.
+        """ React to right-click, (or, if onlyOneMouseButton, left click).
         """
 
-        self.delete('selection')
-        x, y = self.getBoardCoord((event.x, event.y), 1)
-        x = max(x, 0)
-        y = max(y, 0)
-        self.selection = ((x, y), (-1, -1))
-        if self.smartFixedColor.get():
-            self.fixedColor.set(1)
-        self.changed.set(1)
+        self.startpos = self.getBoardCoord((event.x, event.y), 1)
+        if self.startpos == (-1, -1):  # click outside board -> clear selection
+            self.delete('selection')
+            self.selection = ((0, 0), (-1, -1))
+            if self.smartFixedColor.get():
+                self.fixedColor.set(1)
+            self.changed.set(1)
+
 
     def selDrag(self, event):
         """ React to right-mouse-key-drag. """
+        if self.startpos is None:
+            # Come here from shift-click or ctrl-click, so do nothing
+            return
+
         pos = self.getBoardCoord((event.x, event.y), 1)
-        if pos[0] >= self.selection[0][0] and pos[1] >= self.selection[0][1]:
-            self.setSelection(self.selection[0], pos)
+        try:
+            self.dragging
+        except:
+            self.dragging = False
+        if pos != self.startpos:
+            if not self.dragging:
+                self.delete('selection')
+                x, y = self.startpos
+                x = max(x, 0)
+                y = max(y, 0)
+                self.selection = ((x, y), (-1, -1))
+                if self.smartFixedColor.get():
+                    self.fixedColor.set(1)
+                self.changed.set(1)
+            self.dragging = True
+            if pos[0] >= self.selection[0][0] and pos[1] >= self.selection[0][1]:
+                self.setSelection(self.selection[0], pos)
+
+    def selStop(self, event):
+        if self.startpos is None:
+            # Come here from shift-click or ctrl-click, so do nothing
+            return
+
+        self.dragging = False
+        pos = self.getBoardCoord((event.x, event.y), 1)
+        if pos == self.startpos and self.onlyOneMouseButton:
+            # no movement, and using same mouse button for selection and for
+            # placing stones, so place stone
+            self.onMove(event)
+        self.startpos = None
 
     def drawSelection(self):
         pos0, pos1 = self.selection
@@ -674,11 +693,11 @@ class PrevSearchesStack(object):
                 [], [],
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
+                bind_mouse_buttons=False,
                 offset=min(10 * self.current.level(), 100))  # small board
         b.resizable = 0
         b.pack(side=LEFT, expand=YES, fill=Y)
         b.update_idletasks()
-        b.unbind_third_mouse_button()
         b.unbind('<Configure>', b.boundConf)
         b.unbind('<Shift-1>', b.bounds1)
         b.restore(kwargs['boardData'])
