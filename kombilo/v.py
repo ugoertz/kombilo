@@ -2870,6 +2870,10 @@ class Viewer:
                         __name__, 'icons/white%d.png' % i)).convert('RGBA')
                     for i in range(16)
                     ]
+        blackShaded = PILImage.open(pkg_resources.resource_stream(
+                        __name__, 'icons/black-shaded.png')).convert('RGBA')
+        whiteShaded = PILImage.open(pkg_resources.resource_stream(
+                        __name__, 'icons/white-shaded.png')).convert('RGBA')
 
         self.board = BoardClass(
                 self.boardFrame, 19, (30, 25),
@@ -2880,7 +2884,10 @@ class Viewer:
                 boardImg=self.boardImg,
                 blackImg=self.blackStones, whiteImg=self.whiteStones,
                 use_PIL=True,
-                onlyOneMouseButton=self.options.only_one_mouse_button.get())
+                onlyOneMouseButton=self.options.only_one_mouse_button.get(),
+                blackShaded=blackShaded,
+                whiteShaded=whiteShaded,
+                )
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
 

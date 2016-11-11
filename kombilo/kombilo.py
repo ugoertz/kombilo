@@ -211,6 +211,7 @@ class BoardWC(Board):
             self.dragging = False
         if pos != self.startpos:
             if not self.dragging:
+                self.delShadedStone()
                 self.delete('selection')
                 x, y = self.startpos
                 x = max(x, 0)
