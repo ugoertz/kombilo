@@ -1985,14 +1985,14 @@ class App(v.Viewer, KEngine):
         self.editDB_OK.config(state=DISABLED)
         self.saveProcMess.config(state=DISABLED)
 
-        dbp = str(askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath))
+        dbp = askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath)
 
         if not dbp:
             self.editDB_OK.config(state=NORMAL)
             self.saveProcMess.config(state=NORMAL)
             return
         else:
-            dbp = os.path.normpath(dbp)
+            dbp = os.path.normpath(str(dbp))
 
         self.datapath = os.path.split(dbp)[0]
 
@@ -2019,10 +2019,17 @@ class App(v.Viewer, KEngine):
         else:
             datap = ('', '#')  # this means: same as dbpath
 
+        if self.options.recProcess.get() and self.options.oneDBperFolder.get() and len(list(os.walk(dbp))) > 120 and not askokcancel(
+                _('Warning'),
+                _('You are about to add a folder with many subfolders. It is probably better to deselect the "Create one DB per folder" option. Proceed nevertheless?')):
+            return
+
         self.callAddDB(dbp, datap)
 
         self.editDB_OK.config(state=NORMAL)
         self.saveProcMess.config(state=NORMAL)
+        self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
+        self.processMessages.update()
 
     def callAddDB(self, dbp, datap, index=None):
         tagAsPro = {'Never': 0, 'All games': 1, 'All games with p-rank players': 2, }[self.untranslate_tagAsPro()]
@@ -2421,7 +2428,7 @@ class App(v.Viewer, KEngine):
             c['taglook'] = self.gamelist.taglook
             c.filename = os.path.join(v.get_configfile_directory(), 'kombilo.cfg')
             c.write()
-        except ImportError:
+        except:
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
 
         self.master.quit()

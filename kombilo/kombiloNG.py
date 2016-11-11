@@ -1519,7 +1519,7 @@ class KEngine(object):
         try:
             success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl, sgfInDB=sgfInDB, logDuplicates=logDuplicates)
             # process returns the GameList, or None if no games were added
-        except ImportError:
+        except:
             if showwarning:
                 showwarning(_('Error'), _('A fatal error occurred when processing %s. Are the directories for the database files writable?') % dbpath)
             return
