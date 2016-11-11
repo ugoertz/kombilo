@@ -50,8 +50,6 @@ if not '_' in __builtin__.__dict__:
     # print 'kombiloNG ignores translations'
     _ = lambda s: s
 
-KOMBILO_VERSION = '0.8'
-
 REFERENCED_TAG = 3
 SEEN_TAG = 4
 

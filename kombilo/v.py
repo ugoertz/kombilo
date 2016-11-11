@@ -53,15 +53,16 @@ from . import libkombilo as lk
 from .board import *
 from .sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
-KOMBILO_VERSION = 0.8
+KOMBILO_VERSION = '0.8.3'
 
 # ---------------------------------------------------------------------------------------
 
 def get_configfile_directory():
+    version = ''.join(KOMBILO_VERSION.split('.')[:2])
     if sys.platform.startswith('win'):
-        return os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.', ''))
+        return os.path.join(os.environ.get('APPDATA'), 'kombilo', version)
     else:
-        return os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.', ''))
+        return os.path.expanduser('~/.kombilo/%s' % version)
 
 def load_icon(button, filename, imagelist, buttonsize):
     try:
@@ -2223,7 +2224,7 @@ class Viewer:
 
         try:
             c = self.config
-            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
+            c['main']['version'] = 'kombilo%s' % '.'.join(KOMBILO_VERSION.split('.')[:2])
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
             c.filename = os.path.join(get_configfile_directory(), 'kombilo.cfg')
@@ -2775,7 +2776,9 @@ class Viewer:
 
         try:
             self.config = self.get_config_obj()
-            if self.config['main']['version'].strip() == 'kombilo%s' % KOMBILO_VERSION:
+            if ('version' not in self.config['main']  # no version fixed in default.cfg
+                    or self.config['main']['version'].strip() ==
+                    'kombilo%s' % '.'.join(KOMBILO_VERSION.split('.')[:2])):
                 # otherwise this is an old .cfg file which should be ignored
 
                 if 'sgfpath' in self.config['main']:

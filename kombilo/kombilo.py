@@ -65,10 +65,7 @@ from .kombiloNG import *
 from .custommenus import CustomMenus
 
 
-
-
-
-KOMBILO_RELEASE = '0.8'
+KOMBILO_VERSION = v.KOMBILO_VERSION
 
 # --------- GUI TOOLS -------------------------------------------------------------------
 
@@ -2413,7 +2410,7 @@ class App(v.Viewer, KEngine):
 
         try:
             c = self.get_config_obj()
-            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
+            c['main']['version'] = 'kombilo%s' % '.'.join(KOMBILO_VERSION.split('.')[:2])
             c['main']['sgfpath'] = self.sgfpath
             c['main']['datapath'] = self.datapath
             self.saveOptions(c['options'])
@@ -2450,7 +2447,7 @@ class App(v.Viewer, KEngine):
 
         t = []
 
-        t.append(_('Kombilo %s - written by') % KOMBILO_RELEASE + ' Ulrich Goertz (ug@geometry.de)' + '\n\n')
+        t.append(_('Kombilo %s - written by') % KOMBILO_VERSION + ' Ulrich Goertz (ug@geometry.de)' + '\n\n')
         t.append(_('Kombilo is a go database program.') + '\n')
         t.append(_('You can find more information on Kombilo and the newest version at') + ' http://www.u-go.net/kombilo/\n\n')
 
@@ -3551,7 +3548,7 @@ class App(v.Viewer, KEngine):
             self.logger.insert(END, _('Error parsing references file.\n'))
         self.loadDBs(self.progBar, showwarning)
 
-        self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_RELEASE + _('Ready ...') + '\n')
+        self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_VERSION + _('Ready ...') + '\n')
         self.progBar.stop()
 
 # ---------------------------------------------------------------------------------------
