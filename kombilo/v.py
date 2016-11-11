@@ -526,6 +526,7 @@ class DataWindow:
         window = window
 
         win = PanedWindow(window, orient='vertical')
+        win.config(bd=0, bg="#666666")  # make sashes dark gray
         self.win = win
         win.pack(expand=YES, fill=BOTH)
 

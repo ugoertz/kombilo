@@ -3181,6 +3181,7 @@ class App(v.Viewer, KEngine):
         self.topFrameS.pack(side=TOP, fill=X, expand=NO)
 
         self.frameS = PanedWindow(self.searchWindow, orient='vertical')   # suffix S means 'in search/results window'
+        self.frameS.config(bd=0, bg="#666666")  # make sashes dark gray
         self.frameS.pack(fill=BOTH, expand=YES)
 
         self.listFrameS = Frame(self.frameS)
