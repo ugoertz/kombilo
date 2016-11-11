@@ -540,13 +540,13 @@ class DataWindow:
         self.filelistF.rowconfigure(2, weight=1)
         self.filelistF.columnconfigure(0, weight=1)
 
-        self.filelistB1 = Button(self.filelistF, text=_('NEW'), command=self.mster.newFile)
+        self.filelistB1 = Button(self.filelistF, command=self.mster.newFile)
         self.filelistB1.grid(row=0, column=1, sticky=S)
-        self.filelistB2 = Button(self.filelistF, text=_('OPEN'), command=self.mster.openFile)
+        self.filelistB2 = Button(self.filelistF, command=self.mster.openFile)
         self.filelistB2.grid(row=1, column=1, sticky=S)
-        self.filelistB3 = Button(self.filelistF, text=_('DEL'), command=self.mster.delFile)
+        self.filelistB3 = Button(self.filelistF, command=self.mster.delFile)
         self.filelistB3.grid(row=0, column=2, sticky=S)
-        self.filelistB4 = Button(self.filelistF, text=_('split'), command=self.mster.splitCollection)
+        self.filelistB4 = Button(self.filelistF, command=self.mster.splitCollection)
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
@@ -565,9 +565,9 @@ class DataWindow:
         self.gamelistF.rowconfigure(2, weight=1)
         self.gamelistF.columnconfigure(0, weight=1)
 
-        self.gamelistB1 = Button(self.gamelistF, text=_('NEW'), command=self.mster.newGame)
+        self.gamelistB1 = Button(self.gamelistF, command=self.mster.newGame)
         self.gamelistB1.grid(row=0, column=1, sticky=S)
-        self.gamelistB2 = Button(self.gamelistF, text=_('DEL'), command=self.mster.delGame)
+        self.gamelistB2 = Button(self.gamelistF, command=self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
         for button, filename in [
@@ -2608,37 +2608,37 @@ class Viewer:
         self.Wbutton = Radiobutton(navFrame, text='W', indicatoron=0, bg='#999999',
                                    variable=self.modeVar, value='white', command=self.modeChange)
 
-        self.nextButton = Button(navFrame, text='->', command=self.next)
+        self.nextButton = Button(navFrame, command=self.next)
         self.boardFrame.bind('<Right>', lambda e, s=self.nextButton: s.invoke())
-        self.prevButton = Button(navFrame, text='<-', command=self.prev)
+        self.prevButton = Button(navFrame, command=self.prev)
         self.boardFrame.bind('<Left>', lambda e, s=self.prevButton: s.invoke())
-        self.next10Button = Button(navFrame, text='-> 10', command=self.next10)
+        self.next10Button = Button(navFrame, command=self.next10)
         self.boardFrame.bind('<Down>', lambda e, s=self.next10Button: s.invoke())
-        self.prev10Button = Button(navFrame, text='<- 10', command=self.prev10)
+        self.prev10Button = Button(navFrame, command=self.prev10)
         self.boardFrame.bind('<Up>', lambda e, s=self.prev10Button: s.invoke())
-        self.startButton = Button(navFrame, text='|<-', command=self.start)
+        self.startButton = Button(navFrame, command=self.start)
         self.boardFrame.bind('<Home>', lambda e, s=self.startButton: s.invoke())
-        self.endButton = Button(navFrame, text='->|', command=self.end)
+        self.endButton = Button(navFrame, command=self.end)
         self.boardFrame.bind('<End>', lambda e, s=self.endButton: s.invoke())
 
         self.boardFrame.bind('<Prior>', self.upVariation)
         self.boardFrame.bind('<Next>', self.downVariation)
 
-        self.passButton = Button(navFrame, text=_('Pass'), command=self.passFct)
+        self.passButton = Button(navFrame, command=self.passFct)
 
-        self.gameinfoButton = Button(navFrame, text=_('Info'), command=self.gameinfo, underline=0)
+        self.gameinfoButton = Button(navFrame, command=self.gameinfo, underline=0)
         self.boardFrame.bind('<Control-i>', lambda e, s=self.gameinfoButton: s.invoke())
 
         lab = Label(navFrame, text=_('Ctrl-Click:'))
 
-        self.removeStoneButton = Radiobutton(navFrame, text='DEL ST', indicatoron=0, variable=self.options.labelType, value='DEL ST')
-        self.triangleButton = Radiobutton(navFrame, text='TR', indicatoron=0, variable=self.options.labelType, value='TR')
-        self.squareButton = Radiobutton(navFrame, text='SQ', indicatoron=0, variable=self.options.labelType, value='SQ')
-        self.letterUButton = Radiobutton(navFrame, text='ABC', indicatoron=0, variable=self.options.labelType, value='ABC')
-        self.letterLButton = Radiobutton(navFrame, text='abc', indicatoron=0, variable=self.options.labelType, value='abc')
-        self.numberButton = Radiobutton(navFrame, text='123', indicatoron=0, variable=self.options.labelType, value='12n')
-        self.delButton = Button(navFrame, text='DEL', command=lambda self=self: self.delVar())
-        self.guessModeButton = Checkbutton(navFrame, text=_('Guess mode'), indicatoron=0,
+        self.removeStoneButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='DEL ST')
+        self.triangleButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='TR')
+        self.squareButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='SQ')
+        self.letterUButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='ABC')
+        self.letterLButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='abc')
+        self.numberButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='12n')
+        self.delButton = Button(navFrame, command=lambda self=self: self.delVar())
+        self.guessModeButton = Checkbutton(navFrame, indicatoron=0,
                                            variable=self.guessMode, command=self.dataWindow.toggleGuessMode)
 
         ca0 = Separator(navFrame, orient='vertical')

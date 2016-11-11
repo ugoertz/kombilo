@@ -2876,17 +2876,17 @@ class App(v.Viewer, KEngine):
 
         self.tagButtonF = Frame(self.tagFrame2)
         self.tagButtonF.pack(side=LEFT)
-        self.tagsearchButton = Button(self.tagButtonF, text=_('Search'), command=self.tagSearch)
+        self.tagsearchButton = Button(self.tagButtonF, command=self.tagSearch)
         self.tagsearchButton.pack(side=LEFT)
-        self.tagsetButton = Button(self.tagButtonF, text=_('Set tags'), command=self.tagSet)
+        self.tagsetButton = Button(self.tagButtonF, command=self.tagSet)
         self.tagsetButton.pack(side=LEFT)
-        self.tagallButton = Button(self.tagButtonF, text=_('Tag all'), command=self.tagAllCurrent)
+        self.tagallButton = Button(self.tagButtonF, command=self.tagAllCurrent)
         self.tagallButton.pack(side=LEFT)
-        self.untagallButton = Button(self.tagButtonF, text=_('Untag all'), command=self.untagAllCurrent)
+        self.untagallButton = Button(self.tagButtonF, command=self.untagAllCurrent)
         self.untagallButton.pack(side=LEFT)
-        self.tagaddButton = Button(self.tagButtonF, text=_('Add tag'), command=self.addTag)
+        self.tagaddButton = Button(self.tagButtonF, command=self.addTag)
         self.tagaddButton.pack(side=LEFT)
-        self.tagdelButton = Button(self.tagButtonF, text=_('Delete tag'), command=self.deleteTagPY)
+        self.tagdelButton = Button(self.tagButtonF, command=self.deleteTagPY)
         self.tagdelButton.pack(side=LEFT)
 
     def updatetaglist(self):
@@ -3275,19 +3275,19 @@ class App(v.Viewer, KEngine):
         self.buttonFrame1S = Frame(self.toolbarFrameS)
         self.buttonFrame1S.pack(side=LEFT, expand=NO)
 
-        self.resetButtonS = Button(self.buttonFrame1S, text=_('Reset'), command=self.reset)
-        self.resetstartButtonS = Button(self.buttonFrame1S, text=_('Reset/start'), command=self.reset_start)
-        self.searchButtonS = Button(self.buttonFrame1S, text=_('Pattern search'), command=self.search)
-        self.backButtonS = Button(self.buttonFrame1S, text=_('Back'), command=self.back)
+        self.resetButtonS = Button(self.buttonFrame1S, command=self.reset)
+        self.resetstartButtonS = Button(self.buttonFrame1S, command=self.reset_start)
+        self.searchButtonS = Button(self.buttonFrame1S, command=self.search)
+        self.backButtonS = Button(self.buttonFrame1S, command=self.back)
 
         self.showContinuation = IntVar()
         self.showContinuation.set(1)
-        self.showContButtonS = Checkbutton(self.buttonFrame1S, text=_('Continuations'), variable=self.showContinuation, indicatoron=0, command=self.showCont)
+        self.showContButtonS = Checkbutton(self.buttonFrame1S, variable=self.showContinuation, indicatoron=0, command=self.showCont)
 
         self.oneClick = IntVar()
-        self.oneClickButtonS = Checkbutton(self.buttonFrame1S, text=_('1 click'), variable=self.oneClick, indicatoron=0)
+        self.oneClickButtonS = Checkbutton(self.buttonFrame1S, variable=self.oneClick, indicatoron=0)
 
-        self.statByDateButtonS = Checkbutton(self.buttonFrame1S, text=_('Statistics by Date'), variable=self.options.statistics_by_date, indicatoron=0, command=self.display_statistics)
+        self.statByDateButtonS = Checkbutton(self.buttonFrame1S, variable=self.options.statistics_by_date, indicatoron=0, command=self.display_statistics)
 
         for ii, b in enumerate([self.searchButtonS, self.resetstartButtonS, self.resetButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS, self.statByDateButtonS]):
             b.grid(row=0, column=ii)
@@ -3317,11 +3317,11 @@ class App(v.Viewer, KEngine):
         l.pack(side=LEFT)
 
         self.nextMoveVar = IntVar()  # 0 = either player, 1 = black, 2 = white
-        self.nextMove1S = Radiobutton(self.toolbarFrameS, text=_('B/W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=0, bg='#999999')
+        self.nextMove1S = Radiobutton(self.toolbarFrameS, highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=0, bg='#999999')
         self.nextMove1S.pack(side=LEFT)
-        self.nextMove2S = Radiobutton(self.toolbarFrameS, text=_('B'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=1, bg='#999999')
+        self.nextMove2S = Radiobutton(self.toolbarFrameS, highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=1, bg='#999999')
         self.nextMove2S.pack(side=LEFT)
-        self.nextMove3S = Radiobutton(self.toolbarFrameS, text=_('W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=2, bg='#999999')
+        self.nextMove3S = Radiobutton(self.toolbarFrameS, highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=2, bg='#999999')
         self.nextMove3S.pack(side=LEFT)
 
         self.fixedAnchorVar = IntVar()
@@ -3442,8 +3442,8 @@ class App(v.Viewer, KEngine):
         self.referencedVar = IntVar()
         b1 = Checkbutton(f3, text=_('Referenced'), variable=self.referencedVar, highlightthickness=0)
 
-        self.GIstart = Button(f3, text=_('Start'), command=self.doGISearch)
-        self.GIclear = Button(f3, text=_('Clear'), command=self.clearGI)
+        self.GIstart = Button(f3, command=self.doGISearch)
+        self.GIclear = Button(f3, command=self.clearGI)
 
         self.GI_bwd = Button(f3, text='<-', command=self.historyGI_back)
         self.GI_fwd = Button(f3, text='->', command=self.historyGI_fwd)
