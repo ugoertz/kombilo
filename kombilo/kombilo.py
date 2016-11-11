@@ -2784,6 +2784,7 @@ class App(v.Viewer, KEngine):
             cancel.append(1)
             options_window.destroy()
 
+        options_window.protocol('WM_DELETE_WINDOW', cancel_fct)
         ok_button = Button(options_window, text=_('OK'), command=ok_fct)
         ok_button.grid(row=row_ctr, column=0)
         cancel_button = Button(options_window, text=_('Cancel'), command=cancel_fct)
@@ -2798,6 +2799,7 @@ class App(v.Viewer, KEngine):
         if cancel:
             return
 
+        self.notebook.select(self.dateProfileFS.winfo_pathname(self.logFS.winfo_id()))  # select tags tab
         self.progBar.start(50)
         currentTime = time.time()
         self.configButtons(DISABLED)
