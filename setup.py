@@ -34,7 +34,7 @@ sgfext = Extension('kombilo._libkombilo', **kwargs)
 
 setup(
         name = 'kombilo',
-        version = '0.8.2',
+        version = '0.8.3',
         description = 'A database program for the game of go',
         author = 'Ulrich Goertz',
         author_email = 'ug@geometry.de',
