@@ -2096,6 +2096,8 @@ void GameList::delete_all_snapshots() throw(DBError) {
   if (rc != SQLITE_OK) throw DBError();
   rc = sqlite3_exec(db, "create table if not exists snapshots ( data text );", 0, 0, 0);
   if (rc != SQLITE_OK) throw DBError();
+  rc = sqlite3_exec(db, "vacuum", 0, 0, 0);
+  if (rc != SQLITE_OK) throw DBError();
 }
 
 VarInfo::VarInfo(Node* N, abstractBoard* B, int I) {
