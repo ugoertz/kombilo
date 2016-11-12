@@ -807,6 +807,13 @@ class KEngine(object):
         path_to_initial_node = cursor.currentNode().pathToNode()
         plist = [(cursor.currentNode(), snapshot_ids)]
 
+        def board_coord_to_human(x, y):
+            # takes x, y between 0 and boardsize-1 in "Kombilo coordinate
+            # system" and returns cordinate string like H11
+            return 'ABCDEFGHJKLMNOPQRST'[x] + '%d' % (options['boardsize']-y)
+        selection_readable = ' - '.join(
+                board_coord_to_human(*x) for x in options['selection'])
+
         options_text = u'{options_str}:\n{min_num_hits_str}: {min_num_hits}\n{max_num_br_str}: {max_num_br}\n{depth_str}: {depth}\n{reset_gl_str}: {reset_gl}\n{sel_str}: {sel}\n\n'.format(**{
             'options_str': _('Options'),
             'min_num_hits_str': _('Minimum number of hits'),
@@ -818,7 +825,7 @@ class KEngine(object):
             'max_num_br': options.as_int('max_number_of_branches'),
             'depth': options.as_int('depth'),
             'reset_gl': _('Yes') if options.as_bool('reset_game_list') else _('No'),
-            'sel': repr(options['selection']),
+            'sel': selection_readable,
             })
 
         # Add information about search options to start node.
@@ -1526,8 +1533,9 @@ class KEngine(object):
             self.addOneFolder(arguments, dbp, gl=gl)
 
         if gl is not None:
-            messages.insert('end', _('Finalizing ... (this will take some time)\n'))
-            messages.update()
+            if messages:
+                messages.insert('end', _('Finalizing ... (this will take some time)\n'))
+                messages.update()
             gl.finalize_processing()
             if gl.size_all():
                 self.add_gl_at(index, gl, dbp)

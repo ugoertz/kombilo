@@ -189,7 +189,7 @@ class BoardWC(Board):
         self.startpos = self.getBoardCoord((event.x, event.y), 1)
         if self.startpos == (-1, -1):  # click outside board -> clear selection
             self.delete('selection')
-            self.selection = ((0, 0), (-1, -1))
+            self.selection = ((0, 0), (self.boardsize-1, self.boardsize-1))
             if self.smartFixedColor.get():
                 self.fixedColor.set(1)
             self.changed.set(1)
@@ -953,7 +953,7 @@ class App(v.Viewer, KEngine):
                     % self.options.date_profile_chunk_size.get())
         self.redo_date_profile = False
 
-    def display_x_indices(self, canvas, fr, to, tag, canvas_fr, canvas_to):
+    def display_x_indices(self, canvas, fr, to, tag, canvas_fr, canvas_to, text_height):
         """
         Indices on x-axis for date profile etc.
 
@@ -966,25 +966,25 @@ class App(v.Viewer, KEngine):
         smallfont = self.smallFont
         xoffset = canvas_fr
         W = canvas_to - canvas_fr
-        H = int(self.statisticsCanv.cget('height'))
+        H = int(self.statisticsCanv.cget('height')) - 2 * text_height
 
         for i in range(6):
             year = fr + i * (to - fr) // 5
             coord = canvas_fr + i * W // 5
             canvas.create_text(
-                    coord - 10, H * 16 // 18,
+                    coord - 10, H,
                     text=repr(year),
                     font=smallfont, anchor='nw', tags=tag)
             canvas.create_rectangle(
-                    coord, H * 16 // 18 - 10,
-                    coord + 1, H * 16 // 18,
+                    coord, H - 10,
+                    coord + 1, H,
                     outline='', fill='black', tags='stat')
 
         canvas.create_rectangle(
                 -10 + xoffset,
-                H * 16 // 18 - 5,
+                H - 5,
                 W + 20 + xoffset,
-                int(self.statisticsCanv.cget('height')) * 16 // 18 - 5,
+                H - 5,
                 outline='', fill='black', tags='stat')
 
     def display_statistics(self):
@@ -1008,6 +1008,14 @@ class App(v.Viewer, KEngine):
         if self.options.statistics_by_date.get():
             font = self.smallFont
             smallfont = self.smallFont
+            # compute pixel size of letters
+            dummy_text = self.statisticsCanv.create_text(0, 0, font=smallfont, text='8q')
+            x1, y1, x2, y2 = self.statisticsCanv.bbox(dummy_text)
+            self.statisticsCanv.delete(dummy_text)
+            letter_width, text_height = (x2 - x1) // 2, (y2 - y1)
+
+            max_len = max(len(str(cont.total())) for cont in self.continuations)
+            xoffset = (max_len + 4) * letter_width  # +4 accounts for label + some space in between
 
             self.statisticsCanv.delete('stat')
             self.statisticsCanv.create_text(
@@ -1019,12 +1027,12 @@ class App(v.Viewer, KEngine):
             fr = self.options.date_profile_from.get()
             to = max(self.options.date_profile_to.get(), fr + 1)
 
-            xoffset = int(self.statisticsCanv.cget('width')) // 6  # coordinate of first year
             W = int(self.statisticsCanv.cget('width')) * 6 // 7        # coordinate of last year
-            yoffset = int(self.statisticsCanv.cget('height')) // 7
-            H = int(self.statisticsCanv.cget('height')) * 6 // 7 - yoffset
+            yoffset = 3 * text_height
+            H = (int(self.statisticsCanv.cget('height'))
+                    - 5 * text_height)                       # time line at bottom + top line of text
             self.display_x_indices(
-                    self.statisticsCanv, fr, to, 'stat', xoffset, W)
+                    self.statisticsCanv, fr, to, 'stat', xoffset, W, text_height)
 
             def get_coord_for_date(dt):
                 if dt < fr:
@@ -1052,7 +1060,8 @@ class App(v.Viewer, KEngine):
 
             i = 0
             ctr = 0
-            while i < 12 and ctr < len(continuations):
+            num_lines = min(12, H // (text_height * 5 // 4))
+            while i < num_lines and ctr < len(continuations):
                 cont = continuations[ctr]
                 earliest = cont.earliest_B() if cont.B else cont.earliest_W()
                 latest = cont.latest_B() if cont.B else cont.latest_W()
@@ -1074,22 +1083,22 @@ class App(v.Viewer, KEngine):
                 became_unpopular = get_coord_for_date(became_unpopular)
 
                 self.statisticsCanv.create_text(
-                        left - 15, i * H//12 + yoffset,
+                        left - letter_width, i * H//num_lines + yoffset, anchor='e',
                         text=cont.label, font=font, tags='stat')
                 self.statisticsCanv.create_text(
-                        left - 40 - 5 * len(repr(cont.total())), i * H//12 + yoffset + 1,
+                        left - 3 * letter_width, i * H//num_lines + yoffset + 1, anchor='e',
                         text=repr(cont.total()), font=smallfont, tags='stat')
                 self.statisticsCanv.create_rectangle(
-                        left, i * H//12 + yoffset - 3,
-                        right, i * H//12 + yoffset + 3,
+                        left, i * H//num_lines + yoffset - 3,
+                        right, i * H//num_lines + yoffset + 3,
                         fill='black' if cont.B else 'white',
                         outline='black' if cont.B else 'white', tags='stat')
 
                 for dt, clr in [(average_date, 'green'), (became_popular, 'yellow'), (became_unpopular, 'red'), ]:
                     if xoffset < dt < W and right - left > 5:
                         self.statisticsCanv.create_rectangle(
-                                dt - 3, i * H//12 + yoffset - 6,
-                                dt + 3, i * H//12 + yoffset + 7,
+                                dt - 3, i * H//num_lines + yoffset - 6,
+                                dt + 3, i * H//num_lines + yoffset + 7,
                                 fill=clr, outline=clr, tags='stat')
 
                 i += 1
@@ -1129,25 +1138,37 @@ class App(v.Viewer, KEngine):
         if not data:
             return
 
-        W = int(self.statisticsCanv.cget('width')) * 6 // 7 # x-coord of right-most bar
-        xoffset = W // 8                             # x-coord of left-most bar
-        H = int(self.statisticsCanv.cget('height')) * 6//7  # y-coord of lower edge of bars
-        yoffset = int(self.statisticsCanv.cget('height')) // 6
+        # compute pixel size of letters
+        dummy_text = self.statisticsCanv.create_text(0, 0, font=smallfont, text='8q')
+        x1, y1, x2, y2 = self.statisticsCanv.bbox(dummy_text)
+        self.statisticsCanv.delete(dummy_text)
+        letter_width, text_height = (x2 - x1) // 2, (y2 - y1)
 
-        self.display_x_indices(canvas, fr, to, 'stat', xoffset, W)
+
+
+        W = int(self.statisticsCanv.cget('width')) - 5 * letter_width  # x-coord of right-most bar
+        xoffset = letter_width*7 + 10          # x-coord of left-most bar
+        yoffset = 2 * text_height
+        H = int(self.statisticsCanv.cget('height')) - yoffset - 15
+
+        # time axis at bottom at height H + 10
+        # bar charts in rectangle spanned by (xoffset, yoffset), (W, H)
+        # left vertical "axis" with percentages at x-coord = letter_width*5 + 5, anchor='e'
+
+        self.display_x_indices(canvas, fr, to, 'stat', xoffset, W, text_height)
 
         canvas.create_text(
-                5, H - 10, text='0 %', font=smallfont, anchor='nw', tags=tag)
+                xoffset - 10, H, text='0 %', font=smallfont, anchor='e', tags=tag)
         if sum(data) == 0:
             return
 
         # indices on y-axis
         mx = max(data)
         canvas.create_text(
-                2, yoffset - 10, text='%1.1f %%' % (mx * 100), font=smallfont, anchor='nw', tags=tag)
+                xoffset - 5, yoffset, text='%1.1f %%' % (mx * 100), font=smallfont, anchor='e', tags=tag)
         canvas.create_text(
-                4, (H+yoffset)//2 - 10,
-                text='%1.1f %%' % (mx * 50), font=smallfont, anchor='nw', tags=tag)
+                xoffset - 5, (H+yoffset)//2,
+                text='%1.1f %%' % (mx * 50), font=smallfont, anchor='e', tags=tag)
 
         for x, y  in enumerate(data):
             xx = xoffset + int(x * (W-xoffset) / len(data))
@@ -1178,35 +1199,43 @@ class App(v.Viewer, KEngine):
         font = self.smallFont
         smallfont = self.smallFont
 
+        # compute pixel size of letters
+        dummy_text = self.statisticsCanv.create_text(0, 0, font=smallfont, text='Mq')
+        x1, y1, x2, y2 = self.statisticsCanv.bbox(dummy_text)
+        self.statisticsCanv.delete(dummy_text)
+        letter_width, text_height = (x2 - x1) // 2, (y2 - y1)
+
         W = int(self.statisticsCanv.cget('width')) * 6 // 7
-        H = int(self.statisticsCanv.cget('height'))
+        H = int(self.statisticsCanv.cget('height')) - 5
         bar_width = W // 12
-        text_height = max(H // 18, 25)
 
         canvas.create_text(5, 5, text=title, font=font, anchor='nw', tags=tag)
 
         for i, column in enumerate(data):
             ht = 3 * text_height
-            for l in column.get('label', []):
-                canvas.create_text((i + 1) * bar_width, H - ht, text=l, font=smallfont, tags=tag)
-                ht -= text_height
+            if H >= 4 * text_height:
+                for l in column.get('label', []):
+                    canvas.create_text((i + 1) * bar_width, H - ht, text=l, font=smallfont, tags=tag)
+                    ht -= text_height
 
             ht = 0
             if H >= 8 * text_height:
                 for c in colors:
                     if column[c]:
-                        v = int(column[c] * (H - 8*text_height))
+                        v = int(column[c] * (H - 7*text_height - 10))
                         canvas.create_rectangle(
-                                (i + 1) * bar_width - bar_width // 2 + 4,
+                                (i + 1) * bar_width - bar_width // 2 + 8,
                                 H - 4*text_height - ht - v,
-                                (i + 2) * bar_width - bar_width // 2 - 4,
+                                (i + 2) * bar_width - bar_width // 2 - 8,
                                 H - 4*text_height - ht, fill=c, outline='', tags=tag)
                         ht += v
-            if H >= 5 * text_height:
+            if H >= 6 * text_height:
                 for j, l in enumerate(column.get('label_top', [])):
+                    # at this point, column['label_top'] should always have
+                    # precisely one element; todo: clean up
                     canvas.create_text(
                             (i + 1) * bar_width,
-                            H - 5*text_height - ht - 10 * (len(column['label_top']) - j),
+                            H - 9*text_height//2 - ht - 10 * (len(column['label_top']) - j),
                             font=smallfont, text=l, tags=tag)
 
     def clearGI(self):
@@ -3317,7 +3346,7 @@ class App(v.Viewer, KEngine):
 
         # -------------------------
 
-        self.statisticsCanv = Canvas(self.searchStat, highlightthickness=0)
+        self.statisticsCanv = Canvas(self.searchStat, highlightthickness=0, background='#dddddd')
         self.statisticsCanv.bind('<Configure>', self.resize_statistics_canvas)
         self.statisticsCanv.pack(side=BOTTOM, expand=YES, fill=BOTH)
 
@@ -3468,8 +3497,8 @@ class App(v.Viewer, KEngine):
         self.GIstart = Button(f3, command=self.doGISearch)
         self.GIclear = Button(f3, command=self.clearGI)
 
-        self.GI_bwd = Button(f3, text='<-', command=self.historyGI_back)
-        self.GI_fwd = Button(f3, text='->', command=self.historyGI_fwd)
+        self.GI_bwd = Button(f3, command=self.historyGI_back)
+        self.GI_fwd = Button(f3, command=self.historyGI_fwd)
 
         for e in [e1, e2, e3, e4, e5, e6, e7, e8]:
             e.bind('<Return>', lambda event, bs=self.GIstart: bs.invoke())
