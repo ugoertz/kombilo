@@ -104,66 +104,52 @@ LifeIn19x19 forum:
 Step-by-step instructions: Install on a Mac using homebrew
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-From a `post by Marcel Grünauer
+Adapted from a `post by Marcel Grünauer
 <hhttp://lifein19x19.com/forum/viewtopic.php?f=9&t=13741#p21277://lifein19x19.com/forum/viewtopic.php?f=9&t=13741#p212778>`__ to the LifeIn19x19 forum.
 
-Update homebrew and the packages already installed:
-
-::
+This assumes that you already have installed `homebrew <http://brew.sh/>`__.
+Update homebrew and the packages already installed::
 
     $ brew update
     $ brew outdated -q | brew upgrade
 
-Install packages required for the build:
+Install packages required for the build (you may have to ``brew tap
+homebrew/dupes`` before)::
 
-::
-
-    $ brew install boost sqlite3
+    $ brew install boost
     $ brew install homebrew/dupes/tcl-tk
 
 
-In case you already had homebrew's python 2.7 installed:
-
-::
+In case you already had homebrew's python 2.7 installed::
 
     $ brew uninstall python
 
-Then
-
-::
+Then::
 
     $ brew install python --with-tcl-tk
 
 
-You can test the Tk installation with:
-
-::
+You can test the Tk installation with::
 
     $ python
     >>> import Tkinter
     >>> Tkinter._test()
 
 
-I had Pillow already installed for macOS's own python in
-/Library/Python/2.7/site-packages/ and so had to remove that first with ``sudo
-pip uninstall Pillow``. The problem was that this was linked against macOS's Tcl
-and Tk frameworks, whereas homebrew's python was linked against homebrew's Tcl.
+If you have previously already installed Pillow for macOS's own python in
+/Library/Python/2.7/site-packages/ you may have to remove that first with ``sudo
+pip uninstall Pillow``. The problem is that this is linked against macOS's Tcl
+and Tk frameworks, whereas homebrew's python is linked against homebrew's Tcl.
 This caused the message "Class TKApplication is implemented in both
 /usr/local/opt/tcl-tk/lib/libtk8.6.dylib and
 /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk" and a "Segmentation
 fault: 11".
 
-Now you can
-
-::
+Now you can::
 
     $ pip install Pillow
     $ pip install kombilo
     $ kombilo
-
-However, in this setting there still are some issues: The icons are not
-displayed correctly, and no substitute for right-clicking (in order to mark the
-search-relevant region) has been found so far.
 
 
 Further remarks
@@ -1353,12 +1339,9 @@ labels look better, you can use this option.
 
 **Only one mouse button**
 Some Mac OS X users have a mouse with only one button. Using this option, 
-they can mark the search-relevant region with Alt + (left) mouse button
-instead of the right mouse button.
-Set it to ::
-
-  <M2-Button-1>;<M2-B1-Motion>
-
+they can mark the search-relevant region with (left) mouse button click + drag.
+(On Macs, this is the default; on other operating systems, selecting the search
+region by right-click and drag is the default.)
 
 **Number of previous searches remembered**
 As explained above, with the 'back' button you can jump back to the previous

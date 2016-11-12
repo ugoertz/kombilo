@@ -630,6 +630,12 @@ You can reset the counter by quitting and reentering the "guess next move" mode.
 Known issues
 ============
 
+SGF tree restrictions
+---------------------
+
+The SGF tree algorithm currently ignores wild cards and move sequences.
+
+
 Menu bar not shown
 ------------------
 
