@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Kombilo
-AppVerName=Kombilo 0.8.2
+AppVerName=Kombilo 0.8.3
 ; also change in OutputBaseFilename below!
 AppCopyright=Copyright (C) 2001- Ulrich Goertz (ug@geometry.de)
 AppPublisher=Ulrich Goertz
@@ -14,7 +14,7 @@ UninstallDisplayIcon={app}\MyProg.exe
 Compression=bzip
 SourceDir=c:\projects\kombilo\dist\kombilo\
 OutputDir=c:\projects\kombilo\installer\
-OutputBaseFilename=kombilo082
+OutputBaseFilename=kombilo083
 MinVersion=0,5.0
 AllowNoIcons=yes
 ArchitecturesInstallIn64BitMode=x64
