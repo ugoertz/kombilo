@@ -630,11 +630,6 @@ You can reset the counter by quitting and reentering the "guess next move" mode.
 Known issues
 ============
 
-Anywhere field of game info search
-----------------------------------
-
-Searches in the *Anywhere* field have no effect in Kombilo 0.8.2.
-
 Menu bar not shown
 ------------------
 

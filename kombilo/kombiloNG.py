@@ -432,8 +432,12 @@ class GameList(object):
         return self.DBlist[DBindex]['data'][pos][prop]
 
     def getSGF(self, index):
-        '''Return the SGF source of the game at position ``index`` in the current
+        '''
+        Return the SGF source of the game at position ``index`` in the current
         list of games.
+
+        This returns the SGF if sgfInDB was True when processing the db;
+        otherwise it returns the root node SGF.
         '''
         DBindex, game = self.getIndex(index)
         if DBindex == -1:

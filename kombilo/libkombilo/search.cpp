@@ -1182,7 +1182,6 @@ string GameList::getSignature(int i) throw(DBError) {
 }
 
 string GameList::getSGF(int i) throw(DBError) {
-  if (!p_op->sgfInDB) return "";
   return getCurrentProperty(i, "sgf");
 }
 
@@ -1324,15 +1323,10 @@ void GameList::createGamesDB() throw(DBError) {
   sql1 +=                  "fphash long, ";             // hashcode of final position to detect duplicates
   sql1 +=                  "dbtree text, ";
   sql1 +=                  "date date";
+  sql1 +=                ", sgf text";  // contains full sgf if sgfInDB == true, otherwise only the root node
 
-  sql_ins_rnp =            "insert into GAMES (path, filename, pos, dbtree, date";
-  string question_marks =  "?,?,?,?,?";
-
-  if (p_op->sgfInDB) {
-    sql1 +=                ", sgf text";
-    sql_ins_rnp +=         ", sgf";
-    question_marks += ",?";
-  }
+  sql_ins_rnp =            "insert into GAMES (path, filename, pos, dbtree, date, sgf";
+  string question_marks =  "?,?,?,?,?,?";
 
   SGFtagsSize = SGFtags->size();
   int ctr = 0;
@@ -1596,15 +1590,22 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
     if (rc != SQLITE_OK) throw DBError();
 
     if (p_op->sgfInDB) {
-      if (c->root->numChildren == 1) rc = sqlite3_bind_text(ppStmt, stmt_ctr++, sgf, -1, SQLITE_TRANSIENT); 
+      if (c->root->numChildren == 1) rc = sqlite3_bind_text(ppStmt, stmt_ctr++, sgf, -1, SQLITE_TRANSIENT);
       else {
         string s= "(";
         s += c->outputVar(root);
         s+= ")";
         rc = sqlite3_bind_text(ppStmt, stmt_ctr++, s.c_str(), -1, SQLITE_TRANSIENT); 
       }
-      if (rc != SQLITE_OK) throw DBError();
+    } else {
+      // Write only root node to sgf column.
+      // Add () to make this a valid "SGF file" of its own.
+      string s= "(";
+      s += root->SGFstring.c_str();
+      s+= ")";
+      rc = sqlite3_bind_text(ppStmt, stmt_ctr++, s.c_str(), -1, SQLITE_TRANSIENT); 
     }
+    if (rc != SQLITE_OK) throw DBError();
 
     for(int i=0; i < SGFtagsSize; i++) {
       rc = sqlite3_bind_text(ppStmt, stmt_ctr++, (*rootNodeProperties)[i].c_str(), -1, SQLITE_TRANSIENT); 
@@ -1920,7 +1921,7 @@ int GameList::process(const char* sgf, const char* path, const char* fn, std::ve
     delete rootNodeProperties;
     process_results_vector.push_back(return_val);
     // printf("return_val %d\n", return_val);
-    root = root->down;
+    root = root->down; // now look at next game in this collection
     pos++;
   }
   delete c;

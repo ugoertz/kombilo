@@ -358,6 +358,18 @@ database for pattern search. You can also select whether all games (or
 none) of the database should be considered as pro games, or whether this
 should be decided by the rank specified in the files.
 
+**Strict duplicate check**
+This option affects how Kombilo decides whether two games are a duplicate of
+each other. Usually, two games are compared using the :ref:`Dyer signature
+<signature-search>`. If *Strict duplicate check* is selected, Kombilo in
+addition compares the final positions of the two games. In the very rare (but
+existent) case that two different games have the same Dyer signature, this is
+a more precise check. It has the disadvantages of being slower, and of marking
+games as different where there is just a small variation in the recording of the
+end game moves (which also is a rare, but existent phenomenon in the SGF
+collections around).
+
+**Create one DB per folder.**
 The default behavior of Kombilo is to create one database per folder (so
 descending recursively into some folder many databases might be created).
 Whether this is suitable or not depends on the number of folders, and the number
@@ -378,6 +390,17 @@ The hashing algorithms speed up searches for full board and corner
 positions respectively, on the other hand the procesing takes slightly
 longer, more disk space is consumed, and Kombilo uses more memory when
 running, and especially when processing new games.
+
+**Include full SGF**
+Usually Kombilo puts the *root node* of each SGF file into the database. This
+contains all the game information (such as player names, event, etc.), but not
+the moves themselves. From inside Kombilo this information can be accessed using
+the *Anywhere* field in the game info search. If there you also want to access
+the moves of the game (or if you want to use a database from your own scripts
+and need that information there), select this option. Then the full SGF will be
+copied to the database. Correspondingly, the database files will be much larger.
+(This is not required for the pattern search, nor for opening and playing
+through games from the game list.)
 
 
 .. index::

@@ -2053,7 +2053,7 @@ class App(v.Viewer, KEngine):
                 showwarning=showwarning,
                 index=index,
                 all_in_one_db=not self.options.oneDBperFolder.get(),
-                sgfInDB=False,
+                sgfInDB=self.options.include_full_sgf.get(),
                 logDuplicates=self.options.logDuplicates.get())
 
     def add_gl_at(self, index, gl, dbpath):
@@ -2292,15 +2292,15 @@ class App(v.Viewer, KEngine):
         recursionButton = Checkbutton(f3, text=_('Recursively add subdirectories'), highlightthickness=0, variable=self.options.recProcess, pady=5)
         recursionButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
-        oneDBperFolderButton = Checkbutton(f3, text=_('Create one DB per folder'), highlightthickness=0, variable=self.options.oneDBperFolder, pady=5)
-        oneDBperFolderButton.grid(row=2, column=0, columnspan=2, sticky=W)
-
         self.filenamesVar = StringVar()
         filenamesLabel = Label(f3, anchor='w', text=_('Files:'), pady=10)
         filenamesLabel.grid(row=1, column=2, sticky=E)
         filenamesMenu = Combobox(f3, textvariable=self.filenamesVar, values=['*.sgf', '*.sgf, *.mgt', _('All files')], state='readonly')
         filenamesMenu.set('*.sgf')
         filenamesMenu.grid(row=1, column=3, sticky=W)
+
+        oneDBperFolderButton = Checkbutton(f3, text=_('Create one DB per folder'), highlightthickness=0, variable=self.options.oneDBperFolder, pady=5)
+        oneDBperFolderButton.grid(row=2, column=0, columnspan=2, sticky=W)
 
         # self.encodingVar = StringVar()
         #
@@ -2319,45 +2319,59 @@ class App(v.Viewer, KEngine):
         # encoding1Menu.set(_('Add CA tag'))
         # encoding1Menu.grid(row=1, column=5, sticky=W)
 
-        duplButton = Checkbutton(f3, text=_('Accept duplicates'), highlightthickness=0, variable=self.options.acceptDupl, pady=5)
-        duplButton.grid(row=3, column=0, sticky=W)
+        duplButton = Checkbutton(
+                f3, text=_('Accept duplicates'),
+                highlightthickness=0, variable=self.options.acceptDupl, pady=5)
+        duplButton.grid(row=3, column=0, columnspan=2, sticky=W)
 
-        strictDuplCheckButton = Checkbutton(f3, text=_('Strict duplicate check'), highlightthickness=0, variable=self.options.strictDuplCheck, pady=5)
-        strictDuplCheckButton.grid(row=3, column=1, sticky=W)
+        strictDuplCheckButton = Checkbutton(
+                f3, text=_('Strict duplicate check'),
+                highlightthickness=0, variable=self.options.strictDuplCheck, pady=5)
+        strictDuplCheckButton.grid(row=3, column=2, columnspan=2, sticky=W)
 
         logDuplCheckButton = Checkbutton(
                 f3, text=_('Detailed log'),
                 highlightthickness=0,
                 variable=self.options.logDuplicates,
                 pady=5)
-        logDuplCheckButton.grid(row=3, column=2, sticky=W)
+        logDuplCheckButton.grid(row=3, column=4, columnspan=2, sticky=W)
 
         processVariations = Checkbutton(f3, text=_('Process variations'), highlightthickness=0, variable=self.options.processVariations, pady=5)
-        processVariations.grid(row=5, column=0, sticky=W, columnspan=2)
+        processVariations.grid(row=4, column=0, sticky=W, columnspan=2)
 
         profTagLabel = Label(f3, anchor='e', text=_('Tag as professional:'), pady=8)
-        profTagLabel.grid(row=6, column=0, sticky=W, )
+        profTagLabel.grid(row=5, column=0, sticky=W, )
         profTag = Combobox(f3, justify='left', textvariable=self.options.tagAsPro,
                                values=[_('Never'), _('All games'), _('All games with p-rank players'), ], state='readonly')
-        profTag.grid(row=6, column=1, columnspan=2, sticky=W)
+        profTag.grid(row=5, column=1, columnspan=2, sticky=W)
+
+        includeFullSGFButton = Checkbutton(f3, text=_('Include full SGF source'), highlightthickness=0, variable=self.options.include_full_sgf, pady=5)
+        includeFullSGFButton.grid(row=6, column=0, columnspan=2, sticky=W)
+
 
         sep = Separator(f3, orient='horizontal')
         sep.grid(row=7, column=0, columnspan=7, sticky=NSEW)
-        whereDatabasesButton = Checkbutton(f3, text=_('Store databases separately from SGF files'), highlightthickness=0,
-                                           command=self.toggleWhereDatabases, variable=self.options.storeDatabasesSeparately, padx=8)
+        whereDatabasesButton = Checkbutton(
+                f3,
+                text=_('Store databases separately from SGF files'),
+                highlightthickness=0,
+                command=self.toggleWhereDatabases,
+                variable=self.options.storeDatabasesSeparately,
+                padx=8)
         whereDatabasesButton.grid(row=8, column=0, columnspan=3, sticky=W)
 
-        self.whereDatabasesEntry = Entry(f3, textvariable=self.options.whereToStoreDatabases, )
-        self.whereDatabasesEntry.grid(row=8, column=3, columnspan=3, sticky=NSEW)
+        self.whereDatabasesEntry = Entry(
+                f3, textvariable=self.options.whereToStoreDatabases, )
+        self.whereDatabasesEntry.grid(row=8, column=3, columnspan=2, sticky=NSEW)
         if not self.options.storeDatabasesSeparately.get():
             self.whereDatabasesEntry.config(state=DISABLED)
 
         browseButton = Button(f3, text=_('Browse'), command=self.browseDatabases)
         browseButton.grid(row=8, column=5)
         f3.grid_columnconfigure(0, weight=1)
-        f3.grid_columnconfigure(1, weight=2)
-        f3.grid_columnconfigure(2, weight=2)
-        f3.grid_columnconfigure(3, weight=2)
+        f3.grid_columnconfigure(1, weight=1)
+        f3.grid_columnconfigure(2, weight=1)
+        f3.grid_columnconfigure(3, weight=1)
 
         sep1 = Separator(f3, orient='horizontal')
         sep1.grid(row=9, column=0, columnspan=7, sticky=NSEW)
@@ -2368,7 +2382,8 @@ class App(v.Viewer, KEngine):
         self.algo_hash_corner = Checkbutton(f3, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.options.algo_hash_corner, pady=5)
         self.algo_hash_corner.grid(row=10, column=3, columnspan=2)
 
-        self.saveProcMess = Button(f4, text=_('Save messages'), command=self.saveMessagesEditDBlist)
+        self.saveProcMess = Button(
+                f4, text=_('Save messages'), command=self.saveMessagesEditDBlist)
         self.saveProcMess.pack(side=RIGHT)
         self.processMessages = Message(f5)
         self.processMessages.pack(side=TOP, expand=YES, fill=BOTH)
