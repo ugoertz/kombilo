@@ -2254,8 +2254,24 @@ class Viewer:
         config_path = os.path.join(get_configfile_directory(), 'kombilo.cfg')
         if os.path.exists(config_path):
             configfile = open(config_path)
-            c.merge(ConfigObj(infile=configfile, encoding='utf8', default_encoding='utf8'))
+            kombilocfg = ConfigObj(
+                    infile=configfile,
+                    encoding='utf8', default_encoding='utf8')
+
+            c.merge(kombilocfg)
+
+            # set default options depending on OS
+            if sys.platform.startswith('darwin') and 'only_one_mouse_button' not in kombilocfg['options']:
+                # work around for cfg files written by 0.8.2
+                c['options']['only_one_mouse_button'] = "True"
+                c['options']['theme'] = "aqua"
             configfile.close()
+        else:
+            # set default options depending on OS
+            if sys.platform.startswith('darwin'):
+                c['options']['only_one_mouse_button'] = "True"
+                c['options']['theme'] = "aqua"
+
         return c
 
     def edit_options(self):
@@ -2802,7 +2818,10 @@ class Viewer:
         self.guessMode = IntVar()
 
         self.style = Style()
-        self.style.theme_use(self.options.theme.get())
+        try:
+            self.style.theme_use(self.options.theme.get())
+        except:
+            pass
 
         if self.options.language.get():
             self.switch_language(self.options.language.get())
