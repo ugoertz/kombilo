@@ -189,7 +189,7 @@ class BoardWC(Board):
         self.startpos = self.getBoardCoord((event.x, event.y), 1)
         if self.startpos == (-1, -1):  # click outside board -> clear selection
             self.delete('selection')
-            self.selection = ((0, 0), (-1, -1))
+            self.selection = ((0, 0), (self.boardsize-1, self.boardsize-1))
             if self.smartFixedColor.get():
                 self.fixedColor.set(1)
             self.changed.set(1)
