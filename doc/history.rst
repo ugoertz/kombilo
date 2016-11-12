@@ -1,9 +1,8 @@
+:tocdepth: 2
+
 =================
 History/Upgrading
 =================
-
-
-
 
 
 Upgrading
@@ -25,6 +24,12 @@ History/Change log
 
 0.8
 ---
+
+0.8.3 (November 2016)
+^^^^^^^^^^^^^^^^^^^^^
+
+Several minor changes, mostly to ensure compatibility with Mac OS X.
+
 
 0.8.2 (November 2016)
 ^^^^^^^^^^^^^^^^^^^^^

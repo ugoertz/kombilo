@@ -4,7 +4,7 @@ import glob
 from fabric.api import run, cd, local, lcd, prefix, get, put
 
 MAJOR_VERSION = '0.8'
-VERSION = '0.8.2'
+VERSION = '0.8.3'
 BASE_DIR = os.path.dirname(__file__)
 VIRTUALENV = '/bin/bash /home/ug/.virtualenvs/k08/bin/activate'
 

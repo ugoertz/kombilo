@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 ======================================
 Tutorial: Getting started with Kombilo
 ======================================
@@ -34,10 +36,11 @@ A *database* is a collection of SGF files; the default is to create one database
 per folder of SGF files. Kombilo does not come with any games. You can either
 download a game collection (:ref:`find-game-records`) from the internet, or buy
 a commercial one. The `GoGoD encyclopedia <http://gogodonline.co.uk/>`_ comes
-with more than 70.000 at the time of writing, and is highly recommended.
+with more than 85.000 at the time of writing, and is highly recommended. There
+are also several free collections around.
 
 See also the section about :ref:`requirements-on-SGF-files`
-in order to understand which kind of SGF files the program can handle. 
+in order to understand which kind of SGF files the program can handle.
 
 .. image:: images/editdblist.png
   :align: right
@@ -47,18 +50,18 @@ subdirectories should also be added, and then use the ``Add DB`` button to
 select a directory of SGF files. You can add several directories one after
 the other. From a performance point of view, it is best not to have too
 many databases, but rather to group your SGF files into few databases. Having
-a database of 50000 games should not be a problem. For much larger databases,
-you need sufficient memory on your machine. Processing a database of 100000
+a database of 50,000 games should not be a problem. For much larger databases,
+you need sufficient memory on your machine. Processing a database of 100,000
 might require up to 1.5 gigabytes of RAM for Kombilo. If you uncheck the hash
-algorithms, the memory usage (and search performance ...) go down considerably.
+algorithms, the memory usage during processing (and search performance ...) go
+down considerably.
 
 When you add a directory for the first time, the SGF files will be
 'translated' into a format that makes the search more efficient.  This
 processing takes quite some time; if you have thousands of games, it will
 take a couple of minutes even on a very fast machine.  But this has only to
 be done once. The data will be written to several .db files in the same
-directory. (Note: this processing is much faster now than it was in Kombilo
-0.5 and earlier versions.)
+directory.
 
 The sgf files remain in the directory, and Kombilo will not change them
 (unless you change the game info or edit the games yourself, of course).
@@ -76,17 +79,20 @@ using the ``OK`` button.
   is a subset of UTF-8, and in particular can be handled by Kombilo), but
   many SGF files with asian characters are encoded using different
   character encodings and hence cannot be fed into Kombilo right away. This
-  issue will hopefully be resolved soon. See :ref:`encodings`.
+  issue is not totally easy to resolve since the encoding is often not specified
+  in the files. See :ref:`encodings`.
 
 .. warning:: Collections in very many folders
 
-  If you have a collection in vy many (like hundreds or more) of folders with
+  If you have a collection in very many (like hundreds or more) of folders with
   relatively few games each, you should switch off the *Create one DB per
   folder* option.
 
+See :ref:`settingupdatabases` for further details.
+
+
 Searching for patterns
 ======================
-
 
 Now the game list should contain some files, and you can start the first
 search.  Place stones on the board by clicking. Ctrl-click to remove
@@ -105,15 +111,15 @@ rotating the board is automatically taken into account.
   :align: left
 
 Switch between placing black and white stones alternatingly, or stones of
-one color only by using the left most buttons in the toolbar.
+one color only by using the leftmost buttons in the toolbar on top.
 
 When no region is selected, the whole board is relevant.
 
 After defining the pattern and the relevant region, just click the search
 button (the looking glass in the row of buttons directly below the game
-list), or press ``Control-p``.  In order to go back to the complete game
-list, use the "reset game list" button - the leftmost button below the game
-list, or press ``Control-r``.
+list), or press ``Control-p`` (*p* attern search).  In order to go back to the
+complete game list, use the "reset game list" button - the leftmost button below
+the game list, or press ``Control-r``.
 
 If you click on a game in the game list, the game info (players, result, komi,
 event, date etc.) is displayed below the game list.
@@ -122,7 +128,7 @@ event, date etc.) is displayed below the game list.
 
 By double-clicking on a game in the game list, you load the game to the SGF
 editor and you can look at that game. You can also start the viewer by
-selecting a game (by a single click) and pressing the return key.  If you
+selecting a game (by a single click) and pressing enter.  If you
 prefer to open the game in a new window, use Shift-Click instead of
 double-clicking; cf. the :ref:`corresponding option
 <open-game-in-external-viewer>`.
@@ -163,8 +169,8 @@ is given. For the ten most frequent continuations, you get
   board), you get the black winning percentage for white playing at this
   point, and then the black winning percentage for black playing there.
   (Because there is not enough space, the winning percentage for white is
-  not given, but of course (neglecting jigos etc.) it will be 100% - black
-  winning percentage.
+  not given, but of course (neglecting jigos etc.) it will be *100% - black
+  winning percentage*.
 
 .. image:: images/statistics.png
 
@@ -172,21 +178,26 @@ is given. For the ten most frequent continuations, you get
 The labels are ordered by the number of occurrences of the corresponding
 continuation. (Unless there were already labels present in the search
 pattern: in that case Kombilo will use those labels to refer to the same
-intersections, and thus will not sort by frequency.)
+intersections, and thus will not sort by frequency.) The sort criterion can be
+changed in the Options tab.
 
-If you have a sufficient number of games in your databases, this lets you
-create fuseki and joseki dictionaries very easily: The color of the label
-indicates whether black or white (or both, depending on the game, in case
-of the gray labels) played on this point. See :py:mod:`sgftree`.
+The color of the label indicates whether black or white (or both, depending on
+the game, in case of the gray labels) played on this point.  If you have
+a sufficient number of games in your databases, this lets you create fuseki and
+joseki dictionaries very easily: See :ref:`SGF tree search <sgf-tree>`.
+
+Clicking the calendar sheet button on the right of the toolbar below the game
+list switches the statistics view to a time line view, showing in which time
+period the different continuations were played.
 
 After a search, you can clear the board with the *start* button above the
 board.  You can reset the game list (such that it contains all the games
 again) with the *reset game list* button in the toolbar below the game
-list, or by pressing ``Control-r``.  In the file menu, you can also choose
-to do a "complete reset" - that will reset Kombilo to the state right after
-it started up.
+list, or by pressing ``Control-r``. You can do both simultaneously using the
+*reset board and gamelist* button right next to the looking glass below the game
+list. In the file menu, you can also choose to do a "complete reset" - that will
+reset Kombilo to the state right after it started up.
 
-See also :ref:`SGF tree search <sgf-tree>`.
 
 Pattern search options
 ======================
@@ -206,7 +217,8 @@ searches, and disables it for all other searches. You can change
 that in the :ref:`options-menu`.
 
 Furthermore, for a pattern on the edge or in the middle of the board,
-the program also looks for translations; this can be disabled
+the program also looks for *translations* (in the mathematical sense, i.e., for
+occurrences of the same pattern at another place along the edge or on the board); this can be disabled
 by the *fixed anchor* option.
 
 With the *black/white*, *black* and *white* buttons in the line below 
@@ -215,10 +227,10 @@ white plays next. This is sometimes useful, in particular for joseki
 searches with very few stones on the board. The default is to allow either
 a black or a white continuation (or no continuation at all).
 
-Finally, you can impose a move limit, such that only games
-are found where the pattern occurs before the given limit.
+Finally, you can impose a move limit, such that only games are found where the
+pattern occurs before the given limit.
 
-You can also add wildcards to the search pattern, by shift-clicking on 
+You can also add wildcards to the search pattern, by shift-clicking on
 some point. These will be marked by small green circles, and mean that
 in the search these points may be either empty or contain a stone of
 either color.
@@ -227,13 +239,16 @@ For example, the following pattern finds all kos (that are not on the edge):
 
 .. image:: images/search_patt_ko.png
 
+Shift-clicking again, the green circle will turn black (and, on the next
+shift-click, white), meaning that positions are found where this position is
+either empty or has a black stone (or, is empty or white, respectively).
+
 
 Game Info search
 ================
 
 If you are looking for games by a particular player, from a particular
-event or from a certain time period, you can use the 
-game info search.
+event or from a certain time period, you can use the game info search.
 
 .. image:: images/isearch.png
 
@@ -260,7 +275,7 @@ appropriate tool among the 'edit tools' in the data window. Then you can
 perform the corresponding operation by holding down the Control key and
 clicking on an intersection.
 
-With Shift + right-click you can go to the node where some move was/will 
+With Shift + right-click you can go to the node where some move was/will
 be played.
 
 Kombilo's main board has two more features which are related to the pattern
@@ -280,11 +295,14 @@ If the current SGF file contains variations, you can switch between the
 alternatives for the current move with the PageUp and PageDown keys.
 
 You can also use the SGF editor without the database functionality by
-starting the program ``v.py``.
+opening games from the game list in the external viewer by *Shift-click*.
 
 
 The SGF data column
 -------------------
+
+In the left column of the window, you find all kinds of information about the
+currently opened SGF files.
 
 
 File list
@@ -329,7 +347,7 @@ Game info
 
 This shows part of the game information (names of players, result, date,
 etc.) of the current game. In order to see the full game information, or to
-edit it, use the button depicting a looking glass and a sheet of paper
+edit it, use the button depicting a small looking glass over a sheet of paper
 above the go board.
 
 Game tree
@@ -356,6 +374,8 @@ displayed.
 The game list column
 ====================
 
+The right column of the Kombilo window is the game list column.
+
 At the top, the game list window shows the number of games currently in the
 list, and the B/W winning percentages (the two numbers will often not
 add up to 100% since there might be Jigo's, unfinished games etc.)
@@ -365,8 +385,8 @@ for the currently selected game in the list is shown (just click on a game
 to select it).
 
 At the bottom, there is a "notebook" with one sheet ("tab") each for the
-pattern search statistics, the pattern search options, the game info
-search, the date profile, tags and for messages.
+pattern search statistics, the date profile, the pattern search options, the game info
+search, tags and for messages.
 
 Right above the notebook, there is a toolbar with several buttons and
 switches.
@@ -410,7 +430,7 @@ The **Go to: field** makes it easy to find specific games in the game list
 quickly.  The 'Go to' entry always works with respect to the current sort
 criterion.  Let's assume that you sorted the database by date. Then
 entering something in the 'Go to' field will jump to the closest game in
-the game list the date of which starts with what you entered. 
+the game list the date of which starts with what you entered.
 
 Date profile of the database
 ----------------------------
@@ -425,6 +445,8 @@ select the *date profile* tab. If one bar is twice as high as another one,
 then this means that in the first time period the pattern was played twice
 as much as in the second one. The height of the bars does not contain
 information about the absolute number of games in the current game list.
+
+The time period shown can be changed in the *Options* tab.
 
 You can also get date profile information on the different continuations in
 a pattern search: Open the statistics tab and enable the date profile view by
@@ -451,9 +473,9 @@ Kombilo and are set (semi-)automatically:
   this tag.
 
 * Reference to commentary available; set automatically for all games for
-  which a reference to a game comment in the literature is available. You
-  can configure which books/journals should be considered here by editing
-  the file ``kombilo.cfg`` accordingly.
+  which a reference to a game comment in the literature is available (and known
+  to Kombilo). You can configure which books/journals should be considered here
+  by editing the file ``kombilo.cfg`` accordingly.
 
 * Seen: set automatically for all games which you opened in the SGF viewer.
 
@@ -518,7 +540,7 @@ left (depicting a broom).
 
 For instance, you could create a tag ``A Large Avalanche Joseki``, do a
 pattern search for the large avalanche joseki, and tag all games in the
-resulting game list with the tag ``A``. The you can easily search for all
+resulting game list with the tag ``A``. Then you can easily search for all
 these games, also in combination with other tags, and you can search for
 all games where the large avalanche does not occur, by searching for ``not
 A`` - and again, this can be combined with searching for other tags.
@@ -526,15 +548,17 @@ A`` - and again, this can be combined with searching for other tags.
 Search history
 --------------
 
-This tab contains a list of previous search patterns. 
+Selecting the *Edit Advanced Options* menu entry you can choose whether to
+display the search history at the bottom of the left hand column (the default)
+or as a tab on the right.
+
 Click on one of the small boards to go back to the corresponding pattern
 search (i.e. the pattern and the game list are restored to what they have
 been right after the search).
 
 .. image:: images/searchhistory.jpg
 
-See also the :ref:`corresponding section <search-history>` in the manual.
-
+See also the :ref:`Search History <search-history>` in the manual.
 
 
 Analyzing a game
@@ -548,10 +572,12 @@ first few moves you may want to do a whole board search, in order to see up
 to which point the fuseki you played also occurs in professional games, and
 afterwards you have to select an appropriate relevant region.
 
-You can also load a fuseki or joseki dictionary For example, Kombilo works
+You can also load a fuseki or joseki dictionary. For example, Kombilo works
 quite well with `Kogo's joseki dictionary
 <http://waterfire.us/joseki.htm>`_.  To navigate all the variations, you
-should enable the 'Show next move' option.
+should enable the 'Show next move' option. You may want to edit the file and
+change the date (SGF DT property) to a fake date in the future before adding it
+as a database, so that it will always be shown on top of the game list.
 
 
 
@@ -567,7 +593,7 @@ placed on the board.
 
 When you switch to the 'guess next move' mode, a small frame appears next
 to the game tree, which gives you some feedback on your guesses. If your
-guess is right, it displays a green square (and the move is played on the 
+guess is right, it displays a green square (and the move is played on the
 board).
 
 .. image:: images/guessrightwrong.jpg
@@ -584,7 +610,6 @@ Of course, if you just can't find the next move, you can always use the
 
 
 
-
 Further notes
 =============
 
@@ -592,14 +617,14 @@ Using Kombilo with non-latin (Unicode) characters
 -------------------------------------------------
 
 Kombilo works out of the box with UTF-8 encoded SGF files, but currently
-not with other encodings.
+not with other encodings. To add non-UTF-8 files, you would have to find out
+their encoding and then recode them.
 
 
 How can I reset the correct/wrong counter in the "guess next move" mode?
 ------------------------------------------------------------------------
 
-Currently, you can only reset the counter by quitting and reentering the
-"guess next move" mode.
+You can reset the counter by quitting and reentering the "guess next move" mode.
 
 
 Known issues
@@ -619,9 +644,4 @@ Shutting down the program is quite slow, and it is not really clear (to me) what
 causes this.
 
 
-SGF tree memory usage
----------------------
-
-Computing an SGF tree (with hundreds of pattern searches) results in high memory
-usage (possibly several gigabytes).
 

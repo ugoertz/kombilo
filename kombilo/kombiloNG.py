@@ -50,8 +50,6 @@ if not '_' in __builtin__.__dict__:
     # print 'kombiloNG ignores translations'
     _ = lambda s: s
 
-KOMBILO_VERSION = '0.8'
-
 REFERENCED_TAG = 3
 SEEN_TAG = 4
 
@@ -434,8 +432,12 @@ class GameList(object):
         return self.DBlist[DBindex]['data'][pos][prop]
 
     def getSGF(self, index):
-        '''Return the SGF source of the game at position ``index`` in the current
+        '''
+        Return the SGF source of the game at position ``index`` in the current
         list of games.
+
+        This returns the SGF if sgfInDB was True when processing the db;
+        otherwise it returns the root node SGF.
         '''
         DBindex, game = self.getIndex(index)
         if DBindex == -1:
@@ -805,6 +807,30 @@ class KEngine(object):
         path_to_initial_node = cursor.currentNode().pathToNode()
         plist = [(cursor.currentNode(), snapshot_ids)]
 
+        options_text = u'{options_str}:\n{min_num_hits_str}: {min_num_hits}\n{max_num_br_str}: {max_num_br}\n{depth_str}: {depth}\n{reset_gl_str}: {reset_gl}\n{sel_str}: {sel}\n\n'.format(**{
+            'options_str': _('Options'),
+            'min_num_hits_str': _('Minimum number of hits'),
+            'max_num_br_str': _('Maximum number of branches'),
+            'depth_str': _('Depth'),
+            'reset_gl_str': _('Reset game list'),
+            'sel_str': _('Search region'),
+            'min_num_hits': options.as_int('min_number_of_hits'),
+            'max_num_br': options.as_int('max_number_of_branches'),
+            'depth': options.as_int('depth'),
+            'reset_gl': _('Yes') if options.as_bool('reset_game_list') else _('No'),
+            'sel': repr(options['selection']),
+            })
+
+        # Add information about search options to start node.
+        # No need to add comment_head here, since this will be done when we add
+        # the search statistics, and we don't want to do it twice.
+        if not 'C' in cursor.currentNode():
+            cursor.currentNode()['C'] = [
+                    options_text]
+        else:
+            cursor.currentNode()['C'] = [
+                    cursor.currentNode()['C'][0] + '\n\n' + options_text, ]
+
         counter = 0
 
         while plist:
@@ -830,11 +856,13 @@ class KEngine(object):
                 Wperc = self.gamelist.Wwins * 100.0 / noOfG
             else:
                 Bperc, Wperc = 0, 0
-            comment_text = options['comment_head'] + '\n' + _('{0} games (B: {1:1.1f}%, W: {2:1.1f}%)').format(noOfG, Bperc, Wperc)
+            comment_text = _('{0} games (B: {1:1.1f}%, W: {2:1.1f}%)').format(noOfG, Bperc, Wperc)
             if not 'C' in node:
-                node['C'] = [comment_text]
+                node['C'] = [options['comment_head'] + '\n' + comment_text]
             else:
-                node['C'] = [node['C'][0] + '\n\n' + comment_text, ]
+                node['C'] = [
+                    options['comment_head'] + '\n' +
+                    node['C'][0] + '\n\n' + comment_text, ]
 
             if len(node.pathToNode()) - len(path_to_initial_node) >= options.as_int('depth'):
                 continue
@@ -879,7 +907,7 @@ class KEngine(object):
                     continue
                 ctr += 1
 
-                comment_text += body_str % (cont.label, 'B' if cont.B else 'W', cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
+                comment_text += body_str % (cont.label, _('B') if cont.B else _('W'), cont.B or cont.W, _get_date(cont.earliest()), _get_date(cont.latest()))
 
                 # put label for (cont.x, cont.y) into node
                 pos = chr(cont.x + options['selection'][0][0] + 97) + chr(cont.y + options['selection'][0][1] + 97)  # SGF coordinates
@@ -897,7 +925,7 @@ class KEngine(object):
                     cursor.next(i, markCurrent=False)
                 cursor.add(s, update=False)
                 plist.append((cursor.currentNode(),         # store the node
-                            snapshot_ids_parent,          # store snapshots
+                              snapshot_ids_parent,          # store snapshots
                             ))
 
             if comment_text:
@@ -1521,7 +1549,7 @@ class KEngine(object):
         try:
             success = self.process(dbpath, datapath, filenames, acceptDupl, strictDuplCheck, tagAsPro, processVariations, algos, messages, progBar, gl=gl, sgfInDB=sgfInDB, logDuplicates=logDuplicates)
             # process returns the GameList, or None if no games were added
-        except ImportError:
+        except:
             if showwarning:
                 showwarning(_('Error'), _('A fatal error occurred when processing %s. Are the directories for the database files writable?') % dbpath)
             return

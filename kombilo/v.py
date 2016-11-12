@@ -53,15 +53,16 @@ from . import libkombilo as lk
 from .board import *
 from .sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
-KOMBILO_VERSION = 0.8
+KOMBILO_VERSION = '0.8.3'
 
 # ---------------------------------------------------------------------------------------
 
 def get_configfile_directory():
+    version = ''.join(KOMBILO_VERSION.split('.')[:2])
     if sys.platform.startswith('win'):
-        return os.path.join(os.environ.get('APPDATA'), 'kombilo', ('%s' % KOMBILO_VERSION).replace('.', ''))
+        return os.path.join(os.environ.get('APPDATA'), 'kombilo', version)
     else:
-        return os.path.expanduser('~/.kombilo/%s' % ('%s' % KOMBILO_VERSION).replace('.', ''))
+        return os.path.expanduser('~/.kombilo/%s' % version)
 
 def load_icon(button, filename, imagelist, buttonsize):
     try:
@@ -102,7 +103,7 @@ class BunchTkVar:
 
     def loadFromDisk(self, d):
         for x in d:
-            # print x
+            #  print x
             #  if x in self.__dict__:
             #      print ' old value:', self.__dict__[x].get()
             #      print ' new value:',
@@ -526,6 +527,7 @@ class DataWindow:
         window = window
 
         win = PanedWindow(window, orient='vertical')
+        win.config(bd=0, bg="#666666")  # make sashes dark gray
         self.win = win
         win.pack(expand=YES, fill=BOTH)
 
@@ -540,13 +542,13 @@ class DataWindow:
         self.filelistF.rowconfigure(2, weight=1)
         self.filelistF.columnconfigure(0, weight=1)
 
-        self.filelistB1 = Button(self.filelistF, text=_('NEW'), command=self.mster.newFile)
+        self.filelistB1 = Button(self.filelistF, command=self.mster.newFile)
         self.filelistB1.grid(row=0, column=1, sticky=S)
-        self.filelistB2 = Button(self.filelistF, text=_('OPEN'), command=self.mster.openFile)
+        self.filelistB2 = Button(self.filelistF, command=self.mster.openFile)
         self.filelistB2.grid(row=1, column=1, sticky=S)
-        self.filelistB3 = Button(self.filelistF, text=_('DEL'), command=self.mster.delFile)
+        self.filelistB3 = Button(self.filelistF, command=self.mster.delFile)
         self.filelistB3.grid(row=0, column=2, sticky=S)
-        self.filelistB4 = Button(self.filelistF, text=_('split'), command=self.mster.splitCollection)
+        self.filelistB4 = Button(self.filelistF, command=self.mster.splitCollection)
         self.filelistB4.grid(row=1, column=2, sticky=S)
 
         self.tkImages = []
@@ -565,9 +567,9 @@ class DataWindow:
         self.gamelistF.rowconfigure(2, weight=1)
         self.gamelistF.columnconfigure(0, weight=1)
 
-        self.gamelistB1 = Button(self.gamelistF, text=_('NEW'), command=self.mster.newGame)
+        self.gamelistB1 = Button(self.gamelistF, command=self.mster.newGame)
         self.gamelistB1.grid(row=0, column=1, sticky=S)
-        self.gamelistB2 = Button(self.gamelistF, text=_('DEL'), command=self.mster.delGame)
+        self.gamelistB2 = Button(self.gamelistF, command=self.mster.delGame)
         self.gamelistB2.grid(row=1, column=1, sticky=S)
 
         for button, filename in [
@@ -2222,7 +2224,7 @@ class Viewer:
 
         try:
             c = self.config
-            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
+            c['main']['version'] = 'kombilo%s' % '.'.join(KOMBILO_VERSION.split('.')[:2])
             c['main']['sgfpath'] = self.sgfpath
             self.saveOptions(c['options'])
             c.filename = os.path.join(get_configfile_directory(), 'kombilo.cfg')
@@ -2252,8 +2254,24 @@ class Viewer:
         config_path = os.path.join(get_configfile_directory(), 'kombilo.cfg')
         if os.path.exists(config_path):
             configfile = open(config_path)
-            c.merge(ConfigObj(infile=configfile, encoding='utf8', default_encoding='utf8'))
+            kombilocfg = ConfigObj(
+                    infile=configfile,
+                    encoding='utf8', default_encoding='utf8')
+
+            c.merge(kombilocfg)
+
+            # set default options depending on OS
+            if sys.platform.startswith('darwin') and 'only_one_mouse_button' not in kombilocfg['options']:
+                # work around for cfg files written by 0.8.2
+                c['options']['only_one_mouse_button'] = "True"
+                c['options']['theme'] = "aqua"
             configfile.close()
+        else:
+            # set default options depending on OS
+            if sys.platform.startswith('darwin'):
+                c['options']['only_one_mouse_button'] = "True"
+                c['options']['theme'] = "aqua"
+
         return c
 
     def edit_options(self):
@@ -2608,37 +2626,37 @@ class Viewer:
         self.Wbutton = Radiobutton(navFrame, text='W', indicatoron=0, bg='#999999',
                                    variable=self.modeVar, value='white', command=self.modeChange)
 
-        self.nextButton = Button(navFrame, text='->', command=self.next)
+        self.nextButton = Button(navFrame, command=self.next)
         self.boardFrame.bind('<Right>', lambda e, s=self.nextButton: s.invoke())
-        self.prevButton = Button(navFrame, text='<-', command=self.prev)
+        self.prevButton = Button(navFrame, command=self.prev)
         self.boardFrame.bind('<Left>', lambda e, s=self.prevButton: s.invoke())
-        self.next10Button = Button(navFrame, text='-> 10', command=self.next10)
+        self.next10Button = Button(navFrame, command=self.next10)
         self.boardFrame.bind('<Down>', lambda e, s=self.next10Button: s.invoke())
-        self.prev10Button = Button(navFrame, text='<- 10', command=self.prev10)
+        self.prev10Button = Button(navFrame, command=self.prev10)
         self.boardFrame.bind('<Up>', lambda e, s=self.prev10Button: s.invoke())
-        self.startButton = Button(navFrame, text='|<-', command=self.start)
+        self.startButton = Button(navFrame, command=self.start)
         self.boardFrame.bind('<Home>', lambda e, s=self.startButton: s.invoke())
-        self.endButton = Button(navFrame, text='->|', command=self.end)
+        self.endButton = Button(navFrame, command=self.end)
         self.boardFrame.bind('<End>', lambda e, s=self.endButton: s.invoke())
 
         self.boardFrame.bind('<Prior>', self.upVariation)
         self.boardFrame.bind('<Next>', self.downVariation)
 
-        self.passButton = Button(navFrame, text=_('Pass'), command=self.passFct)
+        self.passButton = Button(navFrame, command=self.passFct)
 
-        self.gameinfoButton = Button(navFrame, text=_('Info'), command=self.gameinfo, underline=0)
+        self.gameinfoButton = Button(navFrame, command=self.gameinfo, underline=0)
         self.boardFrame.bind('<Control-i>', lambda e, s=self.gameinfoButton: s.invoke())
 
         lab = Label(navFrame, text=_('Ctrl-Click:'))
 
-        self.removeStoneButton = Radiobutton(navFrame, text='DEL ST', indicatoron=0, variable=self.options.labelType, value='DEL ST')
-        self.triangleButton = Radiobutton(navFrame, text='TR', indicatoron=0, variable=self.options.labelType, value='TR')
-        self.squareButton = Radiobutton(navFrame, text='SQ', indicatoron=0, variable=self.options.labelType, value='SQ')
-        self.letterUButton = Radiobutton(navFrame, text='ABC', indicatoron=0, variable=self.options.labelType, value='ABC')
-        self.letterLButton = Radiobutton(navFrame, text='abc', indicatoron=0, variable=self.options.labelType, value='abc')
-        self.numberButton = Radiobutton(navFrame, text='123', indicatoron=0, variable=self.options.labelType, value='12n')
-        self.delButton = Button(navFrame, text='DEL', command=lambda self=self: self.delVar())
-        self.guessModeButton = Checkbutton(navFrame, text=_('Guess mode'), indicatoron=0,
+        self.removeStoneButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='DEL ST')
+        self.triangleButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='TR')
+        self.squareButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='SQ')
+        self.letterUButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='ABC')
+        self.letterLButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='abc')
+        self.numberButton = Radiobutton(navFrame, indicatoron=0, variable=self.options.labelType, value='12n')
+        self.delButton = Button(navFrame, command=lambda self=self: self.delVar())
+        self.guessModeButton = Checkbutton(navFrame, indicatoron=0,
                                            variable=self.guessMode, command=self.dataWindow.toggleGuessMode)
 
         ca0 = Separator(navFrame, orient='vertical')
@@ -2774,7 +2792,9 @@ class Viewer:
 
         try:
             self.config = self.get_config_obj()
-            if self.config['main']['version'].strip() == 'kombilo%s' % KOMBILO_VERSION:
+            if ('version' not in self.config['main']  # no version fixed in default.cfg
+                    or self.config['main']['version'].strip() ==
+                    'kombilo%s' % '.'.join(KOMBILO_VERSION.split('.')[:2])):
                 # otherwise this is an old .cfg file which should be ignored
 
                 if 'sgfpath' in self.config['main']:
@@ -2798,7 +2818,10 @@ class Viewer:
         self.guessMode = IntVar()
 
         self.style = Style()
-        self.style.theme_use(self.options.theme.get())
+        try:
+            self.style.theme_use(self.options.theme.get())
+        except:
+            pass
 
         if self.options.language.get():
             self.switch_language(self.options.language.get())
@@ -2869,8 +2892,24 @@ class Viewer:
                         __name__, 'icons/white%d.png' % i)).convert('RGBA')
                     for i in range(16)
                     ]
+        blackShaded = PILImage.open(pkg_resources.resource_stream(
+                        __name__, 'icons/black-shaded.png')).convert('RGBA')
+        whiteShaded = PILImage.open(pkg_resources.resource_stream(
+                        __name__, 'icons/white-shaded.png')).convert('RGBA')
 
-        self.board = BoardClass(self.boardFrame, 19, (30, 25), 1, self.labelFont, 1, None, self.boardImg, self.blackStones, self.whiteStones, True)
+        self.board = BoardClass(
+                self.boardFrame, 19, (30, 25),
+                fuzzy=1,
+                labelFont=self.labelFont,
+                focus=1,
+                callOnChange=None,
+                boardImg=self.boardImg,
+                blackImg=self.blackStones, whiteImg=self.whiteStones,
+                use_PIL=True,
+                onlyOneMouseButton=self.options.only_one_mouse_button.get(),
+                blackShaded=blackShaded,
+                whiteShaded=whiteShaded,
+                )
         self.board.shadedStoneVar = self.options.shadedStoneVar
         self.board.fuzzy = self.options.fuzzy
 

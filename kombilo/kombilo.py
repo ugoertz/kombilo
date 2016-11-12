@@ -65,10 +65,7 @@ from .kombiloNG import *
 from .custommenus import CustomMenus
 
 
-
-
-
-KOMBILO_RELEASE = '0.8'
+KOMBILO_VERSION = v.KOMBILO_VERSION
 
 # --------- GUI TOOLS -------------------------------------------------------------------
 
@@ -98,7 +95,8 @@ class BoardWC(Board):
         describes the current board position. It can then be restored with restore."""
 
     def __init__(self, *args, **kwargs):
-        oOMB = kwargs.pop('onlyOneMouseButton', 0)
+        self.onlyOneMouseButton = kwargs.pop('onlyOneMouseButton', 0)
+        bind_mouse_buttons = kwargs.pop('bind_mouse_buttons', True)
 
         Board.__init__(self, *args, **kwargs)
 
@@ -109,34 +107,20 @@ class BoardWC(Board):
         self.fixedColor = IntVar()
         self.smartFixedColor = IntVar()
 
-        self.onlyOneMouseButton = 'init'
-        self.rebind_mouse_buttons(oOMB)
+        if bind_mouse_buttons:
+            if self.onlyOneMouseButton:
+                self.do_on_b1 = self.selStart
+                self.do_on_b1r = self.selStop
+                self.do_on_b1m = self.selDrag
+            else:
+                self.bound3 = self.bind('<Button-3>', self.selStart)
+                self.bound3r = self.bind('<ButtonRelease-3>', self.selStop)
+                self.bound3m = self.bind('<B3-Motion>', self.selDrag)
+        self.startpos = None
 
         self.bounds1 = self.bind('<Shift-1>', self.wildcard)
 
         self.invertSelection = IntVar()
-
-    def unbind_third_mouse_button(self):
-        """Unbinds the 'third' mouse button events (click, motion)."""
-        if self.onlyOneMouseButton:
-            click, motion = self.onlyOneMouseButton.split(';')
-            self.unbind(click, self.bound3m)
-            self.unbind(motion, self.bound3)
-        else:
-            self.unbind('<B3-Motion>', self.bound3m)
-            self.unbind('<3>', self.bound3)
-
-    def rebind_mouse_buttons(self, onlyOneMouseButton):
-        if self.onlyOneMouseButton != 'init':  # do not do this during the first run (since self.bound3m, self.bound3 do not exist yet)
-            self.unbind_third_mouse_button()
-        self.onlyOneMouseButton = onlyOneMouseButton
-        if onlyOneMouseButton:
-            click, motion = onlyOneMouseButton.split(';')
-            self.bound3 = self.bind(click, self.selStart)   # '<M2-Button-1>'
-            self.bound3m = self.bind(motion, self.selDrag)  # '<M2-B1-Motion>'
-        else:
-            self.bound3 = self.bind('<Button-3>', self.selStart)
-            self.bound3m = self.bind('<B3-Motion>', self.selDrag)
 
     def resize(self, event=None):
         """ Resize the board. Take care of wildcards and selection here. """
@@ -199,23 +183,56 @@ class BoardWC(Board):
     # ---- selection of search-relevant section -----------------------------------
 
     def selStart(self, event):
-        """ React to right-click.
+        """ React to right-click, (or, if onlyOneMouseButton, left click).
         """
 
-        self.delete('selection')
-        x, y = self.getBoardCoord((event.x, event.y), 1)
-        x = max(x, 0)
-        y = max(y, 0)
-        self.selection = ((x, y), (-1, -1))
-        if self.smartFixedColor.get():
-            self.fixedColor.set(1)
-        self.changed.set(1)
+        self.startpos = self.getBoardCoord((event.x, event.y), 1)
+        if self.startpos == (-1, -1):  # click outside board -> clear selection
+            self.delete('selection')
+            self.selection = ((0, 0), (-1, -1))
+            if self.smartFixedColor.get():
+                self.fixedColor.set(1)
+            self.changed.set(1)
+
 
     def selDrag(self, event):
         """ React to right-mouse-key-drag. """
+        if self.startpos is None:
+            # Come here from shift-click or ctrl-click, so do nothing
+            return
+
         pos = self.getBoardCoord((event.x, event.y), 1)
-        if pos[0] >= self.selection[0][0] and pos[1] >= self.selection[0][1]:
-            self.setSelection(self.selection[0], pos)
+        try:
+            self.dragging
+        except:
+            self.dragging = False
+        if pos != self.startpos:
+            if not self.dragging:
+                self.delShadedStone()
+                self.delete('selection')
+                x, y = self.startpos
+                x = max(x, 0)
+                y = max(y, 0)
+                self.selection = ((x, y), (-1, -1))
+                if self.smartFixedColor.get():
+                    self.fixedColor.set(1)
+                self.changed.set(1)
+            self.dragging = True
+            if pos[0] >= self.selection[0][0] and pos[1] >= self.selection[0][1]:
+                self.setSelection(self.selection[0], pos)
+
+    def selStop(self, event):
+        if self.startpos is None:
+            # Come here from shift-click or ctrl-click, so do nothing
+            return
+
+        self.dragging = False
+        pos = self.getBoardCoord((event.x, event.y), 1)
+        if pos == self.startpos and self.onlyOneMouseButton:
+            # no movement, and using same mouse button for selection and for
+            # placing stones, so place stone
+            self.onMove(event)
+        self.startpos = None
 
     def drawSelection(self):
         pos0, pos1 = self.selection
@@ -674,11 +691,11 @@ class PrevSearchesStack(object):
                 [], [],
                 use_PIL=True, onlyOneMouseButton=0,
                 square_board=False,
+                bind_mouse_buttons=False,
                 offset=min(10 * self.current.level(), 100))  # small board
         b.resizable = 0
         b.pack(side=LEFT, expand=YES, fill=Y)
         b.update_idletasks()
-        b.unbind_third_mouse_button()
         b.unbind('<Configure>', b.boundConf)
         b.unbind('<Shift-1>', b.bounds1)
         b.restore(kwargs['boardData'])
@@ -1968,14 +1985,14 @@ class App(v.Viewer, KEngine):
         self.editDB_OK.config(state=DISABLED)
         self.saveProcMess.config(state=DISABLED)
 
-        dbp = str(askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath))
+        dbp = askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath)
 
         if not dbp:
             self.editDB_OK.config(state=NORMAL)
             self.saveProcMess.config(state=NORMAL)
             return
         else:
-            dbp = os.path.normpath(dbp)
+            dbp = os.path.normpath(str(dbp))
 
         self.datapath = os.path.split(dbp)[0]
 
@@ -2002,10 +2019,17 @@ class App(v.Viewer, KEngine):
         else:
             datap = ('', '#')  # this means: same as dbpath
 
+        if self.options.recProcess.get() and self.options.oneDBperFolder.get() and len(list(os.walk(dbp))) > 120 and not askokcancel(
+                _('Warning'),
+                _('You are about to add a folder with many subfolders. It is probably better to deselect the "Create one DB per folder" option. Proceed nevertheless?')):
+            return
+
         self.callAddDB(dbp, datap)
 
         self.editDB_OK.config(state=NORMAL)
         self.saveProcMess.config(state=NORMAL)
+        self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
+        self.processMessages.update()
 
     def callAddDB(self, dbp, datap, index=None):
         tagAsPro = {'Never': 0, 'All games': 1, 'All games with p-rank players': 2, }[self.untranslate_tagAsPro()]
@@ -2029,7 +2053,7 @@ class App(v.Viewer, KEngine):
                 showwarning=showwarning,
                 index=index,
                 all_in_one_db=not self.options.oneDBperFolder.get(),
-                sgfInDB=False,
+                sgfInDB=self.options.include_full_sgf.get(),
                 logDuplicates=self.options.logDuplicates.get())
 
     def add_gl_at(self, index, gl, dbpath):
@@ -2268,15 +2292,15 @@ class App(v.Viewer, KEngine):
         recursionButton = Checkbutton(f3, text=_('Recursively add subdirectories'), highlightthickness=0, variable=self.options.recProcess, pady=5)
         recursionButton.grid(row=1, column=0, columnspan=2, sticky=W)
 
-        oneDBperFolderButton = Checkbutton(f3, text=_('Create one DB per folder'), highlightthickness=0, variable=self.options.oneDBperFolder, pady=5)
-        oneDBperFolderButton.grid(row=2, column=0, columnspan=2, sticky=W)
-
         self.filenamesVar = StringVar()
         filenamesLabel = Label(f3, anchor='w', text=_('Files:'), pady=10)
         filenamesLabel.grid(row=1, column=2, sticky=E)
         filenamesMenu = Combobox(f3, textvariable=self.filenamesVar, values=['*.sgf', '*.sgf, *.mgt', _('All files')], state='readonly')
         filenamesMenu.set('*.sgf')
         filenamesMenu.grid(row=1, column=3, sticky=W)
+
+        oneDBperFolderButton = Checkbutton(f3, text=_('Create one DB per folder'), highlightthickness=0, variable=self.options.oneDBperFolder, pady=5)
+        oneDBperFolderButton.grid(row=2, column=0, columnspan=2, sticky=W)
 
         # self.encodingVar = StringVar()
         #
@@ -2295,45 +2319,59 @@ class App(v.Viewer, KEngine):
         # encoding1Menu.set(_('Add CA tag'))
         # encoding1Menu.grid(row=1, column=5, sticky=W)
 
-        duplButton = Checkbutton(f3, text=_('Accept duplicates'), highlightthickness=0, variable=self.options.acceptDupl, pady=5)
-        duplButton.grid(row=3, column=0, sticky=W)
+        duplButton = Checkbutton(
+                f3, text=_('Accept duplicates'),
+                highlightthickness=0, variable=self.options.acceptDupl, pady=5)
+        duplButton.grid(row=3, column=0, columnspan=2, sticky=W)
 
-        strictDuplCheckButton = Checkbutton(f3, text=_('Strict duplicate check'), highlightthickness=0, variable=self.options.strictDuplCheck, pady=5)
-        strictDuplCheckButton.grid(row=3, column=1, sticky=W)
+        strictDuplCheckButton = Checkbutton(
+                f3, text=_('Strict duplicate check'),
+                highlightthickness=0, variable=self.options.strictDuplCheck, pady=5)
+        strictDuplCheckButton.grid(row=3, column=2, columnspan=2, sticky=W)
 
         logDuplCheckButton = Checkbutton(
                 f3, text=_('Detailed log'),
                 highlightthickness=0,
                 variable=self.options.logDuplicates,
                 pady=5)
-        logDuplCheckButton.grid(row=3, column=2, sticky=W)
+        logDuplCheckButton.grid(row=3, column=4, columnspan=2, sticky=W)
 
         processVariations = Checkbutton(f3, text=_('Process variations'), highlightthickness=0, variable=self.options.processVariations, pady=5)
-        processVariations.grid(row=5, column=0, sticky=W, columnspan=2)
+        processVariations.grid(row=4, column=0, sticky=W, columnspan=2)
 
         profTagLabel = Label(f3, anchor='e', text=_('Tag as professional:'), pady=8)
-        profTagLabel.grid(row=6, column=0, sticky=W, )
+        profTagLabel.grid(row=5, column=0, sticky=W, )
         profTag = Combobox(f3, justify='left', textvariable=self.options.tagAsPro,
                                values=[_('Never'), _('All games'), _('All games with p-rank players'), ], state='readonly')
-        profTag.grid(row=6, column=1, columnspan=2, sticky=W)
+        profTag.grid(row=5, column=1, columnspan=2, sticky=W)
+
+        includeFullSGFButton = Checkbutton(f3, text=_('Include full SGF source'), highlightthickness=0, variable=self.options.include_full_sgf, pady=5)
+        includeFullSGFButton.grid(row=6, column=0, columnspan=2, sticky=W)
+
 
         sep = Separator(f3, orient='horizontal')
         sep.grid(row=7, column=0, columnspan=7, sticky=NSEW)
-        whereDatabasesButton = Checkbutton(f3, text=_('Store databases separately from SGF files'), highlightthickness=0,
-                                           command=self.toggleWhereDatabases, variable=self.options.storeDatabasesSeparately, padx=8)
+        whereDatabasesButton = Checkbutton(
+                f3,
+                text=_('Store databases separately from SGF files'),
+                highlightthickness=0,
+                command=self.toggleWhereDatabases,
+                variable=self.options.storeDatabasesSeparately,
+                padx=8)
         whereDatabasesButton.grid(row=8, column=0, columnspan=3, sticky=W)
 
-        self.whereDatabasesEntry = Entry(f3, textvariable=self.options.whereToStoreDatabases, )
-        self.whereDatabasesEntry.grid(row=8, column=3, columnspan=3, sticky=NSEW)
+        self.whereDatabasesEntry = Entry(
+                f3, textvariable=self.options.whereToStoreDatabases, )
+        self.whereDatabasesEntry.grid(row=8, column=3, columnspan=2, sticky=NSEW)
         if not self.options.storeDatabasesSeparately.get():
             self.whereDatabasesEntry.config(state=DISABLED)
 
         browseButton = Button(f3, text=_('Browse'), command=self.browseDatabases)
         browseButton.grid(row=8, column=5)
         f3.grid_columnconfigure(0, weight=1)
-        f3.grid_columnconfigure(1, weight=2)
-        f3.grid_columnconfigure(2, weight=2)
-        f3.grid_columnconfigure(3, weight=2)
+        f3.grid_columnconfigure(1, weight=1)
+        f3.grid_columnconfigure(2, weight=1)
+        f3.grid_columnconfigure(3, weight=1)
 
         sep1 = Separator(f3, orient='horizontal')
         sep1.grid(row=9, column=0, columnspan=7, sticky=NSEW)
@@ -2344,7 +2382,8 @@ class App(v.Viewer, KEngine):
         self.algo_hash_corner = Checkbutton(f3, text=_('Use hashing for corner positions'), highlightthickness=0, variable=self.options.algo_hash_corner, pady=5)
         self.algo_hash_corner.grid(row=10, column=3, columnspan=2)
 
-        self.saveProcMess = Button(f4, text=_('Save messages'), command=self.saveMessagesEditDBlist)
+        self.saveProcMess = Button(
+                f4, text=_('Save messages'), command=self.saveMessagesEditDBlist)
         self.saveProcMess.pack(side=RIGHT)
         self.processMessages = Message(f5)
         self.processMessages.pack(side=TOP, expand=YES, fill=BOTH)
@@ -2393,7 +2432,7 @@ class App(v.Viewer, KEngine):
 
         try:
             c = self.get_config_obj()
-            c['main']['version'] = 'kombilo%s' % KOMBILO_VERSION
+            c['main']['version'] = 'kombilo%s' % '.'.join(KOMBILO_VERSION.split('.')[:2])
             c['main']['sgfpath'] = self.sgfpath
             c['main']['datapath'] = self.datapath
             self.saveOptions(c['options'])
@@ -2404,7 +2443,7 @@ class App(v.Viewer, KEngine):
             c['taglook'] = self.gamelist.taglook
             c.filename = os.path.join(v.get_configfile_directory(), 'kombilo.cfg')
             c.write()
-        except ImportError:
+        except:
             showwarning(_('I/O Error'), _('Could not write kombilo.cfg'))
 
         self.master.quit()
@@ -2430,7 +2469,7 @@ class App(v.Viewer, KEngine):
 
         t = []
 
-        t.append(_('Kombilo %s - written by') % KOMBILO_RELEASE + ' Ulrich Goertz (ug@geometry.de)' + '\n\n')
+        t.append(_('Kombilo %s - written by') % KOMBILO_VERSION + ' Ulrich Goertz (ug@geometry.de)' + '\n\n')
         t.append(_('Kombilo is a go database program.') + '\n')
         t.append(_('You can find more information on Kombilo and the newest version at') + ' http://www.u-go.net/kombilo/\n\n')
 
@@ -2760,6 +2799,7 @@ class App(v.Viewer, KEngine):
             cancel.append(1)
             options_window.destroy()
 
+        options_window.protocol('WM_DELETE_WINDOW', cancel_fct)
         ok_button = Button(options_window, text=_('OK'), command=ok_fct)
         ok_button.grid(row=row_ctr, column=0)
         cancel_button = Button(options_window, text=_('Cancel'), command=cancel_fct)
@@ -2774,6 +2814,7 @@ class App(v.Viewer, KEngine):
         if cancel:
             return
 
+        self.notebook.select(self.dateProfileFS.winfo_pathname(self.logFS.winfo_id()))  # select tags tab
         self.progBar.start(50)
         currentTime = time.time()
         self.configButtons(DISABLED)
@@ -2857,17 +2898,17 @@ class App(v.Viewer, KEngine):
 
         self.tagButtonF = Frame(self.tagFrame2)
         self.tagButtonF.pack(side=LEFT)
-        self.tagsearchButton = Button(self.tagButtonF, text=_('Search'), command=self.tagSearch)
+        self.tagsearchButton = Button(self.tagButtonF, command=self.tagSearch)
         self.tagsearchButton.pack(side=LEFT)
-        self.tagsetButton = Button(self.tagButtonF, text=_('Set tags'), command=self.tagSet)
+        self.tagsetButton = Button(self.tagButtonF, command=self.tagSet)
         self.tagsetButton.pack(side=LEFT)
-        self.tagallButton = Button(self.tagButtonF, text=_('Tag all'), command=self.tagAllCurrent)
+        self.tagallButton = Button(self.tagButtonF, command=self.tagAllCurrent)
         self.tagallButton.pack(side=LEFT)
-        self.untagallButton = Button(self.tagButtonF, text=_('Untag all'), command=self.untagAllCurrent)
+        self.untagallButton = Button(self.tagButtonF, command=self.untagAllCurrent)
         self.untagallButton.pack(side=LEFT)
-        self.tagaddButton = Button(self.tagButtonF, text=_('Add tag'), command=self.addTag)
+        self.tagaddButton = Button(self.tagButtonF, command=self.addTag)
         self.tagaddButton.pack(side=LEFT)
-        self.tagdelButton = Button(self.tagButtonF, text=_('Delete tag'), command=self.deleteTagPY)
+        self.tagdelButton = Button(self.tagButtonF, command=self.deleteTagPY)
         self.tagdelButton.pack(side=LEFT)
 
     def updatetaglist(self):
@@ -3162,6 +3203,7 @@ class App(v.Viewer, KEngine):
         self.topFrameS.pack(side=TOP, fill=X, expand=NO)
 
         self.frameS = PanedWindow(self.searchWindow, orient='vertical')   # suffix S means 'in search/results window'
+        self.frameS.config(bd=0, bg="#666666")  # make sashes dark gray
         self.frameS.pack(fill=BOTH, expand=YES)
 
         self.listFrameS = Frame(self.frameS)
@@ -3256,19 +3298,19 @@ class App(v.Viewer, KEngine):
         self.buttonFrame1S = Frame(self.toolbarFrameS)
         self.buttonFrame1S.pack(side=LEFT, expand=NO)
 
-        self.resetButtonS = Button(self.buttonFrame1S, text=_('Reset'), command=self.reset)
-        self.resetstartButtonS = Button(self.buttonFrame1S, text=_('Reset/start'), command=self.reset_start)
-        self.searchButtonS = Button(self.buttonFrame1S, text=_('Pattern search'), command=self.search)
-        self.backButtonS = Button(self.buttonFrame1S, text=_('Back'), command=self.back)
+        self.resetButtonS = Button(self.buttonFrame1S, command=self.reset)
+        self.resetstartButtonS = Button(self.buttonFrame1S, command=self.reset_start)
+        self.searchButtonS = Button(self.buttonFrame1S, command=self.search)
+        self.backButtonS = Button(self.buttonFrame1S, command=self.back)
 
         self.showContinuation = IntVar()
         self.showContinuation.set(1)
-        self.showContButtonS = Checkbutton(self.buttonFrame1S, text=_('Continuations'), variable=self.showContinuation, indicatoron=0, command=self.showCont)
+        self.showContButtonS = Checkbutton(self.buttonFrame1S, variable=self.showContinuation, indicatoron=0, command=self.showCont)
 
         self.oneClick = IntVar()
-        self.oneClickButtonS = Checkbutton(self.buttonFrame1S, text=_('1 click'), variable=self.oneClick, indicatoron=0)
+        self.oneClickButtonS = Checkbutton(self.buttonFrame1S, variable=self.oneClick, indicatoron=0)
 
-        self.statByDateButtonS = Checkbutton(self.buttonFrame1S, text=_('Statistics by Date'), variable=self.options.statistics_by_date, indicatoron=0, command=self.display_statistics)
+        self.statByDateButtonS = Checkbutton(self.buttonFrame1S, variable=self.options.statistics_by_date, indicatoron=0, command=self.display_statistics)
 
         for ii, b in enumerate([self.searchButtonS, self.resetstartButtonS, self.resetButtonS, self.backButtonS, self.showContButtonS, self.oneClickButtonS, self.statByDateButtonS]):
             b.grid(row=0, column=ii)
@@ -3298,11 +3340,11 @@ class App(v.Viewer, KEngine):
         l.pack(side=LEFT)
 
         self.nextMoveVar = IntVar()  # 0 = either player, 1 = black, 2 = white
-        self.nextMove1S = Radiobutton(self.toolbarFrameS, text=_('B/W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=0, bg='#999999')
+        self.nextMove1S = Radiobutton(self.toolbarFrameS, highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=0, bg='#999999')
         self.nextMove1S.pack(side=LEFT)
-        self.nextMove2S = Radiobutton(self.toolbarFrameS, text=_('B'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=1, bg='#999999')
+        self.nextMove2S = Radiobutton(self.toolbarFrameS, highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=1, bg='#999999')
         self.nextMove2S.pack(side=LEFT)
-        self.nextMove3S = Radiobutton(self.toolbarFrameS, text=_('W'), highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=2, bg='#999999')
+        self.nextMove3S = Radiobutton(self.toolbarFrameS, highlightthickness=0, indicatoron=0, variable=self.nextMoveVar, value=2, bg='#999999')
         self.nextMove3S.pack(side=LEFT)
 
         self.fixedAnchorVar = IntVar()
@@ -3423,8 +3465,8 @@ class App(v.Viewer, KEngine):
         self.referencedVar = IntVar()
         b1 = Checkbutton(f3, text=_('Referenced'), variable=self.referencedVar, highlightthickness=0)
 
-        self.GIstart = Button(f3, text=_('Start'), command=self.doGISearch)
-        self.GIclear = Button(f3, text=_('Clear'), command=self.clearGI)
+        self.GIstart = Button(f3, command=self.doGISearch)
+        self.GIclear = Button(f3, command=self.clearGI)
 
         self.GI_bwd = Button(f3, text='<-', command=self.historyGI_back)
         self.GI_fwd = Button(f3, text='->', command=self.historyGI_fwd)
@@ -3530,7 +3572,7 @@ class App(v.Viewer, KEngine):
             self.logger.insert(END, _('Error parsing references file.\n'))
         self.loadDBs(self.progBar, showwarning)
 
-        self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_RELEASE + _('Ready ...') + '\n')
+        self.logger.insert(END, 'Kombilo %s.\n' % KOMBILO_VERSION + _('Ready ...') + '\n')
         self.progBar.stop()
 
 # ---------------------------------------------------------------------------------------
