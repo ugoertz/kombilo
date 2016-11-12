@@ -30,6 +30,8 @@ History/Change log
 
 Several minor changes, mostly to ensure compatibility with Mac OS X.
 
+Added references to the comments at `Go Game Guru
+<https://gogameguru.com/get-better-at-go/commented-go-games/>`__.
 
 0.8.2 (November 2016)
 ^^^^^^^^^^^^^^^^^^^^^

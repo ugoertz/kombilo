@@ -1526,8 +1526,9 @@ class KEngine(object):
             self.addOneFolder(arguments, dbp, gl=gl)
 
         if gl is not None:
-            messages.insert('end', _('Finalizing ... (this will take some time)\n'))
-            messages.update()
+            if messages:
+                messages.insert('end', _('Finalizing ... (this will take some time)\n'))
+                messages.update()
             gl.finalize_processing()
             if gl.size_all():
                 self.add_gl_at(index, gl, dbp)
