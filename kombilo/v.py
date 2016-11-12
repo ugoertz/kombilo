@@ -2617,13 +2617,13 @@ class Viewer:
         self.modeVar.set('blackwhite')
         self.board.currentColor = 'black'
 
-        self.BWbutton = Radiobutton(navFrame, text='BW', indicatoron=0, bg='#999999',
+        self.BWbutton = Radiobutton(navFrame, indicatoron=0, bg='#999999',
                                     variable=self.modeVar, value='blackwhite', command=self.modeChange)
-        self.WBbutton = Radiobutton(navFrame, text='WB', indicatoron=0, bg='#999999',
+        self.WBbutton = Radiobutton(navFrame, indicatoron=0, bg='#999999',
                                     variable=self.modeVar, value='whiteblack', command=self.modeChange)
-        self.Bbutton = Radiobutton(navFrame, text='B', indicatoron=0, bg='#999999',
+        self.Bbutton = Radiobutton(navFrame, indicatoron=0, bg='#999999',
                                    variable=self.modeVar, value='black', command=self.modeChange)
-        self.Wbutton = Radiobutton(navFrame, text='W', indicatoron=0, bg='#999999',
+        self.Wbutton = Radiobutton(navFrame, indicatoron=0, bg='#999999',
                                    variable=self.modeVar, value='white', command=self.modeChange)
 
         self.nextButton = Button(navFrame, command=self.next)

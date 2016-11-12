@@ -3468,8 +3468,8 @@ class App(v.Viewer, KEngine):
         self.GIstart = Button(f3, command=self.doGISearch)
         self.GIclear = Button(f3, command=self.clearGI)
 
-        self.GI_bwd = Button(f3, text='<-', command=self.historyGI_back)
-        self.GI_fwd = Button(f3, text='->', command=self.historyGI_fwd)
+        self.GI_bwd = Button(f3, command=self.historyGI_back)
+        self.GI_fwd = Button(f3, command=self.historyGI_fwd)
 
         for e in [e1, e2, e3, e4, e5, e6, e7, e8]:
             e.bind('<Return>', lambda event, bs=self.GIstart: bs.invoke())
