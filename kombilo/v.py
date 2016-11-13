@@ -2264,13 +2264,11 @@ class Viewer:
             if sys.platform.startswith('darwin') and 'only_one_mouse_button' not in kombilocfg['options']:
                 # work around for cfg files written by 0.8.2
                 c['options']['only_one_mouse_button'] = "True"
-                c['options']['theme'] = "aqua"
             configfile.close()
         else:
             # set default options depending on OS
             if sys.platform.startswith('darwin'):
                 c['options']['only_one_mouse_button'] = "True"
-                c['options']['theme'] = "aqua"
 
         return c
 
