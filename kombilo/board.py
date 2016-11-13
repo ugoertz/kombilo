@@ -140,8 +140,8 @@ class Board(abstractBoard, Canvas):
         c0, c1 = self.canvasSize
         size = 2 * c0 + (self.boardsize - 1) * c1
         self.config(height=size, width=size)
-        self.labelFont.configure(size=self.labelFontSizeOrig + c1//7 - 3)
-        self.labelFontBold.configure(size=self.labelFontSizeOrig + c1//7)
+        self.labelFont.configure(size=self.labelFontSizeOrig + c1//5)
+        self.labelFontBold.configure(size=self.labelFontSizeOrig + c1//5 + 1)
 
         self.delete('board')
         if self.img:
@@ -491,17 +491,18 @@ class Board(abstractBoard, Canvas):
             return
         self.onChange()
         p = self.getPixelCoord(pos)
-        if not self.use3Dstones.get() or self.canvasSize[1] <= 7:
+        c1 = self.canvasSize[1]
+        if not self.use3Dstones.get() or c1 <= 7:
             self.stones[pos] = self.create_oval(*p, fill=color, tags='non-bg')
         else:
             if color == 'black':
                 self.stones[pos] = self.create_image(
-                        ((p[0] + p[2]) // 2, (p[1] + p[3]) // 2),
+                        ((p[0] + p[2] + (c1//40)) // 2, (p[1] + p[3] + (c1//40)) // 2),
                         image=choice(self.bStones),
                         tags='non-bg')
             elif color == 'white':
                 self.stones[pos] = self.create_image(
-                        ((p[0] + p[2]) // 2, (p[1] + p[3]) // 2),
+                        ((p[0] + p[2] + (c1//40)) // 2, (p[1] + p[3] + (c1//40)) // 2),
                         image=choice(self.wStones),
                         tags='non-bg')
 

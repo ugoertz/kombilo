@@ -2832,9 +2832,9 @@ class Viewer:
             # screen resolution is (probably) very high.
             varlist = [
                     (self.options.scaling, 22, 32),
-                    (self.options.standardFontSize, 9, 10),
-                    (self.options.smallFontSize, 8, 9),
-                    (self.options.labelFontSize, 5, 7),
+                    (self.options.standardFontSize, 10, 11),
+                    (self.options.smallFontSize, 9, 10),
+                    (self.options.labelFontSize, 5, 0),
                     (self.options.monospaceFontSize, 10, 12),
                     ]
 
