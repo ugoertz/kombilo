@@ -170,7 +170,7 @@ class BoardWC(Board):
         self.delete('wildcard')
         self.wildcards = {}
 
-    def placeLabel(self, pos, typ, text=None, color=None):
+    def placeLabel(self, pos, typ, text=None, color=None, extra_tags=()):
         """ Place a label; take care of wildcards at same position. """
 
         if pos in self.wildcards:
@@ -178,7 +178,7 @@ class BoardWC(Board):
         else:
             override = None
 
-        Board.placeLabel(self, pos, typ, text, color, override)
+        Board.placeLabel(self, pos, typ, text, color, override, extra_tags=extra_tags)
 
     # ---- selection of search-relevant section -----------------------------------
 
@@ -338,7 +338,7 @@ class SearchHistoryBoard(BoardWC):
 
         return new_f
 
-    def placeLabel(self, pos, typ, text=None, color=None):
+    def placeLabel(self, *args, **kwargs):
         """Labels are ignored. """
 
         return
@@ -1648,7 +1648,8 @@ class App(v.Viewer, KEngine):
             # need to test for this here since showCont is invoked as command
             # from menu upon changing this option
 
-            # There might be labels on the board, but we just leave them: Either
+            self.board.delete('contlabels')
+            # There might be other labels on the board, but we just leave them: Either
             # there are "overwritten" by one of the continuations below, or they
             # do not correspond to a continuation and hence should stay. (The
             # pattern search takes care of not using labels which are
@@ -1661,7 +1662,7 @@ class App(v.Viewer, KEngine):
                     color = 'black'
                 else:
                     color = self.options.labelColor.get()
-                self.board.placeLabel((c.x + self.sel[0][0], c.y + self.sel[0][1]), '+LB', c.label, color)
+                self.board.placeLabel((c.x + self.sel[0][0], c.y + self.sel[0][1]), '+LB', c.label, color, extra_tags=('contlabels', ))
         else:
             self.board.delLabels()
             if self.cursor:
