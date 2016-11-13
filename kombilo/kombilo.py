@@ -3241,7 +3241,7 @@ class App(v.Viewer, KEngine):
                                           text_font=self.standardFont)
         self.gameinfoS.configure(text_state=DISABLED)
         self.gameinfoS.tag_config('blue', foreground='blue')
-        self.frameS.add(self.gameinfoS, minsize=100, sticky="NSEW")
+        self.frameS.add(self.gameinfoS, minsize=20, sticky="NSEW")
 
         self.nbFrameS = Frame(self.frameS)   # will contain toolbar and notebook
         self.frameS.add(self.nbFrameS, minsize=50, sticky="NSEW")
