@@ -30,6 +30,9 @@ environment:
 
 install:
   - nuget install Tools.InnoSetup
+  - ps: "ls C:/projects/kombilo"
+  - ps: "ls c:/projects/kombilo/Tools.Innosetup.5.5.9"
+  - ps: "ls c:/projects/kombilo/Tools.Innosetup.5.5.9/Inno\ Setup\ 5/iscc.exe"
 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
@@ -64,7 +67,7 @@ build_script:
   - ps: "cp c:/projects/kombilo/kombilo.ico c:/projects/kombilo/dist/kombilo"
   - ps: "ls c:/projects/kombilo/dist/kombilo"
 
-  - "%CMD_IN_ENV% \"C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe\" kombilo.iss"
+  - "%CMD_IN_ENV% \"c:/projects/kombilo/Tools.Innosetup.5.5.9/Inno\ Setup\ 5/iscc.exe\" kombilo.iss"
 
   - "%CMD_IN_ENV% mv installer/kombilo%KOMBILO_VERSION%.exe installer/kombilo%KOMBILO_VERSION%-%PYTHON_ARCH%.exe"
 
