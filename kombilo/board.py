@@ -419,7 +419,7 @@ class Board(abstractBoard, Canvas):
         else:
             return 0
 
-    def placeLabel(self, pos, typ, text=None, color=None, override=None):
+    def placeLabel(self, pos, typ, text=None, color=None, override=None, extra_tags=()):
         """ Place label of typ typ at pos; used to display labels
             from SGF files. If typ has the form +XX, add a label of typ XX.
             Otherwise, add or delete the label, depending on if there is no label at pos,
@@ -458,26 +458,27 @@ class Board(abstractBoard, Canvas):
             fcolor2 = '#D8A542'
 
         x1, x2, y1, y2 = self.getPixelCoord(pos, 1)
+        tags = ('labelbg', 'non-bg') + extra_tags
         if typ == 'LB':
-            labelIDs.append(self.create_oval(x1 + 3, x2 + 3, y1 - 3, y2 - 3, fill=fcolor2, outline='', tags=('labelbg', 'non-bg')))
+            labelIDs.append(self.create_oval(x1 + 3, x2 + 3, y1 - 3, y2 - 3, fill=fcolor2, outline='', tags=tags))
             labelIDs.append(self.create_text((x1 + y1) // 2, (x2 + y2) // 2, text=text, fill=fcolor,
-                                             font=self.labelFontBold, tags=('label', 'non-bg')))
+                                             font=self.labelFontBold, tags=tags))
         elif typ == 'SQ':
             w = self.canvasSize[1] / 3
-            labelIDs.append(self.create_rectangle(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=('label', 'non-bg')))
+            labelIDs.append(self.create_rectangle(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=tags))
         elif typ == 'CR':
             w = self.canvasSize[1] / 3
-            labelIDs.append(self.create_oval(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=('label', 'non-bg')))
+            labelIDs.append(self.create_oval(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=tags))
         elif typ == 'TR':
             w = self.canvasSize[1] / 3
             labelIDs.append(self.create_polygon((x1 + y1) // 2, x2 + w, x1 + w, y2 - w, y1 - w, y2 - w,
                                                 width=2, fill='', outline=fcolor,
-                                                tags=('label', 'non-bg')))
+                                                tags=tags))
         elif typ == 'MA':
             labelIDs.append(self.create_oval(x1 + 3, x2 + 3, y1 - 3, y2 - 3, fill=fcolor2, outline='',
-                             tags=('labelbg', 'non-bg')))
+                             tags=tags))
             labelIDs.append(self.create_text((x1 + y1) // 2, (x2 + y2) // 2, text='X', fill=fcolor,
-                                             font=self.labelFontBold, tags=('label', 'non-bg')))
+                                             font=self.labelFontBold, tags=tags))
 
         self.labels[pos] = (typ, text, labelIDs, color)
 
