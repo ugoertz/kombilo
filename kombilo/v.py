@@ -66,7 +66,9 @@ def get_configfile_directory():
 
 def load_icon(button, filename, imagelist, buttonsize):
     try:
-        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename)).resize((buttonsize, buttonsize), PILImage.LANCZOS))
+        im = PILImageTk.PhotoImage(
+                PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename)
+                    ).convert('RGBA').resize((buttonsize, buttonsize), PILImage.LANCZOS))
         button.config(image=im, width=buttonsize, height=buttonsize)
         imagelist.append(im)
     except AttributeError:
