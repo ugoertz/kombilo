@@ -31,8 +31,8 @@ environment:
 install:
   - nuget install Tools.InnoSetup
   - ps: "ls C:/projects/kombilo"
-  - ps: "ls c:/projects/kombilo/Tools.Innosetup.5.5.9"
-  - ps: "ls c:/projects/kombilo/Tools.Innosetup.5.5.9/Inno\ Setup\ 5/iscc.exe"
+  - ps: "ls c:/projects/kombilo/Tools.Innosetup.5.5.9/tools"
+  - ps: "ls c:/projects/kombilo/Tools.Innosetup.5.5.9/tools/iscc.exe"
 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
