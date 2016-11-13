@@ -1,6 +1,6 @@
 # see https://github.com/ogrisel/python-appveyor-demo
 
-skip_non_tags: true
+# skip_non_tags: true
 
 environment:
   global:
@@ -29,7 +29,7 @@ environment:
       MSVCx90_PATH: "amd64_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.8387_none_08e793bfa83a89b5"
 
 install:
-  - "cinst innosetup"
+  - "Install-Package Tools.InnoSetup"
 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
