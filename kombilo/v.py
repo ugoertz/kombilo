@@ -65,12 +65,19 @@ def get_configfile_directory():
         return os.path.expanduser('~/.kombilo/%s' % version)
 
 def load_icon(button, filename, imagelist, buttonsize):
-    try:
-        im = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename)).resize((buttonsize, buttonsize), PILImage.LANCZOS))
-        button.config(image=im, width=buttonsize, height=buttonsize)
-        imagelist.append(im)
-    except AttributeError:
-        pass
+    image = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename))
+    if isinstance(button, Checkbutton) or isinstance(button, Radiobutton):
+        im1 = PILImageTk.PhotoImage(image.resize((buttonsize, buttonsize), PILImage.LANCZOS))
+    else:
+        # pbms with transparency on macs ...
+        # cf. http://stackoverflow.com/q/9166400
+        image.load()  # needed for split()
+        new_img = PILImage.new('RGB', image.size, (221, 221, 221))
+        new_img.paste(image, mask=image.split()[3])  # 3 is the alpha channel
+
+        im1 = PILImageTk.PhotoImage(new_img.resize((buttonsize, buttonsize), PILImage.LANCZOS))
+    button.config(image=im1, width=buttonsize, height=buttonsize)
+    imagelist.append(im1)
 
 def get_addmenu_options(**kwargs):
     '''
@@ -2264,13 +2271,11 @@ class Viewer:
             if sys.platform.startswith('darwin') and 'only_one_mouse_button' not in kombilocfg['options']:
                 # work around for cfg files written by 0.8.2
                 c['options']['only_one_mouse_button'] = "True"
-                c['options']['theme'] = "aqua"
             configfile.close()
         else:
             # set default options depending on OS
             if sys.platform.startswith('darwin'):
                 c['options']['only_one_mouse_button'] = "True"
-                c['options']['theme'] = "aqua"
 
         return c
 
@@ -2832,10 +2837,7 @@ class Viewer:
             # screen resolution is (probably) very high.
             varlist = [
                     (self.options.scaling, 22, 32),
-                    (self.options.standardFontSize, 9, 10),
-                    (self.options.smallFontSize, 8, 9),
-                    (self.options.labelFontSize, 5, 7),
-                    (self.options.monospaceFontSize, 10, 12),
+                    (self.options.labelFontSize, 5, 0),
                     ]
 
             if master.winfo_screenwidth() > 2200:
