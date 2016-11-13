@@ -29,7 +29,7 @@ environment:
       MSVCx90_PATH: "amd64_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.8387_none_08e793bfa83a89b5"
 
 install:
-  - ps: "Install-Package Tools.InnoSetup"
+  - nuget install Tools.InnoSetup
 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
