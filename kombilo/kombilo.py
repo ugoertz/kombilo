@@ -2168,6 +2168,8 @@ class App(v.Viewer, KEngine):
         # cleaning up
         self.gamelist.reset()
         self.editDB_OK.config(state=NORMAL)
+        self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
+        self.processMessages.update()
         self.saveProcMess.config(state=NORMAL)
 
     def toggleDisabled(self):
