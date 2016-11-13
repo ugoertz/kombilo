@@ -93,8 +93,11 @@ class Board(abstractBoard, Canvas):
             self.labelFontBold = tkFont.Font(family='Helvetica', size=5, weight='bold')
             self.labelFont = tkFont.Font(family='Helvetica', size=5)
         else:
-            self.labelFontBold = labelFont
+            # create new font here since the size changes depending on board
+            # size and this should not interfere with other boards
+            self.labelFontBold = tkFont.Font(family=labelFont['family'], size=labelFont['size'], weight=labelFont['weight'])
             self.labelFont = tkFont.Font(family=labelFont['family'], size=labelFont['size'])
+
         self.labelFontSizeOrig = self.labelFont['size']
 
         self.shadedStoneVar = IntVar()   # if this is true, there is a 'mouse pointer' showing
