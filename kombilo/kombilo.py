@@ -992,7 +992,13 @@ class App(v.Viewer, KEngine):
         Display statistical information on the last search on self.statisticsCanv.
         """
 
-        noMatches = self.noMatches
+        try:
+            noMatches = self.noMatches
+        except AttributeError:
+            # Might be called via checkbutton initialization before
+            # self.noMatches is initialized.
+            return
+
         if not noMatches:
             return
 
