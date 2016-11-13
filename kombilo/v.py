@@ -65,14 +65,19 @@ def get_configfile_directory():
         return os.path.expanduser('~/.kombilo/%s' % version)
 
 def load_icon(button, filename, imagelist, buttonsize):
-    try:
-        im = PILImageTk.PhotoImage(
-                PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename)
-                    ).convert('RGBA').resize((buttonsize, buttonsize), PILImage.LANCZOS))
-        button.config(image=im, width=buttonsize, height=buttonsize)
-        imagelist.append(im)
-    except AttributeError:
-        pass
+    image = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/%s.png' % filename))
+    if isinstance(button, Checkbutton) or isinstance(button, Radiobutton):
+        im1 = PILImageTk.PhotoImage(image.resize((buttonsize, buttonsize), PILImage.LANCZOS))
+    else:
+        # pbms with transparency on macs ...
+        # cf. http://stackoverflow.com/q/9166400
+        image.load()  # needed for split()
+        new_img = PILImage.new('RGB', image.size, (221, 221, 221))
+        new_img.paste(image, mask=image.split()[3])  # 3 is the alpha channel
+
+        im1 = PILImageTk.PhotoImage(new_img.resize((buttonsize, buttonsize), PILImage.LANCZOS))
+    button.config(image=im1, width=buttonsize, height=buttonsize)
+    imagelist.append(im1)
 
 def get_addmenu_options(**kwargs):
     '''
