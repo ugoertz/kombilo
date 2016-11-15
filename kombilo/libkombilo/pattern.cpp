@@ -1167,7 +1167,7 @@ void PatternList::patternList() {
 
       if (pNew1 == pattern) { // can get back original pattern by applying CS + flip f.
         sy.push_back(pair<int,int>(f,1));
-        if (nextMove) special = Pattern::PatternInvFlip(f);
+        special = Pattern::PatternInvFlip(f);
       }
     }
   }
@@ -1190,11 +1190,17 @@ void PatternList::patternList() {
     lCS_ctr++;
   }
 
+  // cout << "sy.size() == " << sy.size() << endl;
+  // cout << "data.size() == " << data.size() << endl;
+  // cout << "special == " << special << endl;
   // cout << endl << endl << "fliptable: ";
   // for(int ii=0; ii<16; ii++) cout << ii << ", ";
   // cout << endl << endl;
 
 
+  // In symm, store how to remap continuation labels in order to take pattern
+  // symmetries into account (e.g., when searching for empty board, want to show
+  // all continuations in one "chamber" of the "root system of type B_2"
   Symmetries symm(pattern.sizeX, pattern.sizeY);
   for(int i=0; i<symm.sizeX; i++)
     for(int j=0; j<symm.sizeY; j++)
@@ -1202,11 +1208,20 @@ void PatternList::patternList() {
 
   for(vector<pair<int,int> >::iterator it_s=sy.begin(); it_s!=sy.end(); it_s++) {
     int s = it_s->first;
+    int c = it_s->second;
+    if (c && special != -1) {
+      // if this pattern has a color-reversing symmetry, then for the
+      // continuations we will always be able to apply this symmetry in order to
+      // "fix the color" (show only Black continuations if as nextMove B or
+      // W allowed; if next move color is fixed, then apply the special flip if
+      // and only if we have the wrong continuation color beforehand). After
+      // that, we want to apply symm but want to fix the color.
+      continue;
+    }
     int newSizeX = max(Pattern::flipsX(s,0,0,pattern.sizeX,pattern.sizeY),
                        Pattern::flipsX(s,pattern.sizeX,pattern.sizeY,pattern.sizeX,pattern.sizeY));
     int newSizeY = max(Pattern::flipsY(s,0,0,pattern.sizeX,pattern.sizeY),
                        Pattern::flipsY(s,pattern.sizeX,pattern.sizeY,pattern.sizeX,pattern.sizeY));
-    int c = it_s->second;
     Symmetries symm1(newSizeX, newSizeY);
 
     for(int i=0; i < pattern.sizeX; i++) {
@@ -1282,30 +1297,61 @@ int PatternList::size() {
 
 
 char* PatternList::updateContinuations(int index, int x, int y, char co, bool tenuki, char winner, int date) {
-  char xx;
-  char yy;
-  char cSymm;
+
+  // printf("-----\n1 x %d, y %d\n", x, y);
   char cc;
-  xx = symmetries[index].getX(x,y);
-  yy = symmetries[index].getY(x,y);
-  cSymm = symmetries[index].getCS(x,y);
   if (co == 'X' || co == 'B') {
-    if (cSymm) cc = 'W'; else cc = 'B';
+    cc = 'B';
   } else {
-    if (cSymm) cc = 'B'; else cc = 'W';
+    cc = 'W';
+  }
+  char cSymm = 0;
+
+  if (special != -1) {
+    // pattern has a color-reversing symmetry, so we can use this when remapping
+    // continuations. If B or W are allowed as next move color, we will
+    // transform all cont's to black. If only one of B or W is allowed as next
+    // move color, we will use this if necessary, to get the right color:
+    if ((cc == 'W' && !nextMove) || (nextMove == 1 && cc == 'W') || (nextMove == 2 && cc == 'B')) {
+      int f = Pattern::PatternInvFlip(data[index].flip);
+      // move x, y to coord of initial pattern, so that we can ...
+      char xx1 = x;
+      x = Pattern::flipsX(f, x, y, data[index].sizeX-1, data[index].sizeY-1);
+      y = Pattern::flipsY(f, xx1, y, data[index].sizeX-1, data[index].sizeY-1);
+      // printf("2 x %d, y %d\n", x, y);
+      // ... now apply the "special" symmetry
+      xx1 = x;
+      x = Pattern::flipsX(special, x, y, pattern.sizeX-1, pattern.sizeY-1);
+      y = Pattern::flipsY(special, xx1, y, pattern.sizeX-1, pattern.sizeY-1);
+      // and move back so that we can apply symm[index] below!
+      xx1 = x;
+      x = Pattern::flipsX(data[index].flip, x, y, pattern.sizeX-1, pattern.sizeY-1);
+      y = Pattern::flipsY(data[index].flip, xx1, y, pattern.sizeX-1, pattern.sizeY-1);
+      // printf("3 x %d, y %d\n", x, y);
+      // printf("s2 xx %d, yy %d\n", xx, yy);
+      cc = (cc == 'B') ? 'W' : 'B';
+      cSymm = 1;
+    }
   }
 
   if ((nextMove == 1 && cc == 'W') || (nextMove == 2 && cc == 'B')) {
-    if (special != -1) {
-      char xx1 = xx;
-      // printf("s1 xx %d, yy %d sp %d\n", xx, yy, special);
-      xx = Pattern::flipsX(special, xx, yy, pattern.sizeX-1, pattern.sizeY-1);
-      yy = Pattern::flipsY(special, xx1, yy, pattern.sizeX-1, pattern.sizeY-1);
-      // printf("s2 xx %d, yy %d\n", xx, yy);
-      cc = (cc == 'B') ? 'W' : 'B';
-      cSymm = 1-cSymm;
+    // wrong continuation color -> no hit
+    return 0;
+  }
+
+  // now that the "special" business is out of the way, look up where to remap
+  // the point under consideration
+  char xx;
+  char yy;
+  xx = symmetries[index].getX(x,y);
+  yy = symmetries[index].getY(x,y);
+  // printf("4 x %d, y %d\n", xx, yy);
+  cSymm = symmetries[index].getCS(x,y) ? 1 - cSymm : cSymm;
+  if (symmetries[index].getCS(x,y)) {
+    if (cc == 'B') {
+      cc = 'W';
     } else {
-      return 0;
+      cc = 'B';
     }
   }
 
