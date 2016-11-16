@@ -1213,7 +1213,11 @@ class KEngine(object):
             for cont in self.continuations[:N]:
                 if cont.label in 'abcdefghijklmnopqrstuvwxyz':
                     labels_to_lower = False
-                unused_labels.remove(cont.label)
+                try:
+                    unused_labels.remove(cont.label)
+                except ValueError:
+                    # label might be '?'
+                    pass
             if exportMode != 'wiki':
                 labels_to_lower = False
 
