@@ -173,6 +173,11 @@ class Pattern(lk.Pattern):
     '''
 
     def __init__(self, p, **kwargs):
+        if 'pattern' in kwargs:
+            # "copy constructor": create Pattern instance from an lk.Pattern
+            lk.Pattern.__init__(self, kwargs['pattern'])
+            return
+
         iPos = p.replace(' ', '').replace(',', '.').replace('\n', '').replace('\r', '')
         boardsize = kwargs.get('boardsize', 19)
         sX = kwargs.get('sizeX', 0)

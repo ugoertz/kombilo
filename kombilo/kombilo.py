@@ -1576,7 +1576,9 @@ class App(v.Viewer, KEngine):
 
         # restore currentSearchPattern
         i, sid = target_values['snapshot_ids'][0]
-        self.currentSearchPattern = self.gamelist.DBlist[i]['data'].mrs_pattern
+        self.currentSearchPattern = Pattern(
+                '',
+                pattern=self.gamelist.DBlist[i]['data'].mrs_pattern)
 
         self.continuations = []
         self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
