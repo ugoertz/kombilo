@@ -787,7 +787,7 @@ class KEngine(object):
         if update_gamelist:
             self.gamelist.update()
 
-    def sgf_tree(self, cursor, current_game, options, searchOptions, messages=None, progBar=None, ):
+    def sgf_tree(self, cursor, current_game, options, searchOptions, messages=None, progBar=None, stop_var=None):
         # plist is a list of pairs consisting of a node and some information (label,
         # number of B, W hits of this node) which will eventually be inserted into the
         # comments of the parent node during the search, new nodes (arising as
@@ -846,9 +846,12 @@ class KEngine(object):
         counter = 0
 
         while plist:
+            if stop_var is not None and stop_var.get():
+                break
             counter += 1
             if counter % 50 == 0:
                 messages.insert('end', _('Done {0} searches so far, {1} nodes pending.\n').format(counter, len(plist)))
+            if counter % 25 == 0:
                 if progBar:
                     progBar.update()
 
@@ -943,6 +946,9 @@ class KEngine(object):
             if comment_text:
                 comment_text = head_str + comment_text
             node['C'] = [node['C'][0] + '\n\n' + comment_text, ]
+
+        if stop_var is not None and stop_var.get():
+            messages.insert('end', _('Interrupted\n'))
 
         messages.insert('end', _('Total: %d pattern searches\n') % counter)
         messages.insert('end', _('Cleaning up ...\n'))

@@ -2873,6 +2873,7 @@ class Viewer:
         self.master = master
 
         navFrame = Frame(self.master)
+        self.navFrame = navFrame  # use in do_sgf_tree to display stop button
         navFrame.pack(side=TOP, pady=3)
         self.mainframe = PanedWindow(self.master, sashrelief=SUNKEN, sashwidth=2, sashpad=2, orient='horizontal')  # note that PanedWindow is Tkinter, not ttk
         self.mainframe.pack(expand=YES, fill=BOTH)

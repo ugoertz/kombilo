@@ -2854,6 +2854,18 @@ class App(v.Viewer, KEngine):
         if cancel:
             return
 
+        stop_var = BooleanVar()
+        stop_var.set(False)
+
+        def stop_search_fct():
+            stop_var.set(True)
+        stop_button = Button(
+                self.navFrame,
+                text=_('Stop building sgf tree'), bg='red',
+                command=stop_search_fct)
+        stop_button.grid(row=0, column=50, padx=20)
+
+        stored_selection = self.board.selection
         self.notebook.select(self.dateProfileFS.winfo_pathname(self.logFS.winfo_id()))  # select tags tab
         self.progBar.start(50)
         currentTime = time.time()
@@ -2902,7 +2914,7 @@ class App(v.Viewer, KEngine):
             path_to_initial_node = self.cursor.currentNode().pathToNode()
 
         self.currentFileChanged()
-        self.sgf_tree(cursor, current_game, options, searchOptions, messages=self.logger, progBar=self.progBar, )
+        self.sgf_tree(cursor, current_game, options, searchOptions, messages=self.logger, progBar=self.progBar, stop_var=stop_var)
 
         if new_cursor_var.get():
             self.newFile(cursor)
@@ -2916,6 +2928,9 @@ class App(v.Viewer, KEngine):
             for i in path_to_initial_node:
                 self.next(i)
 
+        stop_button.destroy()
+        self.currentSearchPattern = None
+        self.board.setSelection(*stored_selection)
         self.logger.insert(END, _('Finished computing sgf tree') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
         self.progBar.stop()
         self.configButtons(NORMAL)
