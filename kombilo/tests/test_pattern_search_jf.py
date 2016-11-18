@@ -84,3 +84,17 @@ def test_pattern_1(K):
 
     K.gamelist.reset()
 
+def test_sig_search(K):
+    K.signatureSearch('dd____km____')
+    assert K.gamelist.noOfGames() == 0
+    K.gamelist.reset()
+    K.signatureSearch('bdddodldoegq')
+    assert K.gamelist.noOfGames() == 0
+    K.gamelist.reset()
+    K.signatureSearch('bdlhodldoegq')
+    assert K.gamelist.noOfGames() == 1
+    K.gamelist.reset()
+    K.signatureSearch('bd____ld__gq')
+    assert K.gamelist.noOfGames() == 1
+    K.gamelist.reset()
+
