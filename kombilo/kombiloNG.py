@@ -328,7 +328,7 @@ class GameList(object):
     def __init__(self):
         self.DBlist = []      # list of dicts
 
-        self.Bwins, self.Wwins, self.Owins = 0, 0, 0   # others: Jigo, Void, Left unfinished, ? (Unknown)
+        self.Bwins, self.Wwins, self.BwinsG, self.WwinsG = 0, 0, 0, 0
 
         self.references = {}
         self.gameIndex = []
@@ -505,15 +505,19 @@ class GameList(object):
             if db['disabled']:
                 continue
             db['data'].reset()
-        self.Bwins, self.Wwins, self.Owins = 0, 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
         self.update()
 
     def update_winning_percentages(self):
         self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
 
         for i, db in enumerate(self.DBlist):
             if db['disabled']:
                 continue
+            self.BwinsG += db['data'].BwinsG
+            self.WwinsG += db['data'].WwinsG
             self.Bwins += db['data'].Bwins
             self.Wwins += db['data'].Wwins
 
@@ -759,7 +763,9 @@ class KEngine(object):
         self.contLabels = CL
         self.fixedLabels = FL
 
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
+        self.noMatches, self.noSwitched = 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
         self.continuations = []
         if progBar:
             progBar.configure(value=5)
@@ -867,8 +873,8 @@ class KEngine(object):
             self.gamelist.update_winning_percentages()
             noOfG = self.gamelist.noOfGames()
             if noOfG:
-                Bperc = self.gamelist.Bwins * 100.0 / noOfG
-                Wperc = self.gamelist.Wwins * 100.0 / noOfG
+                Bperc = self.gamelist.BwinsG * 100.0 / noOfG
+                Wperc = self.gamelist.WwinsG * 100.0 / noOfG
             else:
                 Bperc, Wperc = 0, 0
             comment_text = _('{0} games (B: {1:1.1f}%, W: {2:1.1f}%)').format(noOfG, Bperc, Wperc)
@@ -1048,6 +1054,8 @@ class KEngine(object):
         self.noSwitched += gl.num_switched
         self.Bwins += gl.Bwins
         self.Wwins += gl.Wwins
+        self.BwinsG += gl.BwinsG
+        self.WwinsG += gl.WwinsG
 
         for y in range(self.currentSearchPattern.sizeY):
             for x in range(self.currentSearchPattern.sizeX):
@@ -1157,7 +1165,9 @@ class KEngine(object):
     def signatureSearch(self, sig):
         '''Do a signature search for the Dyer signature ``sig``.
         '''
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
+        self.noMatches, self.noSwitched = 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
 
         for db in self.gamelist.DBlist:
             if db['disabled']:
@@ -1168,6 +1178,8 @@ class KEngine(object):
             self.noSwitched += gl.num_switched
             self.Bwins += gl.Bwins
             self.Wwins += gl.Wwins
+            self.BwinsG += gl.BwinsG
+            self.WwinsG += gl.WwinsG
 
         self.gamelist.update()
 

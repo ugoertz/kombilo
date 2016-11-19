@@ -639,11 +639,13 @@ int GameList::end_sorted() {
   sort(currentList->begin(), currentList->end(), sndcomp);
   delete oldList;
   oldList = 0;
-  Bwins = Wwins = 0;
+  BwinsG = WwinsG = 0;
   for(vector<pair<int,int> >::iterator it = currentList->begin(); it != currentList->end(); it++) {
-    if ((*all)[it->second]->winner == 'B') Bwins++;
-    if ((*all)[it->second]->winner == 'W') Wwins++;
+    if ((*all)[it->second]->winner == 'B') BwinsG++;
+    if ((*all)[it->second]->winner == 'W') WwinsG++;
   }
+  Bwins = BwinsG;  // to preserve compatibility with handling before 0.8.4
+  Wwins = WwinsG;
   return 0;
 }
 
@@ -730,8 +732,8 @@ void GameList::reset() {
   }
   num_hits = 0;
   num_switched = 0;
-  Bwins = BwinsAll;
-  Wwins = WwinsAll;
+  BwinsG = Bwins = BwinsAll;
+  WwinsG = Wwins = WwinsAll;
   dates_current.clear();
   for(int i = 0; i < (DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_current.push_back(dates_all[i]);
 }
@@ -1268,6 +1270,13 @@ void GameList::search(Pattern& pattern, SearchOptions* so) throw(DBError) {
   // printf("cont %d\n", continuations[15+15*19].B+continuations[15+15*19].W);
   pl.continuations.clear();
   update_dates_current();
+
+  // update BwinsG, WwinsG
+  BwinsG = WwinsG = 0;
+  for(vector<pair<int,int> >::iterator it = currentList->begin(); it != currentList->end(); it++) {
+    if ((*all)[it->second]->winner == 'B') BwinsG++;
+    if ((*all)[it->second]->winner == 'W') WwinsG++;
+  }
 }
 
 
@@ -1302,9 +1311,9 @@ int rnw_callback(void *num, int argc, char **argv, char **azColName) {
 void GameList::readNumOfWins() throw(DBError) {
   int* pi = new int;
   sqlite3_exec(db, "select count(rowid) from GAMES where RE like 'B%'", rnw_callback, pi, 0);
-  Bwins = BwinsAll = *pi;
+  BwinsG = Bwins = BwinsAll = *pi;
   sqlite3_exec(db, "select count(rowid) from GAMES where RE like 'W%'", rnw_callback, pi, 0);
-  Wwins = WwinsAll = *pi;
+  WwinsG = Wwins = WwinsAll = *pi;
   delete pi;
 }
 
@@ -1979,6 +1988,8 @@ int GameList::snapshot() throw(DBError) {
   snapshot.pb_int(num_switched);
   snapshot.pb_int(Bwins);
   snapshot.pb_int(Wwins);
+  snapshot.pb_int(BwinsG);
+  snapshot.pb_int(WwinsG);
 
   // insert snapshot into database
   sqlite3_stmt *ppStmt=0;
@@ -2073,6 +2084,8 @@ void GameList::restore(int handle, bool del) throw(DBError) {
   num_switched = snapshot.retrieve_int();
   Bwins = snapshot.retrieve_int();
   Wwins = snapshot.retrieve_int();
+  BwinsG = snapshot.retrieve_int();
+  WwinsG = snapshot.retrieve_int();
 
   rc = sqlite3_finalize(ppStmt);
   if (rc != SQLITE_OK) throw DBError();

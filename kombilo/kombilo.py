@@ -486,9 +486,10 @@ class GameListGUI(GameList, VScrolledList):
         GameList.update(self, self.mster.options.sortCriterion.get(), self.mster.options.sortReverse.get())
 
         noOfG = self.noOfGames()
+
         if noOfG:
-            Bperc = self.Bwins * 100.0 / noOfG
-            Wperc = self.Wwins * 100.0 / noOfG
+            Bperc = self.BwinsG * 100.0 / noOfG
+            Wperc = self.WwinsG * 100.0 / noOfG
         self.total_in_list = noOfG
         self.noGamesLabel.config(
                 text=_('%d games') % noOfG,
@@ -1529,7 +1530,6 @@ class App(v.Viewer, KEngine):
 
         self.comments.delete('1.0', END)
         self.gamelist.clearGameInfo()
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
 
         cu = target_values['cursorSn']
         if cu:
@@ -1581,7 +1581,9 @@ class App(v.Viewer, KEngine):
                 pattern=self.gamelist.DBlist[i]['data'].mrs_pattern)
 
         self.continuations = []
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
+        self.noMatches, self.noSwitched = 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
 
         for db in self.gamelist.DBlist:
             if db['disabled']:

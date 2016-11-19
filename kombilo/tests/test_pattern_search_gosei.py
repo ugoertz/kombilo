@@ -265,6 +265,11 @@ def test_pattern_5(K):
             'Gosei-Gos23-T27: Omori Yasushi - O Rissei (B), 0A, 0A, 0B, 0A, ')
     assert len(K.continuations) == 4
 
+    assert K.gamelist.Bwins == 68
+    assert K.gamelist.Wwins == K.noMatches - K.gamelist.Bwins
+    assert K.gamelist.BwinsG == 17
+    assert K.gamelist.WwinsG == K.gamelist.noOfGames() - K.gamelist.BwinsG
+
     assert K.continuations[0].x == 6
     assert K.continuations[0].y == 3
     assert K.continuations[0].B == 30
