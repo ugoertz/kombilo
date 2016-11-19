@@ -16,6 +16,7 @@ kombilo/libkombilo/boost
 kombilo/libkombilo/examples/sgftest
 kombilo/libkombilo/examples/tags
 kombilo/kombilo.cfg
+kombilo/libkombilo.py
 kombilo/dist
 kombilo/build
 kombilo/tests/db/*.d*
