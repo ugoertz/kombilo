@@ -838,6 +838,11 @@ class KEngine(object):
             'reset_gl': _('Yes') if options.as_bool('reset_game_list') else _('No'),
             'sel': selection_readable,
             })
+        options_text += _('Fixed Color') + ': %s\n' % (_('Yes') if self.fixedColorVar.get() else _('No'))
+        options_text += _('Fixed Anchor') + ': %s\n' % (_('Yes') if self.fixedAnchorVar.get() else _('No'))
+        options_text += _('Next move') + ': %s\n' % {0: _('B or W'), 1: _('B'), 2: _('W'), }[self.nextMoveVar.get()]
+        options_text += _('Move limit') + ': %d\n' % self.moveLimit.get()
+        options_text += _('Search in variations') + ': %s\n' % (_('Yes') if self.searchInVariations.get() else _('No'))
 
         # Add information about search options to start node.
         # No need to add comment_head here, since this will be done when we add
@@ -1339,6 +1344,16 @@ class KEngine(object):
                     if exportMode == 'wiki':
                         t.append(' %%%')
                     t.append('\n')
+
+            t.append('\n')
+            t.append(_('Search options'))
+            t.append('\n')
+            t.append('\n')
+            t.append(_('Fixed Color') + ': %s\n' % (_('Yes') if self.fixedColorVar.get() else _('No')))
+            t.append(_('Fixed Anchor') + ': %s\n' % (_('Yes') if self.fixedAnchorVar.get() else _('No')))
+            t.append(_('Next move') + ': %s\n' % {0: _('B or W'), 1: _('B'), 2: _('W'), }[self.nextMoveVar.get()])
+            t.append(_('Move limit') + ': %d\n' % self.moveLimit.get())
+            t.append(_('Search in variations') + ': %s\n' % (_('Yes') if self.searchInVariations.get() else _('No')))
 
         return ''.join(t)
 
