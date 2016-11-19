@@ -1241,9 +1241,9 @@ class Viewer:
                 for color in ['B', 'W']:
                     if color in c and c[color][0] and self.convCoord(c[color][0]):
                         if color == 'B':
-                            self.board.placeMark(self.convCoord(c[color][0]), '', 'white', 'small')
+                            self.board.placeMark(self.convCoord(c[color][0]), 'white', 'white', 'small')
                         else:
-                            self.board.placeMark(self.convCoord(c[color][0]), '', 'black', 'small')
+                            self.board.placeMark(self.convCoord(c[color][0]), 'black', 'black', 'small')
 
             if self.cursor.atEnd:
                 return

@@ -29,7 +29,7 @@ import time
 import datetime
 import os
 import sys
-from copy import copy
+from copy import copy, deepcopy
 from string import split, find, join, strip, replace
 import re
 from array import *
@@ -170,7 +170,7 @@ class BoardWC(Board):
         self.delete('wildcard')
         self.wildcards = {}
 
-    def placeLabel(self, pos, typ, text=None, color=None, extra_tags=()):
+    def placeLabel(self, pos, typ, text=None, color=None, override=None, extra_tags=()):
         """ Place a label; take care of wildcards at same position. """
 
         if pos in self.wildcards:
@@ -294,7 +294,7 @@ class BoardWC(Board):
         data['status'] = [[self.getStatus(i, j) for j in range(self.boardsize)] for i in range(self.boardsize)]
         data['wildcards'] = copy(self.wildcards)
         data['selection'] = self.selection
-        data['labels'] = copy(self.labels)
+        data['labels'] = deepcopy(self.labels)
         return data
 
     def restore(self, d, small=False, **kwargs):
@@ -310,8 +310,8 @@ class BoardWC(Board):
                         self.placeStone((i, j), d['status'][i][j])
             if not small:
                 for p in d['labels']:
-                    typ, text, dummy, color = d['labels'][p]
-                    self.placeLabel(p, typ, text, color)
+                    for typ, text, dummy, color, override, extra_args in d['labels'][p]:
+                        self.placeLabel(p, typ, text, color, override, extra_args)
 
         for x, y in d['wildcards']:
             self.place_wildcard(x, y, d['wildcards'][(x, y)][1])
@@ -1658,7 +1658,12 @@ class App(v.Viewer, KEngine):
             # need to test for this here since showCont is invoked as command
             # from menu upon changing this option
 
+            # delete labels from previous search
             self.board.delete('contlabels')
+            for pos in self.board.labels:
+                for ctr, (d0, d1, d2, d3, d4, extra_tags) in enumerate(self.board.labels[pos]):
+                    if 'contlabels' in extra_tags:
+                        del self.board.labels[pos][ctr]
             # There might be other labels on the board, but we just leave them: Either
             # there are "overwritten" by one of the continuations below, or they
             # do not correspond to a continuation and hence should stay. (The

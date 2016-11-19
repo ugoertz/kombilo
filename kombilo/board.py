@@ -30,6 +30,7 @@ import tkFont
 from PIL import Image as PILImage
 from PIL import ImageTk as PILImageTk
 from random import randint, choice
+from copy import deepcopy
 import math
 import sys
 import libkombilo as lk
@@ -210,8 +211,13 @@ class Board(abstractBoard, Canvas):
     def renew_labels(self):
         self.delete('label')
         self.delete('labelbg')
-        for x in self.labels:
-            self.placeLabel(x, '+' + self.labels[x][0], self.labels[x][1])
+        old_labels = deepcopy(self.labels)
+        self.labels = {}
+        for x in old_labels:
+            for typ, text, labelIDs, color, override, extra_tags in old_labels[x]:
+                self.placeLabel(
+                        x, typ,
+                        text, color, override, extra_tags)
 
     def resize(self, event=None):
         """ This is called when the window containing the board is resized. """
@@ -234,8 +240,7 @@ class Board(abstractBoard, Canvas):
             self.placeStone(x, self.getStatus(*x))
         for x in self.marks:
             self.placeMark(x, *self.marks[x])
-        for x in self.labels:
-            self.placeLabel(x, '+' + self.labels[x][0], self.labels[x][1])
+        self.renew_labels()
 
         self.tkraise('sel')  # this is for the list of previous search patterns ...
         self.noChanges = 0
@@ -381,12 +386,10 @@ class Board(abstractBoard, Canvas):
         x1, x2, y1, y2 = self.getPixelCoord(pos, 1)
 
         if size == 'small':
-            tmp1 = (y1 - x1) / 4
-            tmp2 = (y2 - x2) / 4
+            tmp = (y1 - x1) * 2 // 5
         else:
-            tmp1 = 3
-            tmp2 = 3
-        self.create_oval(x1 + tmp1, x2 + tmp2, y1 - tmp1, y2 - tmp2, fill=color,
+            tmp = 3
+        self.create_oval(x1 + tmp, x2 + tmp, y1 - tmp, y2 - tmp, fill=color,
                          width=3, outline=outln, tags=('marks', 'non-bg'))
         self.marks[pos] = color, outln, size
         self.onChange()
@@ -423,23 +426,32 @@ class Board(abstractBoard, Canvas):
             return 0
 
     def placeLabel(self, pos, typ, text=None, color=None, override=None, extra_tags=()):
-        """ Place label of typ typ at pos; used to display labels
+        """ Place label of type typ at pos; used to display labels
             from SGF files. If typ has the form +XX, add a label of typ XX.
             Otherwise, add or delete the label, depending on if there is no label at pos,
             or if there is one."""
 
+        orig_type = typ
+
         if typ[0] != '+':
             if pos in self.labels:
-                if self.labels[pos][0] == typ:
-                    for item in self.labels[pos][2]:
-                        self.delete(item)
-                    del self.labels[pos]
-                    return
-                else:
-                    for item in self.labels[pos][2]:
-                        self.delete(item)
-                    del self.labels[pos]
-
+                for ctr, (tp, d1, lIDs, d3, d4, d5) in enumerate(self.labels[pos]):
+                    if tp == typ:
+                        # delete label if the label we have had orig_type
+                        # without a '+'
+                        for item in lIDs:
+                            self.delete(item)
+                        del self.labels[pos][ctr]
+                        return
+                    else:
+                        # replace label if there is a non-+ label here
+                        # (when invoked from v.py, this never happens because we
+                        # catch ctrl-click on an occupied spot and use it to
+                        # delete that label first)
+                        for item in lIDs:
+                            self.delete(item)
+                        del self.labels[pos][ctr]
+                        break  # exit for loop
             self.onChange()
 
         else:
@@ -483,7 +495,14 @@ class Board(abstractBoard, Canvas):
             labelIDs.append(self.create_text((x1 + y1) // 2, (x2 + y2) // 2, text='X', fill=fcolor,
                                              font=self.labelFontBold, tags=tags))
 
-        self.labels[pos] = (typ, text, labelIDs, color)
+        if pos in self.labels:
+            self.labels[pos].append(
+                    (orig_type, text, labelIDs, color, override, extra_tags)
+                    )
+        else:
+            self.labels[pos] = [
+                    (orig_type, text, labelIDs, color, override, extra_tags)
+                    ]
 
     def placeStone(self, pos, co):
         # assert pos[0] >= 0 and pos[1] >= 0
@@ -501,12 +520,12 @@ class Board(abstractBoard, Canvas):
         else:
             if color == 'black':
                 self.stones[pos] = self.create_image(
-                        ((p[0] + p[2] + (c1//40)) // 2, (p[1] + p[3] + (c1//40)) // 2),
+                        ((p[0] + p[2] + (c1//30)) // 2, (p[1] + p[3] + (c1//30)) // 2),
                         image=choice(self.bStones),
                         tags='non-bg')
             elif color == 'white':
                 self.stones[pos] = self.create_image(
-                        ((p[0] + p[2] + (c1//40)) // 2, (p[1] + p[3] + (c1//40)) // 2),
+                        ((p[0] + p[2] + (c1//30)) // 2, (p[1] + p[3] + (c1//30)) // 2),
                         image=choice(self.wStones),
                         tags='non-bg')
 
