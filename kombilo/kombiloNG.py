@@ -1526,7 +1526,8 @@ class KEngine(object):
             tagAsPro=0, processVariations=True, algos=None,
             messages=None, progBar=None, showwarning=None,
             index=None, all_in_one_db=True, sgfInDB=True,
-            logDuplicates=True):
+            logDuplicates=True,
+            stop_var=None):
         '''
         Call this method to newly add a database of SGF files.
 
@@ -1571,6 +1572,11 @@ class KEngine(object):
         if recursive:
             for dirpath, dirnames, files in os.walk(dbp):
                 self.addOneFolder(arguments, dirpath, gl=gl)
+                if stop_var is not None and stop_var.get():
+                    if messages:
+                        messages.insert('end', _('Interrupted\n'))
+                        messages.update()
+                    break
         else:
             self.addOneFolder(arguments, dbp, gl=gl)
 

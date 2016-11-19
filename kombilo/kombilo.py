@@ -2027,18 +2027,16 @@ class App(v.Viewer, KEngine):
     # ---- administration of DBlist ----------------------------------------------------
 
     def addDB(self):
-        self.editDB_OK.config(state=DISABLED)
-        self.saveProcMess.config(state=DISABLED)
-
         dbp = askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath)
 
-        if not dbp:
-            self.editDB_OK.config(state=NORMAL)
-            self.saveProcMess.config(state=NORMAL)
+        if not dbp or not str(dbp):
             return
         else:
             dbp = os.path.normpath(str(dbp))
 
+        self.editDB_OK.config(state=DISABLED)
+        self.saveProcMess.config(state=DISABLED)
+        self.stop_process_button.config(state=ACTIVE)
         self.datapath = os.path.split(dbp)[0]
 
         if self.options.storeDatabasesSeparately.get() and self.options.whereToStoreDatabases.get():
@@ -2071,6 +2069,8 @@ class App(v.Viewer, KEngine):
 
         self.callAddDB(dbp, datap)
 
+        self.stop_process_button.config(state=DISABLED)
+        self.stop_process_var.set(False)
         self.editDB_OK.config(state=NORMAL)
         self.saveProcMess.config(state=NORMAL)
         self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
@@ -2099,7 +2099,8 @@ class App(v.Viewer, KEngine):
                 index=index,
                 all_in_one_db=not self.options.oneDBperFolder.get(),
                 sgfInDB=self.options.include_full_sgf.get(),
-                logDuplicates=self.options.logDuplicates.get())
+                logDuplicates=self.options.logDuplicates.get(),
+                stop_var=self.stop_process_var)
 
     def add_gl_at(self, index, gl, dbpath):
         super(App, self).add_gl_at(index, gl, dbpath)
@@ -2138,6 +2139,9 @@ class App(v.Viewer, KEngine):
         self.currentSearchPattern = None
 
     def reprocessDB(self):
+        self.stop_process_button.config(state=ACTIVE)
+        self.editDB_OK.config(state=DISABLED)
+        self.saveProcMess.config(state=DISABLED)
 
         # export all tags
         from tempfile import NamedTemporaryFile
@@ -2150,8 +2154,6 @@ class App(v.Viewer, KEngine):
         for index in self.db_list.list.curselection():
             i = int(index)
 
-            self.editDB_OK.config(state=DISABLED)
-            self.saveProcMess.config(state=DISABLED)
             self.prevSearches.clear()
             self.currentSearchPattern = None
 
@@ -2183,6 +2185,8 @@ class App(v.Viewer, KEngine):
 
         # cleaning up
         self.gamelist.reset()
+        self.stop_process_button.config(state=DISABLED)
+        self.stop_process_var.set(False)
         self.editDB_OK.config(state=NORMAL)
         self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
         self.processMessages.update()
@@ -2287,6 +2291,8 @@ class App(v.Viewer, KEngine):
 
     def editDBlist(self):
         self.gamelist.clearGameInfo()
+        self.stop_process_var = BooleanVar()
+        self.stop_process_var.set(False)
 
         window = Toplevel()
         self.editDB_window = window
@@ -2327,11 +2333,19 @@ class App(v.Viewer, KEngine):
             else:
                 self.db_list.insert(END, db['sgfpath'] + ' (%s, %d %s)' % (db_date, db['data'].size_all(), _('games')))
 
+        def stop_process():
+            self.stop_process_var.set(True)
+
         for i, (text, command, ) in enumerate([(_('Add DB'), self.addDB), (_('Toggle normal/disabled'), self.toggleDisabled),
                                                (_('Remove DB'), self.removeDB), (_('Reprocess DB'), self.reprocessDB)]):
             Button(f2, text=text, command=command).grid(row=0, column=i, sticky=NSEW)
+
+        self.stop_process_button = Button(f2, text=_('Stop'), command=stop_process, activebackground='red')
+        self.stop_process_button.config(state=DISABLED)
+        self.stop_process_button.grid(row=0, column=4, sticky=NSEW)
+
         self.editDB_OK = Button(f2, text=_('OK'), command=self.finalizeEditDB)
-        self.editDB_OK.grid(row=0, column=4, sticky=NSEW)
+        self.editDB_OK.grid(row=0, column=5, sticky=NSEW)
 
         Label(f3, text=_('Processing options'), justify=LEFT, font=self.boldFont
                 ).grid(row=0, column=0, sticky=W)
