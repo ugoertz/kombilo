@@ -29,7 +29,7 @@ import time
 import datetime
 import os
 import sys
-from copy import copy
+from copy import copy, deepcopy
 from string import split, find, join, strip, replace
 import re
 from array import *
@@ -170,7 +170,7 @@ class BoardWC(Board):
         self.delete('wildcard')
         self.wildcards = {}
 
-    def placeLabel(self, pos, typ, text=None, color=None, extra_tags=()):
+    def placeLabel(self, pos, typ, text=None, color=None, override=None, extra_tags=()):
         """ Place a label; take care of wildcards at same position. """
 
         if pos in self.wildcards:
@@ -294,7 +294,7 @@ class BoardWC(Board):
         data['status'] = [[self.getStatus(i, j) for j in range(self.boardsize)] for i in range(self.boardsize)]
         data['wildcards'] = copy(self.wildcards)
         data['selection'] = self.selection
-        data['labels'] = copy(self.labels)
+        data['labels'] = deepcopy(self.labels)
         return data
 
     def restore(self, d, small=False, **kwargs):
@@ -310,8 +310,8 @@ class BoardWC(Board):
                         self.placeStone((i, j), d['status'][i][j])
             if not small:
                 for p in d['labels']:
-                    typ, text, dummy, color = d['labels'][p]
-                    self.placeLabel(p, typ, text, color)
+                    for typ, text, dummy, color, override, extra_args in d['labels'][p]:
+                        self.placeLabel(p, typ, text, color, override, extra_args)
 
         for x, y in d['wildcards']:
             self.place_wildcard(x, y, d['wildcards'][(x, y)][1])
@@ -486,9 +486,10 @@ class GameListGUI(GameList, VScrolledList):
         GameList.update(self, self.mster.options.sortCriterion.get(), self.mster.options.sortReverse.get())
 
         noOfG = self.noOfGames()
+
         if noOfG:
-            Bperc = self.Bwins * 100.0 / noOfG
-            Wperc = self.Wwins * 100.0 / noOfG
+            Bperc = self.BwinsG * 100.0 / noOfG
+            Wperc = self.WwinsG * 100.0 / noOfG
         self.total_in_list = noOfG
         self.noGamesLabel.config(
                 text=_('%d games') % noOfG,
@@ -1529,7 +1530,6 @@ class App(v.Viewer, KEngine):
 
         self.comments.delete('1.0', END)
         self.gamelist.clearGameInfo()
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
 
         cu = target_values['cursorSn']
         if cu:
@@ -1576,10 +1576,14 @@ class App(v.Viewer, KEngine):
 
         # restore currentSearchPattern
         i, sid = target_values['snapshot_ids'][0]
-        self.currentSearchPattern = self.gamelist.DBlist[i]['data'].mrs_pattern
+        self.currentSearchPattern = Pattern(
+                '',
+                pattern=self.gamelist.DBlist[i]['data'].mrs_pattern)
 
         self.continuations = []
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
+        self.noMatches, self.noSwitched = 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
 
         for db in self.gamelist.DBlist:
             if db['disabled']:
@@ -1654,7 +1658,12 @@ class App(v.Viewer, KEngine):
             # need to test for this here since showCont is invoked as command
             # from menu upon changing this option
 
+            # delete labels from previous search
             self.board.delete('contlabels')
+            for pos in self.board.labels:
+                for ctr, (d0, d1, d2, d3, d4, extra_tags) in enumerate(self.board.labels[pos]):
+                    if 'contlabels' in extra_tags:
+                        del self.board.labels[pos][ctr]
             # There might be other labels on the board, but we just leave them: Either
             # there are "overwritten" by one of the continuations below, or they
             # do not correspond to a continuation and hence should stay. (The
@@ -2018,18 +2027,16 @@ class App(v.Viewer, KEngine):
     # ---- administration of DBlist ----------------------------------------------------
 
     def addDB(self):
-        self.editDB_OK.config(state=DISABLED)
-        self.saveProcMess.config(state=DISABLED)
-
         dbp = askdirectory(parent=self.editDBlistWindow, initialdir=self.datapath)
 
-        if not dbp:
-            self.editDB_OK.config(state=NORMAL)
-            self.saveProcMess.config(state=NORMAL)
+        if not dbp or not str(dbp):
             return
         else:
             dbp = os.path.normpath(str(dbp))
 
+        self.editDB_OK.config(state=DISABLED)
+        self.saveProcMess.config(state=DISABLED)
+        self.stop_process_button.config(state=ACTIVE)
         self.datapath = os.path.split(dbp)[0]
 
         if self.options.storeDatabasesSeparately.get() and self.options.whereToStoreDatabases.get():
@@ -2062,6 +2069,8 @@ class App(v.Viewer, KEngine):
 
         self.callAddDB(dbp, datap)
 
+        self.stop_process_button.config(state=DISABLED)
+        self.stop_process_var.set(False)
         self.editDB_OK.config(state=NORMAL)
         self.saveProcMess.config(state=NORMAL)
         self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
@@ -2090,7 +2099,8 @@ class App(v.Viewer, KEngine):
                 index=index,
                 all_in_one_db=not self.options.oneDBperFolder.get(),
                 sgfInDB=self.options.include_full_sgf.get(),
-                logDuplicates=self.options.logDuplicates.get())
+                logDuplicates=self.options.logDuplicates.get(),
+                stop_var=self.stop_process_var)
 
     def add_gl_at(self, index, gl, dbpath):
         super(App, self).add_gl_at(index, gl, dbpath)
@@ -2129,6 +2139,9 @@ class App(v.Viewer, KEngine):
         self.currentSearchPattern = None
 
     def reprocessDB(self):
+        self.stop_process_button.config(state=ACTIVE)
+        self.editDB_OK.config(state=DISABLED)
+        self.saveProcMess.config(state=DISABLED)
 
         # export all tags
         from tempfile import NamedTemporaryFile
@@ -2141,8 +2154,6 @@ class App(v.Viewer, KEngine):
         for index in self.db_list.list.curselection():
             i = int(index)
 
-            self.editDB_OK.config(state=DISABLED)
-            self.saveProcMess.config(state=DISABLED)
             self.prevSearches.clear()
             self.currentSearchPattern = None
 
@@ -2174,6 +2185,8 @@ class App(v.Viewer, KEngine):
 
         # cleaning up
         self.gamelist.reset()
+        self.stop_process_button.config(state=DISABLED)
+        self.stop_process_var.set(False)
         self.editDB_OK.config(state=NORMAL)
         self.processMessages.insert('end', _('Done. Click "OK" to close this window and continue.'))
         self.processMessages.update()
@@ -2278,6 +2291,8 @@ class App(v.Viewer, KEngine):
 
     def editDBlist(self):
         self.gamelist.clearGameInfo()
+        self.stop_process_var = BooleanVar()
+        self.stop_process_var.set(False)
 
         window = Toplevel()
         self.editDB_window = window
@@ -2318,11 +2333,19 @@ class App(v.Viewer, KEngine):
             else:
                 self.db_list.insert(END, db['sgfpath'] + ' (%s, %d %s)' % (db_date, db['data'].size_all(), _('games')))
 
+        def stop_process():
+            self.stop_process_var.set(True)
+
         for i, (text, command, ) in enumerate([(_('Add DB'), self.addDB), (_('Toggle normal/disabled'), self.toggleDisabled),
                                                (_('Remove DB'), self.removeDB), (_('Reprocess DB'), self.reprocessDB)]):
             Button(f2, text=text, command=command).grid(row=0, column=i, sticky=NSEW)
+
+        self.stop_process_button = Button(f2, text=_('Stop'), command=stop_process, activebackground='red')
+        self.stop_process_button.config(state=DISABLED)
+        self.stop_process_button.grid(row=0, column=4, sticky=NSEW)
+
         self.editDB_OK = Button(f2, text=_('OK'), command=self.finalizeEditDB)
-        self.editDB_OK.grid(row=0, column=4, sticky=NSEW)
+        self.editDB_OK.grid(row=0, column=5, sticky=NSEW)
 
         Label(f3, text=_('Processing options'), justify=LEFT, font=self.boldFont
                 ).grid(row=0, column=0, sticky=W)
@@ -2852,6 +2875,18 @@ class App(v.Viewer, KEngine):
         if cancel:
             return
 
+        stop_var = BooleanVar()
+        stop_var.set(False)
+
+        def stop_search_fct():
+            stop_var.set(True)
+        stop_button = Button(
+                self.navFrame,
+                text=_('Stop building sgf tree'), bg='red',
+                command=stop_search_fct)
+        stop_button.grid(row=0, column=50, padx=20)
+
+        stored_selection = self.board.selection
         self.notebook.select(self.dateProfileFS.winfo_pathname(self.logFS.winfo_id()))  # select tags tab
         self.progBar.start(50)
         currentTime = time.time()
@@ -2900,7 +2935,7 @@ class App(v.Viewer, KEngine):
             path_to_initial_node = self.cursor.currentNode().pathToNode()
 
         self.currentFileChanged()
-        self.sgf_tree(cursor, current_game, options, searchOptions, messages=self.logger, progBar=self.progBar, )
+        self.sgf_tree(cursor, current_game, options, searchOptions, messages=self.logger, progBar=self.progBar, stop_var=stop_var)
 
         if new_cursor_var.get():
             self.newFile(cursor)
@@ -2914,6 +2949,9 @@ class App(v.Viewer, KEngine):
             for i in path_to_initial_node:
                 self.next(i)
 
+        stop_button.destroy()
+        self.currentSearchPattern = None
+        self.board.setSelection(*stored_selection)
         self.logger.insert(END, _('Finished computing sgf tree') + ', ' + _('%1.1f seconds\n') % (time.time() - currentTime))
         self.progBar.stop()
         self.configButtons(NORMAL)

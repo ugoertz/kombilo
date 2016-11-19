@@ -206,9 +206,11 @@ class GameList {
     vector<Continuation* > continuations;
     int num_hits;
     int num_switched;
-    int Bwins;
+    int Bwins;    ///< number of hits in previous search where B wins (can exceed number of games if there are multiple hits per game)
+    int BwinsG;   ///< number of games in currentList where B wins
     int BwinsAll; ///< number of B wins in all games of the gamelist (independent of currentList)
-    int Wwins;
+    int Wwins;    ///< number of hits in previous search where W wins (can exceed number of games if there are multiple hits per game)
+    int WwinsG;   ///< number of games in currentList where W wins
     int WwinsAll; ///< number of B wins in all games of the gamelist (independent of currentList)
     Pattern* mrs_pattern; ///< most recent search pattern
     SearchOptions* searchOptions;

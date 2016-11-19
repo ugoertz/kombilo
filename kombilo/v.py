@@ -53,7 +53,7 @@ from . import libkombilo as lk
 from .board import *
 from .sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
-KOMBILO_VERSION = '0.8.3'
+KOMBILO_VERSION = '0.8.4'
 
 # ---------------------------------------------------------------------------------------
 
@@ -554,7 +554,7 @@ class DataWindow:
 
         self.SGFtreeC = SGFtreeCanvas(self.gametreeF, self.mster.options, unit=master.options.scaling.get() * 3 // 2)
         self.SGFtreeC.pack(side=LEFT, expand=YES, fill=BOTH)
-        self.guessModeCanvas = Canvas(self.gametreeF, width=160, height=100, background='white')
+        self.guessModeCanvas = Canvas(self.gametreeF, width=180, height=200, background='white')
 
         self.filelist = ScrolledList(self.filelistF)
         self.filelist.grid(row=0, column=0, rowspan=3, sticky=NSEW)
@@ -635,14 +635,11 @@ class DataWindow:
             self.guessRightWrong = [0, 0]
             self.guessModeCanvas.pack(side=RIGHT, expand=NO, fill=BOTH)
             self.guessModeCanvas.delete(ALL)
-            if self.mster.boardImg:
-                self.guessModeCanvas.create_image(0, 0, image=self.mster.boardImg)
-                self.guessModeCanvas.create_rectangle(10, 10, 90, 90, fill='', outline='black')
-                for i in range(3):
-                    for j in range(3):
-                        self.guessModeCanvas.create_oval(10 + (80 / 6.0) + (80 / 3.0) * i - 1, 10 + (80 / 6.0) + (80 / 3.0) * j - 1, 10 + (80 / 6.0) + (80 / 3.0) * i + 1, 10 + (80 / 6.0) + (80 / 3.0) * j + 1, fill="black")
-            else:
-                self.guessModeCanvas.create_rectangle(10, 10, 90, 90, fill='', outline='black')
+            bsz = self.mster.guess_bsz
+            self.guessModeCanvas.create_rectangle(10, 10, 10+bsz, 10+bsz, fill='#ffd39b', outline='black')
+            for i in range(3):
+                for j in range(3):
+                    self.guessModeCanvas.create_oval(10 + (bsz / 6.0) + (bsz / 3.0) * i - 1, 10 + (bsz / 6.0) + (bsz / 3.0) * j - 1, 10 + (bsz / 6.0) + (bsz / 3.0) * i + 1, 10 + (bsz / 6.0) + (bsz / 3.0) * j + 1, fill="black")
 
             if self.mster.options.showNextMoveVar.get():
                 self.SNM = 1
@@ -1241,9 +1238,9 @@ class Viewer:
                 for color in ['B', 'W']:
                     if color in c and c[color][0] and self.convCoord(c[color][0]):
                         if color == 'B':
-                            self.board.placeMark(self.convCoord(c[color][0]), '', 'white', 'small')
+                            self.board.placeMark(self.convCoord(c[color][0]), 'white', 'white', 'small')
                         else:
-                            self.board.placeMark(self.convCoord(c[color][0]), '', 'black', 'small')
+                            self.board.placeMark(self.convCoord(c[color][0]), 'black', 'black', 'small')
 
             if self.cursor.atEnd:
                 return
@@ -1398,12 +1395,12 @@ class Viewer:
         correct = self.dataWindow.guessRightWrong[0]
         total = self.dataWindow.guessRightWrong[0] + self.dataWindow.guessRightWrong[1]
         perc = ('%d%%' % (correct * 100 // total)) if total else '-'
-        self.dataWindow.guessModeCanvas.create_text(130, 20, text='%d/%d' % (correct, total), tags='labels')
-        self.dataWindow.guessModeCanvas.create_text(130, 40, text=perc, tags='labels')
+        self.dataWindow.guessModeCanvas.create_text(10, 140, text='%d/%d' % (correct, total), tags='labels', anchor='nw')
+        self.dataWindow.guessModeCanvas.create_text(10, 180, text=perc, tags='labels', anchor='nw')
 
     def guessSuccess(self):
         self.dataWindow.guessModeCanvas.delete('labels')
-        self.dataWindow.guessModeCanvas.create_rectangle(20, 20, 80, 80, fill='green', outline='green', tags='labels')
+        self.dataWindow.guessModeCanvas.create_image(20, 20, image=self.guess_success_img, anchor='nw', tags='labels')
         self.dataWindow.guessRightWrong[0] += 1
         self.displayGuessPercentage()
         if self.cursor.atEnd:
@@ -1416,7 +1413,7 @@ class Viewer:
         self.dataWindow.guessModeCanvas.delete('labels')
 
         if self.cursor.atEnd:
-            self.dataWindow.guessModeCanvas.create_rectangle(20, 20, 80, 80, fill='green', tags='labels', outline='green')
+            self.dataWindow.guessModeCanvas.create_image(20, 20, image=self.guess_success_img, anchor='nw', tags='labels')
             self.displayGuessPercentage()
             self.dataWindow.guessModeCanvas.create_text(
                     50, 50, text='END',
@@ -1424,21 +1421,27 @@ class Viewer:
                     tags='labels')
             return
 
+        bsz = self.guess_bsz
         if not right or not pos:
-            dx = 50
-            dy = 50
-            p0 = 40
-            p1 = 40
+            dx = 10 + bsz//2
+            dy = 10 + bsz//2
+            p0 = bsz//2
+            p1 = bsz//2
         else:
             dist = int(4 * sqrt((right[0] - pos[0]) * (right[0] - pos[0]) + (right[1] - pos[1]) * (right[1] - pos[1])))
 
             dx = max(2, dist // 3 + randint(0, dist // 3))
             dy = max(2, dist // 3 + randint(0, dist // 3))
 
-            p0 = right[0] * 4 + 2
-            p1 = right[1] * 4 + 2
+            p0 = right[0] * bsz // 18  # pos of correct move in pixels on board
+            p1 = right[1] * bsz // 18
 
-        self.dataWindow.guessModeCanvas.create_rectangle(p0 - dx + 10, p1 - dy + 10, min(80, p0 + dx) + 10, min(80, p1 + dx) + 10, fill='red', outline='', tags='labels')
+        sz = 3 * dx
+        self.fail_img_current = PILImageTk.PhotoImage(self.guess_fail_img.resize((sz, sz), PILImage.LANCZOS))
+        self.dataWindow.guessModeCanvas.create_image(
+                p0+10, p1+10,
+                image=self.fail_img_current, tags='labels')
+        # self.dataWindow.guessModeCanvas.create_rectangle(p0 - dx + 10, p1 - dy + 10, min(80, p0 + dx) + 10, min(80, p1 + dx) + 10, fill='red', outline='', tags='labels')
 
         self.dataWindow.guessRightWrong[1] += 1
         self.displayGuessPercentage()
@@ -2873,6 +2876,7 @@ class Viewer:
         self.master = master
 
         navFrame = Frame(self.master)
+        self.navFrame = navFrame  # use in do_sgf_tree to display stop button
         navFrame.pack(side=TOP, pady=3)
         self.mainframe = PanedWindow(self.master, sashrelief=SUNKEN, sashwidth=2, sashpad=2, orient='horizontal')  # note that PanedWindow is Tkinter, not ttk
         self.mainframe.pack(expand=YES, fill=BOTH)
@@ -2886,6 +2890,14 @@ class Viewer:
 
         self.boardFrame.pack(side=TOP, expand=YES, fill=BOTH, padx=5)
         labelFrame.pack(side=TOP)
+
+        self.guess_bsz = 120  # pixel size of guess move indicator board
+        try:
+            self.guess_success_img = PILImageTk.PhotoImage(PILImage.open(pkg_resources.resource_stream(__name__, 'icons/guess_success.png')).resize((self.guess_bsz-20, self.guess_bsz-20), PILImage.LANCZOS))
+            self.guess_fail_img = PILImage.open(pkg_resources.resource_stream(__name__, 'icons/guess_fail.png'))
+        except (TclError, IOError, AttributeError):
+            self.guess_fail_img = None
+            self.guess_success_img = None
 
         # The board
 

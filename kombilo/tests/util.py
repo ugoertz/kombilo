@@ -35,7 +35,7 @@ from .. import libkombilo as lk
 from ..kombiloNG import *
 
 
-def create_db(sgfs):
+def create_db(sgfs, dbname='kombilo'):
     pop = lk.ProcessOptions()
     pop.rootNodeTags = 'PW,PB,RE,DT,EV'
     pop.sgfInDB = True
@@ -45,8 +45,8 @@ def create_db(sgfs):
 
     gls = lk.vectorGL()
 
-    os.system('rm -f %s' % os.path.join(os.path.dirname(__file__), 'db/kombilo.d*'))
-    gl = lkGameList(os.path.join(os.path.dirname(__file__), 'db/kombilo.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
+    os.system('rm -f %s' % os.path.join(os.path.dirname(__file__), 'db/%s.d*' % dbname))
+    gl = lkGameList(os.path.join(os.path.dirname(__file__), 'db/%s.db' % dbname), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,', pop, 19, 5000)
 
     path = 'sgfs'
 

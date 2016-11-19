@@ -173,6 +173,11 @@ class Pattern(lk.Pattern):
     '''
 
     def __init__(self, p, **kwargs):
+        if 'pattern' in kwargs:
+            # "copy constructor": create Pattern instance from an lk.Pattern
+            lk.Pattern.__init__(self, kwargs['pattern'])
+            return
+
         iPos = p.replace(' ', '').replace(',', '.').replace('\n', '').replace('\r', '')
         boardsize = kwargs.get('boardsize', 19)
         sX = kwargs.get('sizeX', 0)
@@ -323,7 +328,7 @@ class GameList(object):
     def __init__(self):
         self.DBlist = []      # list of dicts
 
-        self.Bwins, self.Wwins, self.Owins = 0, 0, 0   # others: Jigo, Void, Left unfinished, ? (Unknown)
+        self.Bwins, self.Wwins, self.BwinsG, self.WwinsG = 0, 0, 0, 0
 
         self.references = {}
         self.gameIndex = []
@@ -500,15 +505,19 @@ class GameList(object):
             if db['disabled']:
                 continue
             db['data'].reset()
-        self.Bwins, self.Wwins, self.Owins = 0, 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
         self.update()
 
     def update_winning_percentages(self):
         self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
 
         for i, db in enumerate(self.DBlist):
             if db['disabled']:
                 continue
+            self.BwinsG += db['data'].BwinsG
+            self.WwinsG += db['data'].WwinsG
             self.Bwins += db['data'].Bwins
             self.Wwins += db['data'].Wwins
 
@@ -754,7 +763,9 @@ class KEngine(object):
         self.contLabels = CL
         self.fixedLabels = FL
 
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
+        self.noMatches, self.noSwitched = 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
         self.continuations = []
         if progBar:
             progBar.configure(value=5)
@@ -782,7 +793,7 @@ class KEngine(object):
         if update_gamelist:
             self.gamelist.update()
 
-    def sgf_tree(self, cursor, current_game, options, searchOptions, messages=None, progBar=None, ):
+    def sgf_tree(self, cursor, current_game, options, searchOptions, messages=None, progBar=None, stop_var=None):
         # plist is a list of pairs consisting of a node and some information (label,
         # number of B, W hits of this node) which will eventually be inserted into the
         # comments of the parent node during the search, new nodes (arising as
@@ -827,6 +838,11 @@ class KEngine(object):
             'reset_gl': _('Yes') if options.as_bool('reset_game_list') else _('No'),
             'sel': selection_readable,
             })
+        options_text += _('Fixed Color') + ': %s\n' % (_('Yes') if self.fixedColorVar.get() else _('No'))
+        options_text += _('Fixed Anchor') + ': %s\n' % (_('Yes') if self.fixedAnchorVar.get() else _('No'))
+        options_text += _('Next move') + ': %s\n' % {0: _('B or W'), 1: _('B'), 2: _('W'), }[self.nextMoveVar.get()]
+        options_text += _('Move limit') + ': %d\n' % self.moveLimit.get()
+        options_text += _('Search in variations') + ': %s\n' % (_('Yes') if self.searchInVariations.get() else _('No'))
 
         # Add information about search options to start node.
         # No need to add comment_head here, since this will be done when we add
@@ -841,9 +857,12 @@ class KEngine(object):
         counter = 0
 
         while plist:
+            if stop_var is not None and stop_var.get():
+                break
             counter += 1
             if counter % 50 == 0:
                 messages.insert('end', _('Done {0} searches so far, {1} nodes pending.\n').format(counter, len(plist)))
+            if counter % 25 == 0:
                 if progBar:
                     progBar.update()
 
@@ -859,8 +878,8 @@ class KEngine(object):
             self.gamelist.update_winning_percentages()
             noOfG = self.gamelist.noOfGames()
             if noOfG:
-                Bperc = self.gamelist.Bwins * 100.0 / noOfG
-                Wperc = self.gamelist.Wwins * 100.0 / noOfG
+                Bperc = self.gamelist.BwinsG * 100.0 / noOfG
+                Wperc = self.gamelist.WwinsG * 100.0 / noOfG
             else:
                 Bperc, Wperc = 0, 0
             comment_text = _('{0} games (B: {1:1.1f}%, W: {2:1.1f}%)').format(noOfG, Bperc, Wperc)
@@ -938,6 +957,9 @@ class KEngine(object):
             if comment_text:
                 comment_text = head_str + comment_text
             node['C'] = [node['C'][0] + '\n\n' + comment_text, ]
+
+        if stop_var is not None and stop_var.get():
+            messages.insert('end', _('Interrupted\n'))
 
         messages.insert('end', _('Total: %d pattern searches\n') % counter)
         messages.insert('end', _('Cleaning up ...\n'))
@@ -1037,6 +1059,8 @@ class KEngine(object):
         self.noSwitched += gl.num_switched
         self.Bwins += gl.Bwins
         self.Wwins += gl.Wwins
+        self.BwinsG += gl.BwinsG
+        self.WwinsG += gl.WwinsG
 
         for y in range(self.currentSearchPattern.sizeY):
             for x in range(self.currentSearchPattern.sizeX):
@@ -1146,7 +1170,9 @@ class KEngine(object):
     def signatureSearch(self, sig):
         '''Do a signature search for the Dyer signature ``sig``.
         '''
-        self.noMatches, self.noSwitched, self.Bwins, self.Wwins = 0, 0, 0, 0
+        self.noMatches, self.noSwitched = 0, 0
+        self.Bwins, self.Wwins = 0, 0
+        self.BwinsG, self.WwinsG = 0, 0
 
         for db in self.gamelist.DBlist:
             if db['disabled']:
@@ -1157,6 +1183,8 @@ class KEngine(object):
             self.noSwitched += gl.num_switched
             self.Bwins += gl.Bwins
             self.Wwins += gl.Wwins
+            self.BwinsG += gl.BwinsG
+            self.WwinsG += gl.WwinsG
 
         self.gamelist.update()
 
@@ -1213,7 +1241,11 @@ class KEngine(object):
             for cont in self.continuations[:N]:
                 if cont.label in 'abcdefghijklmnopqrstuvwxyz':
                     labels_to_lower = False
-                unused_labels.remove(cont.label)
+                try:
+                    unused_labels.remove(cont.label)
+                except ValueError:
+                    # label might be '?'
+                    pass
             if exportMode != 'wiki':
                 labels_to_lower = False
 
@@ -1312,6 +1344,16 @@ class KEngine(object):
                     if exportMode == 'wiki':
                         t.append(' %%%')
                     t.append('\n')
+
+            t.append('\n')
+            t.append(_('Search options'))
+            t.append('\n')
+            t.append('\n')
+            t.append(_('Fixed Color') + ': %s\n' % (_('Yes') if self.fixedColorVar.get() else _('No')))
+            t.append(_('Fixed Anchor') + ': %s\n' % (_('Yes') if self.fixedAnchorVar.get() else _('No')))
+            t.append(_('Next move') + ': %s\n' % {0: _('B or W'), 1: _('B'), 2: _('W'), }[self.nextMoveVar.get()])
+            t.append(_('Move limit') + ': %d\n' % self.moveLimit.get())
+            t.append(_('Search in variations') + ': %s\n' % (_('Yes') if self.searchInVariations.get() else _('No')))
 
         return ''.join(t)
 
@@ -1484,7 +1526,8 @@ class KEngine(object):
             tagAsPro=0, processVariations=True, algos=None,
             messages=None, progBar=None, showwarning=None,
             index=None, all_in_one_db=True, sgfInDB=True,
-            logDuplicates=True):
+            logDuplicates=True,
+            stop_var=None):
         '''
         Call this method to newly add a database of SGF files.
 
@@ -1529,6 +1572,11 @@ class KEngine(object):
         if recursive:
             for dirpath, dirnames, files in os.walk(dbp):
                 self.addOneFolder(arguments, dirpath, gl=gl)
+                if stop_var is not None and stop_var.get():
+                    if messages:
+                        messages.insert('end', _('Interrupted\n'))
+                        messages.update()
+                    break
         else:
             self.addOneFolder(arguments, dbp, gl=gl)
 
