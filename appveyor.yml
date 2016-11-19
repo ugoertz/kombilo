@@ -31,7 +31,7 @@ environment:
 install:
   - nuget install Tools.InnoSetup
   - nuget install swigwin
-  - ps: "ls c:/projects/kombilo/swigwin.3.0.9/tools"
+  - ps: "ls c:/projects/kombilo/swigwin.3.0.9/tools/swigwin.3.0.9"
 
 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
@@ -51,7 +51,7 @@ build_script:
   - "%CMD_IN_ENV% pybabel compile -d kombilo/lang -D kombilo"
 
   # swig
-  - "%CMD_IN_ENV c:/projects/kombilo/swigwin.3.0.9/tools/swig.exe -c++ -python c:/projects/kombilo/kombilo/libkombilo.i"
+  - "%CMD_IN_ENV c:/projects/kombilo/swigwin.3.0.9/tools/swigwin.3.0.9/swig.exe -c++ -python c:/projects/kombilo/kombilo/libkombilo.i"
   - ps: "ls c:/projects/kombilo"
   - ps: "ls c:/projects/kombilo/kombilo/libkombilo"
   - ps: "mv c:/projects/kombilo/libkomilo.py c:/projects/kombilo/kombilo/"
