@@ -50,10 +50,7 @@ build_script:
 
   # swig
   - "%CMD_IN_ENV c:/projects/kombilo/swigwin.3.0.9/tools/swigwin-3.0.9/swig.exe -c++ -python c:/projects/kombilo/kombilo/libkombilo/libkombilo.i"
-  - ps: "ls c:/projects/kombilo"
-  - ps: "ls c:/projects/kombilo/kombilo/libkombilo"
-  - ps: "mv c:/projects/kombilo/libkomilo.py c:/projects/kombilo/kombilo/"
-  - ps: "mv c:/projects/kombilo/libkomilo_wrap.cxx c:/projects/kombilo/kombilo/libkombilo/"
+  - ps: "mv c:/projects/kombilo/kombilo/libkombilo/libkombilo.py c:/projects/kombilo/kombilo/"
 
   # copy dlls which we want to include in the wheel
   - ps: "ls c:/windows/winsxs/amd64_microsoft.vc90.crt*"
