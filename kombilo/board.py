@@ -233,7 +233,7 @@ class Board(abstractBoard, Canvas):
         for x in self.status_keys():
             self.placeStone(x, self.getStatus(*x))
         for x in self.marks:
-            self.placeMark(x, self.marks[x])
+            self.placeMark(x, *self.marks[x])
         for x in self.labels:
             self.placeLabel(x, '+' + self.labels[x][0], self.labels[x][1])
 
@@ -388,7 +388,7 @@ class Board(abstractBoard, Canvas):
             tmp2 = 3
         self.create_oval(x1 + tmp1, x2 + tmp2, y1 - tmp1, y2 - tmp2, fill=color,
                          width=3, outline=outln, tags=('marks', 'non-bg'))
-        self.marks[pos] = color
+        self.marks[pos] = color, outln, size
         self.onChange()
 
     def delMarks(self):
