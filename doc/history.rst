@@ -25,6 +25,15 @@ History/Change log
 0.8
 ---
 
+0.8.4 (November 2016)
+^^^^^^^^^^^^^^^^^^^^^
+
+Some small changes, among them
+
+* Fix how symmetries in search patterns (and of continuations) are handled
+* Add *Stop* buttons for sgf tree computation and for processing SGF collections
+* Add more tests
+
 0.8.3 (November 2016)
 ^^^^^^^^^^^^^^^^^^^^^
 

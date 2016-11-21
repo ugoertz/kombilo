@@ -69,6 +69,13 @@ After the processing, the pattern search function actually does not use
 them anymore, but they are needed if you want to play through games with
 the SGF viewer.
 
+If you chose to add all subfolders of the given folder recursively and note that
+processing takes too long, you can use the *Stop* button to interrupt it. *This
+will not stop immediately, but will finish the currently processed folder (but
+not any subfolders) and write the database.* The resulting database of course
+will not have all the SGF files, but other than that is fully functional. If you
+want to discard it, you can of course just delete it.
+
 After having added one or more databases, close the ``Edit DB list`` window
 using the ``OK`` button.
 
