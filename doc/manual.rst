@@ -420,6 +420,18 @@ and if you use the hashing algorithms, also ``kombilo.db1`` and
 ``kombilo.db2``.
 
 
+If you select the option to add all subfolders of the given folder recursively
+and note that processing takes too long since you have too many folders, you can
+use the *Stop* button to interrupt it. *This will not stop immediately, but will
+finish the currently processed folder (but not any subfolders) and write the
+database.* The resulting database of course will not have all the SGF files, but
+other than that is fully functional. If you want to discard it, you can of
+course just delete it.
+
+Since after clicking the *Stop* button, the currently processed folder is
+completely finished, in non-recursive mode this has no actual effect.
+
+
 Toggle normal/disabled
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -650,6 +662,14 @@ Reset game list
 
 The node of the SGF file where you start the search must not have any children
 before the search.
+
+Depending on the parameters and the size of your database, the computation might
+require thousands of pattern searches and thus could take quite some time. So it
+is recommended to try with smaller values first to get some feeling for the
+choice of parameters. You can always interrupt building the SGF tree using the
+red button in the top toolbar. This will not react immediately, but will stop
+the computation fairly quickly. The resulting SGF file will be incomplete, but
+all the data given there is correct.
 
 .. _game-info-search:
 
