@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-12 23:23+0100\n"
+"POT-Creation-Date: 2016-11-21 18:04+0100\n"
 "PO-Revision-Date: 2012-04-14 18:22+0200\n"
 "Last-Translator: Ulrich <u@g0ertz.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,52 +18,61 @@ msgstr ""
 "X-Generator: Pootle 2.1.6\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: kombilo.py:1845 kombilo.py:1799 kombilo.py:1786 kombilo.py:1681
+#: kombilo.py:1861 kombilo.py:1845 kombilo.py:1799 kombilo.py:1786
+#: kombilo.py:1681
 msgid "    A B C D E F G H J K L M N O P Q R S T"
 msgstr ""
 
-#: kombilo.py:1360 kombilo.py:3054 kombilo.py:1314 kombilo.py:2984
-#: kombilo.py:1307 kombilo.py:2935 kombilo.py:1209 kombilo.py:2875
+#: kombilo.py:1367 kombilo.py:3101 kombilo.py:1360 kombilo.py:3054
+#: kombilo.py:1314 kombilo.py:2984 kombilo.py:1307 kombilo.py:2935
+#: kombilo.py:1209 kombilo.py:2875
 #, python-format
 msgid "%1.1f seconds"
 msgstr ""
 
-#: kombilo.py:2754 kombilo.py:2908 kombilo.py:2686 kombilo.py:2838
-#: kombilo.py:2644 kombilo.py:2789 kombilo.py:2587 kombilo.py:2732
+#: kombilo.py:2786 kombilo.py:2955 kombilo.py:2754 kombilo.py:2908
+#: kombilo.py:2686 kombilo.py:2838 kombilo.py:2644 kombilo.py:2789
+#: kombilo.py:2587 kombilo.py:2732
 #, python-format
 msgid "%1.1f seconds\n"
 msgstr ""
 
-#: kombilo.py:494 kombilo.py:477 kombilo.py:465
+#: kombilo.py:495 kombilo.py:494 kombilo.py:477 kombilo.py:465
 #, python-format
 msgid "%d games"
 msgstr "%d partioj"
 
-#: kombiloNG.py:805 kombiloNG.py:803 kombiloNG.py:772 kombiloNG.py:746
+#: kombiloNG.py:816 kombiloNG.py:805 kombiloNG.py:803 kombiloNG.py:772
+#: kombiloNG.py:746
 #, python-format
 msgid "%d games before searching for initial pattern.\n"
 msgstr ""
 
-#: kombilo.py:2040 kombilo.py:1994 kombilo.py:1980 kombilo.py:1904
+#: kombilo.py:2054 kombilo.py:2040 kombilo.py:1994 kombilo.py:1980
+#: kombilo.py:1904
 #, python-format
 msgid "%s could not be created."
 msgstr ""
 
-#: kombilo.py:2031 kombilo.py:1985 kombilo.py:1971 kombilo.py:1895
+#: kombilo.py:2045 kombilo.py:2031 kombilo.py:1985 kombilo.py:1971
+#: kombilo.py:1895
 #, python-format
 msgid "%s is not a directory."
 msgstr ""
 
-#: kombilo.py:1947 kombilo.py:1901 kombilo.py:1887 kombilo.py:1782
+#: kombilo.py:1963 kombilo.py:1947 kombilo.py:1901 kombilo.py:1887
+#: kombilo.py:1782
 #, python-format
 msgid "%s not found."
 msgstr ""
 
-#: kombilo.py:2636 kombilo.py:2568 kombilo.py:2531 kombilo.py:2471
+#: kombilo.py:2668 kombilo.py:2636 kombilo.py:2568 kombilo.py:2531
+#: kombilo.py:2471
 msgid "(Don't) allow color swap in search pattern"
 msgstr ""
 
-#: kombilo.py:2637 kombilo.py:2569 kombilo.py:2532 kombilo.py:2472
+#: kombilo.py:2669 kombilo.py:2637 kombilo.py:2569 kombilo.py:2532
+#: kombilo.py:2472
 msgid "(Don't) translate search pattern"
 msgstr ""
 
@@ -79,35 +88,41 @@ msgstr ""
 msgid "1 click"
 msgstr ""
 
-#: kombilo.py:2634 kombilo.py:2566 kombilo.py:2529 kombilo.py:2469
+#: kombilo.py:2666 kombilo.py:2634 kombilo.py:2566 kombilo.py:2529
+#: kombilo.py:2469
 msgid "1-click mode"
 msgstr ""
 
-#: kombiloNG.py:1562 kombiloNG.py:1526 kombiloNG.py:1386 kombiloNG.py:1342
+#: kombiloNG.py:1610 kombiloNG.py:1562 kombiloNG.py:1526 kombiloNG.py:1386
+#: kombiloNG.py:1342
 #, python-format
 msgid ""
 "A fatal error occurred when processing %s. Are the directories for the "
 "database files writable?"
 msgstr ""
 
-#: kombilo.py:1769 kombilo.py:1888 kombilo.py:1723 kombilo.py:1842
-#: kombilo.py:1710 kombilo.py:1828 kombilo.py:1605
+#: kombilo.py:1785 kombilo.py:1904 kombilo.py:1769 kombilo.py:1888
+#: kombilo.py:1723 kombilo.py:1842 kombilo.py:1710 kombilo.py:1828
+#: kombilo.py:1605
 msgid "ASCII"
 msgstr ""
 
-#: kombilo.py:2508 kombilo.py:2440 kombilo.py:2403 kombilo.py:2332
+#: kombilo.py:2540 kombilo.py:2508 kombilo.py:2440 kombilo.py:2403
+#: kombilo.py:2332
 msgid "About Kombilo ..."
 msgstr ""
 
-#: v.py:2300 v.py:2282 v.py:2269 v.py:2246
+#: v.py:2320 v.py:2300 v.py:2282 v.py:2269 v.py:2246
 msgid "About v.py ..."
 msgstr ""
 
-#: kombilo.py:2352 kombilo.py:2298 kombilo.py:2268 kombilo.py:2190
+#: kombilo.py:2384 kombilo.py:2352 kombilo.py:2298 kombilo.py:2268
+#: kombilo.py:2190
 msgid "Accept duplicates"
 msgstr ""
 
-#: kombilo.py:2312 kombilo.py:2259 kombilo.py:2232 kombilo.py:2155
+#: kombilo.py:2339 kombilo.py:2312 kombilo.py:2259 kombilo.py:2232
+#: kombilo.py:2155
 msgid "Add DB"
 msgstr ""
 
@@ -135,30 +150,32 @@ msgstr ""
 msgid "Add tag"
 msgstr ""
 
-#: kombiloNG.py:1574 kombiloNG.py:1538 kombiloNG.py:1399 kombiloNG.py:1355
+#: kombiloNG.py:1622 kombiloNG.py:1574 kombiloNG.py:1538 kombiloNG.py:1399
+#: kombiloNG.py:1355
 #, python-format
 msgid "Added %s."
 msgstr ""
 
-#: kombilo.py:2975 kombilo.py:2905 kombilo.py:2856 kombilo.py:2796
+#: kombilo.py:3022 kombilo.py:2975 kombilo.py:2905 kombilo.py:2856
+#: kombilo.py:2796
 #, python-brace-format
 msgid "Added tag {0} {1}.\n"
 msgstr ""
 
-#: custommenus.py:434 kombilo.py:2327 v.py:1101 v.py:1976 v.py:2178
-#: kombilo.py:2277 v.py:1099 v.py:1974 v.py:2176 kombilo.py:2247 v.py:1086
-#: v.py:1961 v.py:2163 custommenus.py:438 kombilo.py:2169 v.py:1071 v.py:1944
-#: v.py:2146
+#: custommenus.py:434 kombilo.py:2359 v.py:1117 v.py:1998 v.py:2200
+#: kombilo.py:2327 v.py:1101 v.py:1976 v.py:2178 kombilo.py:2277 v.py:1099
+#: v.py:1974 v.py:2176 kombilo.py:2247 v.py:1086 v.py:1961 v.py:2163
+#: custommenus.py:438 kombilo.py:2169 v.py:1071 v.py:1944 v.py:2146
 msgid "All files"
 msgstr ""
 
-#: kombilo.py:2374 kombilo.py:2317 kombilo.py:2280 kombilo.py:1921
-#: kombilo.py:2202
+#: kombilo.py:2406 kombilo.py:2374 kombilo.py:2317 kombilo.py:2280
+#: kombilo.py:1921 kombilo.py:2202
 msgid "All games"
 msgstr ""
 
-#: kombilo.py:2374 kombilo.py:2317 kombilo.py:2280 kombilo.py:1921
-#: kombilo.py:2202
+#: kombilo.py:2406 kombilo.py:2374 kombilo.py:2317 kombilo.py:2280
+#: kombilo.py:1921 kombilo.py:2202
 msgid "All games with p-rank players"
 msgstr ""
 
@@ -166,15 +183,16 @@ msgstr ""
 msgid "Alternative SGF viewer"
 msgstr ""
 
-#: v.py:753 v.py:751 v.py:742 v.py:730
+#: v.py:769 v.py:753 v.py:751 v.py:742 v.py:730
 msgid "An error occurred, please submit a bug report."
 msgstr ""
 
-#: kombilo.py:3488 kombilo.py:3417 kombilo.py:3365 kombilo.py:3256
+#: kombilo.py:3535 kombilo.py:3488 kombilo.py:3417 kombilo.py:3365
+#: kombilo.py:3256
 msgid "Anywhere"
 msgstr ""
 
-#: v.py:2588 v.py:2570 v.py:2545 v.py:2502
+#: v.py:2608 v.py:2588 v.py:2570 v.py:2545 v.py:2502
 msgid "Ask before discarding unsaved changes"
 msgstr ""
 
@@ -186,18 +204,24 @@ msgstr ""
 msgid "Avoid having players of current game shown as window title."
 msgstr ""
 
-#: kombiloNG.py:917 kombiloNG.py:1276 kombiloNG.py:1277 kombiloNG.py:1283
-#: kombiloNG.py:1241 kombiloNG.py:1242 kombiloNG.py:1248 kombilo.py:3303
-#: kombiloNG.py:1184 kombiloNG.py:1185 kombiloNG.py:1191 kombilo.py:3256
-#: kombiloNG.py:1158 kombiloNG.py:1159 kombiloNG.py:1165 kombilo.py:3137
+#: kombiloNG.py:843 kombiloNG.py:936 kombiloNG.py:1308 kombiloNG.py:1309
+#: kombiloNG.py:1315 kombiloNG.py:1354 kombiloNG.py:917 kombiloNG.py:1276
+#: kombiloNG.py:1277 kombiloNG.py:1283 kombiloNG.py:1241 kombiloNG.py:1242
+#: kombiloNG.py:1248 kombilo.py:3303 kombiloNG.py:1184 kombiloNG.py:1185
+#: kombiloNG.py:1191 kombilo.py:3256 kombiloNG.py:1158 kombiloNG.py:1159
+#: kombiloNG.py:1165 kombilo.py:3137
 msgid "B"
+msgstr ""
+
+#: kombiloNG.py:843 kombiloNG.py:1354
+msgid "B or W"
 msgstr ""
 
 #: kombilo.py:3301 kombilo.py:3254 kombilo.py:3135
 msgid "B/W"
 msgstr ""
 
-#: kombilo.py:498 kombilo.py:481 kombilo.py:467
+#: kombilo.py:499 kombilo.py:498 kombilo.py:481 kombilo.py:467
 #, python-brace-format
 msgid "B: {0:1.1f}%, W: {1:1.1f}%"
 msgstr ""
@@ -206,31 +230,35 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: v.py:2719 v.py:2701 v.py:2676 v.py:2638
+#: v.py:2739 v.py:2719 v.py:2701 v.py:2676 v.py:2638
 msgid "Back 10 moves"
 msgstr ""
 
-#: v.py:2717 v.py:2699 v.py:2674 v.py:2636
+#: v.py:2737 v.py:2717 v.py:2699 v.py:2674 v.py:2636
 msgid "Back one move"
 msgstr ""
 
-#: kombilo.py:2633 kombilo.py:2565 kombilo.py:2528 kombilo.py:2468
+#: kombilo.py:2665 kombilo.py:2633 kombilo.py:2565 kombilo.py:2528
+#: kombilo.py:2468
 msgid "Back to previous search pattern"
 msgstr ""
 
-#: kombilo.py:3477 kombilo.py:3406 kombilo.py:3354 kombilo.py:3245
+#: kombilo.py:3524 kombilo.py:3477 kombilo.py:3406 kombilo.py:3354
+#: kombilo.py:3245
 msgid "Black"
 msgstr ""
 
-#: kombilo.py:1849 kombilo.py:1803 kombilo.py:1790
+#: kombilo.py:1865 kombilo.py:1849 kombilo.py:1803 kombilo.py:1790
 msgid "Black = 1\n"
 msgstr ""
 
-#: kombilo.py:2637 kombilo.py:2569 kombilo.py:2532 kombilo.py:2472
+#: kombilo.py:2669 kombilo.py:2637 kombilo.py:2569 kombilo.py:2532
+#: kombilo.py:2472
 msgid "Black or white plays next (or no continuation)"
 msgstr ""
 
-#: kombilo.py:2638 kombilo.py:2570 kombilo.py:2533 kombilo.py:2473
+#: kombilo.py:2670 kombilo.py:2638 kombilo.py:2570 kombilo.py:2533
+#: kombilo.py:2473
 msgid "Black plays next"
 msgstr ""
 
@@ -246,7 +274,8 @@ msgstr ""
 msgid "Both lost"
 msgstr ""
 
-#: kombilo.py:2398 kombilo.py:2331 kombilo.py:2294 kombilo.py:2216
+#: kombilo.py:2430 kombilo.py:2398 kombilo.py:2331 kombilo.py:2294
+#: kombilo.py:2216
 msgid "Browse"
 msgstr ""
 
@@ -254,24 +283,25 @@ msgstr ""
 msgid "Browse ..."
 msgstr ""
 
-#: custommenus.py:578 kombilo.py:1440 kombilo.py:2834 option_editor.py:53
-#: v.py:2483 kombilo.py:1394 kombilo.py:2765 v.py:2465 kombilo.py:1382
-#: kombilo.py:2718 v.py:2447 custommenus.py:582 kombilo.py:1284 kombilo.py:2659
-#: v.py:2426
+#: custommenus.py:578 kombilo.py:1447 kombilo.py:2866 option_editor.py:53
+#: v.py:2503 kombilo.py:1440 kombilo.py:2834 v.py:2483 kombilo.py:1394
+#: kombilo.py:2765 v.py:2465 kombilo.py:1382 kombilo.py:2718 v.py:2447
+#: custommenus.py:582 kombilo.py:1284 kombilo.py:2659 v.py:2426
 msgid "Cancel"
 msgstr "Nuligi"
 
-#: v.py:1987 v.py:1985 v.py:1972 v.py:1955
+#: v.py:2009 v.py:1987 v.py:1985 v.py:1972 v.py:1955
 msgid "Cannot open this file\n"
 msgstr ""
 
-#: v.py:170 v.py:169 v.py:160 v.py:146
+#: v.py:189 v.py:170 v.py:169 v.py:160 v.py:146
 msgid "Cannot write to "
 msgstr ""
 
-#: kombilo.py:1555 v.py:1180 v.py:1315 v.py:1433 kombilo.py:1509 v.py:1178
-#: v.py:1313 v.py:1431 kombilo.py:1497 v.py:1165 v.py:1300 v.py:1418
-#: kombilo.py:1399 v.py:1150 v.py:1285 v.py:1397
+#: kombilo.py:1561 v.py:1196 v.py:1331 v.py:1455 kombilo.py:1555 v.py:1180
+#: v.py:1315 v.py:1433 kombilo.py:1509 v.py:1178 v.py:1313 v.py:1431
+#: kombilo.py:1497 v.py:1165 v.py:1300 v.py:1418 kombilo.py:1399 v.py:1150
+#: v.py:1285 v.py:1397
 #, python-brace-format
 msgid "Cap - B: {0}, W: {1}"
 msgstr ""
@@ -280,7 +310,8 @@ msgstr ""
 msgid "Change custom menus"
 msgstr ""
 
-#: kombiloNG.py:943 kombiloNG.py:908 kombiloNG.py:877 kombiloNG.py:851
+#: kombiloNG.py:965 kombiloNG.py:943 kombiloNG.py:908 kombiloNG.py:877
+#: kombiloNG.py:851
 msgid "Cleaning up ...\n"
 msgstr ""
 
@@ -288,7 +319,8 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: kombilo.py:2640 kombilo.py:2572 kombilo.py:2535 kombilo.py:2475
+#: kombilo.py:2672 kombilo.py:2640 kombilo.py:2572 kombilo.py:2535
+#: kombilo.py:2475
 msgid "Clear all entries"
 msgstr ""
 
@@ -322,39 +354,47 @@ msgstr ""
 msgid "Command to launch viewer"
 msgstr ""
 
-#: kombilo.py:2785 kombilo.py:2717 kombilo.py:2670 kombilo.py:2613
+#: kombilo.py:2817 kombilo.py:2785 kombilo.py:2717 kombilo.py:2670
+#: kombilo.py:2613
 msgid "Comment head"
 msgstr ""
 
-#: kombiloNG.py:643 kombiloNG.py:641 kombiloNG.py:610 kombiloNG.py:584
+#: kombiloNG.py:652 kombiloNG.py:643 kombiloNG.py:641 kombiloNG.py:610
+#: kombiloNG.py:584
 msgid "Commentary in "
 msgstr ""
 
-#: kombilo.py:2588 kombilo.py:2520 kombilo.py:2483 kombilo.py:2414
+#: kombilo.py:2620 kombilo.py:2588 kombilo.py:2520 kombilo.py:2483
+#: kombilo.py:2414
 msgid "Complete reset"
 msgstr ""
 
-#: kombilo.py:2457 v.py:2025 v.py:2220 kombilo.py:2389 v.py:2023 v.py:2218
-#: kombilo.py:2352 v.py:2010 v.py:2205 kombilo.py:2274 v.py:1993 v.py:2191
+#: kombilo.py:2489 v.py:2047 v.py:2242 kombilo.py:2457 v.py:2025 v.py:2220
+#: kombilo.py:2389 v.py:2023 v.py:2218 kombilo.py:2352 v.py:2010 v.py:2205
+#: kombilo.py:2274 v.py:1993 v.py:2191
 msgid "Confirm deletion"
 msgstr ""
 
-#: kombiloNG.py:1239 kombiloNG.py:1250 kombiloNG.py:1204 kombiloNG.py:1215
-#: kombilo.py:3266 kombiloNG.py:1147 kombiloNG.py:1158 kombilo.py:3219
-#: kombiloNG.py:1121 kombiloNG.py:1132 kombilo.py:3106
+#: kombiloNG.py:1271 kombiloNG.py:1282 kombiloNG.py:1239 kombiloNG.py:1250
+#: kombiloNG.py:1204 kombiloNG.py:1215 kombilo.py:3266 kombiloNG.py:1147
+#: kombiloNG.py:1158 kombilo.py:3219 kombiloNG.py:1121 kombiloNG.py:1132
+#: kombilo.py:3106
 msgid "Continuations"
 msgstr ""
 
-#: kombilo.py:2152 kombilo.py:2099 kombilo.py:2072 kombilo.py:1996
+#: kombilo.py:2170 kombilo.py:2152 kombilo.py:2099 kombilo.py:2072
+#: kombilo.py:1996
 #, python-brace-format
 msgid "Could not delete the database files {0}/{1}."
 msgstr ""
 
-#: kombilo.py:2112 kombilo.py:2059 kombilo.py:2032 kombilo.py:1956
+#: kombilo.py:2129 kombilo.py:2112 kombilo.py:2059 kombilo.py:2032
+#: kombilo.py:1956
 msgid "Could not delete the database files."
 msgstr ""
 
-#: kombiloNG.py:1407 kombiloNG.py:1372 kombiloNG.py:1314 kombiloNG.py:1270
+#: kombiloNG.py:1449 kombiloNG.py:1407 kombiloNG.py:1372 kombiloNG.py:1314
+#: kombiloNG.py:1270
 #, python-brace-format
 msgid "Could not open database {0}/{1}."
 msgstr ""
@@ -363,72 +403,75 @@ msgstr ""
 msgid "Could not save custom menu file."
 msgstr ""
 
-#: kombilo.py:2476 kombilo.py:2408 kombilo.py:2371 kombilo.py:2300
+#: kombilo.py:2508 kombilo.py:2476 kombilo.py:2408 kombilo.py:2371
+#: kombilo.py:2300
 msgid "Could not write kombilo.cfg"
 msgstr ""
 
-#: v.py:2233 v.py:2231 v.py:2218 v.py:2212
+#: v.py:2255 v.py:2233 v.py:2231 v.py:2218 v.py:2212
 msgid "Could not write kombilo.cfg."
 msgstr ""
 
-#: kombilo.py:2208 kombilo.py:2155 kombilo.py:2128 kombilo.py:2051
+#: kombilo.py:2230 kombilo.py:2208 kombilo.py:2155 kombilo.py:2128
+#: kombilo.py:2051
 msgid "Could not write to "
 msgstr ""
 
-#: kombilo.py:578 v.py:2189 kombilo.py:561 v.py:2187 kombilo.py:560 v.py:2174
-#: kombilo.py:543 v.py:2157
+#: kombilo.py:579 v.py:2211 kombilo.py:578 v.py:2189 kombilo.py:561 v.py:2187
+#: kombilo.py:560 v.py:2174 kombilo.py:543 v.py:2157
 msgid "Could not write to file "
 msgstr "Ne povis skribi datumaron "
 
-#: v.py:2735 v.py:2717 v.py:2692 v.py:2654
+#: v.py:2755 v.py:2735 v.py:2717 v.py:2692 v.py:2654
 msgid "Create new SGF file"
 msgstr ""
 
-#: v.py:2739 v.py:2721 v.py:2696 v.py:2658
+#: v.py:2759 v.py:2739 v.py:2721 v.py:2696 v.py:2658
 msgid "Create new game"
 msgstr ""
 
-#: kombilo.py:2331 kombilo.py:2271
+#: kombilo.py:2363 kombilo.py:2331 kombilo.py:2271
 msgid "Create one DB per folder"
 msgstr ""
 
-#: v.py:2570 v.py:2552 v.py:2527 v.py:2482
+#: v.py:2590 v.py:2570 v.py:2552 v.py:2527 v.py:2482
 msgid "Ctrl-Click behavior"
 msgstr ""
 
-#: v.py:2650 v.py:2632 v.py:2607 v.py:2562
+#: v.py:2670 v.py:2650 v.py:2632 v.py:2607 v.py:2562
 msgid "Ctrl-Click:"
 msgstr ""
 
-#: v.py:2742 v.py:2724 v.py:2699 v.py:2661
+#: v.py:2762 v.py:2742 v.py:2724 v.py:2699 v.py:2661
 msgid "Ctrl-click deletes stone"
 msgstr ""
 
-#: v.py:2746 v.py:2728 v.py:2703 v.py:2665
+#: v.py:2766 v.py:2746 v.py:2728 v.py:2703 v.py:2665
 msgid "Ctrl-click places/deletes lowercase label"
 msgstr ""
 
-#: v.py:2747 v.py:2729 v.py:2704 v.py:2666
+#: v.py:2767 v.py:2747 v.py:2729 v.py:2704 v.py:2666
 msgid "Ctrl-click places/deletes number label"
 msgstr ""
 
-#: v.py:2744 v.py:2726 v.py:2701 v.py:2663
+#: v.py:2764 v.py:2744 v.py:2726 v.py:2701 v.py:2663
 msgid "Ctrl-click places/deletes square label"
 msgstr ""
 
-#: v.py:2743 v.py:2725 v.py:2700 v.py:2662
+#: v.py:2763 v.py:2743 v.py:2725 v.py:2700 v.py:2662
 msgid "Ctrl-click places/deletes triangle label"
 msgstr ""
 
-#: v.py:2745 v.py:2727 v.py:2702 v.py:2664
+#: v.py:2765 v.py:2745 v.py:2727 v.py:2702 v.py:2664
 msgid "Ctrl-click places/deletes uppercase label"
 msgstr ""
 
-#: v.py:2733 v.py:2715 v.py:2690 v.py:2652
+#: v.py:2753 v.py:2733 v.py:2715 v.py:2690 v.py:2652
 msgid "Current SGF file"
 msgstr ""
 
-#: kombilo.py:2628 kombilo.py:2560 kombilo.py:2523 kombilo.py:2463
+#: kombilo.py:2660 kombilo.py:2628 kombilo.py:2560 kombilo.py:2523
+#: kombilo.py:2463
 msgid "Custom Menus"
 msgstr ""
 
@@ -436,50 +479,57 @@ msgstr ""
 msgid "DEL"
 msgstr ""
 
-#: kombilo.py:2194 kombilo.py:2308 kombilo.py:2255 kombilo.py:2228
-#: kombilo.py:2151 kombilo.py:2141 kombilo.py:2114
+#: kombilo.py:2216 kombilo.py:2332 kombilo.py:2194 kombilo.py:2308
+#: kombilo.py:2255 kombilo.py:2228 kombilo.py:2151 kombilo.py:2141
+#: kombilo.py:2114
 msgid "DISABLED"
 msgstr ""
 
-#: kombilo.py:1357 kombilo.py:1311 kombilo.py:1304 kombilo.py:1206
+#: kombilo.py:1364 kombilo.py:1357 kombilo.py:1311 kombilo.py:1304
+#: kombilo.py:1206
 msgid "Database error\n"
 msgstr ""
 
-#: kombilo.py:1374 kombilo.py:1328 kombilo.py:1321 kombilo.py:1223
+#: kombilo.py:1381 kombilo.py:1374 kombilo.py:1328 kombilo.py:1321
+#: kombilo.py:1223
 msgid "Databases:"
 msgstr ""
 
-#: kombilo.py:3255 kombilo.py:3184 kombilo.py:3135 kombilo.py:3024
+#: kombilo.py:3302 kombilo.py:3255 kombilo.py:3184 kombilo.py:3135
+#: kombilo.py:3024
 msgid "Date profile"
 msgstr ""
 
-#: kombilo.py:952 kombilo.py:935 kombilo.py:934 kombilo.py:904
+#: kombilo.py:953 kombilo.py:952 kombilo.py:935 kombilo.py:934 kombilo.py:904
 #, python-format
 msgid "Date profile (Each bar represents %d months)"
 msgstr ""
 
-#: kombilo.py:3417 kombilo.py:3346 kombilo.py:3297 kombilo.py:3178
+#: kombilo.py:3464 kombilo.py:3417 kombilo.py:3346 kombilo.py:3297
+#: kombilo.py:3178
 msgid "Date profile options"
 msgstr ""
 
-#: kombilo.py:2644 kombilo.py:2576 kombilo.py:2539 kombilo.py:2479
+#: kombilo.py:2676 kombilo.py:2644 kombilo.py:2576 kombilo.py:2539
+#: kombilo.py:2479
 msgid "Define a new tag (give one-letter abbreviation and description)."
 msgstr ""
 
-#: custommenus.py:529 kombilo.py:717 kombilo.py:700 kombilo.py:699
-#: custommenus.py:533 kombilo.py:681
+#: custommenus.py:529 kombilo.py:718 kombilo.py:717 kombilo.py:700
+#: kombilo.py:699 custommenus.py:533 kombilo.py:681
 msgid "Delete"
 msgstr "Forigi"
 
-#: v.py:2737 v.py:2719 v.py:2694 v.py:2656
+#: v.py:2757 v.py:2737 v.py:2719 v.py:2694 v.py:2656
 msgid "Delete SGF file from list"
 msgstr ""
 
-#: v.py:2740 v.py:2722 v.py:2697 v.py:2659
+#: v.py:2760 v.py:2740 v.py:2722 v.py:2697 v.py:2659
 msgid "Delete game"
 msgstr ""
 
-#: kombiloNG.py:1440 kombiloNG.py:1405 kombiloNG.py:1434 kombiloNG.py:1390
+#: kombiloNG.py:1482 kombiloNG.py:1440 kombiloNG.py:1405 kombiloNG.py:1434
+#: kombiloNG.py:1390
 msgid "Delete old database files."
 msgstr ""
 
@@ -487,54 +537,60 @@ msgstr ""
 msgid "Delete tag"
 msgstr ""
 
-#: kombilo.py:2998 kombilo.py:2928 kombilo.py:2879 kombilo.py:2819
+#: kombilo.py:3045 kombilo.py:2998 kombilo.py:2928 kombilo.py:2879
+#: kombilo.py:2819
 #, python-brace-format
 msgid "Delete tag [{0}] {1}.\n"
 msgstr ""
 
-#: v.py:2748 v.py:2730 v.py:2705 v.py:2667
+#: v.py:2768 v.py:2748 v.py:2730 v.py:2705 v.py:2667
 msgid "Delete this and all following nodes"
 msgstr ""
 
-#: kombilo.py:3027 kombilo.py:2957 kombilo.py:2908 kombilo.py:2848
+#: kombilo.py:3074 kombilo.py:3027 kombilo.py:2957 kombilo.py:2908
+#: kombilo.py:2848
 #, python-brace-format
 msgid "Deleted tag [{0}] {1} from {2} games.\n"
 msgstr ""
 
-#: kombiloNG.py:821 kombilo.py:2784 kombilo.py:2716 kombilo.py:2669
-#: kombilo.py:2612
+#: kombiloNG.py:832 kombilo.py:2816 kombiloNG.py:821 kombilo.py:2784
+#: kombilo.py:2716 kombilo.py:2669 kombilo.py:2612
 msgid "Depth"
 msgstr ""
 
-#: kombilo.py:2362 kombilo.py:2305
+#: kombilo.py:2394 kombilo.py:2362 kombilo.py:2305
 msgid "Detailed log"
 msgstr ""
 
-#: kombiloNG.py:1567 kombiloNG.py:1531 kombiloNG.py:1390 kombiloNG.py:1346
+#: kombiloNG.py:1615 kombiloNG.py:1567 kombiloNG.py:1531 kombiloNG.py:1390
+#: kombiloNG.py:1346
 #, python-format
 msgid "Directory %s contains no sgf files.\n"
 msgstr ""
 
-#: kombilo.py:2036 kombilo.py:2441 kombilo.py:1990 kombilo.py:2373
-#: kombilo.py:1976 kombilo.py:2336 kombilo.py:1900 kombilo.py:2258
+#: kombilo.py:2050 kombilo.py:2473 kombilo.py:2036 kombilo.py:2441
+#: kombilo.py:1990 kombilo.py:2373 kombilo.py:1976 kombilo.py:2336
+#: kombilo.py:1900 kombilo.py:2258
 #, python-format
 msgid "Directory %s does not exist. Create it?"
 msgstr ""
 
-#: v.py:2610 v.py:2592 v.py:2567 v.py:2522
+#: v.py:2630 v.py:2610 v.py:2592 v.py:2567 v.py:2522
 msgid "Documentation"
 msgstr ""
 
-#: kombiloNG.py:846 kombiloNG.py:813 kombiloNG.py:782 kombiloNG.py:756
+#: kombiloNG.py:864 kombiloNG.py:846 kombiloNG.py:813 kombiloNG.py:782
+#: kombiloNG.py:756
 #, python-brace-format
 msgid "Done {0} searches so far, {1} nodes pending.\n"
 msgstr ""
 
-#: kombilo.py:2060
+#: kombilo.py:2076 kombilo.py:2191 kombilo.py:2060
 msgid "Done. Click \"OK\" to close this window and continue."
 msgstr ""
 
-#: kombiloNG.py:1646 kombiloNG.py:1610 kombiloNG.py:1471 kombiloNG.py:1427
+#: kombiloNG.py:1694 kombiloNG.py:1646 kombiloNG.py:1610 kombiloNG.py:1471
+#: kombiloNG.py:1427
 #, python-format
 msgid "Duplicate ... %s\n"
 msgstr ""
@@ -543,19 +599,20 @@ msgstr ""
 msgid "E.g., Helvetica, Times, Courier"
 msgstr ""
 
-#: v.py:2560 v.py:2542 v.py:2517 v.py:2472
+#: v.py:2580 v.py:2560 v.py:2542 v.py:2517 v.py:2472
 msgid "E_xit"
 msgstr ""
 
-#: kombilo.py:2277 kombilo.py:2224 kombilo.py:2197 kombilo.py:2120
+#: kombilo.py:2301 kombilo.py:2277 kombilo.py:2224 kombilo.py:2197
+#: kombilo.py:2120
 msgid "Edit database list"
 msgstr ""
 
-#: v.py:2724 v.py:2706 v.py:2681 v.py:2643
+#: v.py:2744 v.py:2724 v.py:2706 v.py:2681 v.py:2643
 msgid "Edit game info"
 msgstr ""
 
-#: v.py:2722 v.py:2704 v.py:2679 v.py:2641
+#: v.py:2742 v.py:2722 v.py:2704 v.py:2679 v.py:2641
 msgid "End of game"
 msgstr ""
 
@@ -568,58 +625,67 @@ msgstr ""
 msgid "Enter the command to launch the SGF viewer"
 msgstr ""
 
-#: v.py:2749 v.py:2731 v.py:2706 v.py:2668
+#: v.py:2769 v.py:2749 v.py:2731 v.py:2706 v.py:2668
 msgid "Enter/leave guess mode"
 msgstr ""
 
-#: custommenus.py:132 custommenus.py:228 kombiloNG.py:1562 kombilo.py:561
-#: kombilo.py:564 kombilo.py:1352 kombilo.py:1543 kombilo.py:1557
-#: kombilo.py:1945 kombilo.py:1947 kombilo.py:1949 kombilo.py:2031
-#: kombilo.py:2036 kombilo.py:2040 kombilo.py:2208 kombilo.py:2441
-#: kombilo.py:2703 kombilo.py:2885 kombilo.py:2965 kombilo.py:2996
-#: kombilo.py:3049 kombilo.py:3618 v.py:751 v.py:753 v.py:966 v.py:1020
-#: v.py:1119 v.py:1122 v.py:1159 v.py:1165 v.py:1292 v.py:1335 v.py:1480
-#: v.py:1523 v.py:1551 v.py:1726 v.py:1826 v.py:1841 v.py:2063 v.py:2166
-#: v.py:2168 v.py:2191 v.py:2212 v.py:2288 v.py:2418 v.py:2804 v.py:2812
-#: v.py:2978 kombiloNG.py:1526 kombilo.py:544 kombilo.py:547 kombilo.py:1306
-#: kombilo.py:1497 kombilo.py:1511 kombilo.py:1899 kombilo.py:1901
-#: kombilo.py:1903 kombilo.py:1985 kombilo.py:1990 kombilo.py:1994
-#: kombilo.py:2155 kombilo.py:2373 kombilo.py:2635 kombilo.py:2815
-#: kombilo.py:2895 kombilo.py:2926 kombilo.py:2979 kombilo.py:3547 v.py:749
-#: v.py:964 v.py:1018 v.py:1117 v.py:1120 v.py:1157 v.py:1163 v.py:1290
-#: v.py:1333 v.py:1478 v.py:1521 v.py:1549 v.py:1724 v.py:1824 v.py:1839
-#: v.py:2061 v.py:2164 v.py:2189 v.py:2210 v.py:2270 v.py:2400 v.py:2784
-#: v.py:2792 v.py:2939 kombiloNG.py:1386 kombilo.py:543 kombilo.py:546
-#: kombilo.py:1299 kombilo.py:1485 kombilo.py:1499 kombilo.py:1885
-#: kombilo.py:1887 kombilo.py:1889 kombilo.py:1971 kombilo.py:1976
-#: kombilo.py:1980 kombilo.py:2128 kombilo.py:2336 kombilo.py:2598
-#: kombilo.py:2767 kombilo.py:2846 kombilo.py:2877 kombilo.py:2930
-#: kombilo.py:3492 v.py:740 v.py:742 v.py:951 v.py:1005 v.py:1104 v.py:1107
-#: v.py:1144 v.py:1150 v.py:1277 v.py:1320 v.py:1465 v.py:1508 v.py:1536
-#: v.py:1711 v.py:1811 v.py:2048 v.py:2151 v.py:2153 v.py:2176 v.py:2197
-#: v.py:2257 v.py:2387 v.py:2759 v.py:2767 v.py:2914 custommenus.py:136
-#: custommenus.py:232 kombiloNG.py:1342 kombilo.py:526 kombilo.py:529
-#: kombilo.py:1201 kombilo.py:1387 kombilo.py:1401 kombilo.py:1780
-#: kombilo.py:1782 kombilo.py:1784 kombilo.py:1895 kombilo.py:1900
-#: kombilo.py:1904 kombilo.py:2051 kombilo.py:2258 kombilo.py:2538
-#: kombilo.py:2710 kombilo.py:2786 kombilo.py:2817 kombilo.py:2870
-#: kombilo.py:3379 v.py:728 v.py:730 v.py:939 v.py:993 v.py:1089 v.py:1092
-#: v.py:1129 v.py:1135 v.py:1262 v.py:1305 v.py:1444 v.py:1487 v.py:1515
-#: v.py:1694 v.py:1794 v.py:1809 v.py:2031 v.py:2134 v.py:2136 v.py:2159
-#: v.py:2183 v.py:2234 v.py:2366 v.py:2753 v.py:2766 v.py:2902
+#: custommenus.py:132 custommenus.py:228 kombiloNG.py:1610 kombilo.py:562
+#: kombilo.py:565 kombilo.py:1359 kombilo.py:1549 kombilo.py:1563
+#: kombilo.py:1961 kombilo.py:1963 kombilo.py:1965 kombilo.py:2045
+#: kombilo.py:2050 kombilo.py:2054 kombilo.py:2230 kombilo.py:2473
+#: kombilo.py:2735 kombilo.py:2929 kombilo.py:3012 kombilo.py:3043
+#: kombilo.py:3096 kombilo.py:3665 v.py:767 v.py:769 v.py:982 v.py:1036
+#: v.py:1135 v.py:1138 v.py:1175 v.py:1181 v.py:1308 v.py:1351 v.py:1502
+#: v.py:1545 v.py:1573 v.py:1748 v.py:1848 v.py:1863 v.py:2085 v.py:2188
+#: v.py:2190 v.py:2213 v.py:2234 v.py:2308 v.py:2438 v.py:2824 v.py:2832
+#: v.py:3004 kombiloNG.py:1562 kombilo.py:561 kombilo.py:564 kombilo.py:1352
+#: kombilo.py:1543 kombilo.py:1557 kombilo.py:1945 kombilo.py:1947
+#: kombilo.py:1949 kombilo.py:2031 kombilo.py:2036 kombilo.py:2040
+#: kombilo.py:2208 kombilo.py:2441 kombilo.py:2703 kombilo.py:2885
+#: kombilo.py:2965 kombilo.py:2996 kombilo.py:3049 kombilo.py:3618 v.py:751
+#: v.py:753 v.py:966 v.py:1020 v.py:1119 v.py:1122 v.py:1159 v.py:1165
+#: v.py:1292 v.py:1335 v.py:1480 v.py:1523 v.py:1551 v.py:1726 v.py:1826
+#: v.py:1841 v.py:2063 v.py:2166 v.py:2168 v.py:2191 v.py:2212 v.py:2288
+#: v.py:2418 v.py:2804 v.py:2812 v.py:2978 kombiloNG.py:1526 kombilo.py:544
+#: kombilo.py:547 kombilo.py:1306 kombilo.py:1497 kombilo.py:1511
+#: kombilo.py:1899 kombilo.py:1901 kombilo.py:1903 kombilo.py:1985
+#: kombilo.py:1990 kombilo.py:1994 kombilo.py:2155 kombilo.py:2373
+#: kombilo.py:2635 kombilo.py:2815 kombilo.py:2895 kombilo.py:2926
+#: kombilo.py:2979 kombilo.py:3547 v.py:749 v.py:964 v.py:1018 v.py:1117
+#: v.py:1120 v.py:1157 v.py:1163 v.py:1290 v.py:1333 v.py:1478 v.py:1521
+#: v.py:1549 v.py:1724 v.py:1824 v.py:1839 v.py:2061 v.py:2164 v.py:2189
+#: v.py:2210 v.py:2270 v.py:2400 v.py:2784 v.py:2792 v.py:2939
+#: kombiloNG.py:1386 kombilo.py:543 kombilo.py:546 kombilo.py:1299
+#: kombilo.py:1485 kombilo.py:1499 kombilo.py:1885 kombilo.py:1887
+#: kombilo.py:1889 kombilo.py:1971 kombilo.py:1976 kombilo.py:1980
+#: kombilo.py:2128 kombilo.py:2336 kombilo.py:2598 kombilo.py:2767
+#: kombilo.py:2846 kombilo.py:2877 kombilo.py:2930 kombilo.py:3492 v.py:740
+#: v.py:742 v.py:951 v.py:1005 v.py:1104 v.py:1107 v.py:1144 v.py:1150
+#: v.py:1277 v.py:1320 v.py:1465 v.py:1508 v.py:1536 v.py:1711 v.py:1811
+#: v.py:2048 v.py:2151 v.py:2153 v.py:2176 v.py:2197 v.py:2257 v.py:2387
+#: v.py:2759 v.py:2767 v.py:2914 custommenus.py:136 custommenus.py:232
+#: kombiloNG.py:1342 kombilo.py:526 kombilo.py:529 kombilo.py:1201
+#: kombilo.py:1387 kombilo.py:1401 kombilo.py:1780 kombilo.py:1782
+#: kombilo.py:1784 kombilo.py:1895 kombilo.py:1900 kombilo.py:1904
+#: kombilo.py:2051 kombilo.py:2258 kombilo.py:2538 kombilo.py:2710
+#: kombilo.py:2786 kombilo.py:2817 kombilo.py:2870 kombilo.py:3379 v.py:728
+#: v.py:730 v.py:939 v.py:993 v.py:1089 v.py:1092 v.py:1129 v.py:1262 v.py:1305
+#: v.py:1444 v.py:1487 v.py:1515 v.py:1694 v.py:1794 v.py:1809 v.py:2031
+#: v.py:2134 v.py:2136 v.py:2159 v.py:2183 v.py:2366 v.py:2753 v.py:2766
+#: v.py:2902
 msgid "Error"
 msgstr "Eraro"
 
-#: v.py:1292 v.py:1523 v.py:1290 v.py:1521 v.py:1277 v.py:1508 v.py:1262
-#: v.py:1487
+#: v.py:1308 v.py:1545 v.py:1292 v.py:1523 v.py:1290 v.py:1521 v.py:1277
+#: v.py:1508 v.py:1262 v.py:1487
 msgid "Error in SGF file"
 msgstr "Eraro in SGF-dosiero"
 
-#: v.py:1999 v.py:1997 v.py:1984 v.py:1967
+#: v.py:2021 v.py:1999 v.py:1997 v.py:1984 v.py:1967
 msgid "Error in SGF file!"
 msgstr "Eraro in SGF-a dosiero!"
 
-#: kombilo.py:3601 kombilo.py:3530
+#: kombilo.py:3648 kombilo.py:3601 kombilo.py:3530
 msgid "Error parsing references file.\n"
 msgstr ""
 
@@ -627,8 +693,8 @@ msgstr ""
 msgid "Error reading kombilo.app"
 msgstr ""
 
-#: kombilo.py:3618 v.py:2978 kombilo.py:3547 v.py:2939 kombilo.py:3492
-#: v.py:2914
+#: kombilo.py:3665 v.py:3004 kombilo.py:3618 v.py:2978 kombilo.py:3547
+#: v.py:2939 kombilo.py:3492 v.py:2914
 msgid "Error reading kombilo.app file."
 msgstr ""
 
@@ -636,38 +702,45 @@ msgstr ""
 msgid "Error reading v.app"
 msgstr ""
 
-#: kombilo.py:1945 kombilo.py:1949 kombilo.py:1899 kombilo.py:1903
-#: kombilo.py:1885 kombilo.py:1889 kombilo.py:1780 kombilo.py:1784
+#: kombilo.py:1961 kombilo.py:1965 kombilo.py:1945 kombilo.py:1949
+#: kombilo.py:1899 kombilo.py:1903 kombilo.py:1885 kombilo.py:1889
+#: kombilo.py:1780 kombilo.py:1784
 msgid "Error starting SGF viewer"
 msgstr "Eraro dum lanĉo de SGF-rigardilo"
 
-#: kombilo.py:3481 kombilo.py:3410 kombilo.py:3358 kombilo.py:3249
+#: kombilo.py:3528 kombilo.py:3481 kombilo.py:3410 kombilo.py:3358
+#: kombilo.py:3249
 msgid "Event"
 msgstr ""
 
-#: v.py:2557 v.py:2539 v.py:2514 v.py:2469
+#: v.py:2577 v.py:2557 v.py:2539 v.py:2514 v.py:2469
 msgid "Export SGF source"
 msgstr ""
 
-#: kombilo.py:2596 kombilo.py:2528 kombilo.py:2491 kombilo.py:2422
+#: kombilo.py:2628 kombilo.py:2596 kombilo.py:2528 kombilo.py:2491
+#: kombilo.py:2422
 msgid "Export current _position"
 msgstr ""
 
-#: kombilo.py:1768 kombilo.py:1887 kombilo.py:1722 kombilo.py:1841
-#: kombilo.py:1709 kombilo.py:1827 kombilo.py:1604
+#: kombilo.py:1784 kombilo.py:1903 kombilo.py:1768 kombilo.py:1887
+#: kombilo.py:1722 kombilo.py:1841 kombilo.py:1709 kombilo.py:1827
+#: kombilo.py:1604
 msgid "Export mode:"
 msgstr ""
 
-#: kombilo.py:1755 kombilo.py:1877 kombilo.py:1709 kombilo.py:1831
-#: kombilo.py:1696 kombilo.py:1817 kombilo.py:1591 kombilo.py:1712
+#: kombilo.py:1771 kombilo.py:1893 kombilo.py:1755 kombilo.py:1877
+#: kombilo.py:1709 kombilo.py:1831 kombilo.py:1696 kombilo.py:1817
+#: kombilo.py:1591 kombilo.py:1712
 msgid "Export position"
 msgstr "Eksporti pozicion"
 
-#: kombilo.py:2595 kombilo.py:2527 kombilo.py:2490 kombilo.py:2421
+#: kombilo.py:2627 kombilo.py:2595 kombilo.py:2527 kombilo.py:2490
+#: kombilo.py:2421
 msgid "Export search _results"
 msgstr ""
 
-#: kombilo.py:2598 kombilo.py:2530 kombilo.py:2493 kombilo.py:2424
+#: kombilo.py:2630 kombilo.py:2598 kombilo.py:2530 kombilo.py:2493
+#: kombilo.py:2424
 msgid "Export tags to file"
 msgstr ""
 
@@ -675,7 +748,7 @@ msgstr ""
 msgid "Failed to open the web browser."
 msgstr ""
 
-#: v.py:2288 v.py:2270 v.py:2257
+#: v.py:2308 v.py:2288 v.py:2270 v.py:2257
 msgid ""
 "Failed to open the web browser.\n"
 "You can find the documentation at"
@@ -689,28 +762,33 @@ msgid ""
 "a file at: %s"
 msgstr ""
 
-#: kombiloNG.py:1450 kombiloNG.py:1415
+#: kombiloNG.py:1492 kombiloNG.py:1450 kombiloNG.py:1415
 #, python-format
 msgid "File exists: %s."
 msgstr ""
 
-#: kombilo.py:2325 kombilo.py:2275 kombilo.py:2245 kombilo.py:2167
+#: kombilo.py:2357 kombilo.py:2325 kombilo.py:2275 kombilo.py:2245
+#: kombilo.py:2167
 msgid "Files:"
 msgstr ""
 
-#: kombiloNG.py:1537 kombiloNG.py:1672 kombiloNG.py:1501 kombiloNG.py:1636
-#: kombiloNG.py:1489 kombiloNG.py:1445
+#: kombiloNG.py:1585 kombiloNG.py:1720 kombiloNG.py:1537 kombiloNG.py:1672
+#: kombiloNG.py:1501 kombiloNG.py:1636 kombiloNG.py:1489 kombiloNG.py:1445
 msgid "Finalizing ... (this will take some time)\n"
 msgstr ""
 
-#: kombilo.py:2603 kombilo.py:2535 kombilo.py:2498 kombilo.py:2429
+#: kombilo.py:2635 kombilo.py:2603 kombilo.py:2535 kombilo.py:2498
+#: kombilo.py:2429
 msgid "Find duplicates"
 msgstr ""
 
-#: kombilo.py:2908 kombilo.py:2838 kombilo.py:2789 kombilo.py:2732
+#: kombilo.py:2955 kombilo.py:2908 kombilo.py:2838 kombilo.py:2789
+#: kombilo.py:2732
 msgid "Finished computing sgf tree"
 msgstr ""
 
+#: kombiloNG.py:806 kombiloNG.py:807 kombiloNG.py:808 kombiloNG.py:809
+#: kombiloNG.py:1325 kombiloNG.py:1326 kombiloNG.py:1327 kombiloNG.py:1328
 #: kombiloNG.py:795 kombiloNG.py:796 kombiloNG.py:797 kombiloNG.py:798
 #: kombiloNG.py:1293 kombiloNG.py:1294 kombiloNG.py:1295 kombiloNG.py:1296
 #: kombiloNG.py:793 kombiloNG.py:794 kombiloNG.py:1258 kombiloNG.py:1259
@@ -721,11 +799,13 @@ msgstr ""
 msgid "First played"
 msgstr ""
 
-#: kombilo.py:3380 kombilo.py:3309 kombilo.py:3262 kombilo.py:3143
+#: kombiloNG.py:842 kombiloNG.py:1353 kombilo.py:3427 kombilo.py:3380
+#: kombilo.py:3309 kombilo.py:3262 kombilo.py:3143
 msgid "Fixed Anchor"
 msgstr ""
 
-#: kombilo.py:3361 kombilo.py:3290 kombilo.py:3243 kombilo.py:3126
+#: kombiloNG.py:841 kombiloNG.py:1352 kombilo.py:3408 kombilo.py:3361
+#: kombilo.py:3290 kombilo.py:3243 kombilo.py:3126
 msgid "Fixed Color"
 msgstr ""
 
@@ -745,16 +825,17 @@ msgstr ""
 msgid "Fonts"
 msgstr ""
 
-#: v.py:2720 v.py:2702 v.py:2677 v.py:2639
+#: v.py:2740 v.py:2720 v.py:2702 v.py:2677 v.py:2639
 msgid "Forward 10 moves"
 msgstr ""
 
-#: v.py:2718 v.py:2700 v.py:2675 v.py:2637
+#: v.py:2738 v.py:2718 v.py:2700 v.py:2675 v.py:2637
 msgid "Forward one move"
 msgstr ""
 
-#: kombilo.py:3419 kombilo.py:3483 kombilo.py:3348 kombilo.py:3412
-#: kombilo.py:3299 kombilo.py:3360 kombilo.py:3180 kombilo.py:3251
+#: kombilo.py:3466 kombilo.py:3530 kombilo.py:3419 kombilo.py:3483
+#: kombilo.py:3348 kombilo.py:3412 kombilo.py:3299 kombilo.py:3360
+#: kombilo.py:3180 kombilo.py:3251
 msgid "From"
 msgstr ""
 
@@ -762,20 +843,22 @@ msgstr ""
 msgid "Fuzzy stone placement"
 msgstr ""
 
-#: v.py:2473 v.py:2455 v.py:2437 v.py:2416
+#: v.py:2493 v.py:2473 v.py:2455 v.py:2437 v.py:2416
 msgid "Game Comment: "
 msgstr ""
 
-#: v.py:2429 v.py:2411 v.py:2398 v.py:2377
+#: v.py:2449 v.py:2429 v.py:2411 v.py:2398 v.py:2377
 msgid "Game Info"
 msgstr ""
 
-#: kombilo.py:3259 kombilo.py:3188 kombilo.py:3139 kombilo.py:3028
+#: kombilo.py:3306 kombilo.py:3259 kombilo.py:3188 kombilo.py:3139
+#: kombilo.py:3028
 msgid "Game info"
 msgstr ""
 
-#: kombilo.py:1357 kombilo.py:1360 kombilo.py:1311 kombilo.py:1314
-#: kombilo.py:1304 kombilo.py:1307 kombilo.py:1206 kombilo.py:1209
+#: kombilo.py:1364 kombilo.py:1367 kombilo.py:1357 kombilo.py:1360
+#: kombilo.py:1311 kombilo.py:1314 kombilo.py:1304 kombilo.py:1307
+#: kombilo.py:1206 kombilo.py:1209
 #, fuzzy, python-format
 msgid "Game info search, query \"%s\""
 msgstr "Partiinforma serĉo, informpeto \"%s\""
@@ -784,7 +867,8 @@ msgstr "Partiinforma serĉo, informpeto \"%s\""
 msgid "Game list"
 msgstr "Partilisto"
 
-#: kombilo.py:3537 kombilo.py:3466 kombilo.py:3414 kombilo.py:3305
+#: kombilo.py:3584 kombilo.py:3537 kombilo.py:3466 kombilo.py:3414
+#: kombilo.py:3305
 msgid "Go to:"
 msgstr ""
 
@@ -804,26 +888,30 @@ msgstr ""
 msgid "Handicap game"
 msgstr ""
 
-#: kombiloNG.py:623 v.py:808 kombiloNG.py:621 v.py:806 kombiloNG.py:601
-#: v.py:797 kombiloNG.py:575 v.py:785
+#: kombiloNG.py:632 v.py:824 kombiloNG.py:623 v.py:808 kombiloNG.py:621
+#: v.py:806 kombiloNG.py:601 v.py:797 kombiloNG.py:575 v.py:785
 msgid "Hcp"
 msgstr ""
 
-#: kombilo.py:3297 kombilo.py:3226 kombilo.py:3179 kombilo.py:3066
+#: kombilo.py:3344 kombilo.py:3297 kombilo.py:3226 kombilo.py:3179
+#: kombilo.py:3066
 msgid "History"
 msgstr ""
 
-#: kombiloNG.py:1307 kombiloNG.py:1272 kombiloNG.py:1215 kombiloNG.py:1174
+#: kombiloNG.py:1339 kombiloNG.py:1307 kombiloNG.py:1272 kombiloNG.py:1215
+#: kombiloNG.py:1174
 msgid "Hits per database\n"
 msgstr ""
 
-#: kombilo.py:722 kombilo.py:705 kombilo.py:704 kombilo.py:686
+#: kombilo.py:723 kombilo.py:722 kombilo.py:705 kombilo.py:704 kombilo.py:686
 msgid "Hold"
 msgstr "Teni"
 
-#: custommenus.py:410 kombiloNG.py:1407 kombilo.py:561 kombilo.py:578
-#: kombilo.py:2112 kombilo.py:2152 kombilo.py:2476 v.py:170 v.py:2166 v.py:2189
-#: v.py:2233 kombiloNG.py:1372 kombilo.py:544 kombilo.py:2059 kombilo.py:2099
+#: custommenus.py:410 kombiloNG.py:1449 kombilo.py:562 kombilo.py:579
+#: kombilo.py:2129 kombilo.py:2170 kombilo.py:2508 v.py:189 v.py:2188 v.py:2211
+#: v.py:2255 kombiloNG.py:1407 kombilo.py:561 kombilo.py:578 kombilo.py:2112
+#: kombilo.py:2152 kombilo.py:2476 v.py:170 v.py:2166 v.py:2189 v.py:2233
+#: kombiloNG.py:1372 kombilo.py:544 kombilo.py:2059 kombilo.py:2099
 #: kombilo.py:2408 v.py:169 v.py:2164 v.py:2187 v.py:2231 kombiloNG.py:1314
 #: kombilo.py:543 kombilo.py:560 kombilo.py:2032 kombilo.py:2072
 #: kombilo.py:2371 v.py:160 v.py:2151 v.py:2174 v.py:2218 custommenus.py:414
@@ -832,7 +920,7 @@ msgstr "Teni"
 msgid "I/O Error"
 msgstr "Leg-/Skrib-Eraro"
 
-#: v.py:1122 v.py:1120 v.py:1107 v.py:1092
+#: v.py:1138 v.py:1122 v.py:1120 v.py:1107 v.py:1092
 #, python-brace-format
 msgid "I/O Error when writing {0}{1}.sgf"
 msgstr ""
@@ -849,11 +937,12 @@ msgid ""
 "semi-colon.)"
 msgstr ""
 
-#: kombilo.py:2599 kombilo.py:2531 kombilo.py:2494 kombilo.py:2425
+#: kombilo.py:2631 kombilo.py:2599 kombilo.py:2531 kombilo.py:2494
+#: kombilo.py:2425
 msgid "Import tags from file"
 msgstr ""
 
-#: kombilo.py:2377
+#: kombilo.py:2409 kombilo.py:2377
 msgid "Include full SGF source"
 msgstr ""
 
@@ -865,12 +954,16 @@ msgstr "Aldonu partiliston"
 msgid "Info"
 msgstr ""
 
-#: v.py:2295 v.py:2277 v.py:2264 v.py:2241
+#: kombiloNG.py:962 kombiloNG.py:1577
+msgid "Interrupted\n"
+msgstr ""
+
+#: v.py:2315 v.py:2295 v.py:2277 v.py:2264 v.py:2241
 msgid "It comes together with the go database program Kombilo."
 msgstr ""
 
-#: kombilo.py:2536 v.py:2325 kombilo.py:2468 v.py:2307 kombilo.py:2431
-#: v.py:2294 kombilo.py:2362 v.py:2273
+#: kombilo.py:2568 v.py:2345 kombilo.py:2536 v.py:2325 kombilo.py:2468
+#: v.py:2307 kombilo.py:2431 v.py:2294 kombilo.py:2362 v.py:2273
 msgid "It is open source software, published under the MIT License."
 msgstr ""
 
@@ -878,32 +971,39 @@ msgstr ""
 msgid "Jigo"
 msgstr ""
 
-#: kombilo.py:2501 kombilo.py:2433 kombilo.py:2396 kombilo.py:2325
+#: kombilo.py:2533 kombilo.py:2501 kombilo.py:2433 kombilo.py:2396
+#: kombilo.py:2325
 #, python-format
 msgid "Kombilo %s - written by"
 msgstr ""
 
-#: kombilo.py:2502 kombilo.py:2434 kombilo.py:2397 kombilo.py:2326
+#: kombilo.py:2534 kombilo.py:2502 kombilo.py:2434 kombilo.py:2397
+#: kombilo.py:2326
 msgid "Kombilo is a go database program."
 msgstr ""
 
-#: kombilo.py:2505 kombilo.py:2437 kombilo.py:2400 kombilo.py:2329
+#: kombilo.py:2537 kombilo.py:2505 kombilo.py:2437 kombilo.py:2400
+#: kombilo.py:2329
 msgid "Kombilo is free software; for more information see the documentation."
 msgstr ""
 
-#: kombilo.py:2539 kombilo.py:2471 kombilo.py:2434 kombilo.py:2365
+#: kombilo.py:2571 kombilo.py:2539 kombilo.py:2471 kombilo.py:2434
+#: kombilo.py:2365
 msgid "Kombilo license"
 msgstr ""
 
-#: kombilo.py:2535 kombilo.py:2467 kombilo.py:2430 kombilo.py:2361
+#: kombilo.py:2567 kombilo.py:2535 kombilo.py:2467 kombilo.py:2430
+#: kombilo.py:2361
 msgid "Kombilo was written by Ulrich Goertz (ug@geometry.de)."
 msgstr ""
 
-#: kombiloNG.py:619 v.py:805 kombiloNG.py:617 v.py:803 kombiloNG.py:599
-#: v.py:794 kombiloNG.py:573 v.py:782
+#: kombiloNG.py:628 v.py:821 kombiloNG.py:619 v.py:805 kombiloNG.py:617
+#: v.py:803 kombiloNG.py:599 v.py:794 kombiloNG.py:573 v.py:782
 msgid "Komi"
 msgstr ""
 
+#: kombiloNG.py:806 kombiloNG.py:807 kombiloNG.py:808 kombiloNG.py:809
+#: kombiloNG.py:1325 kombiloNG.py:1326 kombiloNG.py:1327 kombiloNG.py:1328
 #: kombiloNG.py:795 kombiloNG.py:796 kombiloNG.py:797 kombiloNG.py:798
 #: kombiloNG.py:1293 kombiloNG.py:1294 kombiloNG.py:1295 kombiloNG.py:1296
 #: kombiloNG.py:793 kombiloNG.py:794 kombiloNG.py:1258 kombiloNG.py:1259
@@ -918,6 +1018,8 @@ msgstr ""
 msgid "Label color"
 msgstr ""
 
+#: kombiloNG.py:806 kombiloNG.py:807 kombiloNG.py:808 kombiloNG.py:809
+#: kombiloNG.py:1325 kombiloNG.py:1326 kombiloNG.py:1327 kombiloNG.py:1328
 #: kombiloNG.py:795 kombiloNG.py:796 kombiloNG.py:797 kombiloNG.py:798
 #: kombiloNG.py:1293 kombiloNG.py:1294 kombiloNG.py:1295 kombiloNG.py:1296
 #: kombiloNG.py:793 kombiloNG.py:794 kombiloNG.py:1258 kombiloNG.py:1259
@@ -928,11 +1030,12 @@ msgstr ""
 msgid "Last played"
 msgstr ""
 
-#: v.py:2609 v.py:2591 v.py:2566 v.py:2521
+#: v.py:2629 v.py:2609 v.py:2591 v.py:2566 v.py:2521
 msgid "License"
 msgstr ""
 
-#: kombilo.py:3266 kombilo.py:3195 kombilo.py:3147 kombilo.py:3036
+#: kombilo.py:3313 kombilo.py:3266 kombilo.py:3195 kombilo.py:3147
+#: kombilo.py:3036
 msgid "Log"
 msgstr ""
 
@@ -954,21 +1057,21 @@ msgstr ""
 msgid "Maximize window"
 msgstr ""
 
-#: kombiloNG.py:820 kombilo.py:2783 kombilo.py:2715 kombilo.py:2668
-#: kombilo.py:2611
+#: kombiloNG.py:831 kombilo.py:2815 kombiloNG.py:820 kombilo.py:2783
+#: kombilo.py:2715 kombilo.py:2668 kombilo.py:2611
 msgid "Maximum number of branches"
 msgstr ""
 
-#: kombiloNG.py:819 kombilo.py:2782 kombilo.py:2714 kombilo.py:2667
-#: kombilo.py:2610
+#: kombiloNG.py:830 kombilo.py:2814 kombiloNG.py:819 kombilo.py:2782
+#: kombilo.py:2714 kombilo.py:2667 kombilo.py:2610
 msgid "Minimum number of hits"
 msgstr ""
 
-#: v.py:2566 v.py:2548 v.py:2523 v.py:2478
+#: v.py:2586 v.py:2566 v.py:2548 v.py:2523 v.py:2478
 msgid "Mirror _diagonally"
 msgstr ""
 
-#: v.py:2565 v.py:2547 v.py:2522 v.py:2477
+#: v.py:2585 v.py:2565 v.py:2547 v.py:2522 v.py:2477
 msgid "Mirror _vertically"
 msgstr ""
 
@@ -976,35 +1079,43 @@ msgstr ""
 msgid "Monospace font"
 msgstr ""
 
-#: kombilo.py:3429 kombilo.py:3358 kombilo.py:3307 kombilo.py:3188
+#: kombilo.py:3476 kombilo.py:3429 kombilo.py:3358 kombilo.py:3307
+#: kombilo.py:3188
 msgid "Months/bar"
 msgstr ""
 
-#: kombilo.py:1415 kombilo.py:1369 kombilo.py:1357 kombilo.py:1259
+#: kombilo.py:1422 kombilo.py:1415 kombilo.py:1369 kombilo.py:1357
+#: kombilo.py:1259
 msgid "Move 20"
 msgstr ""
 
-#: kombilo.py:1421 kombilo.py:1375 kombilo.py:1363 kombilo.py:1265
+#: kombilo.py:1428 kombilo.py:1421 kombilo.py:1375 kombilo.py:1363
+#: kombilo.py:1265
 msgid "Move 31"
 msgstr "Meto 31"
 
-#: kombilo.py:1417 kombilo.py:1371 kombilo.py:1359 kombilo.py:1261
+#: kombilo.py:1424 kombilo.py:1417 kombilo.py:1371 kombilo.py:1359
+#: kombilo.py:1261
 msgid "Move 40"
 msgstr "Meto 40"
 
-#: kombilo.py:1423 kombilo.py:1377 kombilo.py:1365 kombilo.py:1267
+#: kombilo.py:1430 kombilo.py:1423 kombilo.py:1377 kombilo.py:1365
+#: kombilo.py:1267
 msgid "Move 51"
 msgstr "Meto 51"
 
-#: kombilo.py:1419 kombilo.py:1373 kombilo.py:1361 kombilo.py:1263
+#: kombilo.py:1426 kombilo.py:1419 kombilo.py:1373 kombilo.py:1361
+#: kombilo.py:1263
 msgid "Move 60"
 msgstr "Meto 60"
 
-#: kombilo.py:1425 kombilo.py:1379 kombilo.py:1367 kombilo.py:1269
+#: kombilo.py:1432 kombilo.py:1425 kombilo.py:1379 kombilo.py:1367
+#: kombilo.py:1269
 msgid "Move 71"
 msgstr "Meto 71"
 
-#: kombilo.py:3389 kombilo.py:3318 kombilo.py:3270 kombilo.py:3151
+#: kombiloNG.py:844 kombiloNG.py:1355 kombilo.py:3436 kombilo.py:3389
+#: kombilo.py:3318 kombilo.py:3270 kombilo.py:3151
 msgid "Move limit"
 msgstr ""
 
@@ -1016,26 +1127,33 @@ msgstr ""
 msgid "Name:"
 msgstr ""
 
-#: v.py:2804 v.py:2784 v.py:2759 v.py:2753
+#: v.py:2824 v.py:2804 v.py:2784 v.py:2759 v.py:2753
 msgid "Neither kombilo.cfg nor default.cfg were found."
 msgstr ""
 
-#: kombilo.py:2374 kombilo.py:2317 kombilo.py:2280 kombilo.py:1921
-#: kombilo.py:2202
+#: kombilo.py:2406 kombilo.py:2374 kombilo.py:2317 kombilo.py:2280
+#: kombilo.py:1921 kombilo.py:2202
 msgid "Never"
 msgstr ""
 
 #: custommenus.py:268 custommenus.py:277 custommenus.py:290 custommenus.py:308
-#: v.py:1964 v.py:1966 v.py:1962 v.py:1949 v.py:1951 custommenus.py:272
-#: custommenus.py:281 custommenus.py:294 custommenus.py:312 v.py:1932 v.py:1934
+#: v.py:1986 v.py:1988 v.py:1964 v.py:1966 v.py:1962 v.py:1949 v.py:1951
+#: custommenus.py:272 custommenus.py:281 custommenus.py:294 custommenus.py:312
+#: v.py:1932 v.py:1934
 msgid "New"
 msgstr ""
 
-#: kombilo.py:3368 kombilo.py:3297 kombilo.py:3250 kombilo.py:3131
+#: kombiloNG.py:843 kombiloNG.py:1354
+msgid "Next move"
+msgstr ""
+
+#: kombilo.py:3415 kombilo.py:3368 kombilo.py:3297 kombilo.py:3250
+#: kombilo.py:3131
 msgid "Next:"
 msgstr ""
 
-#: kombiloNG.py:827
+#: kombiloNG.py:838 kombiloNG.py:841 kombiloNG.py:842 kombiloNG.py:845
+#: kombiloNG.py:1352 kombiloNG.py:1353 kombiloNG.py:1356 kombiloNG.py:827
 msgid "No"
 msgstr ""
 
@@ -1043,13 +1161,14 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: kombilo.py:2981 kombilo.py:2988 kombilo.py:2911 kombilo.py:2918
-#: kombilo.py:2862 kombilo.py:2869 kombilo.py:2802 kombilo.py:2809
+#: kombilo.py:3028 kombilo.py:3035 kombilo.py:2981 kombilo.py:2988
+#: kombilo.py:2911 kombilo.py:2918 kombilo.py:2862 kombilo.py:2869
+#: kombilo.py:2802 kombilo.py:2809
 #, python-format
 msgid "Not a tag abbreviation: %s.\n"
 msgstr ""
 
-#: v.py:2785 v.py:2767 v.py:2742 v.py:2704
+#: v.py:2805 v.py:2785 v.py:2767 v.py:2742 v.py:2704
 msgid "Note"
 msgstr ""
 
@@ -1058,15 +1177,16 @@ msgid ""
 "Note that most changes become effective only after restarting the program."
 msgstr ""
 
-#: v.py:2731 v.py:2713 v.py:2688 v.py:2650
+#: v.py:2751 v.py:2731 v.py:2713 v.py:2688 v.py:2650
 msgid "Number of captured stones"
 msgstr ""
 
-#: v.py:2732 v.py:2714 v.py:2689 v.py:2651
+#: v.py:2752 v.py:2732 v.py:2714 v.py:2689 v.py:2651
 msgid "Number of current move"
 msgstr ""
 
-#: kombilo.py:1765 kombilo.py:1719 kombilo.py:1706 kombilo.py:1601
+#: kombilo.py:1781 kombilo.py:1765 kombilo.py:1719 kombilo.py:1706
+#: kombilo.py:1601
 msgid "Number of moves to be shown (0-9):"
 msgstr ""
 
@@ -1076,14 +1196,15 @@ msgid ""
 "store all searches)."
 msgstr ""
 
-#: custommenus.py:579 kombilo.py:1772 kombilo.py:1894 kombilo.py:2315
-#: kombilo.py:2521 kombilo.py:2832 v.py:2308 v.py:2342 v.py:2484
-#: kombilo.py:1726 kombilo.py:1848 kombilo.py:2262 kombilo.py:2453
-#: kombilo.py:2763 v.py:2290 v.py:2324 v.py:2466 kombilo.py:1713
-#: kombilo.py:1834 kombilo.py:2235 kombilo.py:2416 kombilo.py:2716 v.py:2277
-#: v.py:2311 v.py:2448 custommenus.py:583 kombilo.py:1608 kombilo.py:1729
-#: kombilo.py:1860 kombilo.py:2158 kombilo.py:2345 kombilo.py:2657 v.py:2254
-#: v.py:2427
+#: custommenus.py:579 kombilo.py:1788 kombilo.py:1910 kombilo.py:2347
+#: kombilo.py:2553 kombilo.py:2864 v.py:2328 v.py:2362 v.py:2504
+#: kombilo.py:1772 kombilo.py:1894 kombilo.py:2315 kombilo.py:2521
+#: kombilo.py:2832 v.py:2308 v.py:2342 v.py:2484 kombilo.py:1726
+#: kombilo.py:1848 kombilo.py:2262 kombilo.py:2453 kombilo.py:2763 v.py:2290
+#: v.py:2324 v.py:2466 kombilo.py:1713 kombilo.py:1834 kombilo.py:2235
+#: kombilo.py:2416 kombilo.py:2716 v.py:2277 v.py:2311 v.py:2448
+#: custommenus.py:583 kombilo.py:1608 kombilo.py:1729 kombilo.py:1860
+#: kombilo.py:2158 kombilo.py:2345 kombilo.py:2657 v.py:2254 v.py:2427
 msgid "OK"
 msgstr ""
 
@@ -1095,18 +1216,11 @@ msgstr ""
 msgid "Only one mouse button"
 msgstr ""
 
-#: default.cfg
-msgid ""
-"Select if you have no right mouse button (or do not want to use it). You can "
-"then select the search region with clicking the (left) mouse button and "
-"dragging. (Restart required.)"
-msgstr ""
-
-#: v.py:2736 v.py:2718 v.py:2693 v.py:2655
+#: v.py:2756 v.py:2736 v.py:2718 v.py:2693 v.py:2655
 msgid "Open SGF file"
 msgstr ""
 
-#: v.py:1987 v.py:1985 v.py:1972 v.py:1955
+#: v.py:2009 v.py:1987 v.py:1985 v.py:1972 v.py:1955
 msgid "Open file"
 msgstr ""
 
@@ -1118,28 +1232,29 @@ msgstr ""
 msgid "Opens games for viewing in a new window."
 msgstr ""
 
-#: kombiloNG.py:818 kombilo.py:3257 kombilo.py:3186 kombilo.py:3137
-#: kombilo.py:3026
+#: kombiloNG.py:829 kombilo.py:3304 kombiloNG.py:818 kombilo.py:3257
+#: kombilo.py:3186 kombilo.py:3137 kombilo.py:3026
 msgid "Options"
 msgstr ""
 
-#: v.py:2478 v.py:2460 v.py:2442 v.py:2421
+#: v.py:2498 v.py:2478 v.py:2460 v.py:2442 v.py:2421
 msgid "Other SGF tags: "
 msgstr ""
 
-#: v.py:2394 v.py:2376 v.py:2363 v.py:2342
+#: v.py:2414 v.py:2394 v.py:2376 v.py:2363 v.py:2342
 msgid "Parse error in 'Other SGF tags'"
 msgstr "Analizeraro en 'Aliaj SGF-aj etikedoj'"
 
-#: v.py:1999 v.py:1997 v.py:1984 v.py:1967
+#: v.py:2021 v.py:1999 v.py:1997 v.py:1984 v.py:1967
 msgid "Parsing Error"
 msgstr ""
 
-#: v.py:2723 v.py:2627 v.py:2705 v.py:2602 v.py:2680 v.py:2557 v.py:2642
+#: v.py:2743 v.py:2723 v.py:2627 v.py:2705 v.py:2602 v.py:2680 v.py:2557
+#: v.py:2642
 msgid "Pass"
 msgstr ""
 
-#: kombilo.py:2639 kombilo.py:2571
+#: kombilo.py:2671 kombilo.py:2639 kombilo.py:2571
 msgid "Pattern has to occur at or before this move"
 msgstr ""
 
@@ -1147,32 +1262,34 @@ msgstr ""
 msgid "Pattern has to occur before move n (250=no limit)"
 msgstr ""
 
-#: kombilo.py:2754 kombilo.py:2686 kombilo.py:3261 kombilo.py:2644
-#: kombilo.py:3214 kombilo.py:2587 kombilo.py:3101
+#: kombilo.py:2786 kombilo.py:2754 kombilo.py:2686 kombilo.py:3261
+#: kombilo.py:2644 kombilo.py:3214 kombilo.py:2587 kombilo.py:3101
 msgid "Pattern search"
 msgstr ""
 
-#: kombiloNG.py:1245 kombiloNG.py:1210 kombiloNG.py:1153 kombiloNG.py:1127
+#: kombiloNG.py:1277 kombiloNG.py:1245 kombiloNG.py:1210 kombiloNG.py:1153
+#: kombiloNG.py:1127
 msgid "Pattern:"
 msgstr ""
 
-#: v.py:2728 v.py:2710 v.py:2685 v.py:2647
+#: v.py:2748 v.py:2728 v.py:2710 v.py:2685 v.py:2647
 msgid "Place black stones"
 msgstr ""
 
-#: v.py:2729 v.py:2711 v.py:2686 v.py:2648
+#: v.py:2749 v.py:2729 v.py:2711 v.py:2686 v.py:2648
 msgid "Place white stones"
 msgstr ""
 
-#: v.py:2726 v.py:2708 v.py:2683 v.py:2645
+#: v.py:2746 v.py:2726 v.py:2708 v.py:2683 v.py:2645
 msgid "Play black/white stones"
 msgstr ""
 
-#: v.py:2727 v.py:2709 v.py:2684 v.py:2646
+#: v.py:2747 v.py:2727 v.py:2709 v.py:2684 v.py:2646
 msgid "Play white/black stones"
 msgstr ""
 
-#: kombilo.py:3479 kombilo.py:3408 kombilo.py:3356 kombilo.py:3247
+#: kombilo.py:3526 kombilo.py:3479 kombilo.py:3408 kombilo.py:3356
+#: kombilo.py:3247
 msgid "Player"
 msgstr ""
 
@@ -1180,16 +1297,19 @@ msgstr ""
 msgid "Preserve window title"
 msgstr ""
 
-#: kombilo.py:2368 kombilo.py:2311 kombilo.py:2274 kombilo.py:2196
+#: kombilo.py:2400 kombilo.py:2368 kombilo.py:2311 kombilo.py:2274
+#: kombilo.py:2196
 msgid "Process variations"
 msgstr ""
 
-#: kombiloNG.py:1594 kombiloNG.py:1558 kombiloNG.py:1408 kombiloNG.py:1364
+#: kombiloNG.py:1642 kombiloNG.py:1594 kombiloNG.py:1558 kombiloNG.py:1408
+#: kombiloNG.py:1364
 #, python-format
 msgid "Processing %s."
 msgstr ""
 
-#: kombilo.py:2318 kombilo.py:2265 kombilo.py:2238 kombilo.py:2161
+#: kombilo.py:2350 kombilo.py:2318 kombilo.py:2265 kombilo.py:2238
+#: kombilo.py:2161
 msgid "Processing options"
 msgstr ""
 
@@ -1197,7 +1317,8 @@ msgstr ""
 msgid "Professional game"
 msgstr ""
 
-#: kombilo.py:2812 kombilo.py:2744 kombilo.py:2697 kombilo.py:2638
+#: kombilo.py:2844 kombilo.py:2812 kombilo.py:2744 kombilo.py:2697
+#: kombilo.py:2638
 msgid "Put results into new SGF file"
 msgstr ""
 
@@ -1207,7 +1328,7 @@ msgid ""
 "be a pane in the left hand column)."
 msgstr ""
 
-#: v.py:150 v.py:149 v.py:140 v.py:126
+#: v.py:169 v.py:150 v.py:149 v.py:140 v.py:126
 msgid "Quit"
 msgstr ""
 
@@ -1215,11 +1336,13 @@ msgstr ""
 msgid "Randomly place stones one pixel away from the intersection points."
 msgstr ""
 
-#: kombilo.py:3604 kombilo.py:3533 kombilo.py:3478 kombilo.py:3360
+#: kombilo.py:3651 kombilo.py:3604 kombilo.py:3533 kombilo.py:3478
+#: kombilo.py:3360
 msgid "Ready ..."
 msgstr ""
 
-#: kombilo.py:2321 kombilo.py:2268 kombilo.py:2241 kombilo.py:2163
+#: kombilo.py:2353 kombilo.py:2321 kombilo.py:2268 kombilo.py:2241
+#: kombilo.py:2163
 msgid "Recursively add subdirectories"
 msgstr ""
 
@@ -1227,11 +1350,12 @@ msgstr ""
 msgid "Reference to commentary available"
 msgstr ""
 
-#: kombilo.py:3495 kombilo.py:3424 kombilo.py:3372 kombilo.py:3263
+#: kombilo.py:3542 kombilo.py:3495 kombilo.py:3424 kombilo.py:3372
+#: kombilo.py:3263
 msgid "Referenced"
 msgstr ""
 
-#: kombilo.py:720 kombilo.py:703 kombilo.py:702 kombilo.py:684
+#: kombilo.py:721 kombilo.py:720 kombilo.py:703 kombilo.py:702 kombilo.py:684
 msgid "Release"
 msgstr "Malteni"
 
@@ -1241,11 +1365,13 @@ msgid ""
 "operating systems encoding line breaks in different ways.)"
 msgstr ""
 
-#: kombilo.py:2313 kombilo.py:2260 kombilo.py:2233 kombilo.py:2156
+#: kombilo.py:2340 kombilo.py:2313 kombilo.py:2260 kombilo.py:2233
+#: kombilo.py:2156
 msgid "Remove DB"
 msgstr ""
 
-#: kombilo.py:2644 kombilo.py:2576 kombilo.py:2539 kombilo.py:2479
+#: kombilo.py:2676 kombilo.py:2644 kombilo.py:2576 kombilo.py:2539
+#: kombilo.py:2479
 msgid "Remove a tag."
 msgstr ""
 
@@ -1253,16 +1379,19 @@ msgstr ""
 msgid "Remove carriage return"
 msgstr ""
 
-#: kombilo.py:2643 kombilo.py:2575 kombilo.py:2538 kombilo.py:2478
+#: kombilo.py:2675 kombilo.py:2643 kombilo.py:2575 kombilo.py:2538
+#: kombilo.py:2478
 msgid "Remove given tag from all games currently listed."
 msgstr ""
 
-#: kombilo.py:2118 kombilo.py:2065 kombilo.py:2038 kombilo.py:1962
+#: kombilo.py:2135 kombilo.py:2118 kombilo.py:2065 kombilo.py:2038
+#: kombilo.py:1962
 #, python-format
 msgid "Removed %s."
 msgstr ""
 
-#: kombilo.py:2313 kombilo.py:2260 kombilo.py:2233 kombilo.py:2156
+#: kombilo.py:2340 kombilo.py:2313 kombilo.py:2260 kombilo.py:2233
+#: kombilo.py:2156
 msgid "Reprocess DB"
 msgstr ""
 
@@ -1270,13 +1399,15 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: custommenus.py:567 kombiloNG.py:822 kombilo.py:2632 kombilo.py:2818
-#: kombilo.py:2564 kombilo.py:2750 kombilo.py:2527 kombilo.py:2703
-#: custommenus.py:571 kombilo.py:2467 kombilo.py:2644
+#: custommenus.py:567 kombiloNG.py:833 kombilo.py:2664 kombilo.py:2850
+#: kombiloNG.py:822 kombilo.py:2632 kombilo.py:2818 kombilo.py:2564
+#: kombilo.py:2750 kombilo.py:2527 kombilo.py:2703 custommenus.py:571
+#: kombilo.py:2467 kombilo.py:2644
 msgid "Reset game list"
 msgstr ""
 
-#: kombilo.py:2632 kombilo.py:2564 kombilo.py:2527 kombilo.py:2467
+#: kombilo.py:2664 kombilo.py:2632 kombilo.py:2564 kombilo.py:2527
+#: kombilo.py:2467
 msgid "Reset game list and board"
 msgstr ""
 
@@ -1284,11 +1415,13 @@ msgstr ""
 msgid "Reset/start"
 msgstr ""
 
-#: kombilo.py:2641 kombilo.py:2573 kombilo.py:2536 kombilo.py:2476
+#: kombilo.py:2673 kombilo.py:2641 kombilo.py:2573 kombilo.py:2536
+#: kombilo.py:2476
 msgid "Restore entries of next game info search"
 msgstr ""
 
-#: kombilo.py:2641 kombilo.py:2573 kombilo.py:2536 kombilo.py:2476
+#: kombilo.py:2673 kombilo.py:2641 kombilo.py:2573 kombilo.py:2536
+#: kombilo.py:2476
 msgid "Restore entries of previous game info search"
 msgstr ""
 
@@ -1296,71 +1429,83 @@ msgstr ""
 msgid "Result unknown"
 msgstr ""
 
-#: kombilo.py:2615 kombilo.py:2547 kombilo.py:2510 kombilo.py:2441
+#: kombilo.py:2647 kombilo.py:2615 kombilo.py:2547 kombilo.py:2510
+#: kombilo.py:2441
 msgid "Reverse order"
 msgstr ""
 
-#: custommenus.py:228 kombilo.py:564 kombilo.py:1352 kombilo.py:1543
-#: kombilo.py:2703 kombilo.py:3049 v.py:751 v.py:966 v.py:1020 v.py:1197
-#: v.py:1245 v.py:1335 v.py:1480 v.py:1551 v.py:1726 v.py:1826 v.py:1841
-#: v.py:2063 v.py:2168 v.py:2191 v.py:2212 v.py:2394 v.py:2418 kombilo.py:547
-#: kombilo.py:1306 kombilo.py:1497 kombilo.py:2635 kombilo.py:2979 v.py:749
-#: v.py:964 v.py:1018 v.py:1195 v.py:1243 v.py:1333 v.py:1478 v.py:1549
-#: v.py:1724 v.py:1824 v.py:1839 v.py:2061 v.py:2166 v.py:2189 v.py:2210
-#: v.py:2376 v.py:2400 kombilo.py:546 kombilo.py:1299 kombilo.py:1485
-#: kombilo.py:2598 kombilo.py:2930 v.py:740 v.py:951 v.py:1005 v.py:1182
-#: v.py:1230 v.py:1320 v.py:1465 v.py:1536 v.py:1711 v.py:1811 v.py:2048
-#: v.py:2153 v.py:2176 v.py:2197 v.py:2363 v.py:2387 custommenus.py:232
-#: kombilo.py:529 kombilo.py:1201 kombilo.py:1387 kombilo.py:2538
-#: kombilo.py:2870 v.py:728 v.py:939 v.py:993 v.py:1167 v.py:1215 v.py:1305
-#: v.py:1444 v.py:1515 v.py:1694 v.py:1794 v.py:1809 v.py:2031 v.py:2136
-#: v.py:2159 v.py:2183 v.py:2342 v.py:2366
+#: custommenus.py:228 kombilo.py:565 kombilo.py:1359 kombilo.py:1549
+#: kombilo.py:2735 kombilo.py:3096 v.py:767 v.py:982 v.py:1036 v.py:1213
+#: v.py:1261 v.py:1351 v.py:1502 v.py:1573 v.py:1748 v.py:1848 v.py:1863
+#: v.py:2085 v.py:2190 v.py:2213 v.py:2234 v.py:2414 v.py:2438 kombilo.py:564
+#: kombilo.py:1352 kombilo.py:1543 kombilo.py:2703 kombilo.py:3049 v.py:751
+#: v.py:966 v.py:1020 v.py:1197 v.py:1245 v.py:1335 v.py:1480 v.py:1551
+#: v.py:1726 v.py:1826 v.py:1841 v.py:2063 v.py:2168 v.py:2191 v.py:2212
+#: v.py:2394 v.py:2418 kombilo.py:547 kombilo.py:1306 kombilo.py:1497
+#: kombilo.py:2635 kombilo.py:2979 v.py:749 v.py:964 v.py:1018 v.py:1195
+#: v.py:1243 v.py:1333 v.py:1478 v.py:1549 v.py:1724 v.py:1824 v.py:1839
+#: v.py:2061 v.py:2166 v.py:2189 v.py:2210 v.py:2376 v.py:2400 kombilo.py:546
+#: kombilo.py:1299 kombilo.py:1485 kombilo.py:2598 kombilo.py:2930 v.py:740
+#: v.py:951 v.py:1005 v.py:1182 v.py:1230 v.py:1320 v.py:1465 v.py:1536
+#: v.py:1711 v.py:1811 v.py:2048 v.py:2153 v.py:2176 v.py:2197 v.py:2363
+#: v.py:2387 custommenus.py:232 kombilo.py:529 kombilo.py:1201 kombilo.py:1387
+#: kombilo.py:2538 kombilo.py:2870 v.py:728 v.py:939 v.py:993 v.py:1167
+#: v.py:1215 v.py:1305 v.py:1444 v.py:1515 v.py:1694 v.py:1794 v.py:1809
+#: v.py:2031 v.py:2136 v.py:2159 v.py:2183 v.py:2342 v.py:2366
 msgid "SGF Error"
 msgstr "SGF Eraro"
 
-#: v.py:1119 v.py:1117 v.py:1104 v.py:1089
+#: v.py:1135 v.py:1119 v.py:1117 v.py:1104 v.py:1089
 #, python-format
 msgid "SGF Error in game %d"
 msgstr "SGF Eraro en partio %d"
 
-#: v.py:1159 v.py:1157 v.py:1144 v.py:1129
+#: v.py:1175 v.py:1159 v.py:1157 v.py:1144 v.py:1129
 #, python-format
 msgid "SGF Error in game %d in current file."
 msgstr "SGF-eraro en partio %d en ĉi dosiero"
 
-#: kombilo.py:1557 kombilo.py:1511 kombilo.py:1499 kombilo.py:1401
+#: kombilo.py:1563 kombilo.py:1557 kombilo.py:1511 kombilo.py:1499
+#: kombilo.py:1401
 msgid "SGF File not found"
 msgstr "SGF-a dosiero ne trovita"
 
-#: kombilo.py:2597 kombilo.py:2529 kombilo.py:2492 kombilo.py:2423
+#: kombilo.py:2629 kombilo.py:2597 kombilo.py:2529 kombilo.py:2492
+#: kombilo.py:2423
 msgid "SGF _tree"
 msgstr ""
 
-#: kombiloNG.py:1664 kombiloNG.py:1667 kombiloNG.py:1628 kombiloNG.py:1631
-#: kombiloNG.py:1483 kombiloNG.py:1486 kombiloNG.py:1439 kombiloNG.py:1442
+#: kombiloNG.py:1712 kombiloNG.py:1715 kombiloNG.py:1664 kombiloNG.py:1667
+#: kombiloNG.py:1628 kombiloNG.py:1631 kombiloNG.py:1483 kombiloNG.py:1486
+#: kombiloNG.py:1439 kombiloNG.py:1442
 #, fuzzy, python-format
 msgid "SGF error, file %s, not inserted."
 msgstr "SGF-eraro, dosiero %s, ne aldonita.\n"
 
-#: kombiloNG.py:1654 kombiloNG.py:1618 kombiloNG.py:1474 kombiloNG.py:1430
+#: kombiloNG.py:1702 kombiloNG.py:1654 kombiloNG.py:1618 kombiloNG.py:1474
+#: kombiloNG.py:1430
 #, python-brace-format
 msgid "SGF error, file {0}, {1}\n"
 msgstr ""
 
-#: v.py:1101 v.py:1976 v.py:2178 v.py:1099 v.py:1974 v.py:2176 v.py:1086
-#: v.py:1961 v.py:2163 v.py:1071 v.py:1944 v.py:2146
+#: v.py:1117 v.py:1998 v.py:2200 v.py:1101 v.py:1976 v.py:2178 v.py:1099
+#: v.py:1974 v.py:2176 v.py:1086 v.py:1961 v.py:2163 v.py:1071 v.py:1944
+#: v.py:2146
 msgid "SGF files"
 msgstr ""
 
-#: kombilo.py:2775 kombilo.py:2707 kombilo.py:2660 kombilo.py:2603
+#: kombilo.py:2807 kombilo.py:2775 kombilo.py:2707 kombilo.py:2660
+#: kombilo.py:2603
 msgid "SGF tree options"
 msgstr ""
 
-#: kombilo.py:3491 kombilo.py:3420 kombilo.py:3368 kombilo.py:3259
+#: kombilo.py:3538 kombilo.py:3491 kombilo.py:3420 kombilo.py:3368
+#: kombilo.py:3259
 msgid "SQL"
 msgstr ""
 
-#: kombilo.py:2606 kombilo.py:2538 kombilo.py:2501 kombilo.py:2432
+#: kombilo.py:2638 kombilo.py:2606 kombilo.py:2538 kombilo.py:2501
+#: kombilo.py:2432
 msgid "S_mart FixedColor"
 msgstr ""
 
@@ -1368,28 +1513,31 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: v.py:2556 v.py:2538 v.py:2513 v.py:2468
+#: v.py:2576 v.py:2556 v.py:2538 v.py:2513 v.py:2468
 msgid "Save SGF _as"
 msgstr ""
 
-#: v.py:151 v.py:150 v.py:141 v.py:127
+#: v.py:170 v.py:151 v.py:150 v.py:141 v.py:127
 msgid "Save as"
 msgstr ""
 
-#: kombilo.py:2415 kombilo.py:2347 kombilo.py:2310 kombilo.py:2232
+#: kombilo.py:2447 kombilo.py:2415 kombilo.py:2347 kombilo.py:2310
+#: kombilo.py:2232
 msgid "Save messages"
 msgstr ""
 
-#: kombilo.py:1438 kombilo.py:1392 kombilo.py:2860 kombilo.py:1380
-#: kombilo.py:2811 kombilo.py:1282 kombilo.py:2754
+#: kombilo.py:1445 kombilo.py:1438 kombilo.py:1392 kombilo.py:2860
+#: kombilo.py:1380 kombilo.py:2811 kombilo.py:1282 kombilo.py:2754
 msgid "Search"
 msgstr "Serĉo"
 
-#: kombiloNG.py:1238 kombiloNG.py:1203 kombiloNG.py:1146 kombiloNG.py:1120
+#: kombiloNG.py:1270 kombiloNG.py:1238 kombiloNG.py:1203 kombiloNG.py:1146
+#: kombiloNG.py:1120
 msgid "Search Pattern"
 msgstr ""
 
-#: kombilo.py:2642 kombilo.py:2574 kombilo.py:2537 kombilo.py:2477
+#: kombilo.py:2674 kombilo.py:2642 kombilo.py:2574 kombilo.py:2537
+#: kombilo.py:2477
 msgid ""
 "Search for tagged games.\n"
 "E.g.: H and not S"
@@ -1403,24 +1551,31 @@ msgstr ""
 msgid "Search history as tab"
 msgstr ""
 
-#: kombilo.py:3385 kombilo.py:3314 kombilo.py:3267 kombilo.py:3148
+#: kombiloNG.py:845 kombiloNG.py:1356 kombilo.py:3432 kombilo.py:3385
+#: kombilo.py:3314 kombilo.py:3267 kombilo.py:3148
 msgid "Search in variations"
 msgstr ""
 
-#: kombiloNG.py:823
+#: kombiloNG.py:1349
+msgid "Search options"
+msgstr ""
+
+#: kombiloNG.py:834 kombiloNG.py:823
 msgid "Search region"
 msgstr ""
 
-#: kombiloNG.py:1243 kombiloNG.py:1208 kombiloNG.py:1151 kombiloNG.py:1125
+#: kombiloNG.py:1275 kombiloNG.py:1243 kombiloNG.py:1208 kombiloNG.py:1151
+#: kombiloNG.py:1125
 msgid "Search results"
 msgstr ""
 
-#: kombilo.py:1369 kombilo.py:1323 kombilo.py:1316 kombilo.py:1218
+#: kombilo.py:1376 kombilo.py:1369 kombilo.py:1323 kombilo.py:1316
+#: kombilo.py:1218
 msgid "Searching for duplicates"
 msgstr ""
 
-#: kombilo.py:2537 v.py:2326 kombilo.py:2469 v.py:2308 kombilo.py:2432
-#: v.py:2295 kombilo.py:2363 v.py:2274
+#: kombilo.py:2569 v.py:2346 kombilo.py:2537 v.py:2326 kombilo.py:2469
+#: v.py:2308 kombilo.py:2432 v.py:2295 kombilo.py:2363 v.py:2274
 msgid "See the documentation for more information. "
 msgstr ""
 
@@ -1428,11 +1583,19 @@ msgstr ""
 msgid "Seen"
 msgstr ""
 
+#: default.cfg
+msgid ""
+"Select if you have no right mouse button (or do not want to use it). You can "
+"then select the search region with clicking the (left) mouse button and "
+"dragging. (Restart required.)"
+msgstr ""
+
 #: kombilo.py:2862 kombilo.py:2813 kombilo.py:2756
 msgid "Set tags"
 msgstr ""
 
-#: kombilo.py:2642 kombilo.py:2574 kombilo.py:2537 kombilo.py:2477
+#: kombilo.py:2674 kombilo.py:2642 kombilo.py:2574 kombilo.py:2537
+#: kombilo.py:2477
 msgid "Set tags of selected game."
 msgstr ""
 
@@ -1444,35 +1607,40 @@ msgstr ""
 msgid "Shaded stone pointer"
 msgstr ""
 
-#: v.py:2586 v.py:2568 v.py:2543 v.py:2500
+#: v.py:2606 v.py:2586 v.py:2568 v.py:2543 v.py:2500
 msgid "Show _last move"
 msgstr ""
 
-#: v.py:2585 v.py:2567 v.py:2542 v.py:2499
+#: v.py:2605 v.py:2585 v.py:2567 v.py:2542 v.py:2499
 msgid "Show _next move"
 msgstr ""
 
-#: kombilo.py:1892 kombilo.py:1846 kombilo.py:1832 kombilo.py:1727
+#: kombilo.py:1908 kombilo.py:1892 kombilo.py:1846 kombilo.py:1832
+#: kombilo.py:1727
 msgid "Show all continuations"
 msgstr ""
 
-#: kombilo.py:2633 kombilo.py:2565 kombilo.py:2528 kombilo.py:2468
+#: kombilo.py:2665 kombilo.py:2633 kombilo.py:2565 kombilo.py:2528
+#: kombilo.py:2468
 msgid "Show continuations"
 msgstr ""
 
-#: v.py:2587 v.py:2569 v.py:2544 v.py:2501
+#: v.py:2607 v.py:2587 v.py:2569 v.py:2544 v.py:2501
 msgid "Show coordinates"
 msgstr ""
 
-#: kombilo.py:2620 kombilo.py:2552 kombilo.py:2515 kombilo.py:2446
+#: kombilo.py:2652 kombilo.py:2620 kombilo.py:2552 kombilo.py:2515
+#: kombilo.py:2446
 msgid "Show date"
 msgstr "Montru daton"
 
-#: kombilo.py:2635 kombilo.py:2567 kombilo.py:2530 kombilo.py:2470
+#: kombilo.py:2667 kombilo.py:2635 kombilo.py:2567 kombilo.py:2530
+#: kombilo.py:2470
 msgid "Show date information for continuations"
 msgstr ""
 
-#: kombilo.py:2619 kombilo.py:2551 kombilo.py:2514 kombilo.py:2445
+#: kombilo.py:2651 kombilo.py:2619 kombilo.py:2551 kombilo.py:2514
+#: kombilo.py:2445
 msgid "Show filename"
 msgstr ""
 
@@ -1480,15 +1648,18 @@ msgstr ""
 msgid "Show position of mouse pointer by a shaded stone when over the board?"
 msgstr ""
 
-#: kombilo.py:1401 kombilo.py:1355 kombilo.py:1348 kombilo.py:1250
+#: kombilo.py:1408 kombilo.py:1401 kombilo.py:1355 kombilo.py:1348
+#: kombilo.py:1250
 msgid "Signature Search"
 msgstr ""
 
-#: kombilo.py:2602 kombilo.py:2534 kombilo.py:2497 kombilo.py:2428
+#: kombilo.py:2634 kombilo.py:2602 kombilo.py:2534 kombilo.py:2497
+#: kombilo.py:2428
 msgid "Signature search"
 msgstr ""
 
-#: kombilo.py:1498 kombilo.py:1452 kombilo.py:1440 kombilo.py:1342
+#: kombilo.py:1505 kombilo.py:1498 kombilo.py:1452 kombilo.py:1440
+#: kombilo.py:1342
 #, python-format
 msgid "Signature search, %1.1f seconds, searching for"
 msgstr ""
@@ -1497,28 +1668,33 @@ msgstr ""
 msgid "Small font for search statistics, etc."
 msgstr ""
 
-#: kombilo.py:2613 kombilo.py:2545 kombilo.py:2508 kombilo.py:2439
+#: kombilo.py:2645 kombilo.py:2613 kombilo.py:2545 kombilo.py:2508
+#: kombilo.py:2439
 msgid "Sort by black player"
 msgstr ""
 
-#: kombilo.py:2613 kombilo.py:2545 kombilo.py:2508 kombilo.py:2439
+#: kombilo.py:2645 kombilo.py:2613 kombilo.py:2545 kombilo.py:2508
+#: kombilo.py:2439
 msgid "Sort by date"
 msgstr ""
 
-#: kombilo.py:2613 kombilo.py:2545 kombilo.py:2508 kombilo.py:2439
+#: kombilo.py:2645 kombilo.py:2613 kombilo.py:2545 kombilo.py:2508
+#: kombilo.py:2439
 msgid "Sort by filename"
 msgstr ""
 
-#: kombilo.py:2613 kombilo.py:2545 kombilo.py:2508 kombilo.py:2439
+#: kombilo.py:2645 kombilo.py:2613 kombilo.py:2545 kombilo.py:2508
+#: kombilo.py:2439
 msgid "Sort by white player"
 msgstr ""
 
-#: kombilo.py:2800 kombilo.py:3436 kombilo.py:2732 kombilo.py:3365
-#: kombilo.py:2685 kombilo.py:3313 kombilo.py:2628 kombilo.py:3194
+#: kombilo.py:2832 kombilo.py:3483 kombilo.py:2800 kombilo.py:3436
+#: kombilo.py:2732 kombilo.py:3365 kombilo.py:2685 kombilo.py:3313
+#: kombilo.py:2628 kombilo.py:3194
 msgid "Sort continuations by"
 msgstr ""
 
-#: v.py:2738 v.py:2720 v.py:2695 v.py:2657
+#: v.py:2758 v.py:2738 v.py:2720 v.py:2695 v.py:2657
 msgid "Split collection into single files"
 msgstr ""
 
@@ -1530,24 +1706,28 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: kombiloNG.py:804 kombiloNG.py:802 kombiloNG.py:771 kombiloNG.py:745
+#: kombiloNG.py:815 kombiloNG.py:804 kombiloNG.py:802 kombiloNG.py:771
+#: kombiloNG.py:745
 msgid "Start building SGF tree.\n"
 msgstr ""
 
-#: kombilo.py:2640 kombilo.py:2572 kombilo.py:2535 kombilo.py:2475
+#: kombilo.py:2672 kombilo.py:2640 kombilo.py:2572 kombilo.py:2535
+#: kombilo.py:2475
 msgid "Start game info search"
 msgstr ""
 
-#: v.py:2721 v.py:2703 v.py:2678 v.py:2640
+#: v.py:2741 v.py:2721 v.py:2703 v.py:2678 v.py:2640
 msgid "Start of game/Clear board"
 msgstr ""
 
-#: kombilo.py:2639 kombilo.py:2571 kombilo.py:2534 kombilo.py:2474
+#: kombilo.py:2671 kombilo.py:2639 kombilo.py:2571 kombilo.py:2534
+#: kombilo.py:2474
 msgid "Start pattern search"
 msgstr ""
 
-#: kombiloNG.py:1263 kombilo.py:3253 kombiloNG.py:1228 kombilo.py:3182
-#: kombiloNG.py:1171 kombilo.py:3133 kombiloNG.py:1145 kombilo.py:3022
+#: kombiloNG.py:1295 kombilo.py:3300 kombiloNG.py:1263 kombilo.py:3253
+#: kombiloNG.py:1228 kombilo.py:3182 kombiloNG.py:1171 kombilo.py:3133
+#: kombiloNG.py:1145 kombilo.py:3022
 msgid "Statistics"
 msgstr ""
 
@@ -1555,11 +1735,21 @@ msgstr ""
 msgid "Statistics by Date"
 msgstr ""
 
-#: kombilo.py:2385 kombilo.py:2322 kombilo.py:2285 kombilo.py:2207
+#: kombilo.py:2343
+msgid "Stop"
+msgstr ""
+
+#: kombilo.py:2885
+msgid "Stop building sgf tree"
+msgstr ""
+
+#: kombilo.py:2417 kombilo.py:2385 kombilo.py:2322 kombilo.py:2285
+#: kombilo.py:2207
 msgid "Store databases separately from SGF files"
 msgstr ""
 
-#: kombilo.py:2357 kombilo.py:2301 kombilo.py:2271 kombilo.py:2193
+#: kombilo.py:2389 kombilo.py:2357 kombilo.py:2301 kombilo.py:2271
+#: kombilo.py:2193
 msgid "Strict duplicate check"
 msgstr ""
 
@@ -1575,79 +1765,92 @@ msgstr ""
 msgid "Tag all"
 msgstr ""
 
-#: kombilo.py:2643 kombilo.py:2575 kombilo.py:2538 kombilo.py:2478
+#: kombilo.py:2675 kombilo.py:2643 kombilo.py:2575 kombilo.py:2538
+#: kombilo.py:2478
 msgid "Tag all games currently listed with given tag."
 msgstr ""
 
-#: kombilo.py:2371 kombilo.py:2314 kombilo.py:2277 kombilo.py:2199
+#: kombilo.py:2403 kombilo.py:2371 kombilo.py:2314 kombilo.py:2277
+#: kombilo.py:2199
 msgid "Tag as professional:"
 msgstr ""
 
-#: kombilo.py:3054 kombilo.py:2984 kombilo.py:2935 kombilo.py:2875
+#: kombilo.py:3101 kombilo.py:3054 kombilo.py:2984 kombilo.py:2935
+#: kombilo.py:2875
 #, python-format
 msgid "Tag search %s"
 msgstr ""
 
-#: kombilo.py:3262 kombilo.py:3191 kombilo.py:3143 kombilo.py:3032
+#: kombilo.py:3309 kombilo.py:3262 kombilo.py:3191 kombilo.py:3143
+#: kombilo.py:3032
 msgid "Tags"
 msgstr ""
 
-#: v.py:1165 v.py:1163 v.py:1150 v.py:1135
+#: v.py:1181 v.py:1165 v.py:1163 v.py:1150 v.py:1135
 msgid "The board size of this game is not 19x19."
 msgstr ""
 
-#: v.py:2782 v.py:2764 v.py:2739 kombilo.py:2979 v.py:2701
+#: v.py:2802 v.py:2782 v.py:2764 v.py:2739 kombilo.py:2979 v.py:2701
 msgid "The language files could not be found."
 msgstr ""
 
-#: kombilo.py:2885 kombilo.py:2815 kombilo.py:2767 kombilo.py:2710
+#: kombilo.py:2929 kombilo.py:2885 kombilo.py:2815 kombilo.py:2767
+#: kombilo.py:2710
 msgid "The node where the SGF tree starts must have no children."
 msgstr ""
 
-#: kombilo.py:2457 v.py:2025 v.py:2220 kombilo.py:2389 v.py:2023 v.py:2218
-#: kombilo.py:2352 v.py:2010 v.py:2205 kombilo.py:2274 v.py:1993 v.py:2191
+#: kombilo.py:2489 v.py:2047 v.py:2242 kombilo.py:2457 v.py:2025 v.py:2220
+#: kombilo.py:2389 v.py:2023 v.py:2218 kombilo.py:2352 v.py:2010 v.py:2205
+#: kombilo.py:2274 v.py:1993 v.py:2191
 msgid "There are unsaved changes. Discard them?"
 msgstr ""
 
-#: kombilo.py:2538 v.py:2327 kombilo.py:2470 v.py:2309 kombilo.py:2433
-#: v.py:2296 kombilo.py:2364 v.py:2275
+#: kombilo.py:2570 v.py:2347 kombilo.py:2538 v.py:2327 kombilo.py:2470
+#: v.py:2309 kombilo.py:2433 v.py:2296 kombilo.py:2364 v.py:2275
 msgid "This program is distributed WITHOUT ANY WARRANTY!"
 msgstr ""
 
-#: kombilo.py:2965 kombilo.py:2895 kombilo.py:2846 kombilo.py:2786
+#: kombilo.py:3012 kombilo.py:2965 kombilo.py:2895 kombilo.py:2846
+#: kombilo.py:2786
 msgid "This tag abbreviation exists already."
 msgstr ""
 
-#: kombilo.py:3423 kombilo.py:3485 kombilo.py:3352 kombilo.py:3414
-#: kombilo.py:3303 kombilo.py:3362 kombilo.py:3184 kombilo.py:3253
+#: kombilo.py:3470 kombilo.py:3532 kombilo.py:3423 kombilo.py:3485
+#: kombilo.py:3352 kombilo.py:3414 kombilo.py:3303 kombilo.py:3362
+#: kombilo.py:3184 kombilo.py:3253
 msgid "To"
 msgstr ""
 
-#: kombilo.py:2312 kombilo.py:2259 kombilo.py:2232 kombilo.py:2155
+#: kombilo.py:2339 kombilo.py:2312 kombilo.py:2259 kombilo.py:2232
+#: kombilo.py:2155
 msgid "Toggle normal/disabled"
 msgstr ""
 
-#: kombiloNG.py:942 kombiloNG.py:907 kombiloNG.py:876 kombiloNG.py:850
+#: kombiloNG.py:964 kombiloNG.py:942 kombiloNG.py:907 kombiloNG.py:876
+#: kombiloNG.py:850
 #, python-format
 msgid "Total: %d pattern searches\n"
 msgstr ""
 
-#: v.py:2813 v.py:2793 v.py:2768 v.py:2766
+#: v.py:2833 v.py:2813 v.py:2793 v.py:2768 v.py:2766
 #, python-format
 msgid "Unable to create directory %s."
 msgstr ""
 
-#: kombiloNG.py:1446 kombiloNG.py:1411 kombiloNG.py:1440 kombiloNG.py:1396
+#: kombiloNG.py:1488 kombiloNG.py:1446 kombiloNG.py:1411 kombiloNG.py:1440
+#: kombiloNG.py:1396
 #, python-format
 msgid "Unable to delete database file %s."
 msgstr ""
 
-#: kombiloNG.py:1628 kombiloNG.py:1592 kombiloNG.py:1456 kombiloNG.py:1412
+#: kombiloNG.py:1676 kombiloNG.py:1628 kombiloNG.py:1592 kombiloNG.py:1456
+#: kombiloNG.py:1412
 #, python-format
 msgid "Unable to read file %s"
 msgstr ""
 
-#: kombiloNG.py:1658 kombiloNG.py:1622 kombiloNG.py:1477 kombiloNG.py:1433
+#: kombiloNG.py:1706 kombiloNG.py:1658 kombiloNG.py:1622 kombiloNG.py:1477
+#: kombiloNG.py:1433
 #, python-brace-format
 msgid "Unacceptable board size error, file {0}, {1}\n"
 msgstr ""
@@ -1668,13 +1871,15 @@ msgstr ""
 msgid "Use external SGF viewer"
 msgstr ""
 
-#: kombilo.py:2411 kombilo.py:3407 kombilo.py:2344 kombilo.py:3336
-#: kombilo.py:2307 kombilo.py:3287 kombilo.py:2229 kombilo.py:3168
+#: kombilo.py:2443 kombilo.py:3454 kombilo.py:2411 kombilo.py:3407
+#: kombilo.py:2344 kombilo.py:3336 kombilo.py:2307 kombilo.py:3287
+#: kombilo.py:2229 kombilo.py:3168
 msgid "Use hashing for corner positions"
 msgstr ""
 
-#: kombilo.py:2408 kombilo.py:3402 kombilo.py:2341 kombilo.py:3331
-#: kombilo.py:2304 kombilo.py:3282 kombilo.py:2226 kombilo.py:3163
+#: kombilo.py:2440 kombilo.py:3449 kombilo.py:2408 kombilo.py:3402
+#: kombilo.py:2341 kombilo.py:3331 kombilo.py:2304 kombilo.py:3282
+#: kombilo.py:2226 kombilo.py:3163
 msgid "Use hashing for full board positions"
 msgstr ""
 
@@ -1705,26 +1910,31 @@ msgstr ""
 msgid "Various options"
 msgstr ""
 
-#: kombiloNG.py:917 kombiloNG.py:1277 kombiloNG.py:1282 kombiloNG.py:1283
-#: kombiloNG.py:1242 kombiloNG.py:1247 kombiloNG.py:1248 kombilo.py:3305
-#: kombiloNG.py:1185 kombiloNG.py:1190 kombiloNG.py:1191 kombilo.py:3258
-#: kombiloNG.py:1159 kombiloNG.py:1164 kombiloNG.py:1165 kombilo.py:3139
+#: kombiloNG.py:843 kombiloNG.py:936 kombiloNG.py:1309 kombiloNG.py:1314
+#: kombiloNG.py:1315 kombiloNG.py:1354 kombiloNG.py:917 kombiloNG.py:1277
+#: kombiloNG.py:1282 kombiloNG.py:1283 kombiloNG.py:1242 kombiloNG.py:1247
+#: kombiloNG.py:1248 kombilo.py:3305 kombiloNG.py:1185 kombiloNG.py:1190
+#: kombiloNG.py:1191 kombilo.py:3258 kombiloNG.py:1159 kombiloNG.py:1164
+#: kombiloNG.py:1165 kombilo.py:3139
 msgid "W"
 msgstr ""
 
-#: kombilo.py:2052 v.py:2782 v.py:2764 v.py:2739 kombilo.py:2979 v.py:2701
+#: kombilo.py:2066 v.py:2802 kombilo.py:2052 v.py:2782 v.py:2764 v.py:2739
+#: kombilo.py:2979 v.py:2701
 msgid "Warning"
 msgstr ""
 
-#: kombilo.py:3475 kombilo.py:3404 kombilo.py:3352 kombilo.py:3243
+#: kombilo.py:3522 kombilo.py:3475 kombilo.py:3404 kombilo.py:3352
+#: kombilo.py:3243
 msgid "White"
 msgstr ""
 
-#: kombilo.py:1851 kombilo.py:1805 kombilo.py:1792
+#: kombilo.py:1867 kombilo.py:1851 kombilo.py:1805 kombilo.py:1792
 msgid "White = 1\n"
 msgstr ""
 
-#: kombilo.py:2638 kombilo.py:2570 kombilo.py:2533 kombilo.py:2473
+#: kombilo.py:2670 kombilo.py:2638 kombilo.py:2570 kombilo.py:2533
+#: kombilo.py:2473
 msgid "White plays next"
 msgstr ""
 
@@ -1732,34 +1942,38 @@ msgstr ""
 msgid "White tenuki"
 msgstr ""
 
-#: kombilo.py:1770 kombilo.py:1889 kombilo.py:1724 kombilo.py:1843
-#: kombilo.py:1711 kombilo.py:1829 kombilo.py:1606
+#: kombilo.py:1786 kombilo.py:1905 kombilo.py:1770 kombilo.py:1889
+#: kombilo.py:1724 kombilo.py:1843 kombilo.py:1711 kombilo.py:1829
+#: kombilo.py:1606
 msgid "Wiki"
 msgstr ""
 
-#: kombiloNG.py:827
+#: kombiloNG.py:838 kombiloNG.py:841 kombiloNG.py:842 kombiloNG.py:845
+#: kombiloNG.py:1352 kombiloNG.py:1353 kombiloNG.py:1356 kombiloNG.py:827
 msgid "Yes"
 msgstr ""
 
-#: kombilo.py:2053
+#: kombilo.py:2067 kombilo.py:2053
 msgid ""
 "You are about to add a folder with many subfolders. It is probably better to "
 "deselect the \"Create one DB per folder\" option. Proceed nevertheless?"
 msgstr ""
 
-#: kombilo.py:2503 kombilo.py:2435 kombilo.py:2398 kombilo.py:2327
+#: kombilo.py:2535 kombilo.py:2503 kombilo.py:2435 kombilo.py:2398
+#: kombilo.py:2327
 msgid "You can find more information on Kombilo and the newest version at"
 msgstr ""
 
-#: kombilo.py:2996 kombilo.py:2926 kombilo.py:2877 kombilo.py:2817
+#: kombilo.py:3043 kombilo.py:2996 kombilo.py:2926 kombilo.py:2877
+#: kombilo.py:2817
 msgid "You cannot delete built-in tags."
 msgstr ""
 
-#: v.py:2785 v.py:2767 v.py:2742 v.py:2704
+#: v.py:2805 v.py:2785 v.py:2767 v.py:2742 v.py:2704
 msgid "You have to restart the program to make the change become effective."
 msgstr ""
 
-#: v.py:2607 v.py:2589 v.py:2564 v.py:2519
+#: v.py:2627 v.py:2607 v.py:2589 v.py:2564 v.py:2519
 msgid "_About ..."
 msgstr ""
 
@@ -1771,31 +1985,34 @@ msgstr ""
 msgid "_Alternative SGF viewer"
 msgstr ""
 
-#: kombilo.py:2600 kombilo.py:2532 kombilo.py:2495 kombilo.py:2426
+#: kombilo.py:2632 kombilo.py:2600 kombilo.py:2532 kombilo.py:2495
+#: kombilo.py:2426
 msgid "_Copy current SGF files to folder"
 msgstr ""
 
-#: kombilo.py:2593 kombilo.py:2525 kombilo.py:2488 kombilo.py:2419
+#: kombilo.py:2625 kombilo.py:2593 kombilo.py:2525 kombilo.py:2488
+#: kombilo.py:2419
 msgid "_Database"
 msgstr ""
 
-#: v.py:2571 v.py:2553 v.py:2528 v.py:2483
+#: v.py:2591 v.py:2571 v.py:2553 v.py:2528 v.py:2483
 msgid "_Delete stone"
 msgstr ""
 
-#: v.py:2564 v.py:2546 v.py:2521 v.py:2476
+#: v.py:2584 v.py:2564 v.py:2546 v.py:2521 v.py:2476
 msgid "_Edit"
 msgstr ""
 
-#: kombilo.py:2594 kombilo.py:2526 kombilo.py:2489 kombilo.py:2420
+#: kombilo.py:2626 kombilo.py:2594 kombilo.py:2526 kombilo.py:2489
+#: kombilo.py:2420
 msgid "_Edit DB list"
 msgstr ""
 
-#: v.py:2601 v.py:2583 v.py:2558
+#: v.py:2621 v.py:2601 v.py:2583 v.py:2558
 msgid "_Edit advanced options"
 msgstr ""
 
-#: v.py:2552 v.py:2534 v.py:2509 v.py:2464
+#: v.py:2572 v.py:2552 v.py:2534 v.py:2509 v.py:2464
 msgid "_File"
 msgstr ""
 
@@ -1803,115 +2020,124 @@ msgstr ""
 msgid "_Fuzzy stone placement"
 msgstr ""
 
-#: kombilo.py:2611 kombilo.py:2543 kombilo.py:2506 kombilo.py:2437
+#: kombilo.py:2643 kombilo.py:2611 kombilo.py:2543 kombilo.py:2506
+#: kombilo.py:2437
 msgid "_Game list"
 msgstr ""
 
-#: v.py:2579 v.py:2561 v.py:2536 v.py:2491
+#: v.py:2599 v.py:2579 v.py:2561 v.py:2536 v.py:2491
 msgid "_Guess mode"
 msgstr ""
 
-#: v.py:2605 v.py:2587 v.py:2562 v.py:2517
+#: v.py:2625 v.py:2605 v.py:2587 v.py:2562 v.py:2517
 msgid "_Help"
 msgstr ""
 
-#: kombilo.py:2605 kombilo.py:2537 kombilo.py:2500 kombilo.py:2431
+#: kombilo.py:2637 kombilo.py:2605 kombilo.py:2537 kombilo.py:2500
+#: kombilo.py:2431
 msgid "_Jump to match"
 msgstr ""
 
-#: v.py:2599 v.py:2581 v.py:2556 v.py:2513
+#: v.py:2619 v.py:2599 v.py:2581 v.py:2556 v.py:2513
 msgid "_Language"
 msgstr ""
 
-#: v.py:2572 v.py:2554 v.py:2529 v.py:2484
+#: v.py:2592 v.py:2572 v.py:2554 v.py:2529 v.py:2484
 msgid "_Lower case letter"
 msgstr ""
 
-#: v.py:2553 v.py:2535 v.py:2510 v.py:2465
+#: v.py:2573 v.py:2553 v.py:2535 v.py:2510 v.py:2465
 msgid "_New SGF"
 msgstr ""
 
-#: v.py:2572 v.py:2554 v.py:2529 v.py:2484
+#: v.py:2592 v.py:2572 v.py:2554 v.py:2529 v.py:2484
 msgid "_Number label"
 msgstr ""
 
-#: v.py:2554 v.py:2536 v.py:2511 v.py:2466
+#: v.py:2574 v.py:2554 v.py:2536 v.py:2511 v.py:2466
 msgid "_Open SGF"
 msgstr ""
 
-#: v.py:2583 v.py:2565 v.py:2540 v.py:2495
+#: v.py:2603 v.py:2583 v.py:2565 v.py:2540 v.py:2495
 msgid "_Options"
 msgstr ""
 
-#: v.py:2578 v.py:2560 v.py:2535 v.py:2490
+#: v.py:2598 v.py:2578 v.py:2560 v.py:2535 v.py:2490
 msgid "_Practice"
 msgstr ""
 
-#: v.py:2567 v.py:2549 v.py:2524 v.py:2479
+#: v.py:2587 v.py:2567 v.py:2549 v.py:2524 v.py:2479
 msgid "_Rotate"
 msgstr ""
 
-#: v.py:2555 v.py:2537 v.py:2512 v.py:2467
+#: v.py:2575 v.py:2555 v.py:2537 v.py:2512 v.py:2467
 msgid "_Save SGF"
 msgstr ""
 
-#: v.py:2571 v.py:2553 v.py:2528 v.py:2483
+#: v.py:2591 v.py:2571 v.py:2553 v.py:2528 v.py:2483
 msgid "_Square label"
 msgstr ""
 
-#: v.py:2593 v.py:2575 v.py:2550 v.py:2507
+#: v.py:2613 v.py:2593 v.py:2575 v.py:2550 v.py:2507
 msgid "_Theme"
 msgstr ""
 
-#: v.py:2571 v.py:2553 v.py:2528 v.py:2483
+#: v.py:2591 v.py:2571 v.py:2553 v.py:2528 v.py:2483
 msgid "_Triangle label"
 msgstr ""
 
-#: v.py:2571 v.py:2553 v.py:2528 v.py:2483
+#: v.py:2591 v.py:2571 v.py:2553 v.py:2528 v.py:2483
 msgid "_Upper case letter"
 msgstr ""
 
-#: kombilo.py:2805 kombilo.py:3438 kombilo.py:2737 kombilo.py:3367
-#: kombilo.py:2690 kombilo.py:3315 kombilo.py:964 kombilo.py:2573
-#: kombilo.py:2631 kombilo.py:2681 kombilo.py:3196
+#: kombilo.py:2837 kombilo.py:3485 kombilo.py:2805 kombilo.py:3438
+#: kombilo.py:2737 kombilo.py:3367 kombilo.py:2690 kombilo.py:3315
+#: kombilo.py:964 kombilo.py:2573 kombilo.py:2631 kombilo.py:2681
+#: kombilo.py:3196
 msgid "average"
 msgstr ""
 
-#: kombilo.py:2805 kombilo.py:3438 kombilo.py:2737 kombilo.py:3367
-#: kombilo.py:2690 kombilo.py:3315 kombilo.py:965 kombilo.py:2574
-#: kombilo.py:2631 kombilo.py:2682 kombilo.py:3196
+#: kombilo.py:2837 kombilo.py:3485 kombilo.py:2805 kombilo.py:3438
+#: kombilo.py:2737 kombilo.py:3367 kombilo.py:2690 kombilo.py:3315
+#: kombilo.py:965 kombilo.py:2574 kombilo.py:2631 kombilo.py:2682
+#: kombilo.py:3196
 msgid "became popular"
 msgstr ""
 
-#: kombilo.py:2805 kombilo.py:3438 kombilo.py:2737 kombilo.py:3367
-#: kombilo.py:2690 kombilo.py:3315 kombilo.py:965 kombilo.py:2574
-#: kombilo.py:2631 kombilo.py:2682 kombilo.py:3196
+#: kombilo.py:2837 kombilo.py:3485 kombilo.py:2805 kombilo.py:3438
+#: kombilo.py:2737 kombilo.py:3367 kombilo.py:2690 kombilo.py:3315
+#: kombilo.py:965 kombilo.py:2574 kombilo.py:2631 kombilo.py:2682
+#: kombilo.py:3196
 msgid "became unpopular"
 msgstr ""
 
-#: kombilo.py:2805 kombilo.py:3438 kombilo.py:2737 kombilo.py:3367
-#: kombilo.py:2690 kombilo.py:3315 kombilo.py:964 kombilo.py:2573
-#: kombilo.py:2631 kombilo.py:2681 kombilo.py:3196
+#: kombilo.py:2837 kombilo.py:3485 kombilo.py:2805 kombilo.py:3438
+#: kombilo.py:2737 kombilo.py:3367 kombilo.py:2690 kombilo.py:3315
+#: kombilo.py:964 kombilo.py:2573 kombilo.py:2631 kombilo.py:2681
+#: kombilo.py:3196
 msgid "earliest"
 msgstr ""
 
+#: kombilo.py:2110 kombilo.py:2207 kombilo.py:2216 kombilo.py:2334
 #: kombilo.py:2093 kombilo.py:2185 kombilo.py:2194 kombilo.py:2310
 #: kombilo.py:2040 kombilo.py:2132 kombilo.py:2141 kombilo.py:2257
 #: kombilo.py:2013 kombilo.py:2105 kombilo.py:2114 kombilo.py:2230
 msgid "games"
 msgstr ""
 
-#: v.py:2604 v.py:2586 v.py:2561 v.py:2516
+#: v.py:2624 v.py:2604 v.py:2586 v.py:2561 v.py:2516
 msgid "help"
 msgstr ""
 
-#: kombilo.py:2805 kombilo.py:3438 kombilo.py:2737 kombilo.py:3367
-#: kombilo.py:2690 kombilo.py:3315 kombilo.py:964 kombilo.py:2573
-#: kombilo.py:2631 kombilo.py:2681 kombilo.py:3196
+#: kombilo.py:2837 kombilo.py:3485 kombilo.py:2805 kombilo.py:3438
+#: kombilo.py:2737 kombilo.py:3367 kombilo.py:2690 kombilo.py:3315
+#: kombilo.py:964 kombilo.py:2573 kombilo.py:2631 kombilo.py:2681
+#: kombilo.py:3196
 msgid "latest"
 msgstr ""
 
-#: kombiloNG.py:1661 kombiloNG.py:1625 kombiloNG.py:1480 kombiloNG.py:1436
+#: kombiloNG.py:1709 kombiloNG.py:1661 kombiloNG.py:1625 kombiloNG.py:1480
+#: kombiloNG.py:1436
 msgid "not inserted\n"
 msgstr ""
 
@@ -1919,33 +2145,36 @@ msgstr ""
 msgid "split"
 msgstr ""
 
-#: kombilo.py:2805 kombilo.py:3438 kombilo.py:2737 kombilo.py:3367
-#: kombilo.py:2690 kombilo.py:3315 kombilo.py:964 kombilo.py:2573
-#: kombilo.py:2631 kombilo.py:2681 kombilo.py:3196
+#: kombilo.py:2837 kombilo.py:3485 kombilo.py:2805 kombilo.py:3438
+#: kombilo.py:2737 kombilo.py:3367 kombilo.py:2690 kombilo.py:3315
+#: kombilo.py:964 kombilo.py:2573 kombilo.py:2631 kombilo.py:2681
+#: kombilo.py:3196
 msgid "total"
 msgstr ""
 
-#: v.py:2293 v.py:2275 v.py:2262 v.py:2239
+#: v.py:2313 v.py:2293 v.py:2275 v.py:2262 v.py:2239
 msgid "v.py - written by Ulrich Goertz (ug@geometry.de)"
 msgstr ""
 
-#: v.py:2294 v.py:2276 v.py:2263 v.py:2240
+#: v.py:2314 v.py:2294 v.py:2276 v.py:2263 v.py:2240
 msgid "v.py is a program to display go game records in SGF format."
 msgstr ""
 
-#: v.py:2297 v.py:2279 v.py:2266 v.py:2243
+#: v.py:2317 v.py:2297 v.py:2279 v.py:2266 v.py:2243
 msgid "v.py is free software; for more information see the documentation."
 msgstr ""
 
-#: v.py:2324 v.py:2306 v.py:2293 v.py:2272
+#: v.py:2344 v.py:2324 v.py:2306 v.py:2293 v.py:2272
 msgid "v.py was written by"
 msgstr ""
 
-#: kombiloNG.py:866 kombiloNG.py:833 kombiloNG.py:802 kombiloNG.py:776
+#: kombiloNG.py:885 kombiloNG.py:866 kombiloNG.py:833 kombiloNG.py:802
+#: kombiloNG.py:776
 #, python-brace-format
 msgid "{0} games (B: {1:1.1f}%, W: {2:1.1f}%)"
 msgstr ""
 
+#: kombiloNG.py:1300 kombilo.py:1012 kombilo.py:1030 kombilo.py:1136
 #: kombiloNG.py:1268 kombilo.py:1005 kombilo.py:1023 kombilo.py:1129
 #: kombiloNG.py:1233 kombilo.py:988 kombilo.py:998 kombilo.py:1103
 #: kombiloNG.py:1176 kombilo.py:987 kombilo.py:997 kombilo.py:1102
@@ -1959,7 +2188,8 @@ msgstr ""
 msgid "{0} matches ({1}/{2}), B: {3:1.1f}%, W: {4:1.1}%"
 msgstr ""
 
-#: kombiloNG.py:1311 kombiloNG.py:1276 kombiloNG.py:1219 kombiloNG.py:1178
+#: kombiloNG.py:1343 kombiloNG.py:1311 kombiloNG.py:1276 kombiloNG.py:1219
+#: kombiloNG.py:1178
 #, python-brace-format
 msgid "{0}: {1} games (of {2})"
 msgstr ""
