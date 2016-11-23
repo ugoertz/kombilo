@@ -1697,6 +1697,11 @@ void Algo_hash_full::get_HHF(int ptr, vpsip results, int orientation) {
 
 int Algo_hash_full::search(PatternList& patternList, GameList& gl, SearchOptions& options) {
   // printf("enter algo_hash_full::search\n");
+
+  // hashing for patterns with contlist does not currently work since
+  // Pattern.finalpos is not actually implemented
+  if (patternList.pattern.contList.size()) return -1;
+
   int numOfHits = 0;
   int self_numOfSwitched = 0;
   int Bwins = 0;
@@ -2024,6 +2029,10 @@ void Algo_hash::get_HHCS(int ptr, vector<HashhitCS* >* results, bool cs) {
 
 int Algo_hash::search(PatternList& patternList, GameList& gl, SearchOptions& options) {
   // return value: -1 = failure; 0 = ok, but have to check w/ Algo_movelist
+
+  // hashing for patterns with contlist does not currently work since
+  // Pattern.finalpos is not actually implemented
+  if (patternList.pattern.contList.size()) return -1;
 
   // printf("enter Algo_hash::search\n");
   vector<int> fl, fl2; // stores to which "flip" (with and without CS, resp.) the hashCode belongs
