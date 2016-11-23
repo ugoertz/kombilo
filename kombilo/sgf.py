@@ -3,7 +3,7 @@
 ##   This file is part of Kombilo, a go database program
 ##   It contains classes that help handlng sgf files.
 
-##   Copyright (C) 2001-12 Ulrich Goertz (ug@geometry.de)
+##   Copyright (C) 2001- Ulrich Goertz (ug@geometry.de)
 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy of
 ## this software and associated documentation files (the "Software"), to deal in
@@ -27,7 +27,11 @@
 The sgf module provides functionality for handling SGF files.
 '''
 
-import libkombilo as lk
+from __future__ import absolute_import, division, unicode_literals
+
+from .utilities import bb, uu
+
+import kombilo.libkombilo as lk
 
 # ------- MISC TOOLS ------------------------------------------------------------
 
@@ -87,7 +91,7 @@ class Cursor(lk.Cursor):
 
     def __init__(self, sgf, sloppy=False, encoding='utf8'):
         try:
-            lk.Cursor.__init__(self, sgf, 1)  # TODO: later, use encoding when parsing the sgf file, and immediately recode to utf-8.
+            lk.Cursor.__init__(self, bb(sgf), 1)  # TODO: later, use encoding when parsing the sgf file, and immediately recode to utf-8.
         except:
             raise lk.SGFError()
         # self.encoding = encoding
@@ -102,7 +106,7 @@ class Cursor(lk.Cursor):
         lk.Cursor.game(self, n)
 
     def add(self, st, update=None):
-        lk.Cursor.add(self, st)
+        lk.Cursor.add(self, bb(st))
 
     def next(self, n=0, markCurrent=None):
         '''Go to n-th child of current node. Default for n is 0, so if there
@@ -135,7 +139,7 @@ class Cursor(lk.Cursor):
         for i in range(n):
             nn = nn.down
 
-        nn.SGFstring = self.rootNodeToString(data)
+        nn.SGFstring = bb(self.rootNodeToString(data))
         nn.parsed = 0
         nn.parseNode()
 
@@ -147,7 +151,7 @@ class Cursor(lk.Cursor):
         for key in keylist:  # first append the above fields, if present, in the given order
             if key in node:
                 result.append(key)
-                result.append('[' + lk.SGFescape(node[key][0].encode('utf-8')) + ']\n')
+                result.append('[' + uu(lk.SGFescape(bb(node[key][0]))) + ']\n')
 
         l = 0
         for key in node.keys():  # now check for remaining fields
@@ -155,7 +159,7 @@ class Cursor(lk.Cursor):
                 result.append(key)
                 l += len(key)
                 for item in node[key]:
-                    result.append('[' + lk.SGFescape(item.encode('utf-8')) + ']\n')
+                    result.append('[' + uu(lk.SGFescape(bb(item))) + ']\n')
                     l += len(item) + 2
                     if l > 72:
                         result.append('\n')
@@ -192,11 +196,11 @@ class Cursor(lk.Cursor):
         n = self.root.next
         while g < self.root.numChildren:
             if g in gameNumber:
-                t += '(' + self.outputVar(n) + ')'
+                t += b'(' + self.outputVar(n) + b')'
             g += 1
             n = n.down
 
-        # t = t.replace('\r', '')
+        # t = t.replace(b'\r', b'')
         return t
 
 
@@ -224,7 +228,9 @@ class Node(object):
         '''Retrieve 'unknown' attributes from self.n.'''
 
         try:
-            return self.n.__getattribute__(attr)
+            return self.n.__getattribute__(uu(attr))
+            # FIXME ... SWIG requires a "string" here in Py3 version
+            # should be OK since attr will always be ASCII(?)
         except:
             raise AttributeError
 
@@ -238,37 +244,39 @@ class Node(object):
         return self.n.get_move_number()
 
     def __contains__(self, item):
-        return True if self.n.gpv(item) else False
+        return True if self.n.gpv(bb(item)) else False
 
     def has_key(self, key):
-        return self.__contains__(key)
+        return self.__contains__(bb(key))
 
     def __getitem__(self, ID):
-        # print 'get', ID
+        # print('get', ID), [uu(x) for x in self.n.gpv(bb(ID))]
         try:
-            return [x.decode('utf-8') for x in self.n.gpv(ID)]
+            return [uu(x) for x in self.n.gpv(bb(ID))]
         except:
             raise KeyError
 
     def __setitem__(self, ID, value):
         # print 'set', ID, value
-        self.n.set_property_value(ID, [(x.encode('utf-8') if type(x) == type(u'') else x)  for x in value])
+        self.n.set_property_value(
+                bb(ID), [bb(x) for x in value])
 
     def __delitem__(self, item):
         # print 'del', item
-        self.n.del_property_value(item)
+        self.n.del_property_value(bb(item))
 
     def remove(self, ID, item):
         '''Remove ``item`` from the list ``self.n[ID]``.
         '''
-        ll = list(self.n[ID])
-        ll.remove(item.encode('utf-8') if type(item) == type(u'') else item)
-        self.n[ID] = ll
+        ll = list(self.n[bb(ID)])
+        ll.remove(uu(item))
+        self.n[bb(ID)] = ll
 
     def add_property_value(self, ID, item):
         '''Add ``item`` to the list ``self[ID]``.
         '''
-        self.n.add_property_value(ID, [(x.encode('utf-8') if type(x) == type(u'') else x) for x in item])
+        self.n.add_property_value(
+                bb(ID), [bb(x) for x in item])
 
     def pathToNode(self):
         '''

@@ -21,15 +21,29 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
-import __builtin__
+try:
+    import builtins
+except ImportError:
+    import __builtin__ as builtins
+if '_' not in builtins.__dict__:
+    builtins.__dict__['_'] = lambda s: s
+
 from configobj import ConfigObj
-from Tkinter import (
-        Toplevel, Frame,
-        IntVar, BooleanVar, StringVar,
-        Button, Checkbutton, Label, Entry, Text, )
-from ttk import Combobox
+try:
+    from tkinter import (
+            Toplevel, Frame,
+            IntVar, BooleanVar, StringVar,
+            Button, Checkbutton, Label, Entry, Text, )
+    from tkinter.ttk import Combobox
+except ImportError:
+    from Tkinter import (
+            Toplevel, Frame,
+            IntVar, BooleanVar, StringVar,
+            Button, Checkbutton, Label, Entry, Text, )
+    from ttk import Combobox
+
 from Pmw import ScrolledFrame
 
 class OptionEditor(object):

@@ -1,8 +1,9 @@
 %module libkombilo
-%include "std_string.i"
-%include "std_vector.i"
-%include "std_map.i"
-%include "std_pair.i"
+
+%include <std_string.i>
+%include <std_vector.i>
+%include <std_map.i>
+%include <std_pair.i>
 
 namespace std {
   %template(vectorc) vector<unsigned char>;
@@ -14,7 +15,9 @@ namespace std {
 };
 
 
-%{
+%begin %{
+#define SWIG_PYTHON_STRICT_BYTE_CHAR
+#define SWIG_PYTHON_STRICT_UNICODE_WCHAR
 #include "sgfparser.h"
 #include "abstractboard.h"
 #include "pattern.h"

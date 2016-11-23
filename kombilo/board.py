@@ -24,17 +24,24 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from __future__ import absolute_import, division, unicode_literals
 
-from Tkinter import *
-import tkFont
+try:
+    from tkinter import *
+    import tkinter.font as tkFont
+except ImportError:
+    from Tkinter import *
+    import tkFont
+
 from PIL import Image as PILImage
 from PIL import ImageTk as PILImageTk
 from random import randint, choice
 from copy import deepcopy
 import math
 import sys
-import libkombilo as lk
-from abstractboard import abstractBoard
+from . import libkombilo as lk
+from .abstractboard import abstractBoard
+from .utilities import bb, uu
 
 
 class Board(abstractBoard, Canvas):
@@ -274,26 +281,26 @@ class Board(abstractBoard, Canvas):
 
     def AB(self, poslist):
         for pos in poslist:
-            self.setStatus(pos[0], pos[1], 'B')
+            self.setStatus(pos[0], pos[1], b'B')
             self.placeStone(pos, 'black')
             self.undostack_push(lk.Move(pos[0], pos[1], lk.AB))
 
     def AW(self, poslist):
         for pos in poslist:
-            self.setStatus(pos[0], pos[1], 'W')
+            self.setStatus(pos[0], pos[1], b'W')
             self.placeStone(pos, 'white')
             self.undostack_push(lk.Move(pos[0], pos[1], lk.AW))
 
     def AE(self, poslist):
         for pos in poslist:
             x, y = pos
-            if self.getStatus(x, y) == 'B':
+            if self.getStatus(x, y) == b'B':
                 self.undostack_push(lk.Move(x, y, lk.AEB))
-            elif self.getStatus(x, y) == 'W':
+            elif self.getStatus(x, y) == b'W':
                 self.undostack_push(lk.Move(x, y, lk.AEW))
             else:
                 continue
-            self.setStatus(x, y, ' ')
+            self.setStatus(x, y, b' ')
             self.delete(self.stones[pos])
             del self.stones[pos]
 
@@ -345,10 +352,10 @@ class Board(abstractBoard, Canvas):
             return
 
         if abstractBoard.play(self, (x, y), self.currentColor):  # would this be a legal move?
-            # print 'pl'
+            # print('pl')
             abstractBoard.undo(self)
             self.callOnMove((x, y))
-        # else: print 'no pl', x, y
+        # else: print('no pl', x, y)
 
     def onChange(self):
         if self.noChanges:
@@ -415,7 +422,7 @@ class Board(abstractBoard, Canvas):
         If not removeFromUndostack, append this as capture to undostack.
         Otherwise, find the placement of this stone in undostack, and remove it from there. (This is relevant when a stone is removed which was placed as AB/AW in same sgf node.)
         """
-        if self.getStatus(pos[0], pos[1]) != ' ':
+        if self.getStatus(pos[0], pos[1]) != b' ':
             self.onChange()
             self.delete(self.stones[pos])
             del self.stones[pos]
@@ -462,10 +469,10 @@ class Board(abstractBoard, Canvas):
         if override:
             fcolor = override[0]
             fcolor2 = override[1]
-        elif self.getStatus(pos[0], pos[1]) and self.getStatus(pos[0], pos[1]) in ['b', 'B']:
+        elif self.getStatus(pos[0], pos[1]) and self.getStatus(pos[0], pos[1]) in [b'b', b'B']:
             fcolor = 'white'
             fcolor2 = ''
-        elif self.getStatus(pos[0], pos[1]) and self.getStatus(pos[0], pos[1]) in ['w', 'W']:
+        elif self.getStatus(pos[0], pos[1]) and self.getStatus(pos[0], pos[1]) in [b'w', b'W']:
             fcolor = 'black'
             fcolor2 = ''
         else:
@@ -479,13 +486,13 @@ class Board(abstractBoard, Canvas):
             labelIDs.append(self.create_text((x1 + y1) // 2, (x2 + y2) // 2, text=text, fill=fcolor,
                                              font=self.labelFontBold, tags=tags))
         elif typ == 'SQ':
-            w = self.canvasSize[1] / 3
+            w = self.canvasSize[1] // 3
             labelIDs.append(self.create_rectangle(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=tags))
         elif typ == 'CR':
-            w = self.canvasSize[1] / 3
+            w = self.canvasSize[1] // 3
             labelIDs.append(self.create_oval(x1 + w, x2 + w, y1 - w, y2 - w, width=2, fill='', outline=fcolor, tags=tags))
         elif typ == 'TR':
-            w = self.canvasSize[1] / 3
+            w = self.canvasSize[1] // 3
             labelIDs.append(self.create_polygon((x1 + y1) // 2, x2 + w, x1 + w, y2 - w, y1 - w, y2 - w,
                                                 width=2, fill='', outline=fcolor,
                                                 tags=tags))
@@ -506,10 +513,10 @@ class Board(abstractBoard, Canvas):
 
     def placeStone(self, pos, co):
         # assert pos[0] >= 0 and pos[1] >= 0
-        if co in ['black', 'white']:
-            color = co
-        elif co in ['B', 'W']:
-            color = 'black' if co == 'B' else 'white'
+        if uu(co).lower().startswith('b'):
+            color = 'black'
+        elif uu(co).lower().startswith('w'):
+            color = 'white'
         else:
             return
         self.onChange()
@@ -542,22 +549,22 @@ class Board(abstractBoard, Canvas):
                 captures = self.undostack_top_captures()
                 # print pos, color, captures
                 self.undostack_pop()
-                if color in ['B', 'W'] and self.getStatus(pos[0], pos[1]) != ' ':
-                    self.setStatus(pos[0], pos[1], ' ')
+                if color in [b'B', b'W'] and self.getStatus(pos[0], pos[1]) != b' ':
+                    self.setStatus(pos[0], pos[1], b' ')
                     self.delete(self.stones[pos])
                     del self.stones[pos]
                     for p in captures:
-                        self.placeStone(p, 'black' if color == 'W' else 'white')
-                        self.setStatus(p[0], p[1], 'B' if color == 'W' else 'W')
+                        self.placeStone(p, 'black' if color == b'W' else 'white')
+                        self.setStatus(p[0], p[1], b'B' if color == b'W' else b'W')
                 elif color in [lk.AB, lk.AW]:
-                    self.setStatus(pos[0], pos[1], ' ')
+                    self.setStatus(pos[0], pos[1], b' ')
                     self.delete(self.stones[pos])
                     del self.stones[pos]
                 elif color == lk.AEB:
-                    self.setStatus(pos[0], pos[1], 'B')
+                    self.setStatus(pos[0], pos[1], b'B')
                     self.placeStone(pos, 'black')
                 elif color == lk.AEW:
-                    self.setStatus(pos[0], pos[1], 'W')
+                    self.setStatus(pos[0], pos[1], b'W')
                     self.placeStone(pos, 'white')
 
                 # self.update_idletasks()
@@ -648,7 +655,7 @@ class Board(abstractBoard, Canvas):
         """ switch fuzzy/non-fuzzy stone placement according to self.fuzzy """
         for i in range(self.boardsize):
             for j in range(self.boardsize):
-                if not self.getStatus(i, j) in ['B', 'W']:
+                if not self.getStatus(i, j) in [b'B', b'W']:
                     continue
                 p = (i, j)
                 self.delete(self.stones[p])

@@ -33,7 +33,10 @@ from __future__ import absolute_import
 
 import sys
 
-from Tkinter import *
+try:
+    from tkinter import *
+except ImportError:
+    from Tkinter import *
 
 from ..v import Viewer
 
@@ -42,9 +45,12 @@ KOMBILO_VERSION = 0.8
 # ---------------------------------------------------------------------------------------
 
 def test_v_startup():
-    import __builtin__
-    if not '_' in __builtin__.__dict__:
-        __builtin__.__dict__['_'] = lambda s: s
+    try:
+        import builtins
+    except ImportError:
+        import __builtin__ as builtins
+    if not '_' in builtins.__dict__:
+        builtins.__dict__['_'] = lambda s: s
 
     root = Tk()
     root.withdraw()

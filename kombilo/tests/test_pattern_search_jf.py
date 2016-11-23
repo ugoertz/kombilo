@@ -75,6 +75,7 @@ def test_pattern_1(K):
     K.patternSearch(p, so)
 
     assert K.gamelist.noOfGames() == 1
+    assert K.noMatches == 1
     assert K.gamelist.get_data(0).endswith(
             '1600JSTP06: Wang Hannian - Sheng Dayou (W), 141A, ')
     assert len(K.continuations) == 1

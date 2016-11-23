@@ -21,9 +21,13 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
-import __builtin__
+try:
+    import builtins
+except ImportError:
+    import __builtin__ as builtins
+
 import os
 import sys
 import gettext
@@ -32,19 +36,27 @@ import pkg_resources
 import webbrowser
 from configobj import ConfigObj
 
-from Tkinter import *
-from ttk import *
-from tkMessageBox import *
-from ScrolledText import ScrolledText
-import tkFileDialog
-import tkFont
+try:
+    from tkinter import *
+    from tkinter.ttk import *
+    from tkinter.messagebox import *
+    from tkinter.scrolledtext import ScrolledText
+    import tkinter.filedialog as tkFileDialog
+    import tkinter.font as tkFont
+except ImportError:
+    from Tkinter import *
+    from ttk import *
+    from tkMessageBox import *
+    from ScrolledText import ScrolledText
+    import tkFileDialog
+    import tkFont
 
+from .utilities import bb, uu
 from .tooltip.tooltip import ToolTip
 from PIL import Image as PILImage
 from PIL import ImageTk as PILImageTk
 import Pmw
 
-from string import split, replace, join, strip
 from math import sqrt
 from random import randint
 
@@ -182,7 +194,7 @@ class TextEditor:
         if not f:
             return
         try:
-            file = open(f, 'w')
+            file = open(f, 'wt')
             file.write(self.text.get('1.0', END).encode('utf-8', 'ignore'))
             file.close()
         except IOError:
@@ -347,7 +359,7 @@ class SGFtreeCanvas(Frame):
 
 
         self.canvas = Canvas(self, background='lightyellow')
-        apply(self.canvas.config, (), defaults)
+        self.canvas.config(**defaults)
         self.canvas.config(scrollregion=(0, 0, 1000, 30))
 
         self.sbar_vert = Scrollbar(self)
@@ -639,7 +651,7 @@ class DataWindow:
             self.guessModeCanvas.create_rectangle(10, 10, 10+bsz, 10+bsz, fill='#ffd39b', outline='black')
             for i in range(3):
                 for j in range(3):
-                    self.guessModeCanvas.create_oval(10 + (bsz / 6.0) + (bsz / 3.0) * i - 1, 10 + (bsz / 6.0) + (bsz / 3.0) * j - 1, 10 + (bsz / 6.0) + (bsz / 3.0) * i + 1, 10 + (bsz / 6.0) + (bsz / 3.0) * j + 1, fill="black")
+                    self.guessModeCanvas.create_oval(10 + (bsz / 6) + (bsz / 3) * i - 1, 10 + (bsz / 6) + (bsz / 3) * j - 1, 10 + (bsz / 6) + (bsz / 3) * i + 1, 10 + (bsz / 6) + (bsz / 3) * j + 1, fill="black")
 
             if self.mster.options.showNextMoveVar.get():
                 self.SNM = 1
@@ -773,10 +785,10 @@ class DataWindow:
     def get_geometry(self):
         self.win.update_idletasks()
         l = [str(self.win.sash_coord(i)[1]) for i in range(4)]
-        return join(l, '|%')
+        return '|%'.join(l)
 
     def set_geometry(self, s):
-        l = split(s, '|%')
+        l = s.split('|%')
         if len(l) != 4:
             return
         self.win.update_idletasks()
@@ -833,7 +845,7 @@ class DataWindow:
 
         self.gameinfo.configure(text_state='normal')
         self.gameinfo.delete('1.0', END)
-        self.gameinfo.insert('1.0', join(t, ''))
+        self.gameinfo.insert('1.0', ''.join(t))
         self.gameinfo.configure(text_state=DISABLED)
 
 # -----------------------------------------------------------------------------------
@@ -1028,10 +1040,10 @@ class EnhancedCursor(Cursor):
 
                     for prop in ['LB', 'VW']:
                         if prop in d:
-                            d[prop] = [flip(split(x, ':')[0]) + ':' + split(x, ':')[1] for x in d[prop]]
+                            d[prop] = [flip(x.split(':')[0]) + ':' + x.split(':')[1] for x in d[prop]]
                     for prop in ['LN', 'AR']:
                         if prop in d:
-                            d[prop] = [flip(split(x, ':')[0]) + ':' + flip(split(x, ':')[1]) for x in d[prop]]
+                            d[prop] = [flip(x.split(':')[0]) + ':' + flip(x.split(':')[1]) for x in d[prop]]
                 except:
                     showwarning(_('Error'), _('SGF Error') + '(symmetry(self, flip))')
 
@@ -1065,29 +1077,29 @@ class EnhancedCursor(Cursor):
 
         cv0, cv1 = self.SGFtreeCanv.canvSize
 
-        # print 'x: %1.3f, [%1.3f, %1.3f], y: %1.3f, [%1.3f, %1.3f]' % (x*1.0/cv0, hor[0], hor[1], \
-        #                                                               y*1.0/cv1, vert[0], vert[1])
+        # print 'x: %1.3f, [%1.3f, %1.3f], y: %1.3f, [%1.3f, %1.3f]' % (x/cv0, hor[0], hor[1], \
+        #                                                               y/cv1, vert[0], vert[1])
 
         x1 = (hor[1] - hor[0]) * cv0
         y1 = (vert[1] - vert[0]) * cv1
 
         if x - 40 < hor[0] * cv0:
-            self.SGFtreeCanv.xview('moveto', (x - 50) * 1.0 / cv0)
+            self.SGFtreeCanv.xview('moveto', (x - 50) / cv0)
         elif x + 40 > hor[1] * cv0:
-            self.SGFtreeCanv.xview('moveto', (x + 50 - x1) * 1.0 / cv0)
+            self.SGFtreeCanv.xview('moveto', (x + 50 - x1) / cv0)
 
         if y1 < self.SGFtreeCanv.UNIT * 2:
-            self.SGFtreeCanv.yview('moveto', y * 1.0 / cv1)
+            self.SGFtreeCanv.yview('moveto', y / cv1)
         else:
             if y - 40 < vert[0] * cv1:
-                self.SGFtreeCanv.yview('moveto', (y - 50) * 1.0 / cv1)
+                self.SGFtreeCanv.yview('moveto', (y - 50) / cv1)
             elif y + 40 > vert[1] * cv1:
-                self.SGFtreeCanv.yview('moveto', (y + 50 - y1) * 1.0 / cv1)
+                self.SGFtreeCanv.yview('moveto', (y + 50 - y1) / cv1)
 
         self.SGFtreeCanv.canvas.tag_raise('curr')
 
-        # print 'x: %1.3f, [%1.3f, %1.3f], y: %1.3f, [%1.3f, %1.3f]' % (x*1.0/self.cv0, hor[0], hor[1], \
-        #                                                               y*1.0/self.cv1, vert[0], vert[1])
+        # print 'x: %1.3f, [%1.3f, %1.3f], y: %1.3f, [%1.3f, %1.3f]' % (x/self.cv0, hor[0], hor[1], \
+        #                                                               y/self.cv1, vert[0], vert[1])
 
 # ---------------------------------------------------------------------------------------
 
@@ -1128,7 +1140,7 @@ class Viewer:
 
         while n:
             try:
-                f = open('%s%d.sgf' % (filename, i), 'w')
+                f = open('%s%d.sgf' % (filename, i), 'wb')
                 try:
                     f.write('(' + self.cursor.outputVar(n) + ')')
                 except lk.SGFError:
@@ -1177,7 +1189,7 @@ class Viewer:
 
         try:
             si = self.cursor.getRootNode(gameNo)['SZ'][0]
-            if strip(si) != '19':
+            if si.strip() != '19':
                 showwarning(_('Error'), _('The board size of this game is not 19x19.'))
                 return
         except:
@@ -1356,7 +1368,7 @@ class Viewer:
 
         found = 0
 
-        if not self.board.getStatus(x, y) == '.':
+        if not self.board.getStatus(x, y) == b'.':
             i = 0
             n = self.cursor.currentN
 
@@ -1687,7 +1699,7 @@ class Viewer:
 
         if 'LB' in c and c['LB'][0]:
             for p1 in c['LB']:
-                p, text = split(p1, ':')
+                p, text = p1.split(':')
                 self.board.placeLabel(self.convCoord(p), 'LB', text)
 
     def next10(self):
@@ -1760,7 +1772,7 @@ class Viewer:
 
         try:
             if t == 'DEL ST':
-                if self.board.getStatus(x, y) == ' ':
+                if self.board.getStatus(x, y) == b' ':
                     return
                 if 'AB' in self.cursor.currentNode() or 'AW' in self.cursor.currentNode() or 'AE' in self.cursor.currentNode():
                     removed = False
@@ -1805,7 +1817,7 @@ class Viewer:
 
             if 'LB' in cn:
                 for item in cn['LB']:
-                    if split(item, ':')[0] == pos:
+                    if item.split(':')[0] == pos:
                         pr = list(cn['LB'])
                         pr.remove(item)
                         if pr:
@@ -1818,7 +1830,7 @@ class Viewer:
             def place_first_unused(cn, labels):
                 if 'LB' in cn:
                     for item in cn['LB']:
-                        p, t = split(item, ':')
+                        p, t = item.split(':')
                         try:
                             labels.remove(t)
                         except ValueError:
@@ -1945,10 +1957,10 @@ class Viewer:
 
             s = '[%d]' % i
             t = self.dataWindow.gamelist.list.get(i)
-            l = split(t, ']')
+            l = t.split(']')
             l[0] = s
             self.dataWindow.gamelist.delete(i)
-            self.dataWindow.gamelist.insert(i, join(l, ''))
+            self.dataWindow.gamelist.insert(i, ''.join(l))
 
         self.dataWindow.gamelist.list.select_set(index)
         self.dataWindow.gamelist.list.see(index)
@@ -2002,7 +2014,7 @@ class Viewer:
                 return
         if filename:
             try:
-                f = open(os.path.join(path, filename))
+                f = open(os.path.join(path, filename), 'rb')
                 s = f.read()
                 f.close()
             except IOError:
@@ -2076,7 +2088,7 @@ class Viewer:
         if not self.cursor:
             return
 
-        s = strip(self.comments.get('1.0', END))
+        s = self.comments.get('1.0', END).strip()
         changed = False
 
         try:
@@ -2086,7 +2098,7 @@ class Viewer:
             return
 
         if 'C' in d:
-            if strip(d['C'][0]) != s:
+            if d['C'][0].strip() != s:
                 d['C'] = [s]
                 changed = True
         else:
@@ -2181,7 +2193,7 @@ class Viewer:
 
         try:
             sgf_out = self.cursor.output()
-            file = open(filename, 'w')
+            file = open(filename, 'wb')
             file.write(sgf_out)
             file.close()
         except IOError:
@@ -2204,7 +2216,7 @@ class Viewer:
             return
         try:
             sgf_out = self.cursor.output()
-            file = open(f, 'w')
+            file = open(f, 'wb')
             file.write(sgf_out)
             file.close()
         except IOError:
@@ -2275,7 +2287,7 @@ class Viewer:
 
         config_path = os.path.join(get_configfile_directory(), 'kombilo.cfg')
         if os.path.exists(config_path):
-            configfile = open(config_path)
+            configfile = open(config_path, 'rb')
             kombilocfg = ConfigObj(
                     infile=configfile,
                     encoding='utf8', default_encoding='utf8')
@@ -2379,7 +2391,7 @@ class Viewer:
                     pass
             self.gameinfoDict[key] = [value]
 
-        value = strip(self.gameinfoGCText.get('1.0', END))
+        value = self.gameinfoGCText.get('1.0', END).strip()
         if type(value) == type(u''):
             try:
                 value = value.encode('utf-8', 'ignore')
@@ -2389,7 +2401,7 @@ class Viewer:
         # print self.gameinfoDict
 
         for key in keylist + ['GC']:
-            if not strip(self.gameinfoDict[key][0]):
+            if not self.gameinfoDict[key][0].strip():
                 del self.gameinfoDict[key]
 
         s = self.gameinfoOthersText.get('1.0', END)
@@ -2451,7 +2463,7 @@ class Viewer:
         keylist = ['GC', 'PB', 'BR', 'PW', 'WR', 'EV', 'RE', 'DT', 'KM']
 
         if 'GC' in self.gameinfoDict and self.options.removeCarriageReturn.get():
-            self.gameinfoDict['GC'][0] = replace(self.gameinfoDict['GC'][0], '\r', '')
+            self.gameinfoDict['GC'][0] = self.gameinfoDict['GC'][0].replace('\r', '')
 
         self.gameinfoVars = {}
         for key in keylist:
@@ -2470,7 +2482,7 @@ class Viewer:
         oth = ''
         for key in self.gameinfoDict.keys():
             if key not in keylist:
-                oth += key + '[' + join([lk.SGFescape(s.encode('utf-8')) for s in self.gameinfoDict[key]], '][') + ']\n'
+                oth += key + '[' + ']['.join(lk.SGFescape(s.encode('utf-8')) for s in self.gameinfoDict[key]) + ']\n'
         self.gameinfoVars['others'].set(oth)
 
         f = Frame(window)
@@ -2833,7 +2845,7 @@ class Viewer:
                         _('Unable to create directory %s.') % get_configfile_directory())
                 sys.exit()
 
-        sys.stderr = open(os.path.join(get_configfile_directory(), 'kombilo.err'), 'a')
+        sys.stderr = open(os.path.join(get_configfile_directory(), 'kombilo.err'), 'at')
 
         self.guessMode = IntVar()
 
@@ -2989,9 +3001,9 @@ class Viewer:
 
 def run():
 
-    import __builtin__
-    if not '_' in __builtin__.__dict__:
-        __builtin__.__dict__['_'] = lambda s: s
+    import builtins
+    if not '_' in builtins.__dict__:
+        builtins.__dict__['_'] = lambda s: s
 
     root = Tk()
     root.withdraw()

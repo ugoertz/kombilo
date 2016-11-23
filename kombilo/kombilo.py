@@ -23,26 +23,36 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
 import time
 import datetime
 import os
 import sys
 from copy import copy, deepcopy
-from string import split, find, join, strip, replace
 import re
 from array import *
 from configobj import ConfigObj
 import pkg_resources
 
-from Tkinter import *
-from ttk import *
-from tkMessageBox import *
-from ScrolledText import ScrolledText
-import tkFileDialog
-import tkFont
-from tkCommonDialog import Dialog
+try:
+    from tkinter import *
+    from tkinter.ttk import *
+    from tkinter.messagebox import *
+    from tkinter.scrolledtext import ScrolledText
+    import tkinter.filedialog as tkFileDialog
+    import tkinter.font as tkFont
+    from tkinter.commondialog import Dialog
+except ImportError:
+    # Python 2
+    from Tkinter import *
+    from ttk import *
+    from tkMessageBox import *
+    from ScrolledText import ScrolledText
+    import tkFileDialog
+    import tkFont
+    from tkCommonDialog import Dialog
+
 from .tooltip.tooltip import ToolTip
 from PIL import Image as PILImage
 from PIL import ImageTk as PILImageTk
@@ -53,13 +63,19 @@ from .vsl.vl import VScrolledList
 from .sgf import Node, Cursor
 from . import libkombilo as lk
 from .board import *
+from .utilities import bb, uu
 import kombilo.v as v
 
-import __builtin__
+try:
+    import builtins
+except ImportError:
+    import __builtin__ as builtins
+
+
 # make sure _ is defined as built-in, so that kombiloNG and custommenus do not
 # define a dummy _ of their own
-if '_' not in __builtin__.__dict__:
-    __builtin__.__dict__['_'] = lambda s: s
+if '_' not in builtins.__dict__:
+    builtins.__dict__['_'] = lambda s: s
 
 from .kombiloNG import *
 from .custommenus import CustomMenus
@@ -136,26 +152,28 @@ class BoardWC(Board):
         x1, x2, y1, y2 = self.getPixelCoord((x, y), 1)
         margin = max(0, self.canvasSize[1] - 7) // 4 + 1
 
-        self.wildcards[(x, y)] = (self.create_oval(x1 + margin, x2 + margin, y1 - margin, y2 - margin,
-                                                   fill={'*': 'green', 'x': 'black', 'o': 'white'}[wc_type],
-                                                   tags=('wildcard', 'non-bg')),
-                                  wc_type)
+        self.wildcards[(x, y)] = (
+                self.create_oval(
+                    x1 + margin, x2 + margin, y1 - margin, y2 - margin,
+                    fill={b'*': 'green', b'x': 'black', b'o': 'white'}[bb(wc_type)],
+                    tags=('wildcard', 'non-bg')),
+                bb(wc_type))
         self.tkraise('label')
 
     def wildcard(self, event):
         """ Place/delete a wildcard at position of click. """
 
         x, y = self.getBoardCoord((event.x, event.y), 1)
-        if not (0 <= x < self.boardsize and 0 <= y and self.getStatus(x, y) == ' '):
+        if not (0 <= x < self.boardsize and 0 <= y and self.getStatus(x, y) == b' '):
             return
 
         if (x, y) in self.wildcards:
             wc, wc_type = self.wildcards.pop((x, y))
             self.delete(wc)
 
-            if wc_type == '*':
+            if wc_type == b'*':
                 self.place_wildcard(x, y, 'x')
-            elif wc_type == 'x':
+            elif wc_type == b'x':
                 self.place_wildcard(x, y, 'o')
         else:
             self.place_wildcard(x, y, '*')
@@ -174,7 +192,7 @@ class BoardWC(Board):
         """ Place a label; take care of wildcards at same position. """
 
         if pos in self.wildcards:
-            override = {'*': ('black', ''), 'o': ('black', ''), 'x': ('white', '')}[self.wildcards[pos][1]]
+            override = {b'*': ('black', ''), b'o': ('black', ''), b'x': ('white', '')}[self.wildcards[pos][1]]
         else:
             override = None
 
@@ -305,7 +323,7 @@ class BoardWC(Board):
             self.boardsize = d['boardsize']
             for i in range(self.boardsize):
                 for j in range(self.boardsize):
-                    if d['status'][i][j] in ['B', 'W']:
+                    if d['status'][i][j] in [b'B', b'W']:
                         self.setStatus(i, j, d['status'][i][j])
                         self.placeStone((i, j), d['status'][i][j])
             if not small:
@@ -359,7 +377,7 @@ class ESR_TextEditor(v.TextEditor):
         Button(self.buttonFrame, text=_('Include game list'), command=self.includeGameList).pack(side=LEFT)
 
     def includeGameList(self):
-        separator = ' %%%\n' if self.style == 'wiki' else '\n'  # wiki/plain style
+        separator = b' %%%\n' if self.style == 'wiki' else b'\n'  # wiki/plain style
         self.text.insert(END, '\n\n!' + _('Game list') + '\n\n' + separator.join(self.mster.gamelist.get_all()).decode('utf8'))
 
 
@@ -373,10 +391,10 @@ class DataWindow(v.DataWindow):
             l = [str(self.win.sash_coord(i)[1]) for i in range(5)]
         except:  # allow for DataWindow column having only five panes, if prevSearches are a tab in right hand column
             l = [str(self.win.sash_coord(i)[1]) for i in range(4)]
-        return join(l, '|%')
+        return '|%'.join(l)
 
     def set_geometry(self, s):
-        l = split(s, '|%')
+        l = s.split('|%')
         for i in [4, 3, 2, 1, 0]:
             try:
                 self.win.sash_place(i, 1, int(l[i]))
@@ -488,8 +506,8 @@ class GameListGUI(GameList, VScrolledList):
         noOfG = self.noOfGames()
 
         if noOfG:
-            Bperc = self.BwinsG * 100.0 / noOfG
-            Wperc = self.WwinsG * 100.0 / noOfG
+            Bperc = self.BwinsG * 100 / noOfG
+            Wperc = self.WwinsG * 100 / noOfG
         self.total_in_list = noOfG
         self.noGamesLabel.config(
                 text=_('%d games') % noOfG,
@@ -542,18 +560,18 @@ class GameListGUI(GameList, VScrolledList):
             return
 
         gm = self.DBlist[DBindex]['data'].getCurrent(index)
-        f1 = strip(os.path.join(gm[GL_PATH], gm[GL_FILENAME]))
+        f1 = os.path.join(gm[GL_PATH], gm[GL_FILENAME]).strip()
 
-        if find(f1, '[') != -1:
-            f1, f2 = split(f1, '[')
-            gameNumber = int(strip(f2)[:-1])
+        if f1.find('[') != -1:
+            f1, f2 = f1.split('[')
+            gameNumber = int(f2.strip()[:-1])
         else:
             gameNumber = 0
 
         filename = getFilename(f1)
 
         try:
-            file = open(filename)
+            file = open(filename, 'rb')
             sgf = file.read()
             file.close()
             c = Cursor(sgf, 1)
@@ -572,7 +590,7 @@ class GameListGUI(GameList, VScrolledList):
             c.updateRootNode(newRootNode, gameNumber)
             try:
                 s = c.output()
-                file = open(filename, 'w')
+                file = open(filename, 'wb')
                 file.write(s)
                 file.close()
             except IOError:
@@ -845,10 +863,10 @@ class PrevSearchesStack(object):
         self.active = True
         self.current = node
         l, r = self.prevSF.xview()
-        if b.winfo_x() * 1.0/ self.prevSF.interior().winfo_width() < l:
+        if b.winfo_x() / self.prevSF.interior().winfo_width() < l:
             # b is to the left of the currently visible region (probably come here by "back to previous search" button),
             # so move the ScrolledFrame appropriately
-            self.prevSF.xview('moveto', (b.winfo_x() * 1.0/ self.prevSF.interior().winfo_width()))
+            self.prevSF.xview('moveto', (b.winfo_x() / self.prevSF.interior().winfo_width()))
 
     def click(self, node):
         self.select(node)
@@ -931,13 +949,13 @@ class App(v.Viewer, KEngine):
         """
 
         d = self.dateProfileRelative()
-        m = max((y * 1.0 / z if z else 0) for x, y, z in d)
+        m = max((y / z if z else 0) for x, y, z in d)
         if m == 0:
             self.display_bar_chart(self.dateProfileCanv, 'stat', title='-')
             return
 
         data = [{
-            'black': y * 1.0 / (z * m) if z else 0,
+            'black': y / (z * m) if z else 0,
             'label': ['%d' % x[0], '-', '%d' % (x[1] - 1, )],
             'label_top': ['%d/' % y, '%d' % z]} for x, y, z in d]
 
@@ -1003,8 +1021,8 @@ class App(v.Viewer, KEngine):
         if not noMatches:
             return
 
-        Bperc = self.Bwins * 100.0 / noMatches
-        Wperc = self.Wwins * 100.0 / noMatches
+        Bperc = self.Bwins * 100 / noMatches
+        Wperc = self.Wwins * 100 / noMatches
 
         if not self.continuations:
             self.display_bar_chart(
@@ -1116,13 +1134,13 @@ class App(v.Viewer, KEngine):
             data = []
             for cont in self.continuations[:12]:
                 data.append({
-                    'black': (cont.B - cont.tB) * 1.0 / maxHeight,
-                    self.options.Btenuki.get(): cont.tB * 1.0 / maxHeight,
-                    'white': (cont.W - cont.tW) * 1.0 / maxHeight,
-                    self.options.Wtenuki.get(): cont.tW * 1.0 / maxHeight,
+                    'black': (cont.B - cont.tB) / maxHeight,
+                    self.options.Btenuki.get(): cont.tB / maxHeight,
+                    'white': (cont.W - cont.tW) / maxHeight,
+                    self.options.Wtenuki.get(): cont.tW / maxHeight,
                     'label': [
-                        cont.label, '%1.1f' % (cont.wW * 100.0 / cont.W) if cont.W else '-',
-                        '%1.1f' % (cont.wB * 100.0 / cont.B) if cont.B else '-'],
+                        cont.label, '%1.1f' % (cont.wW * 100 / cont.W) if cont.W else '-',
+                        '%1.1f' % (cont.wB * 100 / cont.B) if cont.B else '-'],
                     'label_top': ['%d' % (cont.B + cont.W)], })
 
             self.display_bar_chart(
@@ -1289,14 +1307,14 @@ class App(v.Viewer, KEngine):
         if not self.gamelist.noOfGames():
             self.reset()
 
-        pbVar = self.pbVar.get().encode('utf-8')
-        pwVar = self.pwVar.get().encode('utf-8')
-        pVar = self.pVar.get().encode('utf-8')
-        evVar = self.evVar.get().encode('utf-8')
+        pbVar = self.pbVar.get()
+        pwVar = self.pwVar.get()
+        pVar = self.pVar.get()
+        evVar = self.evVar.get()
         frVar = self.frVar.get()
         toVar = self.toVar.get()
-        awVar = self.awVar.get().encode('utf-8')
-        sqlVar = self.sqlVar.get().encode('utf-8')
+        awVar = self.awVar.get()
+        sqlVar = self.sqlVar.get()
         refVar = self.referencedVar.get()
 
         self.history_GIsearch.append((pbVar, pwVar, pVar, evVar, frVar, toVar, awVar, sqlVar, refVar))
@@ -1359,12 +1377,12 @@ class App(v.Viewer, KEngine):
                 showwarning(_('Error'), _('SGF Error'))
 
         try:
-            self.gameinfoSearch(query)
+            self.gameinfoSearch(bb(query))
         except lk.DBError:
-            self.logger.insert(END, (_('Game info search, query "%s"') % query.decode('utf8')) + ', ' + _('Database error\n') + '\n')
+            self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('Database error\n') + '\n')
             self.gamelist.reset()
         else:
-            self.logger.insert(END, (_('Game info search, query "%s"') % query.decode('utf8')) + ', ' + _('%1.1f seconds') % (time.time() - currentTime) + '\n')
+            self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('%1.1f seconds') % (time.time() - currentTime) + '\n')
 
         self.progBar.stop()
         self.redo_date_profile = True
@@ -1802,12 +1820,12 @@ class App(v.Viewer, KEngine):
 
         for i in range(19):
             for j in range(19):
-                if self.board.getStatus(j, i) == 'B':
+                if self.board.getStatus(j, i) == b'B':
                     l[i][j] = 'X '
-                elif self.board.getStatus(j, i) == 'W':
+                elif self.board.getStatus(j, i) == b'W':
                     l[i][j] = 'O '
                 if (j, i) in self.board.wildcards:
-                    l[i][j] = '* '
+                    l[i][j] = uu(self.board.wildcards[(j, i)][1]) + ' '
 
         # mark hoshis with ,'s
 
@@ -1875,12 +1893,12 @@ class App(v.Viewer, KEngine):
             l.append('$$  ---------------------------------------')
 
         for line in l:
-            t.append(join(line, '') + '\n')
+            t.append(''.join(line) + '\n')
 
         t.append('\n')
         t.extend(remarks)
 
-        ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, self.monospaceFont)
+        ESR_TextEditor(self, exportMode.get(), ''.join(t), self.sgfpath, self.monospaceFont)
 
     def exportText(self):
         """Export some information on the previous search in a small text editor,
@@ -1916,7 +1934,7 @@ class App(v.Viewer, KEngine):
 
         t = self.patternSearchDetails(exportMode.get(), showAllCont.get())
 
-        ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, self.monospaceFont)
+        ESR_TextEditor(self, exportMode.get(), ''.join(t), self.sgfpath, self.monospaceFont)
 
     def printPattern(self, event=None):
         if self.currentSearchPattern:
@@ -1942,22 +1960,22 @@ class App(v.Viewer, KEngine):
             if os.name == 'posix':
                 s1 = s1.replace('~', os.getenv('HOME'))
 
-            s2 = replace(self.options.altViewerVar2.get(), '%f', filenameQU)
-            s2 = replace(s2, '%F', filename)
-            s2 = replace(s2, '%n', str(moveno))
-            s2 = replace(s2, '%g', str(gameNumber))
+            s2 = self.options.altViewerVar2.get().replace('%f', filenameQU)
+            s2 = s2.replace('%F', filename)
+            s2 = s2.replace('%n', str(moveno))
+            s2 = s2.replace('%g', str(gameNumber))
 
             try:
 
                 if sys.platform[:3] == 'win':
-                    os.spawnv(os.P_DETACH, s1, ('"' + s1 + '"', ) + tuple(split(s2)))
+                    os.spawnv(os.P_DETACH, s1, ('"' + s1 + '"', ) + tuple(s2.split()))
                         # it is necessary to quote the
                         # path if it contains blanks
 
                 elif os.path.isfile(s1):
                     pid = os.fork()
                     if pid == 0:
-                        os.execv(s1, (s1, ) + tuple(split(s2)))
+                        os.execv(s1, (s1, ) + tuple(s2.split()))
                         showwarning(_('Error'), _('Error starting SGF viewer'))
                 else:
                     showwarning(_('Error'), _('%s not found.') % s1)
@@ -2223,7 +2241,7 @@ class App(v.Viewer, KEngine):
     def saveMessagesEditDBlist(self):
         filename = tkFileDialog.asksaveasfilename(initialdir=os.curdir)
         try:
-            file = open(filename, 'w')
+            file = open(filename, 'wt')
             file.write(self.processMessages.get('1.0', END))
             file.close()
         except IOError:
@@ -2545,7 +2563,7 @@ class App(v.Viewer, KEngine):
             canv.create_image(0, 0, image=self.logo, anchor=NW)
 
         text = Text(window, height=15, width=60, relief=FLAT, wrap=WORD)
-        text.insert(1.0, join(t, ''))
+        text.insert(1.0, ''.join(t))
 
         text.config(state=DISABLED)
         text.pack()
@@ -2724,7 +2742,7 @@ class App(v.Viewer, KEngine):
         try:
             if self.cursor and self.cursor.currentNode().has_key('LB'):
                 for p1 in self.cursor.currentNode()['LB']:
-                    p, text = split(p1, ':')
+                    p, text = p1.split(':')
                     x, y = self.convCoord(p)
                     if self.sel[0][0] <= x <= self.sel[1][0] and self.sel[0][1] <= y <= self.sel[1][1]:
                         if text[0] in self.contLabels:
@@ -2911,9 +2929,9 @@ class App(v.Viewer, KEngine):
             sgf_str = '(;GM[1]FF[4]SZ[19]AP[Kombilo]'
             for i in range(CSP.boardsize):
                 for j in range(CSP.boardsize):
-                    if self.board.getStatus(i,j) == 'B':
+                    if self.board.getStatus(i,j) == b'B':
                         B_list.append(chr(i + ord('a')) + chr(j + ord('a')))
-                    elif self.board.getStatus(i,j) == 'W':
+                    elif self.board.getStatus(i,j) == b'W':
                         W_list.append(chr(i + ord('a')) + chr(j + ord('a')))
             if B_list:
                 sgf_str += 'AB' + ''.join([('[%s]' % s) for s in B_list])
@@ -3166,11 +3184,11 @@ class App(v.Viewer, KEngine):
 
         self.mainframe.update_idletasks()
         l = [str(self.mainframe.sash_coord(i)[0]) for i in range(2)]
-        self.options.sashPosK.set(join(l, '|%'))
+        self.options.sashPosK.set('|%'.join(l))
 
         self.frameS.update_idletasks()
         l = [str(self.frameS.sash_coord(i)[1]) for i in range(2)]
-        self.options.sashPosKS.set(join(l, '|%'))
+        self.options.sashPosKS.set('|%'.join(l))
 
         try:
             self.options.continuations_sort_crit.set(self.untranslate_cont_sort_crit())

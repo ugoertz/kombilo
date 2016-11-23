@@ -24,8 +24,17 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from __future__ import absolute_import, division, unicode_literals
 
-from Tkinter import *
+try:
+    xrange
+except:
+    xrange = range
+
+try:
+    from Tkinter import *
+except ImportError:
+    from tkinter import *
 
 
 class VirtualScrollbar(Scrollbar):
@@ -41,7 +50,7 @@ class VirtualScrollbar(Scrollbar):
         if self.total_in_list == 0:
             return
         cil = min(self.current_in_list, self.total_in_list)
-        multiplier = cil * 1.0 / self.total_in_list
+        multiplier = cil / self.total_in_list
         alpha = float(args[0]) * multiplier + self.offset[0]
         beta = float(args[1]) * multiplier + self.offset[0]
         # print args, multiplier, alpha, beta, str(alpha), str(beta)
@@ -90,11 +99,11 @@ class VirtualListbox(Listbox):
 
         if not self.current[0] <= index < self.current[1]:
             cil = self.current_in_list
-            new_start = max(0, int(index) - cil / 2)
+            new_start = max(0, int(index) - cil // 2)
             new_current = (new_start, new_start + cil)
             self.delete(0, END)
             self.insert_interval(new_current)
-            self.offset[0] = new_current[0] * 1.0 / self.total_in_list
+            self.offset[0] = new_current[0] / self.total_in_list
             self.current = new_current
         i = int(index) - self.current[0]
         Listbox.select_set(self, i)
@@ -109,14 +118,14 @@ class VirtualListbox(Listbox):
             new_current = (new_start, new_start + cil)
             self.delete(0, END)
             self.insert_interval(new_current)
-            self.offset[0] = new_current[0] * 1.0 / self.total_in_list
+            self.offset[0] = new_current[0] / self.total_in_list
             # print '1 -------------------------------------------------', self.current, new_current, self.offset[0]
         elif self.current[1] < self.total_in_list and (self.current[1] - beta_til) < cil / 6:
             new_end = min(int(beta_til + cil // 2), self.total_in_list)
             new_current = (new_end - cil, new_end)
             self.delete(0, END)
             self.insert_interval(new_current)
-            self.offset[0] = new_current[0] * 1.0 / self.total_in_list
+            self.offset[0] = new_current[0] / self.total_in_list
             # print '2 -------------------------------------------------', self.current, new_current, self.offset[0]
         else:
             return
@@ -132,7 +141,7 @@ class VirtualListbox(Listbox):
             # print "LISTBOX YVIEW", args
             beta_til = float(args[1]) * self.total_in_list
             self.adjust_scrollbar_offset(beta_til)
-            moveto = str((beta_til - self.current[0]) * 1.0 / cil)
+            moveto = str((beta_til - self.current[0]) / cil)
             return Listbox.yview(self, 'moveto', moveto)
         else:  # e.g. if args[0] == 'scroll'
             # print 'yview else', args
@@ -144,7 +153,7 @@ class VirtualListbox(Listbox):
                 self.select_clear(0, END)
                 if index and 0 <= index - change < cil:
                     self.select_set(index - change)
-                return Listbox.yview(self, 'moveto', str((nearest0 - change) * 1.0 / cil))
+                return Listbox.yview(self, 'moveto', str((nearest0 - change) / cil))
 
 
 class VScrolledList(Frame):

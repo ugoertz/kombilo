@@ -26,8 +26,13 @@
 # http://code.activestate.com/recipes/576688-tooltip-for-tkinter/
 # and slightly adapted for Kombilo.
 
-from Tkinter import *
+from __future__ import absolute_import, division, unicode_literals
+
 from time import time
+try:
+    from Tkinter import *
+except ImportError:
+    from tkinter import *
 
 
 class ToolTip(Toplevel):

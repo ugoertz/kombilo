@@ -24,8 +24,9 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from __future__ import absolute_import, division, unicode_literals
 
-import libkombilo as lk
+import kombilo.libkombilo as lk
 
 
 class abstractBoard(lk.abstractBoard):
@@ -43,7 +44,14 @@ class abstractBoard(lk.abstractBoard):
         #     assert 0 <= pos[1] <= 18
         # except AssertionError:
         #     print 'oops in board1.abstractBoard.play, %d %d' % pos
-        return lk.abstractBoard.play(self, pos[0], pos[1], color)
+        if color.lower().startswith('b'):
+            co = b'B'
+        elif color.lower().startswith('w'):
+            co = b'W'
+        else:
+            raise Exception('Error in abstractBoard.play')
+
+        return lk.abstractBoard.play(self, pos[0], pos[1], co)
 
     def status_keys(self):
-        return [(i, j) for i in range(self.boardsize) for j in range(self.boardsize) if self.getStatus(i, j) not in [' ', '.']]
+        return [(i, j) for i in range(self.boardsize) for j in range(self.boardsize) if self.getStatus(i, j) not in [b' ', b'.']]

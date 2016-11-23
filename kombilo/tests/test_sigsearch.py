@@ -45,7 +45,7 @@ def flip_sig(sig, flip):
     for i in range(6):
         k2.append('_' if sig[2 * i] == '_' else chr(k1[i][0] + oa))
         k2.append('_' if sig[2 * i + 1] == '_' else chr(k1[i][1] + oa))
-    return join(k2, '')
+    return ''.join(k2)
 
 
 def test_sigsearch():
@@ -64,12 +64,12 @@ def test_sigsearch():
     create_db(sgfs)
 
     K = KEngine()
-    print os.path.join(os.path.dirname(__file__), 'db')
+    # print(os.path.join(os.path.dirname(__file__), 'db'))
     K.gamelist.populateDBlist({'1': ['sgfs', os.path.join(os.path.dirname(__file__), 'db'), 'kombilo', ], })
     K.loadDBs()
 
     #  for i in range(K.gamelist.noOfGames()):
-    #      print K.gamelist.printSignature(i)
+    #      print(K.gamelist.printSignature(i))
 
 
     # ordinary signature search
@@ -78,7 +78,7 @@ def test_sigsearch():
         K.signatureSearch(sig)
         assert K.gamelist.noOfGames() == 1
         assert K.gamelist.getProperty(0, GL_FILENAME) == fn.replace('.sgf', '')
-        assert K.gamelist.printSignature(0) == sig
+        assert K.gamelist.printSignature(0) == bb(sig)
 
 
     # search for signature not in list
@@ -90,8 +90,8 @@ def test_sigsearch():
 
     # test symmetrizing signatures
     fn, sig = files_sigs[0]
-    var_sig = flip_sig(sig, lambda x, y: (y, x))
-    assert lk.symmetrize(var_sig, 19) == sig
+    var_sig = bb(flip_sig(sig, lambda x, y: (y, x)))
+    assert lk.symmetrize(var_sig, 19) == bb(sig)
     K.gamelist.reset()
     K.signatureSearch(var_sig)
     assert K.gamelist.noOfGames() == 1
