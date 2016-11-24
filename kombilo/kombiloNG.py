@@ -1073,7 +1073,7 @@ class KEngine(object):
                         ll = lk.Continuation(gl)
                         ll.x = x
                         ll.y = y
-                        ll.label == '?'
+                        ll.label = '?'
                         self.continuations.append(ll)
                     ll.add(gl.lookupContinuation(x, y))
 
