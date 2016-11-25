@@ -524,6 +524,19 @@ data = abdgikeodjoo, bdhjidjimcle, bhihocifnebn, bhjfopednmnf, ccehklcggkgj, ceb
 title = Masterpieces of Handicap Go 2
 data = bgcgbdgjijek, bhqrimbpjorh, cgiqcqficlhh, cihbfigeeicf, ciqqmdcroomg, delhjkdlldhn, dfedcfhdgglg, dfnlhmhqrpij, dggpnrennqrp, dgqikcgbmmob, djkcninckfeh, eeehqjeneikq, efeijhfdkdnk, efhqgncbcqqm, ejkcemfpfhod, fgpcnbbqaorf, ghhpalglchcr, gibiqmglnmpo
 # }}}
+# Commented Games by Lee Sedol --- {{{
+[CGLSI]
+title = Commented Games by Lee Sedol I (Lee Sedol; Lee Sena. Baduktopia)
+data = bdqqqomdsqrk, bcldqolcorfr, dilecjigeigm
+[CGLSII]
+title = Commented Games by Lee Sedol II (Lee Sedol; Lee Sena. Baduktopia)
+data = cgjfjneciikl, cgqrmnqqipqg, cdfdfbiegkdo
+# }}}
+# Patterns of the Sanrensei --- {{{
+[PSRS]
+title = Patterns of the Sanrensei (M. Redmond. Slate and Shell)
+data = eeggfbeijijh, celemcrimhrc, fnqemeopnihb, dfnlrqdrporo, cfimqkkgqjql, rdmqdrqpdqqf, lrhnmbmshqcc, cjjhlebdecjb, qmkpgnemfrgm, fbdkionqpqiq, eicegkfgabie, bdehhjgbghef, einoomqnqimj, kjbeicgiehol, ceobeqkkfqln, hdbjemgmbqpn, dhffoqeljfol, nqplcemnnfbj, pbcbgghdfdro, iclldepbnjoj
+# }}}
 # Go Game Guru --- {{{
 [Relentless]
 title = Relentless: Lee Sedol vs Gu Li (Go Game Guru)
@@ -534,13 +547,13 @@ data = cdelepehcpgo, dhfehjfhrdjm, cdhhqekdofqj, ceooeqdcnoep, ciqnqfcejepn, djn
 # }}}
 # Kiseido Modern Master Games --- {{{
 [MMG1]
-title = The Dawn of Tournament Go (R. van Zeijst, R. Bozulich)
+title = The Dawn of Tournament Go (R. van Zeijst; R. Bozulich)
 data = fhkmcloggcmf, fgohlhlmkkpb, eglqoeepjfmf, dgcnrqdcqmpb, egohihglldmk, cfcqrrelqhfb, cgncgmohpolj, demonmppmcgb, cceqghgcemip, cdldrpkckepm, cjlconcilodb
 [MMG2]
-title = The 2014 Ten-Game Match between Gu Li and Lee Sedol, Part One (R. van Zeijst)
+title = The 2014 Ten-Game Match between Gu Li and Lee Sedol; Part One (R. van Zeijst)
 data = dgearbcdmeih, bcmdkpoljnng, eioergegoggb, bfqqgoeqdqie, djpfnbrpmcnh
 [MMG3]
-title = The 2014 Ten-Game Match between Gu Li and Lee Sedol, Part Two (R. van Zeijst)
+title = The 2014 Ten-Game Match between Gu Li and Lee Sedol; Part Two (R. van Zeijst)
 data = cebilmjbmofk, cgcllebderdj, cgnbphkqhieb, cgpgikkdljbj, bcmfiepgpbnr
 # }}}
 # GoGoD --- {{{
