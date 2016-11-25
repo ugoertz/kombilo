@@ -1807,7 +1807,7 @@ class App(v.Viewer, KEngine):
                 elif self.board.getStatus(j, i) == 'W':
                     l[i][j] = 'O '
                 if (j, i) in self.board.wildcards:
-                    l[i][j] = '* '
+                    l[i][j] = self.board.wildcards[(j, i)][1] + ' '
 
         # mark hoshis with ,'s
 
