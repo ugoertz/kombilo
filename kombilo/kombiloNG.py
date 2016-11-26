@@ -966,8 +966,11 @@ class KEngine(object):
         for i, sid in snapshot_ids:
             DBlist[i]['data'].restore(sid)
         self.gamelist.update()
-        for i, id in all_snapshot_ids:
-            DBlist[i]['data'].delete_snapshot(id)
+
+        # not deleting snapshots here: the following is super-inefficient, and
+        # we delete all snapshots when quitting anyway
+        #  for i, id in all_snapshot_ids:
+        #      DBlist[i]['data'].delete_snapshot(id)
 
         return cursor
 
@@ -1073,7 +1076,7 @@ class KEngine(object):
                         ll = lk.Continuation(gl)
                         ll.x = x
                         ll.y = y
-                        ll.label == '?'
+                        ll.label = '?'
                         self.continuations.append(ll)
                     ll.add(gl.lookupContinuation(x, y))
 
