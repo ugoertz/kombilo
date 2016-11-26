@@ -209,7 +209,7 @@ class CustomMenus:
                             self.master.capB = self.master.capB + len(self.master.board.undostack_top_captures())
                         if nM == 'AW':
                             self.master.capW = self.master.capW + len(self.master.board.undostack_top_captures())
-                        self.master.capVar.set(_('Cap - B: %d, W: %d') % (self.master.capB, self.master.capW))
+                        self.master.capVar.set(_('Cap - B: {0}, W: {1}').format(self.master.capB, self.master.capW))
 
                     else:
                         s = ';' + nM + '[' + pos + ']'
@@ -227,7 +227,7 @@ class CustomMenus:
                             self.master.capB = self.master.capB + len(self.master.board.undostack_top_captures())
                         if nM == 'AW':
                             self.master.capW = self.master.capW + len(self.master.board.undostack_top_captures())
-                        self.master.capVar.set(_('Cap - B: %d, W: %d') % (self.master.capB, self.master.capW))
+                        self.master.capVar.set(_('Cap - B: {0}, W: {1}').format(self.master.capB, self.master.capW))
                 except SGFError:
                     showwarning(_('Error'), _('SGF Error'))
 

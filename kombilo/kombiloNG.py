@@ -984,8 +984,11 @@ class KEngine(object):
         for i, sid in snapshot_ids:
             DBlist[i]['data'].restore(sid)
         self.gamelist.update()
-        for i, id in all_snapshot_ids:
-            DBlist[i]['data'].delete_snapshot(id)
+
+        # not deleting snapshots here: the following is super-inefficient, and
+        # we delete all snapshots when quitting anyway
+        #  for i, id in all_snapshot_ids:
+        #      DBlist[i]['data'].delete_snapshot(id)
 
         return cursor
 
