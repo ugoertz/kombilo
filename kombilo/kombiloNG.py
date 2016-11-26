@@ -201,6 +201,9 @@ class Pattern(lk.Pattern):
             sY = len(iPos) // sX  # determine vertical size from horizontal size and total size of pattern
         # for i in range(sY): print iPos[i*sX:(i+1)*sX]
 
+        if len(iPos) != sX * sY:
+            raise lk.PatternError()
+
         contlist = lk.vectorMNC()
         if 'contlist' in kwargs and kwargs['contlist']:  # FIXME does not work correctly if there are captures!
             XX, YY = kwargs.get('topleft', (0, 0))

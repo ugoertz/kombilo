@@ -310,7 +310,8 @@ def test_pattern_9X(K, SOs):
                .2.
                .3.
                ...
-               ''', ptype=CENTER_PATTERN, sizeX=3, sizeY=7,
+               ''',
+               ptype=CENTER_PATTERN, sizeX=3, sizeY=5,
                contsinpattern='X')
 
     for so in SOs:
@@ -320,7 +321,7 @@ def test_pattern_9X(K, SOs):
         assert K.gamelist.noOfGames() == 1
         for i in range(K.gamelist.noOfGames()):
             print(K.gamelist.get_data(i))
-        assert K.noMatches == 2  # symmetry (mirror horizontally)
+        assert K.noMatches == 1
 
 
 def test_pattern_9(K, SOs):
