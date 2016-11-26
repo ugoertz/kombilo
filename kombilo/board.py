@@ -510,6 +510,7 @@ class Board(abstractBoard, Canvas):
             self.labels[pos] = [
                     (orig_type, text, labelIDs, color, override, extra_tags)
                     ]
+        self.tkraise('marks')
 
     def placeStone(self, pos, co):
         # assert pos[0] >= 0 and pos[1] >= 0
