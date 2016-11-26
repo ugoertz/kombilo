@@ -25,7 +25,7 @@
 ## SOFTWARE.
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
 import pytest
 
@@ -313,7 +313,7 @@ def test_pattern_9X(K, SOs):
                ''', ptype=CENTER_PATTERN, sizeX=3, sizeY=7,
                contsinpattern='X')
 
-    for so in SOs[:1]:
+    for so in SOs:
         K.gamelist.reset()
 
         K.patternSearch(p, so)

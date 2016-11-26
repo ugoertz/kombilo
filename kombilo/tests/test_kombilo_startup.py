@@ -29,7 +29,7 @@ Test whether kombilo.py starts up.
 '''
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
 try:
     from tkinter import Tk

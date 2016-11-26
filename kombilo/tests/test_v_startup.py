@@ -29,7 +29,7 @@ Test whether the SGF viewer v.py starts up.
 '''
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
 import sys
 
