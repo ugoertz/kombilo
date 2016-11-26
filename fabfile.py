@@ -8,8 +8,8 @@ VERSION = '0.8.4'
 BASE_DIR = os.path.dirname(__file__)
 VIRTUALENV = '/bin/bash /home/ug/.virtualenvs/k08/bin/activate'
 
-DOC_BASEPATH = '/home/ug/docker/ugonet/ugonet/data/media/kombilo/'
-DOXY_BASEPATH = '/home/ug/docker/ugonet/ugonet/data/media/libkombilo/'
+DOC_BASEPATH = '/home/ug/docker/ugonet2016/ugonet2016/data/media/kombilo/'
+DOXY_BASEPATH = '/home/ug/docker/ugonet2016/ugonet2016/data/media/libkombilo/'
 PDF_PATH = DOC_BASEPATH
 
 
