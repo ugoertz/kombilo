@@ -91,7 +91,7 @@ class Cursor(lk.Cursor):
 
     def __init__(self, sgf, sloppy=False, encoding='utf8'):
         try:
-            lk.Cursor.__init__(self, bb(sgf), 1)  # TODO: later, use encoding when parsing the sgf file, and immediately recode to utf-8.
+            lk.Cursor.__init__(self, sgf, 1)  # TODO: later, use encoding when parsing the sgf file, and immediately recode to utf-8.
         except:
             raise lk.SGFError()
         # self.encoding = encoding
@@ -106,7 +106,7 @@ class Cursor(lk.Cursor):
         lk.Cursor.game(self, n)
 
     def add(self, st, update=None):
-        lk.Cursor.add(self, bb(st))
+        lk.Cursor.add(self, st)
 
     def next(self, n=0, markCurrent=None):
         '''Go to n-th child of current node. Default for n is 0, so if there
@@ -139,7 +139,7 @@ class Cursor(lk.Cursor):
         for i in range(n):
             nn = nn.down
 
-        nn.SGFstring = bb(self.rootNodeToString(data))
+        nn.SGFstring = self.rootNodeToString(data)
         nn.parsed = 0
         nn.parseNode()
 
@@ -151,7 +151,7 @@ class Cursor(lk.Cursor):
         for key in keylist:  # first append the above fields, if present, in the given order
             if key in node:
                 result.append(key)
-                result.append('[' + uu(lk.SGFescape(bb(node[key][0]))) + ']\n')
+                result.append('[' + uu(lk.SGFescape(node[key][0])) + ']\n')
 
         l = 0
         for key in node.keys():  # now check for remaining fields
@@ -159,7 +159,7 @@ class Cursor(lk.Cursor):
                 result.append(key)
                 l += len(key)
                 for item in node[key]:
-                    result.append('[' + uu(lk.SGFescape(bb(item))) + ']\n')
+                    result.append('[' + uu(lk.SGFescape(item)) + ']\n')
                     l += len(item) + 2
                     if l > 72:
                         result.append('\n')
@@ -196,11 +196,11 @@ class Cursor(lk.Cursor):
         n = self.root.next
         while g < self.root.numChildren:
             if g in gameNumber:
-                t += b'(' + self.outputVar(n) + b')'
+                t += '(' + uu(self.outputVar(n)) + ')'
             g += 1
             n = n.down
 
-        # t = t.replace(b'\r', b'')
+        # t = t.replace('\r', '')
         return t
 
 
@@ -228,9 +228,7 @@ class Node(object):
         '''Retrieve 'unknown' attributes from self.n.'''
 
         try:
-            return self.n.__getattribute__(uu(attr))
-            # FIXME ... SWIG requires a "string" here in Py3 version
-            # should be OK since attr will always be ASCII(?)
+            return self.n.__getattribute__(attr)
         except:
             raise AttributeError
 
@@ -244,39 +242,38 @@ class Node(object):
         return self.n.get_move_number()
 
     def __contains__(self, item):
-        return True if self.n.gpv(bb(item)) else False
+        return True if self.n.gpv(item) else False
 
     def has_key(self, key):
-        return self.__contains__(bb(key))
+        return self.__contains__(key)
 
     def __getitem__(self, ID):
-        # print('get', ID), [uu(x) for x in self.n.gpv(bb(ID))]
         try:
-            return [uu(x) for x in self.n.gpv(bb(ID))]
+            return [uu(x) for x in self.n.gpv(ID)]
         except:
             raise KeyError
 
     def __setitem__(self, ID, value):
         # print 'set', ID, value
         self.n.set_property_value(
-                bb(ID), [bb(x) for x in value])
+                ID, [x for x in value])
 
     def __delitem__(self, item):
         # print 'del', item
-        self.n.del_property_value(bb(item))
+        self.n.del_property_value(item)
 
     def remove(self, ID, item):
         '''Remove ``item`` from the list ``self.n[ID]``.
         '''
-        ll = list(self.n[bb(ID)])
+        ll = list(self.n[ID])
         ll.remove(uu(item))
-        self.n[bb(ID)] = ll
+        self.n[ID] = ll
 
     def add_property_value(self, ID, item):
         '''Add ``item`` to the list ``self[ID]``.
         '''
         self.n.add_property_value(
-                bb(ID), [bb(x) for x in item])
+                ID, [x for x in item])
 
     def pathToNode(self):
         '''

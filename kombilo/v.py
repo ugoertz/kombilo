@@ -1140,9 +1140,9 @@ class Viewer:
 
         while n:
             try:
-                f = open('%s%d.sgf' % (filename, i), 'wb')
+                f = open('%s%d.sgf' % (filename, i), 'wt')
                 try:
-                    f.write('(' + self.cursor.outputVar(n) + ')')
+                    f.write('(' + uu(self.cursor.outputVar(n)) + ')')
                 except lk.SGFError:
                     showwarning(_('Error'), _('SGF Error in game %d') % i)
                 f.close()
@@ -1368,7 +1368,7 @@ class Viewer:
 
         found = 0
 
-        if not self.board.getStatus(x, y) == b'.':
+        if not self.board.getStatus(x, y) == '.':
             i = 0
             n = self.cursor.currentN
 
@@ -1772,7 +1772,7 @@ class Viewer:
 
         try:
             if t == 'DEL ST':
-                if self.board.getStatus(x, y) == b' ':
+                if self.board.getStatus(x, y) == ' ':
                     return
                 if 'AB' in self.cursor.currentNode() or 'AW' in self.cursor.currentNode() or 'AE' in self.cursor.currentNode():
                     removed = False
@@ -2014,7 +2014,7 @@ class Viewer:
                 return
         if filename:
             try:
-                f = open(os.path.join(path, filename), 'rb')
+                f = open(os.path.join(path, filename), 'rt')
                 s = f.read()
                 f.close()
             except IOError:
@@ -2192,8 +2192,8 @@ class Viewer:
         self.leaveNode()
 
         try:
-            sgf_out = self.cursor.output()
-            file = open(filename, 'wb')
+            sgf_out = uu(self.cursor.output())
+            file = open(filename, 'wt')
             file.write(sgf_out)
             file.close()
         except IOError:
@@ -2215,8 +2215,8 @@ class Viewer:
         if not f:
             return
         try:
-            sgf_out = self.cursor.output()
-            file = open(f, 'wb')
+            sgf_out = uu(self.cursor.output())
+            file = open(f, 'wt')
             file.write(sgf_out)
             file.close()
         except IOError:
@@ -2482,7 +2482,7 @@ class Viewer:
         oth = ''
         for key in self.gameinfoDict.keys():
             if key not in keylist:
-                oth += key + '[' + ']['.join(lk.SGFescape(s.encode('utf-8')) for s in self.gameinfoDict[key]) + ']\n'
+                oth += key + '[' + ']['.join(uu(lk.SGFescape(s)) for s in self.gameinfoDict[key]) + ']\n'
         self.gameinfoVars['others'].set(oth)
 
         f = Frame(window)

@@ -72,7 +72,7 @@ def search(K, moveno=6000):
             if c.atEnd: break
             c.next()
 
-        p = Pattern(''.join({ b' ': '.', b'B': 'X', b'W': 'O' }[b.getStatus(i,j)] for i in range(19) for j in range(19)), ptype=FULLBOARD_PATTERN)
+        p = Pattern(''.join({' ': '.', 'B': 'X', 'W': 'O' }[b.getStatus(i,j)] for i in range(19) for j in range(19)), ptype=FULLBOARD_PATTERN)
         K.patternSearch(p, so)
         assert K.gamelist.noOfGames() == 1
         K.gamelist.reset()

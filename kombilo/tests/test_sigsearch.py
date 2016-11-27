@@ -78,7 +78,7 @@ def test_sigsearch():
         K.signatureSearch(sig)
         assert K.gamelist.noOfGames() == 1
         assert K.gamelist.getProperty(0, GL_FILENAME) == fn.replace('.sgf', '')
-        assert K.gamelist.printSignature(0) == bb(sig)
+        assert K.gamelist.printSignature(0) == sig
 
 
     # search for signature not in list
@@ -90,8 +90,8 @@ def test_sigsearch():
 
     # test symmetrizing signatures
     fn, sig = files_sigs[0]
-    var_sig = bb(flip_sig(sig, lambda x, y: (y, x)))
-    assert lk.symmetrize(var_sig, 19) == bb(sig)
+    var_sig = flip_sig(sig, lambda x, y: (y, x))
+    assert lk.symmetrize(var_sig, 19) == sig
     K.gamelist.reset()
     K.signatureSearch(var_sig)
     assert K.gamelist.noOfGames() == 1

@@ -37,7 +37,7 @@ from ..kombiloNG import *
 
 def create_db(sgfs, dbname='kombilo'):
     pop = lk.ProcessOptions()
-    pop.rootNodeTags = b'PW,PB,RE,DT,EV'
+    pop.rootNodeTags = 'PW,PB,RE,DT,EV'
     pop.sgfInDB = True
     pop.professional_tag = False
     pop.processVariations = True
@@ -52,7 +52,7 @@ def create_db(sgfs, dbname='kombilo'):
 
     gl.start_processing()
     for fn, sgf in sgfs.items():
-        gl.process(bb(sgf), bb(path), bb(fn), gls, b'', lk.CHECK_FOR_DUPLICATES)
+        gl.process(sgf, path, fn, gls, '', lk.CHECK_FOR_DUPLICATES)
 
     gl.finalize_processing()
 

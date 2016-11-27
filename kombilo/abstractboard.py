@@ -27,6 +27,7 @@
 from __future__ import absolute_import, division, unicode_literals
 
 import kombilo.libkombilo as lk
+from .utilities import bb, uu
 
 
 class abstractBoard(lk.abstractBoard):
@@ -45,13 +46,19 @@ class abstractBoard(lk.abstractBoard):
         # except AssertionError:
         #     print 'oops in board1.abstractBoard.play, %d %d' % pos
         if color.lower().startswith('b'):
-            co = b'B'
+            co = 'B'
         elif color.lower().startswith('w'):
-            co = b'W'
+            co = 'W'
         else:
             raise Exception('Error in abstractBoard.play')
 
         return lk.abstractBoard.play(self, pos[0], pos[1], co)
 
+    def getStatus(self, p0, p1):
+        return uu(lk.abstractBoard.getStatus(self, p0, p1))
+
+    def setStatus(self, p0, p1, c):
+        lk.abstractBoard.setStatus(self, p0, p1, c)
+
     def status_keys(self):
-        return [(i, j) for i in range(self.boardsize) for j in range(self.boardsize) if self.getStatus(i, j) not in [b' ', b'.']]
+        return [(i, j) for i in range(self.boardsize) for j in range(self.boardsize) if self.getStatus(i, j) not in [' ', '.']]

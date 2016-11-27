@@ -16,8 +16,7 @@ namespace std {
 
 
 %begin %{
-#define SWIG_PYTHON_STRICT_BYTE_CHAR
-#define SWIG_PYTHON_STRICT_UNICODE_WCHAR
+#define SWIG_PYTHON_2_UNICODE
 #include "sgfparser.h"
 #include "abstractboard.h"
 #include "pattern.h"

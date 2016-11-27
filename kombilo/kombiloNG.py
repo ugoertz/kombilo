@@ -190,7 +190,7 @@ class Pattern(lk.Pattern):
             lk.Pattern.__init__(self, kwargs['pattern'])
             return
 
-        iPos = bb(p).replace(b' ', b'').replace(b',', b'.').replace(b'\n', b'').replace(b'\r', b'')
+        iPos = p.replace(' ', '').replace(',', '.').replace('\n', '').replace('\r', '')
         boardsize = kwargs.get('boardsize', 19)
         sX = kwargs.get('sizeX', 0)
         sY = kwargs.get('sizeY', 0)
@@ -208,28 +208,28 @@ class Pattern(lk.Pattern):
         if 'contlist' in kwargs and kwargs['contlist']:  # FIXME does not work correctly if there are captures!
             XX, YY = kwargs.get('topleft', (0, 0))
 
-            c = Cursor(b'(%s)' % bb(kwargs['contlist']))
+            c = Cursor('(%s)' % kwargs['contlist'])
             while 1:
                 n = c.currentNode()
                 if 'B' in n:
-                    contlist.push_back(lk.MoveNC(ord(n['B'][0][0]) - 97 - XX, ord(n['B'][0][1]) - 97 - YY, b'X'))
+                    contlist.push_back(lk.MoveNC(ord(n['B'][0][0]) - 97 - XX, ord(n['B'][0][1]) - 97 - YY, 'X'))
                 if 'W' in n:
-                    contlist.push_back(lk.MoveNC(ord(n['W'][0][0]) - 97 - XX, ord(n['W'][0][1]) - 97 - YY, b'O'))
+                    contlist.push_back(lk.MoveNC(ord(n['W'][0][0]) - 97 - XX, ord(n['W'][0][1]) - 97 - YY, 'O'))
                 if c.atEnd:
                     break
                 c.next()
         elif 'contsinpattern' in kwargs:
             color = kwargs['contsinpattern']
             for counter in range(1, 10):
-                i = iPos.find(b'%d' % counter)
+                i = iPos.find('%d' % counter)
                 if i == -1:
                     break
                 # print(i%sX, i//sX, color)
-                contlist.push_back(lk.MoveNC(i % sX, i // sX, bb(color)))
-                iPos = iPos.replace(b'%d' % counter, b'.')
+                contlist.push_back(lk.MoveNC(i % sX, i // sX, color))
+                iPos = iPos.replace('%d' % counter, '.')
                 color = 'X' if color == 'O' else 'O'
 
-        contlabels = bb(kwargs.get('contlabels', '.' * len(iPos)))
+        contlabels = kwargs.get('contlabels', '.' * len(iPos))
 
         # print(iPos, len(contlist), [(m.x, m.y, m.color) for m in contlist])
 
@@ -246,7 +246,7 @@ class Pattern(lk.Pattern):
         If hoshi==True, hoshi points are marked with ','. (Of course, this is only applicable for fullboard or corner patterns, or patterns with fixed anchor.)
         '''
 
-        plist = [list(uu(self.initialPos[i * self.sizeX: (i + 1) * self.sizeX])) for i in range(self.sizeY)]
+        plist = [list(self.initialPos[i * self.sizeX: (i + 1) * self.sizeX]) for i in range(self.sizeY)]
 
         if hoshi and self.left == self.right and self.top == self.bottom:
             if self.boardsize == 19:
@@ -305,11 +305,11 @@ class lkGameList(lk.GameList):
 
     def __init__(self, *args):
         try:
-            args = [bb(x) for x in args]
+            args = [x for x in args]
         except:
             pass
         if len(args) == 1:
-            lk.GameList.__init__(self, args[0], b'', b'[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,[[path]],,,', lk.ProcessOptions(), 19, 500)
+            lk.GameList.__init__(self, args[0], '', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,[[path]],,,', lk.ProcessOptions(), 19, 500)
         else:
             lk.GameList.__init__(self, *args)
 
@@ -513,7 +513,7 @@ class GameList(object):
 
             li.append(filename + ': ')
 
-        li.append(uu(d[GL_PW]) + ' - ' + uu(d[GL_PB]) + ' (' + _(uu(d[GL_RESULT])) + '), ')
+        li.append(d[GL_PW] + ' - ' + d[GL_PB] + ' (' + _(d[GL_RESULT]) + '), ')
         if self.showDate:
             li.append(d[GL_DATE] + ', ')
         li.append(res)
@@ -611,7 +611,7 @@ class GameList(object):
         filename = getFilename(f1)
 
         try:
-            f = open(filename, 'rb')
+            f = open(filename, 'rt')
             sgf = f.read()
             c = Cursor(sgf, 1)
 
@@ -970,7 +970,7 @@ class KEngine(object):
                 path = node.pathToNode()
                 for i in path:
                     cursor.next(i, markCurrent=False)
-                cursor.add(bb(s), update=False)
+                cursor.add(s, update=False)
                 plist.append((cursor.currentNode(),         # store the node
                               snapshot_ids_parent,          # store snapshots
                             ))
@@ -1037,8 +1037,8 @@ class KEngine(object):
         except AttributeError:
             board_has_wildcards = False
 
-        dp = b''
-        d = b''
+        dp = ''
+        d = ''
         contdict = []
 
         for i in range(sel[0][1], sel[1][1] + 1):
@@ -1046,34 +1046,34 @@ class KEngine(object):
                 if board_has_wildcards and (j, i) in board.wildcards:
                     dp += board.wildcards[(j, i)][1]
                     d += board.wildcards[(j, i)][1]
-                elif board.getStatus(j, i) == b' ':
-                    dp += b'.' if (not i in [3, 9, 15] or not j in [3, 9, 15]) else b','  # TODO board size
-                    d += b'.'
+                elif board.getStatus(j, i) == ' ':
+                    dp += '.' if (not i in [3, 9, 15] or not j in [3, 9, 15]) else ','  # TODO board size
+                    d += '.'
                 else:
                     inContdict = False
                     if cursor and 'LB' in cursor.currentNode():
                         # check whether position (j,i) is labelled by a number
                         # (in which case we will not in the initial pattern, but in the contlist)
 
-                        pos = bb(chr(j + 97) + chr(i + 97))
+                        pos = chr(j + 97) + chr(i + 97)
                         labels = cursor.currentNode()['LB']
                         for l in labels:
-                            p, mark = bb(l).split(b':')
+                            p, mark = l.split(':')
                             if pos == p:
                                 try:  # will fail if int(mark) does not work
-                                    contdict.append((int(mark), b'%s[%s]' % (board.getStatus(j, i),  pos, )))
+                                    contdict.append((int(mark), '%s[%s]' % (board.getStatus(j, i),  pos, )))
                                     dp += mark
-                                    d += b'.'
+                                    d += '.'
                                     inContdict = True
                                     break
                                 except ValueError:
                                     pass
                     if not inContdict:
-                        dp += {b'B': b'X', b'W': b'O'}[board.getStatus(j, i)]
-                        d += {b'B': b'X', b'W': b'O'}[board.getStatus(j, i)]
+                        dp += {'B': 'X', 'W': 'O'}[board.getStatus(j, i)]
+                        d += {'B': 'X', 'W': 'O'}[board.getStatus(j, i)]
 
         contdict.sort()
-        contlist = b';' + b';'.join([x[1] for x in contdict]) if contdict else None
+        contlist = ';' + ';'.join([x[1] for x in contdict]) if contdict else None
         # print 'contlist', contlist
         #print d
         return dp, d, contlist
@@ -1097,7 +1097,7 @@ class KEngine(object):
                         ll = lk.Continuation(gl)
                         ll.x = x
                         ll.y = y
-                        ll.label = b'?'
+                        ll.label = '?'
                         self.continuations.append(ll)
                     ll.add(gl.lookupContinuation(x, y))
 
@@ -1115,7 +1115,7 @@ class KEngine(object):
                 i += 1
             else:
                 lab = '?'
-            c.label = bb(lab)
+            c.label = lab
             for db in self.gamelist.DBlist:
                 if db['disabled']:
                     continue
@@ -1149,7 +1149,7 @@ class KEngine(object):
         for db in self.gamelist.DBlist:
             if db['disabled']:
                 continue
-            db['data'].gisearch(bb(query))
+            db['data'].gisearch(query)
 
         self.gamelist.update()
 
@@ -1162,7 +1162,7 @@ class KEngine(object):
         for db in self.gamelist.DBlist:
             if db['disabled']:
                 continue
-            count += db['data'].gisearchNC(bb(query)).size()
+            count += db['data'].gisearchNC(query).size()
 
         return count
 
@@ -1202,7 +1202,7 @@ class KEngine(object):
             if db['disabled']:
                 continue
             gl = db['data']
-            gl.sigsearch(bb(sig))
+            gl.sigsearch(sig)
             self.noMatches += gl.num_hits
             self.noSwitched += gl.num_switched
             self.Bwins += gl.Bwins
@@ -1240,7 +1240,7 @@ class KEngine(object):
         for db in self.gamelist.DBlist:
             if db['disabled']:
                 continue
-            db['data'].tagsearchSQL(bb(' '.join(query)))
+            db['data'].tagsearchSQL(' '.join(query))
         self.gamelist.update()
 
     def patternSearchDetails(self, exportMode='ascii', showAllCont=False):
@@ -1263,7 +1263,7 @@ class KEngine(object):
             # case labels, as required by wiki format
             labels_to_lower = True
             for cont in self.continuations[:N]:
-                cont_label = uu(cont.label)
+                cont_label = cont.label
                 if cont_label in 'abcdefghijklmnopqrstuvwxyz':
                     labels_to_lower = False
                 try:
@@ -1275,7 +1275,7 @@ class KEngine(object):
                 labels_to_lower = False
 
             for cont in self.continuations[:N]:
-                cont_label = uu(cont.label)
+                cont_label = cont.label
                 x, y = cont.x + 1, cont.y + 1
                 if plist[y][x] in ['.', ',']:
                     if labels_to_lower:
@@ -1330,7 +1330,7 @@ class KEngine(object):
                 t.append('\n')
 
                 for cont in self.continuations[:N]:
-                    cont_label = uu(cont.label)
+                    cont_label = cont.label
                     if cont.B:  # black continuations
                         t.append(_('B') + '%s:    %d (%d), ' % (lbl[cont_label], cont.B, cont.B - cont.tB))
                         t.append((_('B') + ' %1.1f%% - ' + _('W') + ' %1.1f%%') % (cont.wB * 100 / cont.B, cont.lB * 100 / cont.B))
@@ -1446,7 +1446,7 @@ class KEngine(object):
                 if include and not k in include:
                     continue
                 for sig in c[k]['data']:
-                    symmsig = uu(lk.symmetrize(bb(sig), boardsize))
+                    symmsig = uu(lk.symmetrize(sig, boardsize))
                     self.gamelist.references[symmsig].append(c[k]['title'])
             return True
         except:
@@ -1484,7 +1484,7 @@ class KEngine(object):
 
     def find_duplicates(self, strict=True, dupl_within_db=True):
         return lk.find_duplicates(
-                [uu(os.path.join(db['name'][0], db['name'][1]+'.db'))
+                [os.path.join(db['name'][0], db['name'][1]+'.db')
                     for db in self.gamelist.DBlist if not db['disabled']],
                 strict, dupl_within_db
                 )
@@ -1523,7 +1523,7 @@ class KEngine(object):
                 messages.update()
                 return
 
-        gl = lkGameList(os.path.join(datapath[0], datapath[1] + '.db'), b'DATE', b'[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,[[path]],,,', pop, 19, 500)
+        gl = lkGameList(os.path.join(datapath[0], datapath[1] + '.db'), 'DATE', '[[filename.]],,,[[id]],,,[[PB]],,,[[PW]],,,[[winner]],,,signaturexxx,,,[[date]],,,[[path]],,,', pop, 19, 500)
         # TODO boardsize
 
         return gl
@@ -1701,7 +1701,7 @@ class KEngine(object):
             try:
                 # read as binary file, since we want to pass bytestring to
                 # process
-                file = open(filename, 'rb')
+                file = open(filename, 'rt')
                 sgf = file.read()
                 file.close()
             except:

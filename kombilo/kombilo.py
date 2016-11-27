@@ -155,16 +155,16 @@ class BoardWC(Board):
         self.wildcards[(x, y)] = (
                 self.create_oval(
                     x1 + margin, x2 + margin, y1 - margin, y2 - margin,
-                    fill={b'*': 'green', b'x': 'black', b'o': 'white'}[bb(wc_type)],
+                    fill={'*': 'green', 'x': 'black', 'o': 'white'}[wc_type],
                     tags=('wildcard', 'non-bg')),
-                bb(wc_type))
+                wc_type)
         self.tkraise('label')
 
     def wildcard(self, event):
         """ Place/delete a wildcard at position of click. """
 
         x, y = self.getBoardCoord((event.x, event.y), 1)
-        if not (0 <= x < self.boardsize and 0 <= y and self.getStatus(x, y) == b' '):
+        if not (0 <= x < self.boardsize and 0 <= y and self.getStatus(x, y) == ' '):
             return
 
         if (x, y) in self.wildcards:
@@ -571,7 +571,7 @@ class GameListGUI(GameList, VScrolledList):
         filename = getFilename(f1)
 
         try:
-            file = open(filename, 'rb')
+            file = open(filename, 'rt')
             sgf = file.read()
             file.close()
             c = Cursor(sgf, 1)
@@ -589,8 +589,8 @@ class GameListGUI(GameList, VScrolledList):
         if (not newRootNode is None):  # FIXME  and backup != newRootNode.data:
             c.updateRootNode(newRootNode, gameNumber)
             try:
-                s = c.output()
-                file = open(filename, 'wb')
+                s = uu(c.output())
+                file = open(filename, 'wt')
                 file.write(s)
                 file.close()
             except IOError:
@@ -1377,7 +1377,7 @@ class App(v.Viewer, KEngine):
                 showwarning(_('Error'), _('SGF Error'))
 
         try:
-            self.gameinfoSearch(bb(query))
+            self.gameinfoSearch(query)
         except lk.DBError:
             self.logger.insert(END, (_('Game info search, query "%s"') % query) + ', ' + _('Database error\n') + '\n')
             self.gamelist.reset()
@@ -1820,12 +1820,12 @@ class App(v.Viewer, KEngine):
 
         for i in range(19):
             for j in range(19):
-                if self.board.getStatus(j, i) == b'B':
+                if self.board.getStatus(j, i) == 'B':
                     l[i][j] = 'X '
-                elif self.board.getStatus(j, i) == b'W':
+                elif self.board.getStatus(j, i) == 'W':
                     l[i][j] = 'O '
                 if (j, i) in self.board.wildcards:
-                    l[i][j] = uu(self.board.wildcards[(j, i)][1]) + ' '
+                    l[i][j] = self.board.wildcards[(j, i)][1] + ' '
 
         # mark hoshis with ,'s
 
@@ -2929,9 +2929,9 @@ class App(v.Viewer, KEngine):
             sgf_str = '(;GM[1]FF[4]SZ[19]AP[Kombilo]'
             for i in range(CSP.boardsize):
                 for j in range(CSP.boardsize):
-                    if self.board.getStatus(i,j) == b'B':
+                    if self.board.getStatus(i,j) == 'B':
                         B_list.append(chr(i + ord('a')) + chr(j + ord('a')))
-                    elif self.board.getStatus(i,j) == b'W':
+                    elif self.board.getStatus(i,j) == 'W':
                         W_list.append(chr(i + ord('a')) + chr(j + ord('a')))
             if B_list:
                 sgf_str += 'AB' + ''.join([('[%s]' % s) for s in B_list])

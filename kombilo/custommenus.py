@@ -357,14 +357,14 @@ class CustomMenus:
 
         for i in range(sel[0][1], sel[1][1] + 1):
             for j in range(sel[0][0], sel[1][0] + 1):
-                if self.master.board.getStatus(j, i) == b'W':
+                if self.master.board.getStatus(j, i) == 'W':
                     d[(i - 1, j - 1)] = 'O'
-                elif self.master.board.getStatus(j, i) == b'B':
+                elif self.master.board.getStatus(j, i) == 'B':
                     d[(i - 1, j - 1)] = 'X'
                 else:
                     d[(i - 1, j - 1)] = '.'
                 if (j, i) in self.master.board.wildcards:
-                    d[(i - 1, j - 1)] = uu(self.master.board.wildcards[(j,i)][1])
+                    d[(i - 1, j - 1)] = self.master.board.wildcards[(j,i)][1]
 
         self.correspEntry[index][1]['psearch'] = (sel, d,
                                                   self.master.fixedAnchorVar.get(),
