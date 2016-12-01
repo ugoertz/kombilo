@@ -255,8 +255,7 @@ class Node(object):
 
     def __setitem__(self, ID, value):
         # print 'set', ID, value
-        self.n.set_property_value(
-                ID, [x for x in value])
+        self.n.set_property_value(ID, [x for x in value])
 
     def __delitem__(self, item):
         # print 'del', item

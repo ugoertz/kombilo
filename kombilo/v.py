@@ -195,7 +195,7 @@ class TextEditor:
             return
         try:
             file = open(f, 'wt')
-            file.write(self.text.get('1.0', END).encode('utf-8', 'ignore'))
+            file.write(self.text.get('1.0', END))
             file.close()
         except IOError:
             showwarning(_('I/O Error'), _('Cannot write to ') + f)
@@ -2384,19 +2384,9 @@ class Viewer:
         keylist = ['PB', 'BR', 'PW', 'WR', 'EV', 'RE', 'DT', 'KM']
         for key in keylist:
             value = self.gameinfoVars[key].get()
-            if type(value) == type(u''):
-                try:
-                    value = value.encode('utf-8', 'ignore')
-                except:
-                    pass
             self.gameinfoDict[key] = [value]
 
         value = self.gameinfoGCText.get('1.0', END).strip()
-        if type(value) == type(u''):
-            try:
-                value = value.encode('utf-8', 'ignore')
-            except:
-                pass
         self.gameinfoDict['GC'] = [value]
         # print self.gameinfoDict
 
@@ -2405,10 +2395,6 @@ class Viewer:
                 del self.gameinfoDict[key]
 
         s = self.gameinfoOthersText.get('1.0', END)
-        try:
-            s = s.encode('utf-8', 'ignore')
-        except:
-            pass
         try:
             # print "d =", s
             cc = Cursor(('(;' + s + ')'), 1)
