@@ -2134,7 +2134,8 @@ VarInfo::~VarInfo() {
 void insert_if_new(vector<int>& d, int i1, int i2) {
   vector<int>::iterator it = d.begin();
   while (it != d.end()) {
-    if (*it++ == i1 && *it++ == i2) return;
+    if (*it == i1 && *(it+1) == i2) return;
+    it += 2;
   }
   d.push_back(i1);
   d.push_back(i2);
