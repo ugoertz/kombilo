@@ -28,7 +28,8 @@ Lines starting with a ``#`` are comments - no need to type them.
 
 There are two main steps to the installation: installing Python and the Python
 packages, and then installing Kombilo as a Python package.  See below for more
-details on the different steps.
+details on the different steps. The instructions below are for Python 2.7, but
+as of Kombilo 0.9, alternatively you can also run Kombilo on Python 3.5.
 
 ::
 

@@ -22,6 +22,15 @@ databases, including all tags.
 History/Change log
 ==================
 
+0.9
+---
+
+0.9
+^^^
+
+The Python code now runs on both Python 3.5 and Python 2.7.
+
+
 0.8
 ---
 
