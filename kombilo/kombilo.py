@@ -171,9 +171,9 @@ class BoardWC(Board):
             wc, wc_type = self.wildcards.pop((x, y))
             self.delete(wc)
 
-            if wc_type == b'*':
+            if wc_type == '*':
                 self.place_wildcard(x, y, 'x')
-            elif wc_type == b'x':
+            elif wc_type == 'x':
                 self.place_wildcard(x, y, 'o')
         else:
             self.place_wildcard(x, y, '*')
@@ -192,7 +192,7 @@ class BoardWC(Board):
         """ Place a label; take care of wildcards at same position. """
 
         if pos in self.wildcards:
-            override = {b'*': ('black', ''), b'o': ('black', ''), b'x': ('white', '')}[self.wildcards[pos][1]]
+            override = {'*': ('black', ''), 'o': ('black', ''), 'x': ('white', '')}[self.wildcards[pos][1]]
         else:
             override = None
 
@@ -323,7 +323,7 @@ class BoardWC(Board):
             self.boardsize = d['boardsize']
             for i in range(self.boardsize):
                 for j in range(self.boardsize):
-                    if d['status'][i][j] in [b'B', b'W']:
+                    if d['status'][i][j] in ['B', 'W']:
                         self.setStatus(i, j, d['status'][i][j])
                         self.placeStone((i, j), d['status'][i][j])
             if not small:
@@ -377,8 +377,8 @@ class ESR_TextEditor(v.TextEditor):
         Button(self.buttonFrame, text=_('Include game list'), command=self.includeGameList).pack(side=LEFT)
 
     def includeGameList(self):
-        separator = b' %%%\n' if self.style == 'wiki' else b'\n'  # wiki/plain style
-        self.text.insert(END, '\n\n!' + _('Game list') + '\n\n' + separator.join(self.mster.gamelist.get_all()).decode('utf8'))
+        separator = ' %%%\n' if self.style == 'wiki' else '\n'  # wiki/plain style
+        self.text.insert(END, '\n\n!' + _('Game list') + '\n\n' + separator.join(self.mster.gamelist.get_all()))
 
 
 # -------------------------------------------------------------------------------------
