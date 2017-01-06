@@ -1705,7 +1705,7 @@ class KEngine(object):
                 sgf = file.read()
                 file.close()
             except:
-                messages.insert('end', _('Unable to read file %s') % filename)
+                messages.insert('end', _('Unable to read file %s') % filename + '\n')
                 messages.update()
                 continue
 
