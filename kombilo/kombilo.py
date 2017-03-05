@@ -1915,6 +1915,18 @@ class App(v.Viewer, KEngine):
         dialog.wait_window()
 
         t = self.patternSearchDetails(exportMode.get(), showAllCont.get())
+        if self.currentSearchPattern:
+            t_so = []
+            t_so.append('\n')
+            t_so.append(_('Search options'))
+            t_so.append('\n')
+            t_so.append('\n')
+            t_so.append(_('Fixed Color') + ': %s\n' % (_('Yes') if self.fixedColorVar.get() else _('No')))
+            t_so.append(_('Fixed Anchor') + ': %s\n' % (_('Yes') if self.fixedAnchorVar.get() else _('No')))
+            t_so.append(_('Next move') + ': %s\n' % {0: _('B or W'), 1: _('B'), 2: _('W'), }[self.nextMoveVar.get()])
+            t_so.append(_('Move limit') + ': %d\n' % self.moveLimit.get())
+            t_so.append(_('Search in variations') + ': %s\n' % (_('Yes') if self.searchInVariations.get() else _('No')))
+            t += ''.join(t_so)
 
         ESR_TextEditor(self, exportMode.get(), join(t, ''), self.sgfpath, self.monospaceFont)
 

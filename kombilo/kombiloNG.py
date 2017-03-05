@@ -1351,16 +1351,6 @@ class KEngine(object):
                         t.append(' %%%')
                     t.append('\n')
 
-            t.append('\n')
-            t.append(_('Search options'))
-            t.append('\n')
-            t.append('\n')
-            t.append(_('Fixed Color') + ': %s\n' % (_('Yes') if self.fixedColorVar.get() else _('No')))
-            t.append(_('Fixed Anchor') + ': %s\n' % (_('Yes') if self.fixedAnchorVar.get() else _('No')))
-            t.append(_('Next move') + ': %s\n' % {0: _('B or W'), 1: _('B'), 2: _('W'), }[self.nextMoveVar.get()])
-            t.append(_('Move limit') + ': %d\n' % self.moveLimit.get())
-            t.append(_('Search in variations') + ': %s\n' % (_('Yes') if self.searchInVariations.get() else _('No')))
-
         return ''.join(t)
 
     def copyCurrentGamesToFolder(self, dir):
