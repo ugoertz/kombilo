@@ -29,6 +29,7 @@
 search and prints some information about the results after each search.
 '''
 
+from __future__ import print_function
 
 import sys, time
 sys.path.append('../src')
@@ -47,13 +48,12 @@ if __name__ == '__main__':
 
     K.loadDBs()
 
-    print K.gamelist.noOfGames(), 'games in database.'
-    print
+    print(K.gamelist.noOfGames(), 'games in database.\n')
 
-    print 'Date profile:'
+    print('Date profile:')
     ct = time.time()
-    print K.dateProfile()
-    print time.time() - ct
+    print(K.dateProfile())
+    print(time.time() - ct)
 
     # p = Pattern('''
     #             ...................
@@ -113,21 +113,21 @@ if __name__ == '__main__':
     # so.algos = lk.ALGO_FINALPOS | lk.ALGO_MOVELIST | lk.ALGO_HASH_CORNER  | lk.ALGO_HASH_FULL
     # so.trustHashFull = True
 
-    print
-    print 'Pattern search:'
+    print()
+    print('Pattern search:')
     K.patternSearch(p, so)
-    print K.patternSearchDetails()
+    print(K.patternSearchDetails())
     # K.gamelist.reset()
 
-    print K.gamelist.noOfGames(), 'games in database.'
+    print(K.gamelist.noOfGames(), 'games in database.')
     for i in range(min(20, K.gamelist.noOfGames())):
-        print K.gamelist.get_data(i)
-    print
+        print(K.gamelist.get_data(i))
+    print()
 
     K.gamelist.reset()
-    print 'Signature search:'
+    print('Signature search:')
     K.signatureSearch('dd____km____')
-    print K.gamelist.noOfGames(), 'games in database.'
+    print(K.gamelist.noOfGames(), 'games in database.')
     for i in range(min(10, K.gamelist.noOfGames())):
-        print K.gamelist.get_data(i)
+        print(K.gamelist.get_data(i))
 
