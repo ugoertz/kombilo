@@ -53,7 +53,7 @@ from . import libkombilo as lk
 from .board import *
 from .sgf import Node, Cursor, flip_mirror1, flip_mirror2, flip_rotate
 
-KOMBILO_VERSION = '0.8.4'
+KOMBILO_VERSION = '0.8.5'
 
 # ---------------------------------------------------------------------------------------
 

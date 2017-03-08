@@ -25,6 +25,12 @@ History/Change log
 0.8
 ---
 
+0.8.5 (March 2017)
+^^^^^^^^^^^^^^^^^^
+
+A few small bug fixes.
+
+
 0.8.4 (November 2016)
 ^^^^^^^^^^^^^^^^^^^^^
 
