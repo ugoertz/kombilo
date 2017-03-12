@@ -24,6 +24,7 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 ## SOFTWARE.
 
+from __future__ import print_function
 
 '''
 This script carries out a number of pattern searches, for various patterns and
@@ -119,7 +120,7 @@ if __name__ == '__main__':
 
     dummy, data['loading'] = timer(K.loadDBs)
     data['numofgames'] = K.gamelist.noOfGames()
-    print data['numofgames'], 'games'
+    print(data['numofgames'], 'games')
     try:
         f = open('/proc/self/status')
         data['memory'] = [ x for x in f.readlines() if x.startswith('VmHWM') ][0].split(':')[1].strip()
@@ -213,7 +214,7 @@ if __name__ == '__main__':
         data['content'] += '<tr><td>%s</td><td><div class="pattern" style="font-size:80%%;"><pre>%s</pre></div></td><td><table style="font-size:80%%;">' % (id, iPos)
         searchresults = { }
         for p_ctr in range(pl.size()):
-            print '.',
+            print('.', end='')
             p = pl.get(p_ctr)
             for alg in (algos or [ lk.ALGO_FINALPOS | lk.ALGO_MOVELIST | lk.ALGO_HASH_CORNER  | lk.ALGO_HASH_FULL ]):
                 so.algos = alg

@@ -34,7 +34,11 @@ from __future__ import print_function
 import sys, time
 sys.path.append('../src')
 
-from kombilo.kombiloNG import *
+from kombilo.kombiloNG import (
+        KEngine, Pattern,
+        FULLBOARD_PATTERN, CORNER_NE_PATTERN,
+        )
+import kombilo.libkombilo as lk
 
 
 
@@ -98,7 +102,7 @@ if __name__ == '__main__':
     #             ...................
     #             ...................
     #             ''', ptype=FULLBOARD_PATTERN, )
-    
+
     p = Pattern('''
                 .......
                 .......
