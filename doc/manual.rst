@@ -61,6 +61,18 @@ Kombilo before uninstalling.)
 0.7.\*) around, it does not interact with Kombilo 0.8.\*. You have to newly
 process the SGF databases when upgrading from 0.7.\* to 0.8.\*.
 
+*Installation on other Linux flavors* should in principle be similar. You might
+have to install a couple more system packages, though. On Linux Mint, you
+should, in addition to the packages mentioned above, also
+
+::
+
+    apt install build-essential python-wheel python-setuptools python-dev
+
+For a system-wide installation on Linux Mint (i.e., doing ``sudo pip install
+kombilo`` rather than ``pip install kombilo``) you should in addition ``apt
+install python-imaging-tk``.
+
 .. index::
   pair: Installation; Mac OS X
 .. _install-macosx:
