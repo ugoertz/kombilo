@@ -2843,6 +2843,8 @@ class Viewer:
 
         if self.options.language.get():
             self.switch_language(self.options.language.get())
+        else:
+            self.switch_language('en')
 
         if self.options.scaling.get() == -1:
             # Application is opened for the first time, so we adjust button size
@@ -3025,4 +3027,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-
