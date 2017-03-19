@@ -2794,7 +2794,10 @@ class Viewer:
             resource = os.path.join('lang', lang, 'LC_MESSAGES', 'kombilo.mo')
 
             translation = gettext.GNUTranslations(pkg_resources.resource_stream(__name__, resource))
-            translation.install(unicode=True)
+            try:
+                translation.install(unicode=True)
+            except TypeError:  # With Python3, translation.install does not need/accept unicode argument
+                translation.install()
         except:
             if show_warning:
                 showwarning(_('Warning'), _('The language files could not be found.'))
@@ -2841,8 +2844,12 @@ class Viewer:
         except:
             pass
 
-        if self.options.language.get():
-            self.switch_language(self.options.language.get())
+        if not self.options.language.get():
+            # this can be removed in version 0.9, since now language is set to "en" in
+            # default.cfg file
+            self.options.language.set('en')
+
+        self.switch_language(self.options.language.get())
 
         if self.options.scaling.get() == -1:
             # Application is opened for the first time, so we adjust button size
@@ -2987,7 +2994,6 @@ class Viewer:
 
 def run():
 
-    import builtins
     if not '_' in builtins.__dict__:
         builtins.__dict__['_'] = lambda s: s
 
