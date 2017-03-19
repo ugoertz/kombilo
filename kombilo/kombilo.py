@@ -3245,10 +3245,10 @@ class App(v.Viewer, KEngine):
                 pass
 
     def switch_language(self, lang, show_warning=False):
+        v.Viewer.switch_language(self, lang, show_warning)
+
         self.options.continuations_sort_crit.set(self.untranslate_cont_sort_crit())
         self.options.tagAsPro.set(self.untranslate_tagAsPro())
-
-        v.Viewer.switch_language(self, lang, show_warning)
 
         for var in [self.options.continuations_sort_crit, self.options.tagAsPro, ]:
             var.set(_(var.get()))
@@ -3709,4 +3709,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-
