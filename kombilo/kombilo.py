@@ -3179,14 +3179,14 @@ class App(v.Viewer, KEngine):
             return {_(s): s for s in [
                 'total', 'earliest', 'latest', 'average',
                 'became popular', 'became unpopular', ]}[self.options.continuations_sort_crit.get()]
-        except KeyError:
+        except:
             return self.options.continuations_sort_crit.get()
 
     def untranslate_tagAsPro(self):
         try:
             return {_(s): s for s in [
                 'Never', 'All games', 'All games with p-rank players', ]}[self.options.tagAsPro.get()]
-        except KeyError:
+        except:
             return self.options.tagAsPro.get()
 
     def saveOptions(self, d):
