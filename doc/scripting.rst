@@ -77,10 +77,7 @@ In this directory there are a couple of scripts which I used to test the
 pattern search for consistency. You can use them as starting points for
 your own scripts.
 
-final_position.py
-^^^^^^^^^^^^^^^^^
-
-.. automodule:: final_position
+Also see the tests in the ``kombilo/tests`` subdirectory.
 
 various_tests.py
 ^^^^^^^^^^^^^^^^
@@ -94,13 +91,13 @@ API
 The kombiloNG module
 --------------------
 
-.. automodule:: kombiloNG
+.. automodule:: kombilo.kombiloNG
   :members:
 
 The sgf module
 --------------
 
-.. automodule:: sgf
+.. automodule:: kombilo.sgf
   :members:
 
 

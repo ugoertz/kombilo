@@ -106,13 +106,14 @@ Example config file (starting with opposing san ren sei)::
   fixedColor = 1
 '''
 
+from __future__ import absolute_import, unicode_literals, print_function
 
 import sys
 sys.path.append('../../src')
 from copy import copy
 
 from configobj import ConfigObj
-from kombiloNG import KEngine, lk, Cursor
+from kombilo.kombiloNG import KEngine, lk, Cursor
 
 def _(s):
     return s
@@ -120,7 +121,7 @@ def _(s):
 class Messages:
 
     def insert(self, pos, s):
-        print s
+        print(s)
 
 
 if __name__ == '__main__':

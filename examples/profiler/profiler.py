@@ -68,11 +68,10 @@ different path or to use more than one database.
 import sys
 basepath = sys.argv[1]
 sys.path.insert(0, basepath)
-sys.path.append('../../src')
 import time, os, os.path
 
-import libkombilo as lk
-from kombiloNG import *
+import kombilo.libkombilo as lk
+from kombilo.kombiloNG import *
 
 
 def timer(f, *args, **kwargs):
