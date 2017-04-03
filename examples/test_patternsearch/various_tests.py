@@ -24,8 +24,6 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 ## SOFTWARE.
 
-from __future__ import print_function
-
 '''
 This script carries out a number of pattern searches, for various patterns and
 with various parameters, and checks the results for consistency.
@@ -38,14 +36,16 @@ where ``s1`` is a subdirectory which contains data as for the
 :py:mod:`profiler` script, and to which the output html page is written.
 '''
 
+from __future__ import print_function
+
 import sys
 basepath = sys.argv[1]
 sys.path.insert(0, basepath)
 sys.path.append('../../src')
 import time, os, os.path
 
-import libkombilo as lk
-from kombiloNG import *
+import kombilo.libkombilo as lk
+from kombilo.kombiloNG import *
 
 
 def timer(f, *args, **kwargs):

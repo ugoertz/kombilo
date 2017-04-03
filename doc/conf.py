@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../examples'))
 sys.path.insert(0, os.path.abspath('../examples/sgftree'))
 sys.path.insert(0, os.path.abspath('../examples/profiler'))
 sys.path.insert(0, os.path.abspath('../examples/test_patternsearch'))
-sys.path.insert(0, os.path.abspath('../kombilo'))
+sys.path.insert(0, os.path.abspath('..'))
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
