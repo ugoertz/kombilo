@@ -24,7 +24,7 @@ elif sys.platform.startswith('darwin'):
 else:
     kwargs['libraries'] = ['stdc++', 'sqlite3']
     kwargs['library_dirs'] = ['/usr/lib', ]
-    kwargs['extra_compile_args'] = ['-O3', '-I.', '-fopenmp']  # can use this w/ g++ to max optimization
+    kwargs['extra_compile_args'] = ['-O3', '-I.', '-fopenmp', "-std=c++14"]  # can use this w/ g++ to max optimization
     kwargs['extra_link_args'] = [ '-lgomp', ]
 
 kwargs['sources'] = sources
